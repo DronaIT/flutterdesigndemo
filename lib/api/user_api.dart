@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
+import 'package:flutterdesigndemo/models/login.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 class UserApi {
@@ -23,4 +26,21 @@ class UserApi {
       rethrow;
     }
   }
+
+  Future<Response> updateUsersApi(Map<String, String> loginFormula , String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {
+        "fields": loginFormula,
+      };
+      Map<String, String> header = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${TableNames.APIKEY}"
+      };
+      final Response response = await dioClient.patch(TableNames.TB_STUDENT+"/"+recordId, options: Options(headers: header) , data: jsonEncode(someMap));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

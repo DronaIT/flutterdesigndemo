@@ -33,7 +33,7 @@ class strings_name {
   static const String str_something_wrong = "Something went wrong! contact to admin";
   static const String str_enter_otp = "Please enter valid otp.";
   static const String str_enter_pass_same = "Password & confirm password should be same";
-
+  static const String str_user_not_found = "User does not found";
   static const String str_user_already_verified = "User is already verified";
   static const String str_user_not_verified = "User not verified .please setup your account.";
   static const String str_invalide_mobile_password = "Invalid phone number & password.";

@@ -123,9 +123,8 @@ class _LoginState extends State<Login> {
                               isVisible = true;
                             });
                             var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
-                            var data =
-                                await userRepository.getUsersRequested(query);
-
+                            var data = await userRepository.getUsersRequested(query);
+                            print("chechch=>${data}");
                             if (data.isNotEmpty) {
                               setState(() {
                                 isVisible = false;

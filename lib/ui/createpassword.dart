@@ -1,17 +1,20 @@
+import 'package:dart_airtable/dart_airtable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/api/user_repository.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/models/login.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
-import 'package:dart_airtable/dart_airtable.dart';
 
 import '../utils/prefrence.dart';
 
@@ -25,12 +28,15 @@ class CreatePassword extends StatefulWidget {
 class _CreatePasswordState extends State<CreatePassword> {
   TextEditingController passController = TextEditingController();
   TextEditingController confirmPassController = TextEditingController();
-  List<AirtableRecordField> records = [];
+  //List<AirtableRecordField> records = [];
+
+  final userRepository = getIt.get<UserRepository>();
   bool isVisible = false;
+  List<Records> loginRecords = [];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-
       child: Stack(
         children: [
           Scaffold(
@@ -77,7 +83,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                     SizedBox(height: 40.h),
                     CustomButton(
                         text: strings_name.str_proceed,
-                        click: ()  async {
+                        click: () async {
                           var passWord = FormValidator.validatePassword(
                               passController.text.toString());
                           var confirmPassword = FormValidator.validateCPassword(
@@ -94,24 +100,14 @@ class _CreatePasswordState extends State<CreatePassword> {
                             setState(() {
                               isVisible = true;
                             });
-                          //  print("phone=>${Get.arguments.toString()}");
-                            var airtable =  Airtable(
-                                apiKey: TableNames.APIKEY,
-                                projectBase: TableNames.PROJECTBASE);
-                            var getRecord = await airtable.getRecordsFilterByFormula(
-                                TableNames.TB_STUDENT,
-                                "(${TableNames.TB_USERS_PHONE}='${Get.arguments.toString()}')"
-                                );
-
-                            records.add(AirtableRecordField(
-                                fieldName: "mobile_number", value:  Get.arguments.toString()));
-                            records.add(AirtableRecordField(
-                                fieldName: "password", value: passController.text.toString()));
-                            getRecord!.first.fields = records;
-                          // print("records==> ${getRecord}");
-                            var record = await airtable.updateRecord(TableNames.TB_STUDENT, getRecord.first);
-                           // print("recordsdd==> ${record?.toJSON()}");
-                            if (records != null && records.isNotEmpty) {
+                            var query = "(${TableNames.TB_USERS_PHONE}='${Get.arguments.toString()}')";
+                            var data = await userRepository.getUsersRegister(query);
+                            Map<String, String> password = {
+                              "password": passController.text.toString(),
+                            };
+                            var dataUpdate = await userRepository.getUsersCreatePassword(password , data.first.id!);
+                            print("reponse=>${dataUpdate}");
+                            if (dataUpdate.isNotEmpty) {
                               setState(() {
                                 isVisible = false;
                               });
@@ -124,7 +120,6 @@ class _CreatePasswordState extends State<CreatePassword> {
                               Utils.showSnackBar(
                                   context, strings_name.str_something_wrong);
                             }
-                            //Get.to(const Home());
                           }
                         }),
                   ],
@@ -140,7 +135,6 @@ class _CreatePasswordState extends State<CreatePassword> {
                 visible: isVisible),
           )
         ],
-
       ),
     );
   }

@@ -115,4 +115,29 @@ class DioClient {
       rethrow;
     }
   }
+
+
+  Future<dynamic> patch(
+      String uri, {
+        data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        CancelToken? cancelToken,
+        ProgressCallback? onSendProgress,
+        ProgressCallback? onReceiveProgress,
+      }) async {
+    try {
+      final Response response = await _dio.patch(
+        uri,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

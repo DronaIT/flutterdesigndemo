@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/api/user_repository.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -11,7 +13,6 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
-import 'package:dart_airtable/dart_airtable.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final TextEditingController phoneController = TextEditingController();
   bool isVisible = false;
+  final userRepository = getIt.get<UserRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,47 +82,71 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 40.h),
                     CustomButton(
                         text: strings_name.str_verify,
-                        click: ()  async {
+                        click: () async {
                           var phone = FormValidator.validatePhone(
                               phoneController.text.toString());
                           if (phone.isNotEmpty) {
                             Utils.showSnackBar(context, phone);
-                          }  else {
+                          } else {
                             setState(() {
                               isVisible = true;
                             });
-                            var airtable = Airtable(
-                                apiKey: TableNames.APIKEY,
-                                projectBase: TableNames.PROJECTBASE);
                             var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
-                            var records = await airtable.getRecordsFilterByFormula(TableNames.TB_STUDENT, query);
-                            // print("object ==> ${records!.first.toJSON().entries.first.value}");
-                            // print("object1 ==> ${records.first.fields[2].value}");
-                            if (records != null && records.isNotEmpty) {
+                            var data = await userRepository.getUsersRegister(query);
+                            print("chechch=>${data}");
+                            if (data.isNotEmpty) {
                               setState(() {
                                 isVisible = false;
                               });
-                              var pass= -1;
-                              for (var i = 0; i < records.first.fields.length; i++) {
-                                if(records.first.fields[i].fieldName == "password") {
-                                  pass = i;
-                                  break;
-                                }
-                              }
-                              if(records.first.fields.isNotEmpty && pass != -1){
-                                Get.to(const OtpVerification(),
-                                  arguments: phoneController.text);
+                              print("djdjdj ${data.first.fields?.password}");
+                              if(data.first.fields?.password == null){
+                                Get.to(const OtpVerification(), arguments: phoneController.text);
                               }else{
-                                Utils.showSnackBar(
-                                    context, strings_name.str_user_already_verified);
+                                Utils.showSnackBar(context, strings_name.str_user_already_verified);
                               }
+                            } else if (data.length == 0) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_user_not_found);
                             } else {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(
-                                  context, strings_name.str_something_wrong);
+                              Utils.showSnackBar(context, strings_name.str_something_wrong);
                             }
+                            // var airtable = Airtable(
+                            //     apiKey: TableNames.APIKEY,
+                            //     projectBase: TableNames.PROJECTBASE);
+                            // var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
+                            // var records = await airtable.getRecordsFilterByFormula(TableNames.TB_STUDENT, query);
+                            // // print("object ==> ${records!.first.toJSON().entries.first.value}");
+                            // // print("object1 ==> ${records.first.fields[2].value}");
+                            // if (records != null && records.isNotEmpty) {
+                            //   setState(() {
+                            //     isVisible = false;
+                            //   });
+                            //   var pass= -1;
+                            //   for (var i = 0; i < records.first.fields.length; i++) {
+                            //     if(records.first.fields[i].fieldName == "password") {
+                            //       pass = i;
+                            //       break;
+                            //     }
+                            //   }
+                            //   if(records.first.fields.isNotEmpty && pass != -1){
+                            //     Get.to(const OtpVerification(),
+                            //       arguments: phoneController.text);
+                            //   }else{
+                            //     Utils.showSnackBar(
+                            //         context, strings_name.str_user_already_verified);
+                            //   }
+                            // } else {
+                            //   setState(() {
+                            //     isVisible = false;
+                            //   });
+                            //   Utils.showSnackBar(
+                            //       context, strings_name.str_something_wrong);
+                            // }
                           }
                         }),
                   ],
