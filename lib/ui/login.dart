@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterdesigndemo/api/api_repository.dart';
+import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/api/user_repository.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/ui/forgotpassword.dart';
+import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/register.dart';
+import 'package:flutterdesigndemo/utils/prefrence.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
@@ -23,10 +26,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   bool isVisible = false;
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  final userRepository = getIt.get<UserRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -120,63 +123,29 @@ class _LoginState extends State<Login> {
                               isVisible = true;
                             });
                             var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
-                           var data = await ApiRepository().getLoginData(query);
+                            var data =
+                                await userRepository.getUsersRequested(query);
 
-
-                            // var airtable = Airtable(
-                            //     apiKey: TableNames.APIKEY,
-                            //     projectBase: TableNames.PROJECTBASE);
-                            // var queryGetUSer = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
-                            // var recordByPhone = await airtable.getRecordsFilterByFormula(TableNames.TB_USERS, queryGetUSer);
-                            // // print("object ==> ${recordByPhone}");
-                            // if (recordByPhone != null && recordByPhone.isNotEmpty) {
-                            //   var pass= -1;
-                            //   for (var i = 0; i < recordByPhone.first.fields.length; i++) {
-                            //     if(recordByPhone.first.fields[i].fieldName == "password") {
-                            //       pass = i;
-                            //       break;
-                            //     }
-                            //   }
-                            //   if(recordByPhone.first.fields.isNotEmpty && pass != -1 && recordByPhone.first.fields[pass].fieldName == "password"){
-                            //     var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
-                            //     var records = await airtable.getRecordsFilterByFormula(TableNames.TB_USERS, query);
-                            //     // print("object ==> ${records}");
-                            //     if(records != null && records.isNotEmpty){
-                            //       setState(() {
-                            //         isVisible = false;
-                            //       });
-                            //       await PreferenceUtils.setIsLogin(true);
-                            //       Get.offAll(Home());
-                            //     }else{
-                            //       setState(() {
-                            //         isVisible = false;
-                            //       });
-                            //       Utils.showSnackBar(
-                            //           context, strings_name.str_invalide_mobile_password);
-                            //     }
-                            //
-                            //   }else{
-                            //     setState(() {
-                            //       isVisible = false;
-                            //     });
-                            //     Utils.showSnackBar(
-                            //         context, strings_name.str_user_not_verified);
-                            //   }
-                            // } else {
-                            //   setState(() {
-                            //     isVisible = false;
-                            //   });
-                            //   Utils.showSnackBar(
-                            //       context, strings_name.str_something_wrong);
-                            // }
+                            if (data.isNotEmpty) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              await PreferenceUtils.setIsLogin(true);
+                              Get.offAll(Home());
+                            } else if (data.length == 0) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(
+                                  context, strings_name.str_invalide_mobile_password);
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(
+                                  context, strings_name.str_something_wrong);
+                            }
                           }
-
-                          // var records = await airtable.getRecordsFilterByFormula(
-                          //     TableNames.TB_USERS,
-                          //     "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')"
-                          //     );
-
-                          // Get.to(const Home());
                         }),
                     SizedBox(height: 20.h),
                     GestureDetector(

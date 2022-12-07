@@ -39,7 +39,7 @@ dependencies:
 
 dev_dependencies:
   get:
-  http:
+
   flutter_svg:
   cached_network_image:
   flutter_screenutil:
@@ -51,6 +51,7 @@ dev_dependencies:
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.15
   dio: ^4.0.6
+  get_it: ^7.2.0
   pretty_dio_logger: ^1.1.1
   logger:
   json_annotation: ^3.1.1

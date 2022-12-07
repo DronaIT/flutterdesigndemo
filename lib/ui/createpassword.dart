@@ -99,7 +99,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                 apiKey: TableNames.APIKEY,
                                 projectBase: TableNames.PROJECTBASE);
                             var getRecord = await airtable.getRecordsFilterByFormula(
-                                TableNames.TB_USERS,
+                                TableNames.TB_STUDENT,
                                 "(${TableNames.TB_USERS_PHONE}='${Get.arguments.toString()}')"
                                 );
 
@@ -109,7 +109,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                 fieldName: "password", value: passController.text.toString()));
                             getRecord!.first.fields = records;
                           // print("records==> ${getRecord}");
-                            var record = await airtable.updateRecord(TableNames.TB_USERS, getRecord.first);
+                            var record = await airtable.updateRecord(TableNames.TB_STUDENT, getRecord.first);
                            // print("recordsdd==> ${record?.toJSON()}");
                             if (records != null && records.isNotEmpty) {
                               setState(() {

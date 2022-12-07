@@ -93,7 +93,7 @@ class _RegisterState extends State<Register> {
                                 apiKey: TableNames.APIKEY,
                                 projectBase: TableNames.PROJECTBASE);
                             var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
-                            var records = await airtable.getRecordsFilterByFormula(TableNames.TB_USERS, query);
+                            var records = await airtable.getRecordsFilterByFormula(TableNames.TB_STUDENT, query);
                             // print("object ==> ${records!.first.toJSON().entries.first.value}");
                             // print("object1 ==> ${records.first.fields[2].value}");
                             if (records != null && records.isNotEmpty) {
