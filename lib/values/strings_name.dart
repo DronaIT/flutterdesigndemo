@@ -37,7 +37,7 @@ class strings_name {
   static const String str_user_already_verified = "User is already verified";
   static const String str_user_not_verified = "User not verified .please setup your account.";
   static const String str_invalide_mobile_password = "Invalid phone number & password.";
-
+  static const String str_invalide_password = "Invalid password.";
   static const String genericError = "Something went wrong, please try again!";
   static const String noNetworkError = "No network available!";
   static const String poorNetworkError = "Poor network connection, please try again!";

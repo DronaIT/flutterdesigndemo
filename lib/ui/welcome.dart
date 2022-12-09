@@ -43,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
     initialization();
     isLogin = PreferenceUtils.getIsLogin();
-    print("check==>${isLogin}");
+
   }
 
   void initialization() async {

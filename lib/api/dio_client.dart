@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 class DioClient {
   // dio instance
@@ -8,7 +8,7 @@ class DioClient {
   // injecting dio instance
   DioClient(this._dio) {
     _dio
-      ..options.baseUrl = "https://api.airtable.com/v0/appwU8yBYoG1yhBXx/"
+      ..options.baseUrl = TableNames.APIENDPOINTS
       ..options.responseType = ResponseType.json
       ..interceptors.add(LogInterceptor(
         request: true,

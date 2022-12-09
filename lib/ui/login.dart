@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
-import 'package:flutterdesigndemo/api/user_repository.dart';
+import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
   bool isVisible = false;
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
-  final userRepository = getIt.get<UserRepository>();
+  final loginRepository = getIt.get<ApiRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +111,9 @@ class _LoginState extends State<Login> {
                         text: strings_name.str_signin,
                         click: () async {
                           var phone = FormValidator.validatePhone(
-                              phoneController.text.toString());
+                              phoneController.text.toString().trim());
                           var password = FormValidator.validatePassword(
-                              passController.text.toString());
+                              passController.text.toString().trim());
                           if (phone.isNotEmpty) {
                             Utils.showSnackBar(context, phone);
                           } else if (password.isNotEmpty) {
@@ -122,27 +122,31 @@ class _LoginState extends State<Login> {
                             setState(() {
                               isVisible = true;
                             });
-                            var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
-                            var data = await userRepository.getUsersRequested(query);
-                            print("chechch=>${data}");
-                            if (data.isNotEmpty) {
+                           // var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
+                            var query = "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
+                            var data = await loginRepository.loginApi(query);
+                            if (data.records!.isNotEmpty) {
                               setState(() {
                                 isVisible = false;
                               });
-                              await PreferenceUtils.setIsLogin(true);
-                              Get.offAll(Home());
-                            } else if (data.length == 0) {
+                              if(data.records!.first.fields?.password == null){
+                                Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
+                              }else if(data.records!.first.fields?.password != passController.text.toString()){
+                                Utils.showSnackBar(context, strings_name.str_invalide_password);
+                              } else{
+                                await PreferenceUtils.setIsLogin(true);
+                                Get.offAll(Home());
+                              }
+                            } else if (data.records!.length == 0) {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(
-                                  context, strings_name.str_invalide_mobile_password);
+                              Utils.showSnackBar(context, strings_name.str_user_not_verified);
                             } else {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(
-                                  context, strings_name.str_something_wrong);
+                              Utils.showSnackBar(context, strings_name.str_something_wrong);
                             }
                           }
                         }),

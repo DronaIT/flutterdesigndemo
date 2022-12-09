@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
-import 'package:flutterdesigndemo/api/user_repository.dart';
+import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -24,7 +24,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final TextEditingController phoneController = TextEditingController();
   bool isVisible = false;
-  final userRepository = getIt.get<UserRepository>();
+  final registerRepository = getIt.get<ApiRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class _RegisterState extends State<Register> {
                         text: strings_name.str_verify,
                         click: () async {
                           var phone = FormValidator.validatePhone(
-                              phoneController.text.toString());
+                              phoneController.text.toString().trim());
                           if (phone.isNotEmpty) {
                             Utils.showSnackBar(context, phone);
                           } else {
@@ -92,19 +92,17 @@ class _RegisterState extends State<Register> {
                               isVisible = true;
                             });
                             var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
-                            var data = await userRepository.getUsersRegister(query);
-                            print("chechch=>${data}");
-                            if (data.isNotEmpty) {
+                            var data = await registerRepository.registerApi(query);
+                            if (data.records!.isNotEmpty) {
                               setState(() {
                                 isVisible = false;
                               });
-                              print("djdjdj ${data.first.fields?.password}");
-                              if(data.first.fields?.password == null){
+                              if(data.records!.first.fields?.password == null){
                                 Get.to(const OtpVerification(), arguments: phoneController.text);
                               }else{
                                 Utils.showSnackBar(context, strings_name.str_user_already_verified);
                               }
-                            } else if (data.length == 0) {
+                            } else if (data.records!.length == 0) {
                               setState(() {
                                 isVisible = false;
                               });
@@ -115,38 +113,7 @@ class _RegisterState extends State<Register> {
                               });
                               Utils.showSnackBar(context, strings_name.str_something_wrong);
                             }
-                            // var airtable = Airtable(
-                            //     apiKey: TableNames.APIKEY,
-                            //     projectBase: TableNames.PROJECTBASE);
-                            // var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
-                            // var records = await airtable.getRecordsFilterByFormula(TableNames.TB_STUDENT, query);
-                            // // print("object ==> ${records!.first.toJSON().entries.first.value}");
-                            // // print("object1 ==> ${records.first.fields[2].value}");
-                            // if (records != null && records.isNotEmpty) {
-                            //   setState(() {
-                            //     isVisible = false;
-                            //   });
-                            //   var pass= -1;
-                            //   for (var i = 0; i < records.first.fields.length; i++) {
-                            //     if(records.first.fields[i].fieldName == "password") {
-                            //       pass = i;
-                            //       break;
-                            //     }
-                            //   }
-                            //   if(records.first.fields.isNotEmpty && pass != -1){
-                            //     Get.to(const OtpVerification(),
-                            //       arguments: phoneController.text);
-                            //   }else{
-                            //     Utils.showSnackBar(
-                            //         context, strings_name.str_user_already_verified);
-                            //   }
-                            // } else {
-                            //   setState(() {
-                            //     isVisible = false;
-                            //   });
-                            //   Utils.showSnackBar(
-                            //       context, strings_name.str_something_wrong);
-                            // }
+
                           }
                         }),
                   ],

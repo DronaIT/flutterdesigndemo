@@ -1,12 +1,11 @@
 import 'package:dart_airtable/dart_airtable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
-import 'package:flutterdesigndemo/api/user_repository.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/models/login.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -30,9 +29,9 @@ class _CreatePasswordState extends State<CreatePassword> {
   TextEditingController confirmPassController = TextEditingController();
   //List<AirtableRecordField> records = [];
 
-  final userRepository = getIt.get<UserRepository>();
+  final userRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
-  List<Records> loginRecords = [];
+  //List<Records> loginRecords = [];
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +84,9 @@ class _CreatePasswordState extends State<CreatePassword> {
                         text: strings_name.str_proceed,
                         click: () async {
                           var passWord = FormValidator.validatePassword(
-                              passController.text.toString());
+                              passController.text.toString().trim());
                           var confirmPassword = FormValidator.validateCPassword(
-                              confirmPassController.text.toString());
+                              confirmPassController.text.toString().trim());
                           if (passWord.isNotEmpty) {
                             Utils.showSnackBar(context, passWord);
                           } else if (confirmPassword.isNotEmpty) {
@@ -101,13 +100,12 @@ class _CreatePasswordState extends State<CreatePassword> {
                               isVisible = true;
                             });
                             var query = "(${TableNames.TB_USERS_PHONE}='${Get.arguments.toString()}')";
-                            var data = await userRepository.getUsersRegister(query);
+                            var data = await userRepository.registerApi(query);
                             Map<String, String> password = {
                               "password": passController.text.toString(),
                             };
-                            var dataUpdate = await userRepository.getUsersCreatePassword(password , data.first.id!);
-                            print("reponse=>${dataUpdate}");
-                            if (dataUpdate.isNotEmpty) {
+                            var dataUpdate = await userRepository.createPasswordApi(password , data.records!.first.id!);
+                            if (dataUpdate != null) {
                               setState(() {
                                 isVisible = false;
                               });
@@ -117,8 +115,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(
-                                  context, strings_name.str_something_wrong);
+                              Utils.showSnackBar(context, strings_name.str_something_wrong);
                             }
                           }
                         }),

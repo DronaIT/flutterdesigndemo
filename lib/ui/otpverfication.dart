@@ -50,7 +50,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                   child: AppWidgets.spannableText(strings_name.str_otp,
                       "+91-${Get.arguments.toString()}", primaryTextSemiBold16),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 15.h),
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   child: PinCodeTextField(

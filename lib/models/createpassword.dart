@@ -1,38 +1,15 @@
-class loginresponse {
-  List<Records>? records;
-
-  loginresponse({this.records});
-
-  loginresponse.fromJson(Map<String, dynamic> json) {
-    if (json['records'] != null) {
-      records = <Records>[];
-      json['records'].forEach((v) {
-        records!.add(new Records.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.records != null) {
-      data['records'] = this.records!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Records {
+class CreatePasswordResponse {
   String? id;
   String? createdTime;
   Fields? fields;
 
-  Records({this.id, this.createdTime, this.fields});
+  CreatePasswordResponse({this.id, this.createdTime, this.fields});
 
-  Records.fromJson(Map<String, dynamic> json) {
+  CreatePasswordResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdTime = json['createdTime'];
     fields =
-    json['fields'] != null ? new Fields.fromJson(json['fields']) : null;
+        json['fields'] != null ? new Fields.fromJson(json['fields']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +26,6 @@ class Records {
 class Fields {
   String? city;
   String? joiningYear;
-  String? password;
   int? studentId;
   List<String>? hubIds;
   String? name;
@@ -62,28 +38,28 @@ class Fields {
   String? enrollmentNumber;
   List<String>? hubIdFromHubIds;
   List<String>? specializationIdFromSpecializationIds;
+  String? password;
 
   Fields(
       {this.city,
-        this.joiningYear,
-        this.password,
-        this.studentId,
-        this.hubIds,
-        this.name,
-        this.address,
-        this.mobileNumber,
-        this.specializationIds,
-        this.gender,
-        this.createdOn,
-        this.updatedOn,
-        this.enrollmentNumber,
-        this.hubIdFromHubIds,
-        this.specializationIdFromSpecializationIds});
+      this.joiningYear,
+      this.studentId,
+      this.hubIds,
+      this.name,
+      this.address,
+      this.mobileNumber,
+      this.specializationIds,
+      this.gender,
+      this.createdOn,
+      this.updatedOn,
+      this.enrollmentNumber,
+      this.hubIdFromHubIds,
+      this.specializationIdFromSpecializationIds,
+      this.password});
 
   Fields.fromJson(Map<String, dynamic> json) {
     city = json['city'];
     joiningYear = json['joining_year'];
-    password = json['password'];
     studentId = json['student_id'];
     hubIds = json['hub_ids'].cast<String>();
     name = json['name'];
@@ -97,13 +73,13 @@ class Fields {
     hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
     specializationIdFromSpecializationIds =
         json['specialization_id (from specialization_ids)'].cast<String>();
+    password = json['password'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['city'] = this.city;
     data['joining_year'] = this.joiningYear;
-    data['password'] = this.password;
     data['student_id'] = this.studentId;
     data['hub_ids'] = this.hubIds;
     data['name'] = this.name;
@@ -117,6 +93,7 @@ class Fields {
     data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
     data['specialization_id (from specialization_ids)'] =
         this.specializationIdFromSpecializationIds;
+    data['password'] = this.password;
     return data;
   }
 }

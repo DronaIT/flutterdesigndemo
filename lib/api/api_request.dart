@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
-import 'package:flutterdesigndemo/models/login.dart';
+import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/createpassword.dart';
+
+import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
+import 'package:flutterdesigndemo/ui/createpassword.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
-class UserApi {
+class ApiRequest {
   final DioClient dioClient;
 
-  UserApi({required this.dioClient});
+  ApiRequest({required this.dioClient});
 
-  Future<Response> getUsersApi(String loginFormula) async {
+  Future<BaseLoginResponse<LoginFieldsResponse>> loginRegisterApi(String loginFormula) async {
     try {
       Map<String, String> someMap = {
         "filterByFormula": loginFormula,
@@ -21,13 +25,13 @@ class UserApi {
       };
       final Response response = await dioClient.get(TableNames.TB_STUDENT,
           queryParameters: someMap, options: Options(headers: header));
-      return response;
+      return BaseLoginResponse<LoginFieldsResponse>.fromJson(response.data, (response) => LoginFieldsResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Response> updateUsersApi(Map<String, String> loginFormula , String recordId) async {
+  Future<CreatePasswordResponse>createPasswordApi(Map<String, String> loginFormula ,String recordId) async {
     try {
       Map<String, dynamic> someMap = {
         "fields": loginFormula,
@@ -36,8 +40,9 @@ class UserApi {
         "Content-Type": "application/json",
         "Authorization": "Bearer ${TableNames.APIKEY}"
       };
-      final Response response = await dioClient.patch(TableNames.TB_STUDENT+"/"+recordId, options: Options(headers: header) , data: jsonEncode(someMap));
-      return response;
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT+"/"+recordId, options: Options(headers: header) , data: jsonEncode(someMap));
+      return  CreatePasswordResponse.fromJson(response);
     } catch (e) {
       rethrow;
     }
