@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
 import 'package:flutterdesigndemo/ui/forgotpassword.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/register.dart';
@@ -135,7 +136,9 @@ class _LoginState extends State<Login> {
                                 Utils.showSnackBar(context, strings_name.str_invalide_password);
                               } else{
                                 await PreferenceUtils.setIsLogin(true);
+                                await PreferenceUtils.setLoginData(data.records!.first.fields!);
                                 Get.offAll(Home());
+
                               }
                             } else if (data.records!.length == 0) {
                               setState(() {

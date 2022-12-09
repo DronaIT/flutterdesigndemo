@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtils {
@@ -10,6 +12,7 @@ class PreferenceUtils {
   static const _keyAmount = 'amount';
   static const _keyisLogin = 'isLogin';
   static const _keyisOtpVerify = 'isOtpVerify';
+  static const _keyLoginData = 'isLoginData';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -41,5 +44,12 @@ class PreferenceUtils {
       await _preferences.setBool(_keyisOtpVerify, amount);
 
   static bool getisOtpVerify() => _preferences.getBool(_keyisOtpVerify) ?? false;
+
+
+  static Future setLoginData(LoginFieldsResponse user) async =>
+      await _preferences.setString(_keyLoginData, jsonEncode(user));
+
+  static String? getLoginData() => _preferences.getString(_keyLoginData);
+
 
 }

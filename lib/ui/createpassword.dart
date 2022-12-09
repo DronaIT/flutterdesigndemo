@@ -110,6 +110,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                 isVisible = false;
                               });
                               await PreferenceUtils.setIsLogin(true);
+                              await PreferenceUtils.setLoginData(data.records!.first.fields!);
                               Get.offAll(Home());
                             } else {
                               setState(() {

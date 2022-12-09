@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/utils/prefrence.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -8,7 +9,17 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+
 class _HomeState extends State<Home> {
+
+  @override
+  void initState() {
+    super.initState();
+
+   var  isLogin = PreferenceUtils.getLoginData();
+   print("cjejccj=>${isLogin}");
+
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
