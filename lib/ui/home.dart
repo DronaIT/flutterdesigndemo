@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/utils/prefrence.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/homeModuleResponse.dart';
 import 'package:flutterdesigndemo/ui/create_students.dart';
+import 'package:flutterdesigndemo/utils/prefrence.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
             crossAxisCount: 2,
             shrinkWrap: true,
             children: List.generate(
-              homeModule.records!.length,
+              homeModule.records != null ? homeModule.records!.length : 0,
               (index) {
                 return Padding(
                     padding: const EdgeInsets.all(5.0),
