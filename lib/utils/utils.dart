@@ -1,6 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/utils/prefrence.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 
@@ -10,8 +11,7 @@ extension E on String {
 
 class FormValidator {
   static bool validateEmail(String? email) {
-    String pattern =
-        r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$';
+    String pattern = r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$';
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(email!)) {
       return false;
@@ -30,7 +30,6 @@ class FormValidator {
     if (value.length < 6) return strings_name.str_confirm_password_length;
     return "";
   }
-
 
   static String validatePhone(String? value) {
     if (value!.isEmpty) return strings_name.str_empty_phone;
@@ -55,9 +54,7 @@ class Utils {
       } else if ((difference.inDays / 30).floor() >= 2) {
         return 'Completed ${(difference.inDays / 365).floor()} months ago';
       } else if ((difference.inDays / 30).floor() >= 1) {
-        return (numericDates)
-            ? 'Completed 1 month ago'
-            : 'Completed Last month';
+        return (numericDates) ? 'Completed 1 month ago' : 'Completed Last month';
       } else if ((difference.inDays / 7).floor() >= 2) {
         return 'Completed ${(difference.inDays / 7).floor()} weeks ago';
       } else if ((difference.inDays / 7).floor() >= 1) {
@@ -69,15 +66,11 @@ class Utils {
       } else if (difference.inHours >= 2) {
         return 'Completed ${difference.inHours} hours ago';
       } else if (difference.inHours >= 1) {
-        return (numericDates)
-            ? 'Completed 1 hour ago'
-            : 'Completed An hour ago';
+        return (numericDates) ? 'Completed 1 hour ago' : 'Completed An hour ago';
       } else if (difference.inMinutes >= 2) {
         return 'Completed ${difference.inMinutes} minutes ago';
       } else if (difference.inMinutes >= 1) {
-        return (numericDates)
-            ? 'Completed 1 minute ago'
-            : 'Completed A minute ago';
+        return (numericDates) ? 'Completed 1 minute ago' : 'Completed A minute ago';
       } else if (difference.inSeconds >= 3) {
         return 'Completed ${difference.inSeconds} seconds ago';
       } else {
@@ -125,10 +118,29 @@ class Utils {
       animationDuration: const Duration(seconds: 1),
       backgroundColor: colors_name.colorPrimary,
       message: message,
-      messageText:
-          Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+      messageText: Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
       duration: const Duration(seconds: 2),
     ).show(context);
+  }
+
+  static String? getHubId(String? hubId) {
+    final hubList = PreferenceUtils.getHubList();
+    for (int i = 0; i < hubList.records!.length; i++) {
+      if (hubList.records![i].fields!.hubId == hubId) {
+        return hubList.records![i].id;
+      }
+    }
+    return hubId;
+  }
+
+  static String? getSpecializationId(String? specializationId) {
+    final specializationList = PreferenceUtils.getSpecializationList();
+    for (int i = 0; i < specializationList.records!.length; i++) {
+      if (specializationList.records![i].fields!.specializationId == specializationId) {
+        return specializationList.records![i].id;
+      }
+    }
+    return specializationId;
   }
 }
 
