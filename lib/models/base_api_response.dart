@@ -1,12 +1,13 @@
 class BaseLoginResponse<T> {
   List<BaseApiResponseWithSerializable<T>>? records;
+
   BaseLoginResponse({this.records});
 
-  BaseLoginResponse.fromJson(Map<String, dynamic> json ,Function(Map<String, dynamic>) create) {
+  BaseLoginResponse.fromJson(Map<String, dynamic> json, Function(Map<String, dynamic>) create) {
     if (json['records'] != null) {
       records = <BaseApiResponseWithSerializable<T>>[];
       json['records'].forEach((v) {
-        records!.add(new BaseApiResponseWithSerializable<T>.fromJson(v ,create));
+        records!.add(new BaseApiResponseWithSerializable<T>.fromJson(v, create));
       });
     }
   }
@@ -27,13 +28,11 @@ class BaseApiResponseWithSerializable<T> {
 
   BaseApiResponseWithSerializable({this.id, this.createdTime, this.fields});
 
-  factory BaseApiResponseWithSerializable.fromJson(Map<String, dynamic> json ,Function(Map<String, dynamic>) create) {
-    return BaseApiResponseWithSerializable(
-      id: json['id'],createdTime: json['createdTime'],fields: create(json["fields"])
-    );
+  factory BaseApiResponseWithSerializable.fromJson(Map<String, dynamic> json, Function(Map<String, dynamic>) create) {
+    return BaseApiResponseWithSerializable(id: json['id'], createdTime: json['createdTime'], fields: create(json["fields"]));
   }
-  Map<String, dynamic> toJson() =>
-      {
+
+  Map<String, dynamic> toJson() => {
         "id": id,
         "createdTime": createdTime,
         "fields": this.fields,
@@ -43,4 +42,3 @@ class BaseApiResponseWithSerializable<T> {
 abstract class Serializable {
   Map<String, dynamic> toJson();
 }
-

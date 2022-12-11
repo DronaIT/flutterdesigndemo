@@ -34,6 +34,11 @@ const blackTextSemiBold16 = TextStyle(
   fontWeight: FontWeight.w600,
   color: Colors.black,
 );
+const blackTextSemiBold14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
 
 const primaryTextSemiBold16 = TextStyle(
   fontSize: 16,
@@ -41,24 +46,15 @@ const primaryTextSemiBold16 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
-
 const errorTextStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,
   color: colors_name.errorColor,
 );
 
-const greyDarkTextStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: colors_name.textColorGreyDark,
-    height: 1.45);
+const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
 
-const primaryColorSubtitleStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: colors_name.colorPrimary,
-    height: 1.45);
+const primaryColorSubtitleStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorPrimary, height: 1.45);
 
 const whiteText16 = TextStyle(
   fontSize: 16,
@@ -77,7 +73,6 @@ const whiteText32 = TextStyle(
   fontWeight: FontWeight.w400,
   color: Colors.white,
 );
-
 
 const cyanText16 = TextStyle(
   fontSize: 16,
@@ -113,8 +108,7 @@ final labelStyleAppPrimaryColor = labelStyle.copyWith(
   height: 1,
 );
 
-final labelStyleGrey =
-    labelStyle.copyWith(color: const Color(0xFF323232).withOpacity(0.5));
+final labelStyleGrey = labelStyle.copyWith(color: const Color(0xFF323232).withOpacity(0.5));
 
 final labelCyanStyle = labelStyle.copyWith(color: colors_name.textColorCyan);
 
@@ -125,17 +119,9 @@ const labelStyleWhite = TextStyle(
   color: Colors.white,
 );
 
-const appBarSubtitleStyle = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    height: 1.25,
-    color: colors_name.colorWhite);
+const appBarSubtitleStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, height: 1.25, color: colors_name.colorWhite);
 
-const cardTitleStyle = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w500,
-    height: 1.2,
-    color: colors_name.textColorPrimary);
+const cardTitleStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w500, height: 1.2, color: colors_name.textColorPrimary);
 
 const cardTitleCyanStyle = TextStyle(
   fontSize: 20,
@@ -143,11 +129,7 @@ const cardTitleCyanStyle = TextStyle(
   color: colors_name.colorPrimary,
 );
 
-const cardSubtitleStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    height: 1.2,
-    color: colors_name.textColorGreyLight);
+const cardSubtitleStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, height: 1.2, color: colors_name.textColorGreyLight);
 
 const titleStyle = TextStyle(
   fontSize: 18,
@@ -162,8 +144,7 @@ const settingsItemStyle = TextStyle(
 
 final cardTagStyle = titleStyle.copyWith(color: colors_name.textColorGreyDark);
 
-const titleStyleWhite = TextStyle(
-    fontSize: 18, fontWeight: FontWeight.w500, color: colors_name.colorWhite);
+const titleStyleWhite = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: colors_name.colorWhite);
 
 const inputFieldLabelStyle = TextStyle(
   fontSize: 18,
@@ -172,20 +153,11 @@ const inputFieldLabelStyle = TextStyle(
   color: colors_name.textColorPrimary,
 );
 
-const cardSmallTagStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    height: 1.2,
-    color: colors_name.textColorGreyDark);
+const cardSmallTagStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, height: 1.2, color: colors_name.textColorGreyDark);
 
-const pageTitleStyle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    height: 1.15,
-    color: colors_name.appBarTextColor);
+const pageTitleStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 1.15, color: colors_name.appBarTextColor);
 
-final pageTitleBlackStyle =
-    pageTitleStyle.copyWith(color: colors_name.textColorPrimary);
+final pageTitleBlackStyle = pageTitleStyle.copyWith(color: colors_name.textColorPrimary);
 
 const appBarActionTextStyle = TextStyle(
   fontSize: 16,
@@ -193,11 +165,7 @@ const appBarActionTextStyle = TextStyle(
   color: colors_name.colorPrimary,
 );
 
-const pageTitleWhiteStyle = TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.w600,
-    height: 1.15,
-    color: colors_name.colorWhite);
+const pageTitleWhiteStyle = TextStyle(fontSize: 28, fontWeight: FontWeight.w600, height: 1.15, color: colors_name.colorWhite);
 
 const extraBigTitleStyle = TextStyle(
   fontSize: 40,
@@ -205,8 +173,7 @@ const extraBigTitleStyle = TextStyle(
   height: 1.12,
 );
 
-final extraBigTitleCyanStyle =
-    extraBigTitleStyle.copyWith(color: colors_name.textColorCyan);
+final extraBigTitleCyanStyle = extraBigTitleStyle.copyWith(color: colors_name.textColorCyan);
 
 const bigTitleStyle = TextStyle(
   fontSize: 28,
@@ -224,8 +191,7 @@ const descriptionTextStyle = TextStyle(
   fontSize: 16,
 );
 
-final bigTitleCyanStyle =
-    bigTitleStyle.copyWith(color: colors_name.textColorCyan);
+final bigTitleCyanStyle = bigTitleStyle.copyWith(color: colors_name.textColorCyan);
 
 const bigTitleWhiteStyle = TextStyle(
   fontSize: 28,
@@ -239,14 +205,10 @@ const boldTitleStyle = TextStyle(
   fontWeight: FontWeight.w700,
   height: 1.34,
 );
-final boldTitleWhiteStyle =
-    boldTitleStyle.copyWith(color: colors_name.textColorWhite);
+final boldTitleWhiteStyle = boldTitleStyle.copyWith(color: colors_name.textColorWhite);
 
-final boldTitleCyanStyle =
-    boldTitleStyle.copyWith(color: colors_name.textColorCyan);
+final boldTitleCyanStyle = boldTitleStyle.copyWith(color: colors_name.textColorCyan);
 
-final boldTitleSecondaryColorStyle =
-    boldTitleStyle.copyWith(color: colors_name.textColorSecondary);
+final boldTitleSecondaryColorStyle = boldTitleStyle.copyWith(color: colors_name.textColorSecondary);
 
-final boldTitlePrimaryColorStyle =
-    boldTitleStyle.copyWith(color: colors_name.colorPrimary);
+final boldTitlePrimaryColorStyle = boldTitleStyle.copyWith(color: colors_name.colorPrimary);

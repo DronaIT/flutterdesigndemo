@@ -42,4 +42,6 @@ class strings_name {
   static const String noNetworkError = "No network available!";
   static const String poorNetworkError = "Poor network connection, please try again!";
   static const String sessionExpired = "Session Expired";
+
+  static const String str_add_students = "Add Students";
 }

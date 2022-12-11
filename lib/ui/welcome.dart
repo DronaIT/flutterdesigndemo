@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/models/HubResponse.dart';
+import 'package:flutterdesigndemo/models/RoleResponse.dart';
+import 'package:flutterdesigndemo/models/SpecializationResponse.dart';
+import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/utils/prefrence.dart';
@@ -14,7 +19,6 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
@@ -38,19 +42,43 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   var isLogin = 0;
+
+  final apiRepository = getIt.get<ApiRepository>();
+  BaseLoginResponse<RoleResponse> roleResponse = BaseLoginResponse();
+  BaseLoginResponse<HubResponse> hubResponse = BaseLoginResponse();
+  BaseLoginResponse<SpecializationResponse> specializationResponse = BaseLoginResponse();
+
   @override
   void initState() {
     super.initState();
     initialization();
     isLogin = PreferenceUtils.getIsLogin();
-
   }
 
   void initialization() async {
     await Future.delayed(const Duration(seconds: 3));
+    getRecords();
     FlutterNativeSplash.remove();
-    if (isLogin == 1 || isLogin  == 2 ) {
+    if (isLogin == 1 || isLogin == 2) {
       Get.offAll(const Home());
+    }
+  }
+
+  Future<void> getRecords() async {
+    roleResponse = await apiRepository.getRolesApi();
+    if (roleResponse.records!.isNotEmpty) {
+      PreferenceUtils.setRoleList(roleResponse);
+      print("Role ${PreferenceUtils.getRoleList().records!.length}");
+    }
+    hubResponse = await apiRepository.getHubApi();
+    if (hubResponse.records!.isNotEmpty) {
+      PreferenceUtils.setHubList(hubResponse);
+      print("Hub ${PreferenceUtils.getHubList().records!.length}");
+    }
+    specializationResponse = await apiRepository.getSpecializationApi();
+    if (specializationResponse.records!.isNotEmpty) {
+      PreferenceUtils.setSpecializationList(specializationResponse);
+      print("Specialization ${PreferenceUtils.getSpecializationList().records!.length}");
     }
   }
 
@@ -65,27 +93,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               children: [
                 SizedBox(height: 60.h),
-                Container(
-                    alignment: Alignment.topLeft,
-                    child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h)),
+                Container(alignment: Alignment.topLeft, child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h)),
                 custom_text(
                   text: strings_name.str_welcome,
                   alignment: Alignment.topLeft,
                   textStyles: centerTextStyle30,
                 ),
-                // custom_text(
-                //   text: strings_name.str_welcome_detail,
-                //   size: 16.sp,
-                //   fontWeight: FontWeight.w600,
-                //   alignment: Alignment.topLeft,
-                //   textStyles: blackText16,
-                // ),
                 SizedBox(height: 5.h),
                 Container(
                   alignment: Alignment.topLeft,
                   margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: AppWidgets.spannableText(strings_name.str_welcome_detail,
-                      strings_name.str_drona, primaryTextSemiBold16),
+                  child: AppWidgets.spannableText(strings_name.str_welcome_detail, strings_name.str_drona, primaryTextSemiBold16),
                 ),
                 SizedBox(height: 40.h),
                 Lottie.asset(AppImage.ic_welcome),
