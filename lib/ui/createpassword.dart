@@ -1,4 +1,3 @@
-import 'package:dart_airtable/dart_airtable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -27,10 +26,12 @@ class CreatePassword extends StatefulWidget {
 class _CreatePasswordState extends State<CreatePassword> {
   TextEditingController passController = TextEditingController();
   TextEditingController confirmPassController = TextEditingController();
+
   //List<AirtableRecordField> records = [];
 
   final userRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
+
   //List<Records> loginRecords = [];
 
   @override
@@ -47,8 +48,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                     SizedBox(height: 60.h),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: AppImage.load(AppImage.ic_launcher,
-                          width: 80.w, height: 80.h),
+                      child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
                     ),
                     custom_text(
                       text: strings_name.str_setup_password,
@@ -61,62 +61,73 @@ class _CreatePasswordState extends State<CreatePassword> {
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    custom_edittext(
-                        type: TextInputType.visiblePassword,
-                        textInputAction: TextInputAction.next,
-                        controller: passController,
-                        obscure: true,
-                        isPassword: true),
+                    custom_edittext(type: TextInputType.visiblePassword, textInputAction: TextInputAction.next, controller: passController, obscure: true, isPassword: true),
                     SizedBox(height: 8.h),
                     custom_text(
                       text: strings_name.str_confirm_password,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    custom_edittext(
-                        type: TextInputType.visiblePassword,
-                        textInputAction: TextInputAction.next,
-                        controller: confirmPassController,
-                        obscure: true,
-                        isPassword: true),
+                    custom_edittext(type: TextInputType.visiblePassword, textInputAction: TextInputAction.next, controller: confirmPassController, obscure: true, isPassword: true),
                     SizedBox(height: 40.h),
                     CustomButton(
                         text: strings_name.str_proceed,
                         click: () async {
-                          var passWord = FormValidator.validatePassword(
-                              passController.text.toString().trim());
-                          var confirmPassword = FormValidator.validateCPassword(
-                              confirmPassController.text.toString().trim());
+                          var passWord = FormValidator.validatePassword(passController.text.toString().trim());
+                          var confirmPassword = FormValidator.validateCPassword(confirmPassController.text.toString().trim());
                           if (passWord.isNotEmpty) {
                             Utils.showSnackBar(context, passWord);
                           } else if (confirmPassword.isNotEmpty) {
                             Utils.showSnackBar(context, confirmPassword);
-                          } else if (passController.text.toString() !=
-                              confirmPassController.text.toString()) {
-                            Utils.showSnackBar(
-                                context, strings_name.str_enter_pass_same);
+                          } else if (passController.text.toString() != confirmPassController.text.toString()) {
+                            Utils.showSnackBar(context, strings_name.str_enter_pass_same);
                           } else {
                             setState(() {
                               isVisible = true;
                             });
-                            var query = "(${TableNames.TB_USERS_PHONE}='${Get.arguments.toString()}')";
-                            var data = await userRepository.registerApi(query);
-                            Map<String, String> password = {
-                              "password": passController.text.toString(),
-                            };
-                            var dataUpdate = await userRepository.createPasswordApi(password , data.records!.first.id!);
-                            if (dataUpdate != null) {
-                              setState(() {
-                                isVisible = false;
-                              });
-                              await PreferenceUtils.setIsLogin(true);
-                              await PreferenceUtils.setLoginData(data.records!.first.fields!);
-                              Get.offAll(Home());
+                            var query = "(${TableNames.TB_USERS_PHONE}='${Get.arguments[0]["phone"].toString()}')";
+                            if (!Get.arguments[1]["isFromEmployee"]) {
+                              var data = await userRepository.registerApi(query);
+                              Map<String, String> password = {
+                                "password": passController.text.toString(),
+                              };
+                              if (data.records!.isNotEmpty) {
+                                var dataUpdate = await userRepository.createPasswordApi(password, data.records!.first.id!);
+                                if (dataUpdate != null) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  await PreferenceUtils.setIsLogin(1);
+                                  await PreferenceUtils.setLoginData(dataUpdate.fields!);
+                                  Get.offAll(Home());
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                }
+                              }
                             } else {
-                              setState(() {
-                                isVisible = false;
-                              });
-                              Utils.showSnackBar(context, strings_name.str_something_wrong);
+                              var dataPass = await userRepository.registerEmployeeApi(query);
+                              if (dataPass.records!.isNotEmpty) {
+                                Map<String, String> password = {
+                                  "password": passController.text.toString(),
+                                };
+                                var dataPassword = await userRepository.createPasswordEmpApi(password, dataPass.records!.first.id!);
+                                if (dataPassword != null) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  await PreferenceUtils.setIsLogin(2);
+                                  await PreferenceUtils.setLoginDataEmployee(dataPassword.fields!);
+                                  Get.offAll(Home());
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                }
+                              }
                             }
                           }
                         }),
@@ -126,11 +137,7 @@ class _CreatePasswordState extends State<CreatePassword> {
             ),
           ),
           Center(
-            child: Visibility(
-                child: const CircularProgressIndicator(
-                    strokeWidth: 5.0,
-                    backgroundColor: colors_name.colorPrimary),
-                visible: isVisible),
+            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary), visible: isVisible),
           )
         ],
       ),

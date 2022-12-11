@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
+import 'package:flutterdesigndemo/models/LoginEmployeResponse.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/createpassword.dart';
+import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 
 import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
 import 'package:flutterdesigndemo/ui/createpassword.dart';
@@ -32,6 +34,25 @@ class ApiRequest {
   }
 
 
+
+  Future<BaseLoginResponse<LoginEmployeResponse>> loginRegisterEmployeeApi(String loginFormula) async {
+    try {
+      Map<String, String> someMap = {
+        "filterByFormula": loginFormula,
+      };
+      Map<String, String> header = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${TableNames.APIKEY}"
+      };
+      final Response response = await dioClient.get(TableNames.TBL_EMPLOYEE,
+          queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<LoginEmployeResponse>.fromJson(response.data, (response) => LoginEmployeResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
   Future<CreatePasswordResponse>createPasswordApi(Map<String, String> loginFormula ,String recordId) async {
     try {
       Map<String, dynamic> someMap = {
@@ -48,5 +69,24 @@ class ApiRequest {
       rethrow;
     }
   }
+
+
+  Future<CreatePasswordEmployeeResponse> createPasswordEmployeeApi(Map<String, String> loginFormula ,String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {
+        "fields": loginFormula,
+      };
+      Map<String, String> header = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${TableNames.APIKEY}"
+      };
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_EMPLOYEE+"/"+recordId, options: Options(headers: header) , data: jsonEncode(someMap));
+      return  CreatePasswordEmployeeResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
 }

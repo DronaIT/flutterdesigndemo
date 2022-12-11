@@ -37,7 +37,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  var isLogin = false;
+  var isLogin = 0;
   @override
   void initState() {
     super.initState();
@@ -49,7 +49,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initialization() async {
     await Future.delayed(const Duration(seconds: 3));
     FlutterNativeSplash.remove();
-    if (isLogin) {
+    if (isLogin == 1 || isLogin  == 2 ) {
       Get.offAll(const Home());
     }
   }

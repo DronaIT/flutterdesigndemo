@@ -135,16 +135,39 @@ class _LoginState extends State<Login> {
                               }else if(data.records!.first.fields?.password != passController.text.toString()){
                                 Utils.showSnackBar(context, strings_name.str_invalide_password);
                               } else{
-                                await PreferenceUtils.setIsLogin(true);
+                                await PreferenceUtils.setIsLogin(1);
                                 await PreferenceUtils.setLoginData(data.records!.first.fields!);
                                 Get.offAll(Home());
 
                               }
                             } else if (data.records!.length == 0) {
-                              setState(() {
-                                isVisible = false;
-                              });
-                              Utils.showSnackBar(context, strings_name.str_user_not_verified);
+                              var dataEmployee = await loginRepository.loginEmployeeApi(query);
+
+                              if (dataEmployee.records!.isNotEmpty) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                if(dataEmployee.records!.first.fields?.password == null){
+                                  Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
+                                }else if(dataEmployee.records!.first.fields?.password != passController.text.toString()){
+                                  Utils.showSnackBar(context, strings_name.str_invalide_password);
+                                } else{
+                                  await PreferenceUtils.setIsLogin(2);
+                                  await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+                                  Get.offAll(Home());
+
+                                }
+                              }else if(dataEmployee.records!.length == 0){
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                Utils.showSnackBar(context, strings_name.str_user_not_found);
+                              }else{
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                Utils.showSnackBar(context, strings_name.str_something_wrong);
+                              }
                             } else {
                               setState(() {
                                 isVisible = false;

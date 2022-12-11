@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:flutterdesigndemo/models/LoginEmployeResponse.dart';
 import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +10,7 @@ class PreferenceUtils {
 
   static const _keyUsername = 'username';
   static const _keyEmail = 'email';
-  static const _keyAmount = 'amount';
+
   static const _keyisLogin = 'isLogin';
   static const _keyisOtpVerify = 'isOtpVerify';
   static const _keyLoginData = 'isLoginData';
@@ -27,17 +28,18 @@ class PreferenceUtils {
 
   static String getEmail() => _preferences.getString(_keyEmail) ?? " ";
 
-  static Future setAmount(int amount) async =>
-      await _preferences.setInt(_keyAmount, amount);
-
-  static int getAmount() => _preferences.getInt(_keyAmount) ?? 0;
 
 
 
-  static Future setIsLogin(bool amount) async =>
-      await _preferences.setBool(_keyisLogin, amount);
+  //0 = not login
+  //1 = student
+  //2 = employee
 
-  static bool getIsLogin() => _preferences.getBool(_keyisLogin) ?? false;
+  static Future setIsLogin(int amount) async =>
+      await _preferences.setInt(_keyisLogin, amount);
+
+  static int getIsLogin() => _preferences.getInt(_keyisLogin) ?? 0;
+
 
 
   static Future setisOtpVerify(bool amount) async =>
@@ -51,5 +53,10 @@ class PreferenceUtils {
 
   static String? getLoginData() => _preferences.getString(_keyLoginData);
 
+
+  static Future setLoginDataEmployee(LoginEmployeResponse user) async =>
+      await _preferences.setString(_keyLoginData, jsonEncode(user));
+
+  static String? getLoginDataEmployee() => _preferences.getString(_keyLoginData);
 
 }

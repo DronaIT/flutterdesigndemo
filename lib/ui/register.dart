@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
+import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -40,8 +40,7 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 60.h),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: AppImage.load(AppImage.ic_launcher,
-                          width: 80.w, height: 80.h),
+                      child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
                     ),
                     custom_text(
                       text: strings_name.str_lest_setup,
@@ -83,8 +82,7 @@ class _RegisterState extends State<Register> {
                     CustomButton(
                         text: strings_name.str_verify,
                         click: () async {
-                          var phone = FormValidator.validatePhone(
-                              phoneController.text.toString().trim());
+                          var phone = FormValidator.validatePhone(phoneController.text.toString().trim());
                           if (phone.isNotEmpty) {
                             Utils.showSnackBar(context, phone);
                           } else {
@@ -97,23 +95,41 @@ class _RegisterState extends State<Register> {
                               setState(() {
                                 isVisible = false;
                               });
-                              if(data.records!.first.fields?.password == null){
-                                Get.to(const OtpVerification(), arguments: phoneController.text);
-                              }else{
+                              if (data.records!.first.fields?.password == null) {
+                                Get.to(const OtpVerification(), arguments:[{"phone": phoneController.text},
+                                  {"isFromEmployee": false}]);
+                              } else {
                                 Utils.showSnackBar(context, strings_name.str_user_already_verified);
                               }
                             } else if (data.records!.length == 0) {
-                              setState(() {
-                                isVisible = false;
-                              });
-                              Utils.showSnackBar(context, strings_name.str_user_not_found);
+                              var dataEmployee = await registerRepository.registerEmployeeApi(query);
+                              if (dataEmployee.records!.isNotEmpty) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                if (dataEmployee.records!.first.fields?.password == null) {
+                                  Get.to(const OtpVerification(), arguments: [{"phone": phoneController.text},
+                                    {"isFromEmployee": true}]);
+                                } else {
+                                  Utils.showSnackBar(context, strings_name.str_user_already_verified);
+                                }
+                              } else if (dataEmployee.records!.length == 0) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                Utils.showSnackBar(context, strings_name.str_user_not_found);
+                              } else {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                Utils.showSnackBar(context, strings_name.str_something_wrong);
+                              }
                             } else {
                               setState(() {
                                 isVisible = false;
                               });
                               Utils.showSnackBar(context, strings_name.str_something_wrong);
                             }
-
                           }
                         }),
                   ],
@@ -122,11 +138,7 @@ class _RegisterState extends State<Register> {
             ),
           ),
           Center(
-            child: Visibility(
-                child: const CircularProgressIndicator(
-                    strokeWidth: 5.0,
-                    backgroundColor: colors_name.colorPrimary),
-                visible: isVisible),
+            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary), visible: isVisible),
           )
         ],
       ),

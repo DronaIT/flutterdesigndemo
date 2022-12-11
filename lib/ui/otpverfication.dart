@@ -48,7 +48,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                   alignment: Alignment.topLeft,
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   child: AppWidgets.spannableText(strings_name.str_otp,
-                      "+91-${Get.arguments.toString()}", primaryTextSemiBold16),
+                      "+91-${Get.arguments[0]["phone"].toString()}", primaryTextSemiBold16),
                 ),
                 SizedBox(height: 15.h),
                 Container(
@@ -97,7 +97,8 @@ class _OtpVerificationState extends State<OtpVerification> {
                         Utils.showSnackBar(
                             context, strings_name.str_enter_otp);
                       }else{
-                        Get.to(const CreatePassword() ,arguments: Get.arguments.toString());
+                        Get.to(const CreatePassword() , arguments:[{"phone": Get.arguments[0]["phone"]},
+                            {"isFromEmployee": Get.arguments[1]["isFromEmployee"]}]);
                       }
                     }),
               ],

@@ -16,8 +16,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-   var  isLogin = PreferenceUtils.getLoginData();
-   print("cjejccj=>${isLogin}");
+   //var  isLogin = PreferenceUtils.getLoginData();
+
 
   }
   @override
