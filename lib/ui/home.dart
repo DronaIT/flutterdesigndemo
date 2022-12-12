@@ -24,8 +24,8 @@ class _HomeState extends State<Home> {
   final homeRepository = getIt.get<ApiRepository>();
   BaseLoginResponse<homeModuleResponse> homeModule = BaseLoginResponse();
 
-  Future<void> getRecords() async {
-    var query = "SEARCH('DR01',${TableNames.CLM_ROLE_ID},0)";
+  Future<void> getRecords(String roleId) async {
+    var query = "SEARCH('${roleId}',${TableNames.CLM_ROLE_ID},0)";
     setState(() {
       isVisible = true;
     });
@@ -44,9 +44,13 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    var loginData = PreferenceUtils.getLoginData();
-    print("cjejccj=>${loginData}");
-    getRecords();
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      getRecords("DR09");
+    } else if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      getRecords(loginData.roleIdFromRoleIds![0]);
+    }
   }
 
   @override

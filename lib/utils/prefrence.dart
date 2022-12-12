@@ -46,7 +46,7 @@ class PreferenceUtils {
 
   static Future setLoginData(LoginFieldsResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
 
-  static String? getLoginData() => _preferences.getString(_keyLoginData);
+  static LoginFieldsResponse getLoginData() => LoginFieldsResponse.fromJson(jsonDecode(_preferences.getString(_keyLoginData)!));
 
   static Future setRoleList(BaseLoginResponse<RoleResponse> roleResponse) async => await _preferences.setString(_keyRoleList, jsonEncode(roleResponse));
 
@@ -62,7 +62,7 @@ class PreferenceUtils {
 
   static Future setLoginDataEmployee(LoginEmployeResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
 
-  static String? getLoginDataEmployee() => _preferences.getString(_keyLoginData);
+  static LoginEmployeResponse getLoginDataEmployee() => LoginEmployeResponse.fromJson(jsonDecode(_preferences.getString(_keyLoginData)!));
 
   static Future setSpecializationList(BaseLoginResponse<SpecializationResponse> specializationResponse) async => await _preferences.setString(_keySpecializationList, jsonEncode(specializationResponse));
 
