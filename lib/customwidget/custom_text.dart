@@ -10,6 +10,8 @@ class custom_text extends StatefulWidget {
   final FontWeight fontWeight;
   final Alignment alignment;
   final TextStyle textStyles;
+  final double leftValue;
+  final double rightValue;
 
   custom_text(
       {required this.text,
@@ -18,7 +20,9 @@ class custom_text extends StatefulWidget {
       this.fontWeight = FontWeight.bold,
       this.alignment = Alignment.topLeft,
       this.textStyles = centerTextStyle,
-      this.topValue = 10.0});
+      this.topValue = 10.0,
+        this.leftValue = 10.0,
+        this.rightValue = 10.0});
 
   @override
   State<custom_text> createState() => _custom_textState();
@@ -28,7 +32,7 @@ class _custom_textState extends State<custom_text> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: widget.topValue, left: 10, right: 10),
+      margin: EdgeInsets.only(top: widget.topValue, left: widget.leftValue, right:widget.rightValue),
       alignment: widget.alignment,
       child: Text(
         widget.text,

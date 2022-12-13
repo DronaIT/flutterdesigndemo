@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/homeModuleResponse.dart';
+import 'package:flutterdesigndemo/ui/addemployee.dart';
 import 'package:flutterdesigndemo/ui/create_students.dart';
 import 'package:flutterdesigndemo/utils/prefrence.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -98,7 +99,7 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                               onTap: () {
-                                Get.to(CreateStudent());
+                                Get.to(AddEmployee());
                               },
                             ),
                           ),

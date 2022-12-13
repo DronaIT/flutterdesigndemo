@@ -41,7 +41,14 @@ class strings_name {
   static const String genericError = "Something went wrong, please try again!";
   static const String noNetworkError = "No network available!";
   static const String poorNetworkError = "Poor network connection, please try again!";
-  static const String sessionExpired = "Session Expired";
+  static const String sessionExpired = "Session expired";
 
-  static const String str_add_students = "Add Students";
+  static const String str_add_students = "Add students";
+  static const String str_add_employee = "Add employee";
+  static const String str_employee_name = "Employee name";
+  static const String str_city = "City";
+  static const String str_select_gender = "Select gender";
+
+  static const String str_select_role = "Select role";
+  static const String str_select_hub = "Select hub";
 }
