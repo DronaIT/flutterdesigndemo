@@ -195,7 +195,7 @@ class _LoginState extends State<Login> {
             child: Visibility(
                 child: const CircularProgressIndicator(
                     strokeWidth: 5.0,
-                    backgroundColor: colors_name.colorPrimary),
+                    color: colors_name.colorPrimary),
                 visible: isVisible),
           )
         ],

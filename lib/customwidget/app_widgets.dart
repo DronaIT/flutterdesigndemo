@@ -63,7 +63,7 @@ class AppWidgets {
                   height: 20,
                   width: 20,
                   child: const CircularProgressIndicator(
-                      backgroundColor: Colors.white))
+                      color: Colors.white))
                   : Text(
                 text,
                 maxLines: 1,
@@ -263,16 +263,14 @@ class AppWidgets {
 
   static AppBar appBarWithoutBack(String title) {
     return AppBar(
-      leading: const Center(),
-      titleSpacing: 0,
-      centerTitle: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0.0,
-      title: Transform(
-        transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
-        child: AppWidgets.textMedium(title,
-            color: colors_name.colorWhite, size: 24),
+      centerTitle: true,
+      backgroundColor: colors_name.colorPrimary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(14),
+        ),
       ),
+      title: Text(title),
     );
   }
 

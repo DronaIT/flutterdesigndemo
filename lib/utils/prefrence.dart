@@ -69,4 +69,8 @@ class PreferenceUtils {
   static BaseLoginResponse<SpecializationResponse> getSpecializationList() {
     return BaseLoginResponse<SpecializationResponse>.fromJson(jsonDecode(_preferences.getString(_keySpecializationList)!), (response) => SpecializationResponse.fromJson(response));
   }
+
+  static  clearPrefrence(){
+    _preferences.clear();
+  }
 }

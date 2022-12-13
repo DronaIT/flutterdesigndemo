@@ -138,7 +138,7 @@ class _RegisterState extends State<Register> {
             ),
           ),
           Center(
-            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary), visible: isVisible),
+            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
           )
         ],
       ),

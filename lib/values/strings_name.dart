@@ -51,4 +51,14 @@ class strings_name {
 
   static const String str_select_role = "Select role";
   static const String str_select_hub = "Select hub";
+
+  static const String str_sure_want_logout = "Are you sure want to logout ?";
+
+  static const String str_yes = "Yes";
+  static const String str_cancle = "Cancel";
+
+  static const String str_settings = "Settings";
+  static const String str_logout = "Logout";
+  static const String str_home = "Home";
+
 }
