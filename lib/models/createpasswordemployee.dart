@@ -1,5 +1,4 @@
-import 'package:flutterdesigndemo/models/LoginEmployeResponse.dart';
-
+import 'package:flutterdesigndemo/models/login_employee_response.dart';
 
 class CreatePasswordEmployeeResponse {
   String? id;
@@ -11,8 +10,7 @@ class CreatePasswordEmployeeResponse {
   CreatePasswordEmployeeResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdTime = json['createdTime'];
-    fields =
-        json['fields'] != null ? new LoginEmployeResponse.fromJson(json['fields']) : null;
+    fields = json['fields'] != null ? new LoginEmployeResponse.fromJson(json['fields']) : null;
   }
 
   Map<String, dynamic> toJson() {

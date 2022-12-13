@@ -4,11 +4,11 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/homeModuleResponse.dart';
+import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
-import 'package:flutterdesigndemo/utils/prefrence.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -144,7 +144,7 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                               onTap: () {
-                                Get.to(const AddEmployee());
+                                if (homeModule.records![index].fields?.moduleId == "DM01") Get.to(AddEmployee());
                               },
                             ),
                           ),

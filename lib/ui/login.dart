@@ -6,11 +6,11 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/forgotpassword.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/register.dart';
-import 'package:flutterdesigndemo/utils/prefrence.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
@@ -44,10 +44,7 @@ class _LoginState extends State<Login> {
                 child: Column(
                   children: [
                     SizedBox(height: 60.h),
-                    Container(
-                        alignment: Alignment.topLeft,
-                        child: AppImage.load(AppImage.ic_launcher,
-                            width: 80.w, height: 80.h)),
+                    Container(alignment: Alignment.topLeft, child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h)),
                     custom_text(
                       text: strings_name.str_lest_started,
                       alignment: Alignment.topLeft,
@@ -90,12 +87,7 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    custom_edittext(
-                        type: TextInputType.visiblePassword,
-                        textInputAction: TextInputAction.next,
-                        controller: passController,
-                        obscure: true,
-                        isPassword: true),
+                    custom_edittext(type: TextInputType.visiblePassword, textInputAction: TextInputAction.next, controller: passController, obscure: true, isPassword: true),
                     SizedBox(height: 8.h),
                     GestureDetector(
                       child: custom_text(
@@ -111,10 +103,8 @@ class _LoginState extends State<Login> {
                     CustomButton(
                         text: strings_name.str_signin,
                         click: () async {
-                          var phone = FormValidator.validatePhone(
-                              phoneController.text.toString().trim());
-                          var password = FormValidator.validatePassword(
-                              passController.text.toString().trim());
+                          var phone = FormValidator.validatePhone(phoneController.text.toString().trim());
+                          var password = FormValidator.validatePassword(passController.text.toString().trim());
                           if (phone.isNotEmpty) {
                             Utils.showSnackBar(context, phone);
                           } else if (password.isNotEmpty) {
@@ -123,22 +113,21 @@ class _LoginState extends State<Login> {
                             setState(() {
                               isVisible = true;
                             });
-                           // var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
+                            // var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
                             var query = "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
                             var data = await loginRepository.loginApi(query);
                             if (data.records!.isNotEmpty) {
                               setState(() {
                                 isVisible = false;
                               });
-                              if(data.records!.first.fields?.password == null){
+                              if (data.records!.first.fields?.password == null) {
                                 Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
-                              }else if(data.records!.first.fields?.password != passController.text.toString()){
+                              } else if (data.records!.first.fields?.password != passController.text.toString()) {
                                 Utils.showSnackBar(context, strings_name.str_invalide_password);
-                              } else{
+                              } else {
                                 await PreferenceUtils.setIsLogin(1);
                                 await PreferenceUtils.setLoginData(data.records!.first.fields!);
                                 Get.offAll(Home());
-
                               }
                             } else if (data.records!.length == 0) {
                               var dataEmployee = await loginRepository.loginEmployeeApi(query);
@@ -147,22 +136,21 @@ class _LoginState extends State<Login> {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                if(dataEmployee.records!.first.fields?.password == null){
+                                if (dataEmployee.records!.first.fields?.password == null) {
                                   Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
-                                }else if(dataEmployee.records!.first.fields?.password != passController.text.toString()){
+                                } else if (dataEmployee.records!.first.fields?.password != passController.text.toString()) {
                                   Utils.showSnackBar(context, strings_name.str_invalide_password);
-                                } else{
+                                } else {
                                   await PreferenceUtils.setIsLogin(2);
                                   await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
                                   Get.offAll(Home());
-
                                 }
-                              }else if(dataEmployee.records!.length == 0){
+                              } else if (dataEmployee.records!.length == 0) {
                                 setState(() {
                                   isVisible = false;
                                 });
                                 Utils.showSnackBar(context, strings_name.str_user_not_found);
-                              }else{
+                              } else {
                                 setState(() {
                                   isVisible = false;
                                 });
@@ -178,10 +166,7 @@ class _LoginState extends State<Login> {
                         }),
                     SizedBox(height: 20.h),
                     GestureDetector(
-                      child: AppWidgets.spannableText(
-                          strings_name.str_donot_signup,
-                          strings_name.str_signup,
-                          primaryTextSemiBold16),
+                      child: AppWidgets.spannableText(strings_name.str_donot_signup, strings_name.str_signup, primaryTextSemiBold16),
                       onTap: () {
                         Get.to(Register());
                       },
@@ -192,11 +177,7 @@ class _LoginState extends State<Login> {
             ),
           ),
           Center(
-            child: Visibility(
-                child: const CircularProgressIndicator(
-                    strokeWidth: 5.0,
-                    color: colors_name.colorPrimary),
-                visible: isVisible),
+            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
           )
         ],
       ),

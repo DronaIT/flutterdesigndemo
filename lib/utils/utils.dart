@@ -1,7 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterdesigndemo/utils/prefrence.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 
@@ -141,6 +141,16 @@ class Utils {
       }
     }
     return specializationId;
+  }
+
+  static String? getRoleId(String? roleId) {
+    final roleList = PreferenceUtils.getRoleList();
+    for (int i = 0; i < roleList.records!.length; i++) {
+      if (roleList.records![i].fields!.roleId == roleId) {
+        return roleList.records![i].id;
+      }
+    }
+    return roleId;
   }
 }
 

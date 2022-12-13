@@ -1,16 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
-import 'package:flutterdesigndemo/models/CreateStudentRequest.dart';
-import 'package:flutterdesigndemo/models/HubResponse.dart';
-import 'package:flutterdesigndemo/models/RoleResponse.dart';
-import 'package:flutterdesigndemo/models/SpecializationResponse.dart';
-import 'package:flutterdesigndemo/models/LoginEmployeResponse.dart';
+import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
+import 'package:flutterdesigndemo/models/request/create_student_request.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/role_response.dart';
+import 'package:flutterdesigndemo/models/specialization_response.dart';
+import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/createpassword.dart';
-import 'package:flutterdesigndemo/models/homeModuleResponse.dart';
+import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
-import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/ui/addemployee.dart';
 
 class ApiRepository {
   final ApiRequest userApi;
@@ -123,6 +125,16 @@ class ApiRepository {
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {
       final response = await userApi.getSpecializationApi();
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<CreatePasswordResponse> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
+    try {
+      final response = await userApi.addEmployeeApi(addEmployeeFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:ffi';
 
-import 'package:flutterdesigndemo/models/HubResponse.dart';
-import 'package:flutterdesigndemo/models/SpecializationResponse.dart';
-import 'package:flutterdesigndemo/models/LoginEmployeResponse.dart';
-import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
-import 'package:flutterdesigndemo/models/RoleResponse.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/specialization_response.dart';
+import 'package:flutterdesigndemo/models/login_employee_response.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,7 +69,7 @@ class PreferenceUtils {
     return BaseLoginResponse<SpecializationResponse>.fromJson(jsonDecode(_preferences.getString(_keySpecializationList)!), (response) => SpecializationResponse.fromJson(response));
   }
 
-  static  clearPrefrence(){
+  static clearPrefrence() {
     _preferences.clear();
   }
 }

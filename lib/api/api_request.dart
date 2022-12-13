@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
-import 'package:flutterdesigndemo/models/LoginEmployeResponse.dart';
-import 'package:flutterdesigndemo/models/CreateStudentRequest.dart';
-import 'package:flutterdesigndemo/models/HubResponse.dart';
-import 'package:flutterdesigndemo/models/RoleResponse.dart';
-import 'package:flutterdesigndemo/models/SpecializationResponse.dart';
+import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
+import 'package:flutterdesigndemo/models/login_employee_response.dart';
+import 'package:flutterdesigndemo/models/request/create_student_request.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/role_response.dart';
+import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/createpassword.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 
-import 'package:flutterdesigndemo/models/homeModuleResponse.dart';
-import 'package:flutterdesigndemo/models/loginFiledsResponse.dart';
+import 'package:flutterdesigndemo/models/home_module_response.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 class ApiRequest {
@@ -123,6 +124,18 @@ class ApiRequest {
 
       final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, options: Options(headers: header));
       return BaseLoginResponse<SpecializationResponse>.fromJson(response.data, (response) => SpecializationResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<CreatePasswordResponse> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": addEmployeeFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.post(TableNames.TBL_EMPLOYEE, options: Options(headers: header), data: jsonEncode(someMap));
+      return CreatePasswordResponse.fromJson(response.data);
     } catch (e) {
       rethrow;
     }

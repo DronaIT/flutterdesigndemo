@@ -4,7 +4,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/ui/createpassword.dart';
-import 'package:flutterdesigndemo/utils/prefrence.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -35,8 +35,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                 SizedBox(height: 60.h),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: AppImage.load(AppImage.ic_launcher,
-                      width: 80.w, height: 80.h),
+                  child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
                 ),
                 custom_text(
                   text: strings_name.str_verify_phone,
@@ -47,8 +46,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                 Container(
                   alignment: Alignment.topLeft,
                   margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: AppWidgets.spannableText(strings_name.str_otp,
-                      "+91-${Get.arguments[0]["phone"].toString()}", primaryTextSemiBold16),
+                  child: AppWidgets.spannableText(strings_name.str_otp, "+91-${Get.arguments[0]["phone"].toString()}", primaryTextSemiBold16),
                 ),
                 SizedBox(height: 15.h),
                 Container(
@@ -93,12 +91,13 @@ class _OtpVerificationState extends State<OtpVerification> {
                     text: strings_name.str_confirm,
                     click: () {
                       //print("otp=>${_otp}");
-                      if(_otp.isEmpty){
-                        Utils.showSnackBar(
-                            context, strings_name.str_enter_otp);
-                      }else{
-                        Get.to(const CreatePassword() , arguments:[{"phone": Get.arguments[0]["phone"]},
-                            {"isFromEmployee": Get.arguments[1]["isFromEmployee"]}]);
+                      if (_otp.isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_enter_otp);
+                      } else {
+                        Get.to(const CreatePassword(), arguments: [
+                          {"phone": Get.arguments[0]["phone"]},
+                          {"isFromEmployee": Get.arguments[1]["isFromEmployee"]}
+                        ]);
                       }
                     }),
               ],

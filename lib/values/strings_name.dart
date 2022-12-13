@@ -22,7 +22,7 @@ class strings_name {
   static const String str_welcome = "Welcome";
   static const String str_welcome_detail = "Let's connect with ";
   static const String str_get_started = "Get started";
-  static const String str_empty_phone = "Please enter valid  phone number.";
+  static const String str_empty_phone = "Please enter valid phone number.";
   static const String str_empty_password = "Please enter valid password.";
 
   static const String str_empty_confirm_password = "Please enter valid confirm password.";
@@ -61,4 +61,12 @@ class strings_name {
   static const String str_logout = "Logout";
   static const String str_home = "Home";
 
+  static const String str_empty_name = "Please enter name";
+  static const String str_empty_city = "Please enter city";
+  static const String str_empty_gender = "Please select gender";
+  static const String str_empty_role = "Please select role";
+  static const String str_empty_hub = "Please select hub";
+
+  static const String str_employee_exists = "An employee with this mobile number already exists.";
+  static const String str_student_exists = "There are already students with provided mobile phone numbers.";
 }
