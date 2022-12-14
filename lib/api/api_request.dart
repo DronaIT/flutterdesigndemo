@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
+import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
@@ -136,6 +137,18 @@ class ApiRequest {
 
       final Response response = await dioClient.post(TableNames.TBL_EMPLOYEE, options: Options(headers: header), data: jsonEncode(someMap));
       return CreatePasswordResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<PermissionResponse>> getPermissionsApi(String permissionFormula) async {
+    try {
+      Map<String, String> someMap = {"filterByFormula": permissionFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_PERMISSION, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<PermissionResponse>.fromJson(response.data, (response) => PermissionResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

@@ -7,6 +7,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
+import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
       var loginData = PreferenceUtils.getLoginData();
       name = loginData.name.toString();
       phone = loginData.mobileNumber.toString();
-      getRecords("DR09");
+      getRecords(TableNames.STUDENT_ROLE_ID);
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       name = loginData.employeeName.toString();
@@ -144,7 +145,7 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                               onTap: () {
-                                if (homeModule.records![index].fields?.moduleId == "DM01") Get.to(AddEmployee());
+                                if (homeModule.records![index].fields?.moduleId == "DM01") Get.to(ManageUser());
                               },
                             ),
                           ),
@@ -182,7 +183,7 @@ class _HomeState extends State<Home> {
       case 1:
         Get.back();
         showAlertDialog(context, strings_name.str_sure_want_logout, () {
-          PreferenceUtils.clearPrefrence();
+          PreferenceUtils.clearPreference();
           Get.offAll(const Login());
         });
         break;

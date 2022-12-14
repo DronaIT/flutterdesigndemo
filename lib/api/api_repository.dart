@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
+import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
@@ -22,9 +23,6 @@ class ApiRepository {
   Future<BaseLoginResponse<LoginFieldsResponse>> loginApi(String query) async {
     try {
       final response = await userApi.loginRegisterApi(query);
-      // final users = (response.data['records'] as List)
-      //     .map((e) => Records.fromJson(e))
-      //     .toList();
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -135,6 +133,16 @@ class ApiRepository {
   Future<CreatePasswordResponse> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
     try {
       final response = await userApi.addEmployeeApi(addEmployeeFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseLoginResponse<PermissionResponse>> getPermissionsApi(String permissionFormula) async {
+    try {
+      final response = await userApi.getPermissionsApi(permissionFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

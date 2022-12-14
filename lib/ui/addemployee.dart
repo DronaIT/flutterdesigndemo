@@ -5,10 +5,10 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
-import 'package:flutterdesigndemo/models/hub_response.dart';
-import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
+import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -53,7 +53,7 @@ class _AddEmployeeState extends State<AddEmployee> {
     }
     if (authority != -1) {
       for (var i = 0; i < roleResponseArray!.length; i++) {
-        if (authority > roleResponseArray![i].fields!.roleAuthority!) {
+        if (authority > roleResponseArray![i].fields!.roleAuthority! || roleResponseArray![i].fields?.roleId == TableNames.STUDENT_ROLE_ID) {
           roleResponseArray!.removeAt(i);
           i--;
         }
@@ -196,10 +196,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                             ),
                           ),
                         ),
-                        Flexible(
+                        const Flexible(
                           fit: FlexFit.tight,
                           flex: 2,
-                          child: const Icon(
+                          child: Icon(
                             Icons.keyboard_arrow_down,
                             color: Colors.grey,
                           ),
@@ -241,10 +241,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                             ),
                           ),
                         ),
-                        Flexible(
+                        const Flexible(
                           fit: FlexFit.tight,
                           flex: 2,
-                          child: const Icon(
+                          child: Icon(
                             Icons.keyboard_arrow_down,
                             color: Colors.grey,
                           ),

@@ -43,8 +43,13 @@ class strings_name {
   static const String poorNetworkError = "Poor network connection, please try again!";
   static const String sessionExpired = "Session expired";
 
+  static const String str_manage_users = "Manage User";
   static const String str_add_students = "Add students";
+  static const String str_view_students = "View students";
   static const String str_add_employee = "Add employee";
+  static const String str_view_employee = "View employee";
+  static const String str_update_employee = "Update employee";
+
   static const String str_employee_name = "Employee name";
   static const String str_city = "City";
   static const String str_select_gender = "Select gender";

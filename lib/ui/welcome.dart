@@ -14,6 +14,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
@@ -51,17 +52,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    initialization();
     isLogin = PreferenceUtils.getIsLogin();
+    initialization();
   }
 
   void initialization() async {
-    await Future.delayed(const Duration(seconds: 3));
     getRecords();
-    FlutterNativeSplash.remove();
     if (isLogin == 1 || isLogin == 2) {
-      Get.offAll(const Home());
+      doLogin();
     }
+    await Future.delayed(const Duration(seconds: 5));
+    FlutterNativeSplash.remove();
   }
 
   Future<void> getRecords() async {
@@ -79,6 +80,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     if (specializationResponse.records!.isNotEmpty) {
       PreferenceUtils.setSpecializationList(specializationResponse);
       print("Specialization ${PreferenceUtils.getSpecializationList().records!.length}");
+    }
+  }
+
+  Future<void> doLogin() async {
+    var loginData = PreferenceUtils.getLoginDataEmployee();
+    var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+    if (isLogin == 1) {
+      var data = await apiRepository.loginApi(query);
+      if (data.records!.isNotEmpty) {
+        await PreferenceUtils.setLoginData(data.records!.first.fields!);
+        Get.offAll(const Home());
+      } else {
+        Get.offAll(const Login());
+      }
+    } else if (isLogin == 2) {
+      var dataEmployee = await apiRepository.loginEmployeeApi(query);
+      if (dataEmployee.records!.isNotEmpty) {
+        await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+        Get.offAll(const Home());
+      } else {
+        Get.offAll(const Login());
+      }
     }
   }
 
