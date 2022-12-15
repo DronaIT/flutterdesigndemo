@@ -66,7 +66,9 @@ class strings_name {
   static const String str_logout = "Logout";
   static const String str_home = "Home";
 
-  static const String str_empty_name = "Please enter name";
+
+
+  static const String str_empty_name = "Please enter employee name";
   static const String str_empty_city = "Please enter city";
   static const String str_empty_gender = "Please select gender";
   static const String str_empty_role = "Please select role";
@@ -74,4 +76,9 @@ class strings_name {
 
   static const String str_employee_exists = "An employee with this mobile number already exists.";
   static const String str_student_exists = "There are already students with provided mobile phone numbers.";
+
+  static const String str_male = "Male";
+  static const String str_female = "Female";
+  static const String str_submit = "Submit";
+  static const String str_no_data = "No items";
 }

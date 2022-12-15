@@ -4,6 +4,9 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
 import 'package:flutterdesigndemo/ui/create_students.dart';
+import 'package:flutterdesigndemo/ui/update_employee.dart';
+import 'package:flutterdesigndemo/ui/view_employee.dart';
+import 'package:flutterdesigndemo/ui/view_student.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -144,7 +147,9 @@ class _ManageUserState extends State<ManageUser> {
                       children: const [Text(strings_name.str_view_employee, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(const ViewEmployee());
+                  },
                 ),
               ),
               SizedBox(height: 5.h),
@@ -159,7 +164,9 @@ class _ManageUserState extends State<ManageUser> {
                       children: const [Text(strings_name.str_update_employee, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(const UpdateEmployee());
+                  },
                 ),
               ),
               SizedBox(height: 5.h),
@@ -174,14 +181,16 @@ class _ManageUserState extends State<ManageUser> {
                       children: const [Text(strings_name.str_view_students, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(const ViewStudent());
+                  },
                 ),
               ),
             ],
           ),
         ),
         Center(
-          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary)),
+          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
       ]),
     ));

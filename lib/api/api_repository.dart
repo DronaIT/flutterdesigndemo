@@ -13,6 +13,7 @@ import 'package:flutterdesigndemo/models/createpassword.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
 
 class ApiRepository {
@@ -143,6 +144,17 @@ class ApiRepository {
   Future<BaseLoginResponse<PermissionResponse>> getPermissionsApi(String permissionFormula) async {
     try {
       final response = await userApi.getPermissionsApi(permissionFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+
+  Future<BaseLoginResponse<ViewEmployeeResponse>> viewEmployeeApi(String viewEmpFormula) async {
+    try {
+      final response = await userApi.viewEmployeeApi(viewEmpFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

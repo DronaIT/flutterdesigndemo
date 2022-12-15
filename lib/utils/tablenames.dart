@@ -17,6 +17,7 @@ class TableNames {
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_PASSWORD = "password";
   static const CLM_ROLE_ID = "role_ids";
+  static const CLM_HUB_IDS = "hub_ids";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";

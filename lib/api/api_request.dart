@@ -15,6 +15,7 @@ import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 class ApiRequest {
@@ -153,4 +154,19 @@ class ApiRequest {
       rethrow;
     }
   }
+
+
+  Future<BaseLoginResponse<ViewEmployeeResponse>> viewEmployeeApi(String viewEmpFormula) async {
+    try {
+      Map<String, String> someMap = {"filterByFormula": viewEmpFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_EMPLOYEE, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<ViewEmployeeResponse>.fromJson(response.data, (response) => ViewEmployeeResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 }

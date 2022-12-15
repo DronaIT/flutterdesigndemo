@@ -75,7 +75,7 @@ class _AddStudent extends State<CreateStudent> {
               _importFromExcel();
             }),
         Center(
-          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary)),
+          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
       ]),
     ));
