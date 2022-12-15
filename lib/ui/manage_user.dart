@@ -33,6 +33,9 @@ class _ManageUserState extends State<ManageUser> {
   }
 
   Future<void> initialization() async {
+    setState(() {
+      isVisible = true;
+    });
     var loginData = PreferenceUtils.getLoginDataEmployee();
     var query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_MANAGE_USER}')";
     print(query);
@@ -68,6 +71,9 @@ class _ManageUserState extends State<ManageUser> {
     } else {
       Utils.showSnackBar(context, strings_name.str_something_wrong);
     }
+    setState(() {
+      isVisible = false;
+    });
   }
 
   @override
@@ -75,7 +81,7 @@ class _ManageUserState extends State<ManageUser> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text(strings_name.str_manage_users),
+        title: const Text(strings_name.str_manage_users),
         backgroundColor: colors_name.colorPrimary,
         centerTitle: true,
         shape: const RoundedRectangleBorder(
