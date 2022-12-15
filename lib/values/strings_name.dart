@@ -66,16 +66,18 @@ class strings_name {
   static const String str_logout = "Logout";
   static const String str_home = "Home";
 
-
-
   static const String str_empty_name = "Please enter employee name";
   static const String str_empty_city = "Please enter city";
   static const String str_empty_gender = "Please select gender";
   static const String str_empty_role = "Please select role";
   static const String str_empty_hub = "Please select hub";
+  static const String str_empty_file = "Please select file";
 
   static const String str_employee_exists = "An employee with this mobile number already exists.";
   static const String str_student_exists = "There are already students with provided mobile phone numbers.";
+
+  static const String str_add_student_desc = "You can use XLSX files to upload multiple students and make sure to download and use provided format to create XLSX sheet.";
+  static const String str_sample_file = "Sample File";
 
   static const String str_male = "Male";
   static const String str_female = "Female";
