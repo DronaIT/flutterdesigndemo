@@ -5,7 +5,6 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
-import 'package:flutterdesigndemo/ui/addemployee.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
@@ -91,11 +90,14 @@ class _HomeState extends State<Home> {
                       text: name,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
+                      bottomValue: 0,
                     ),
                     custom_text(
                       text: phone,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
+                      topValue: 5,
+                      bottomValue: 0,
                     ),
                   ],
                 ),

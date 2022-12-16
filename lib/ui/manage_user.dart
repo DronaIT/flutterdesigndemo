@@ -24,7 +24,8 @@ class ManageUser extends StatefulWidget {
 
 class _ManageUserState extends State<ManageUser> {
   bool isVisible = false;
-  bool canAddEmployee = false, canUpdateEmployee = false, canViewEmployee = false;
+  bool canAddEmployee = false,
+      canUpdateEmployee = false, canViewEmployee = false;
   bool canAddStudent = false, canViewStudent = false;
 
   final apiRepository = getIt.get<ApiRepository>();
@@ -148,13 +149,13 @@ class _ManageUserState extends State<ManageUser> {
                     ),
                   ),
                   onTap: () {
-                    Get.to(const ViewEmployee());
+                    Get.to(const ViewEmployee(), arguments: canUpdateEmployee);
                   },
                 ),
               ),
-              SizedBox(height: 5.h),
+              // SizedBox(height: 5.h),
               Visibility(
-                visible: canUpdateEmployee,
+                visible: false,
                 child: GestureDetector(
                   child: Container(
                     color: colors_name.colorWhite,

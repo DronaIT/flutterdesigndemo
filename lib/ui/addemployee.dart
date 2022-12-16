@@ -86,8 +86,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                       type: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       controller: nameController,
+                      topValue: 5,
+
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_city,
                       alignment: Alignment.topLeft,
@@ -98,8 +100,9 @@ class _AddEmployeeState extends State<AddEmployee> {
                       textInputAction: TextInputAction.next,
                       controller: cityController,
                       maxLength: 30,
+                      topValue: 5,
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_phone,
                       alignment: Alignment.topLeft,
@@ -110,8 +113,9 @@ class _AddEmployeeState extends State<AddEmployee> {
                       textInputAction: TextInputAction.next,
                       controller: phoneController,
                       maxLength: 10,
+                      topValue: 5,
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_gender,
                       alignment: Alignment.topLeft,
@@ -127,8 +131,8 @@ class _AddEmployeeState extends State<AddEmployee> {
                             activeColor: colors_name.colorPrimary,
                             title: custom_text(
                               text: strings_name.str_male,
-                              alignment: Alignment.topLeft,
                               textStyles: blackTextSemiBold16,
+                              bottomValue: 0,
                               topValue: 0,
                               leftValue: 5,
                               rightValue: 5,
@@ -146,10 +150,11 @@ class _AddEmployeeState extends State<AddEmployee> {
                           flex: 1,
                           child: RadioListTile(
                             activeColor: colors_name.colorPrimary,
+
                             title: custom_text(
                               text: strings_name.str_female,
-                              alignment: Alignment.topLeft,
                               textStyles: blackTextSemiBold16,
+                              bottomValue: 0,
                               topValue: 0,
                               leftValue: 5,
                               rightValue: 5,
@@ -165,7 +170,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_role,
                       alignment: Alignment.topLeft,
@@ -178,7 +183,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                           fit: FlexFit.loose,
                           child: Container(
                             width: viewWidth,
-                            margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                            margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<RoleResponse>>(
                               value: roleResponse,
                               elevation: 16,
@@ -202,7 +207,7 @@ class _AddEmployeeState extends State<AddEmployee> {
 
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_hub,
                       alignment: Alignment.topLeft,
@@ -214,7 +219,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                         Flexible(
                           fit: FlexFit.loose,
                           child: Container(
-                            margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                            margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
                             width: viewWidth,
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                               value: hubResponse,

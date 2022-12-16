@@ -81,4 +81,7 @@ class strings_name {
   static const String str_female = "Female";
   static const String str_submit = "Submit";
   static const String str_no_data = "No items";
+  static const String str_employee_update = "Employee details updated successfully";
+  static const String str_select_spelization = "Select specialization";
+  static const String str_empty_spe = "Please select specialization";
 }

@@ -8,12 +8,14 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
+import 'package:flutterdesigndemo/ui/update_employee.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 
 class ViewEmployee extends StatefulWidget {
   const ViewEmployee({Key? key}) : super(key: key);
@@ -34,6 +36,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
   void initState() {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
+
   }
 
   @override
@@ -77,7 +80,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                 ),
                 CustomButton(
                   click: () async {
-                    print("hubvalue==>${hubValue}");
+
                     if (hubValue.isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_hub);
                     } else {
@@ -92,7 +95,6 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                           viewEmployee = data.records;
                         });
 
-                        print("record==> ${data.records!.first.fields}");
                       } else {
                         setState(() {
                           isVisible = false;
@@ -110,18 +112,47 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                             itemBuilder: (BuildContext context, int index) {
                               return Card(
                                 elevation: 5,
-                                child: Column(
+                                child: Row(
                                   children: [
-                                    custom_text(text: "${viewEmployee![index].fields!.employeeName!+" ("+viewEmployee![index].fields!.employeeCode!+")"}",textStyles: blackTextSemiBold16 , topValue: 10),
-                                    custom_text(text: viewEmployee![index].fields!.mobileNumber!,textStyles: blackTextSemiBold14 , bottomValue: 10,topValue: 0)
+                                    Flexible(
+                                      child: Column(
+                                        children: [
+                                          custom_text(text: "${viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")"}", textStyles: blackTextSemiBold16, topValue: 10,maxLines: 2),
+                                          custom_text(text: viewEmployee![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                        ],
+                                      ),
+                                    ),
+                                    Get.arguments != null ? GestureDetector(
+                                        onTap: () async {
+                                          var response =  await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);
+                                          if(response){
+                                            setState(() async {
+                                              var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_IDS},0)";
+                                              setState(() {
+                                                isVisible = true;
+                                              });
+                                              var data = await apiRepository.viewEmployeeApi(query);
+                                              if (data.records!.isNotEmpty) {
+                                                setState(() {
+                                                  isVisible = false;
+                                                  viewEmployee = data.records;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  isVisible = false;
+                                                });
+                                                Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                              }
+                                            });
+                                          }
+                                        },
+                                        child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit))) : Container(),
                                   ],
                                 ),
                               );
                             }),
                       )
-                    : Container(
-                     margin: EdgeInsets.only(top: 100),
-                      child: custom_text(text: strings_name.str_no_data ,textStyles: centerTextStyleBlack18 , alignment: Alignment.center)),
+                    : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),

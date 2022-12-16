@@ -161,4 +161,14 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<CreatePasswordEmployeeResponse> updateEmployeeApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.updateEmployeeApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }
