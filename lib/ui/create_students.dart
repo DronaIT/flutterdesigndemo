@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -19,7 +20,8 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateStudent extends StatefulWidget {
   const CreateStudent({Key? key}) : super(key: key);
@@ -41,6 +43,7 @@ class _AddStudent extends State<CreateStudent> {
 
   @override
   void initState() {
+    super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
   }
 
@@ -93,8 +96,8 @@ class _AddStudent extends State<CreateStudent> {
               alignment: Alignment.center,
               textStyles: blackTextSemiBold16,
             ),
-            onTap: () {
-              OpenFile.open("assets/res/tables_data.xlsx");
+            onTap: () async {
+              openFile();
             },
           ),
           SizedBox(height: 8.h),
@@ -172,6 +175,18 @@ class _AddStudent extends State<CreateStudent> {
         )
       ]),
     ));
+  }
+
+  openFile() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = "${documentsDirectory.path}/tables_data.xlsx";
+    print(path);
+
+    ByteData data = await rootBundle.load("assets/res/tables_data.xlsx");
+    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    var file = await File(path).writeAsBytes(bytes);
+
+    OpenFilex.open(file.path);
   }
 
   _importFromExcel() async {

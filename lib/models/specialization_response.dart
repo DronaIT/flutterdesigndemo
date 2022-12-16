@@ -5,8 +5,9 @@ class SpecializationResponse {
   String? specializationName;
   List<String>? hubIds;
   List<String>? hubIdFromHubIds;
+  String? specializationDesc;
 
-  SpecializationResponse({this.tBLSTUDENT, this.specializationId, this.tBLUSER, this.specializationName, this.hubIds, this.hubIdFromHubIds});
+  SpecializationResponse({this.tBLSTUDENT, this.specializationId, this.tBLUSER, this.specializationName, this.hubIds, this.hubIdFromHubIds, this.specializationDesc});
 
   SpecializationResponse.fromJson(Map<String, dynamic> json) {
     tBLSTUDENT = json['TBL_STUDENT'].cast<String>();
@@ -15,6 +16,7 @@ class SpecializationResponse {
     specializationName = json['specialization_name'];
     hubIds = json['hub_ids'].cast<String>();
     hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
+    specializationDesc = json['specialization_desc'];
   }
 
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class SpecializationResponse {
     data['specialization_name'] = this.specializationName;
     data['hub_ids'] = this.hubIds;
     data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
+    data['specialization_desc'] = this.specializationDesc;
     return data;
   }
 }

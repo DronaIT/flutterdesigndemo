@@ -151,7 +151,6 @@ class ApiRepository {
     }
   }
 
-
   Future<BaseLoginResponse<ViewEmployeeResponse>> viewEmployeeApi(String viewEmpFormula) async {
     try {
       final response = await userApi.viewEmployeeApi(viewEmpFormula);
