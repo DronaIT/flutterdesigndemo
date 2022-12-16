@@ -50,7 +50,7 @@ class _ManageSpecializationsState extends State<ManageSpecializations> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_specializations),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
       body: Stack(children: [
         specializationData!.isNotEmpty
             ? ListView.builder(

@@ -131,13 +131,13 @@ class ApiRequest {
     }
   }
 
-  Future<CreatePasswordResponse> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
+  Future<BaseApiResponseWithSerializable<LoginEmployeResponse>> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
     try {
       Map<String, dynamic> someMap = {"fields": addEmployeeFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.post(TableNames.TBL_EMPLOYEE, options: Options(headers: header), data: jsonEncode(someMap));
-      return CreatePasswordResponse.fromJson(response.data);
+      return BaseApiResponseWithSerializable<LoginEmployeResponse>.fromJson(response.data, (response) => LoginEmployeResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
@@ -155,7 +155,6 @@ class ApiRequest {
     }
   }
 
-
   Future<BaseLoginResponse<ViewEmployeeResponse>> viewEmployeeApi(String viewEmpFormula) async {
     try {
       Map<String, String> someMap = {"filterByFormula": viewEmpFormula};
@@ -168,7 +167,6 @@ class ApiRequest {
     }
   }
 
-
   Future<CreatePasswordEmployeeResponse> updateEmployeeApi(Map<String, dynamic> loginFormula, String recordId) async {
     try {
       Map<String, dynamic> someMap = {"fields": loginFormula};
@@ -180,5 +178,4 @@ class ApiRequest {
       rethrow;
     }
   }
-
 }

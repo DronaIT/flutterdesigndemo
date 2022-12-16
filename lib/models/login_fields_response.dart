@@ -15,22 +15,7 @@ class LoginFieldsResponse {
   List<String>? hubIdFromHubIds;
   List<String>? specializationIdFromSpecializationIds;
 
-  LoginFieldsResponse(
-      {this.city,
-        this.joiningYear,
-        this.password,
-        this.studentId,
-        this.hubIds,
-        this.name,
-        this.address,
-        this.mobileNumber,
-        this.specializationIds,
-        this.gender,
-        this.createdOn,
-        this.updatedOn,
-        this.enrollmentNumber,
-        this.hubIdFromHubIds,
-        this.specializationIdFromSpecializationIds});
+  LoginFieldsResponse({this.city, this.joiningYear, this.password, this.studentId, this.hubIds, this.name, this.address, this.mobileNumber, this.specializationIds, this.gender, this.createdOn, this.updatedOn, this.enrollmentNumber, this.hubIdFromHubIds, this.specializationIdFromSpecializationIds});
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -41,14 +26,13 @@ class LoginFieldsResponse {
     name = json['name'];
     address = json['address'];
     mobileNumber = json['mobile_number'];
-    specializationIds = json['specialization_ids'].cast<String>();
+    specializationIds = json['specialization_ids']?.cast<String>();
     gender = json['gender'];
     createdOn = json['created_on'];
     updatedOn = json['updated_on'];
     enrollmentNumber = json['enrollment_number'];
     hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
-    specializationIdFromSpecializationIds =
-        json['specialization_id (from specialization_ids)'].cast<String>();
+    specializationIdFromSpecializationIds = json['specialization_id (from specialization_ids)'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -67,8 +51,7 @@ class LoginFieldsResponse {
     data['updated_on'] = this.updatedOn;
     data['enrollment_number'] = this.enrollmentNumber;
     data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
-    data['specialization_id (from specialization_ids)'] =
-        this.specializationIdFromSpecializationIds;
+    data['specialization_id (from specialization_ids)'] = this.specializationIdFromSpecializationIds;
     return data;
   }
 }

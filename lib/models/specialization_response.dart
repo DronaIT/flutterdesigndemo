@@ -10,7 +10,7 @@ class SpecializationResponse {
   SpecializationResponse({this.tBLSTUDENT, this.specializationId, this.tBLUSER, this.specializationName, this.hubIds, this.hubIdFromHubIds, this.specializationDesc});
 
   SpecializationResponse.fromJson(Map<String, dynamic> json) {
-    tBLSTUDENT = json['TBL_STUDENT'].cast<String>();
+    tBLSTUDENT = json['TBL_STUDENT']?.cast<String>();
     specializationId = json['specialization_id'];
     tBLUSER = json['TBL_USER'];
     specializationName = json['specialization_name'];
