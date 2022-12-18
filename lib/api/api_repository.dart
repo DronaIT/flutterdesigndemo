@@ -170,4 +170,14 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationDetailApi(String detailFormula) async {
+    try {
+      final response = await userApi.getSpecializationDetailApi(detailFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

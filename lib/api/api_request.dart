@@ -178,4 +178,16 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationDetailApi(String detailFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": detailFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<SpecializationResponse>.fromJson(response.data, (response) => SpecializationResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

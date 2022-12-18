@@ -12,11 +12,16 @@ const centerTextStyle20 = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.bold,
   color: colors_name.colorPrimary,
-
 );
 
 const centerTextStyle30 = TextStyle(
   fontSize: 28,
+  fontWeight: FontWeight.bold,
+  color: colors_name.colorPrimary,
+);
+
+const centerTextStyle24 = TextStyle(
+  fontSize: 24,
   fontWeight: FontWeight.bold,
   color: colors_name.colorPrimary,
 );
@@ -76,7 +81,6 @@ const errorTextStyle = TextStyle(
 const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
 
 const primaryColorSubtitleStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorPrimary, height: 1.45);
-
 
 const whiteText18 = TextStyle(
   fontSize: 18,
