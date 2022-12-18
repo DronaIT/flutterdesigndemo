@@ -106,12 +106,15 @@ class _ManageUserState extends State<ManageUser> {
               Visibility(
                 visible: canAddEmployee,
                 child: GestureDetector(
-                  child: Container(
-                    color: colors_name.colorWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [Text(strings_name.str_add_employee, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  child: Card(
+                    elevation: 5,
+                      child: Container(
+                      color: colors_name.colorWhite,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [Text(strings_name.str_add_employee, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -123,12 +126,15 @@ class _ManageUserState extends State<ManageUser> {
               Visibility(
                 visible: canAddStudent,
                 child: GestureDetector(
-                  child: Container(
-                    color: colors_name.colorWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [Text(strings_name.str_add_students, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      color: colors_name.colorWhite,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [Text(strings_name.str_add_students, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -170,12 +176,15 @@ class _ManageUserState extends State<ManageUser> {
               Visibility(
                 visible: canViewEmployee,
                 child: GestureDetector(
-                  child: Container(
-                    color: colors_name.colorWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [Text(strings_name.str_view_employee, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      color: colors_name.colorWhite,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [Text(strings_name.str_view_employee, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -187,12 +196,15 @@ class _ManageUserState extends State<ManageUser> {
               Visibility(
                 visible: false,
                 child: GestureDetector(
-                  child: Container(
-                    color: colors_name.colorWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [Text(strings_name.str_update_employee, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      color: colors_name.colorWhite,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [Text(strings_name.str_update_employee, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -204,12 +216,15 @@ class _ManageUserState extends State<ManageUser> {
               Visibility(
                 visible: canViewStudent,
                 child: GestureDetector(
-                  child: Container(
-                    color: colors_name.colorWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [Text(strings_name.str_view_students, textAlign: TextAlign.center, style: blackTextSemiBold14), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      color: colors_name.colorWhite,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [Text(strings_name.str_view_students, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
                     ),
                   ),
                   onTap: () {
