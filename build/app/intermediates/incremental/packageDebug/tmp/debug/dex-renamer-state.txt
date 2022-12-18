@@ -1,4 +1,4 @@
-#Sat Dec 17 02:26:16 IST 2022
-base.0=G\:\\DronaApp\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Sun Dec 18 17:43:09 IST 2022
+base.0=/home/hb/AndroidStudioProjects/flutterdesigndemo/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

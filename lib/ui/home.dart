@@ -6,7 +6,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
-import 'package:flutterdesigndemo/ui/manage_specializations.dart';
+import 'package:flutterdesigndemo/ui/academic_details.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -151,7 +151,7 @@ class _HomeState extends State<Home> {
                                     onTap: () {
                                       if (homeModule.records![index].fields?.moduleId == "DM01")
                                         Get.to(ManageUser());
-                                      else if (homeModule.records![index].fields?.moduleId == "DM05") Get.to(ManageSpecializations());
+                                      else if (homeModule.records![index].fields?.moduleId == "DM05") Get.to(AcademicDetails());
                                     },
                                   ),
                                 ),
