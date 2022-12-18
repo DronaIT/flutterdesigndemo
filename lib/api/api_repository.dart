@@ -131,7 +131,7 @@ class ApiRepository {
     }
   }
 
-  Future<CreatePasswordResponse> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
+  Future<BaseApiResponseWithSerializable<LoginEmployeResponse>> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
     try {
       final response = await userApi.addEmployeeApi(addEmployeeFormula);
       return response;
@@ -150,7 +150,6 @@ class ApiRepository {
       throw errorMessage;
     }
   }
-
 
   Future<BaseLoginResponse<ViewEmployeeResponse>> viewEmployeeApi(String viewEmpFormula) async {
     try {

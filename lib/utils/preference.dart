@@ -70,6 +70,14 @@ class PreferenceUtils {
   }
 
   static clearPreference() {
+    var roleList = getRoleList();
+    var hubList = getHubList();
+    var specializationList = getSpecializationList();
+
     _preferences.clear();
+
+    setRoleList(roleList);
+    setHubList(hubList);
+    setSpecializationList(specializationList);
   }
 }

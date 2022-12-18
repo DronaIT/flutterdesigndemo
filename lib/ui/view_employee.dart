@@ -36,7 +36,6 @@ class _ViewEmployeeState extends State<ViewEmployee> {
   void initState() {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
-
   }
 
   @override
@@ -80,7 +79,6 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                 ),
                 CustomButton(
                   click: () async {
-
                     if (hubValue.isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_hub);
                     } else {
@@ -94,7 +92,6 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                           isVisible = false;
                           viewEmployee = data.records;
                         });
-
                       } else {
                         setState(() {
                           isVisible = false;
@@ -117,42 +114,45 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                     Flexible(
                                       child: Column(
                                         children: [
-                                          custom_text(text: "${viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")"}", textStyles: blackTextSemiBold16, topValue: 10,maxLines: 2),
+                                          custom_text(text: "${viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")"}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
                                           custom_text(text: viewEmployee![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                         ],
                                       ),
                                     ),
-                                    Get.arguments != null ? GestureDetector(
-                                        onTap: () async {
-                                          var response =  await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);
-                                          if(response){
-                                            setState(() async {
-                                              var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_IDS},0)";
-                                              setState(() {
-                                                isVisible = true;
-                                              });
-                                              var data = await apiRepository.viewEmployeeApi(query);
-                                              if (data.records!.isNotEmpty) {
-                                                setState(() {
-                                                  isVisible = false;
-                                                  viewEmployee = data.records;
+                                    Get.arguments != null
+                                        ? GestureDetector(
+                                            onTap: () async {
+                                              var response = await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);
+                                              if (response) {
+                                                setState(() async {
+                                                  var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_IDS},0)";
+                                                  setState(() {
+                                                    isVisible = true;
+                                                  });
+                                                  var data = await apiRepository.viewEmployeeApi(query);
+                                                  if (data.records!.isNotEmpty) {
+                                                    setState(() {
+                                                      isVisible = false;
+                                                      viewEmployee = data.records;
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      isVisible = false;
+                                                      viewEmployee = [];
+                                                    });
+                                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                                  }
                                                 });
-                                              } else {
-                                                setState(() {
-                                                  isVisible = false;
-                                                });
-                                                Utils.showSnackBar(context, strings_name.str_something_wrong);
                                               }
-                                            });
-                                          }
-                                        },
-                                        child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit))) : Container(),
+                                            },
+                                            child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
+                                        : Container(),
                                   ],
                                 ),
                               );
                             }),
                       )
-                    : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),

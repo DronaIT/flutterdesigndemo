@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -120,6 +122,18 @@ class Utils {
       message: message,
       messageText: Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
       duration: const Duration(seconds: 2),
+    ).show(context);
+  }
+
+  static void showSnackBarDuration(BuildContext context, String message, int second) {
+    Flushbar(
+      flushbarStyle: FlushbarStyle.GROUNDED,
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      animationDuration: const Duration(seconds: 1),
+      backgroundColor: colors_name.colorPrimary,
+      message: message,
+      messageText: Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+      duration: Duration(seconds: second),
     ).show(context);
   }
 

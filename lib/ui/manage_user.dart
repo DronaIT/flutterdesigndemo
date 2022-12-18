@@ -24,8 +24,7 @@ class ManageUser extends StatefulWidget {
 
 class _ManageUserState extends State<ManageUser> {
   bool isVisible = false;
-  bool canAddEmployee = false,
-      canUpdateEmployee = false, canViewEmployee = false;
+  bool canAddEmployee = false, canUpdateEmployee = false, canViewEmployee = false;
   bool canAddStudent = false, canViewStudent = false;
 
   final apiRepository = getIt.get<ApiRepository>();
@@ -115,7 +114,7 @@ class _ManageUserState extends State<ManageUser> {
                     ),
                   ),
                   onTap: () {
-                    Get.to(const AddEmployee());
+                    Get.to(() => AddEmployee());
                   },
                 ),
               ),

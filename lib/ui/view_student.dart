@@ -44,10 +44,10 @@ class _ViewStudentState extends State<ViewStudent> {
     speResponseArray = PreferenceUtils.getSpecializationList().records;
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_students),
       body: Stack(
         children: [
@@ -63,7 +63,7 @@ class _ViewStudentState extends State<ViewStudent> {
                   bottomValue: 0,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10,  bottom: 5),
+                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                   width: MediaQuery.of(context).size.width,
                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                     value: hubResponse,
@@ -113,8 +113,6 @@ class _ViewStudentState extends State<ViewStudent> {
                     }).toList(),
                   ),
                 ),
-
-
                 CustomButton(
                   click: () async {
                     if (hubValue.isEmpty) {
@@ -127,47 +125,44 @@ class _ViewStudentState extends State<ViewStudent> {
                         isVisible = true;
                       });
                       var data = await apiRepository.loginApi(query);
-                      if(data.records!.isNotEmpty){
+                      if (data.records!.isNotEmpty) {
                         setState(() {
                           isVisible = false;
                           viewStudent = data.records;
                         });
-                      }else{
+                      } else {
                         setState(() {
                           isVisible = false;
+                          viewStudent = [];
                         });
                       }
-
                     }
                   },
                   text: strings_name.str_submit,
                 ),
                 viewStudent!.length > 0
                     ? Expanded(
-                  child: ListView.builder(
-                      itemCount: viewStudent?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          child: Flexible(
-                            child: Column(
-                              children: [
-                                custom_text(text: "${viewStudent![index].fields!.name! + " (" + viewStudent![index].fields!.enrollmentNumber! + ")"}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                ) : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
-
+                        child: ListView.builder(
+                            itemCount: viewStudent?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 5,
+                                child: Column(
+                                  children: [
+                                    custom_text(text: "${viewStudent![index].fields!.name! + " (" + viewStudent![index].fields!.enrollmentNumber! + ")"}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                    custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                  ],
+                                ),
+                              );
+                            }),
+                      )
+                    : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
-
         ],
       ),
     ));

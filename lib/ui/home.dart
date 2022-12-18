@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
+import 'package:flutterdesigndemo/ui/manage_specializations.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -118,43 +119,47 @@ class _HomeState extends State<Home> {
       ),
       body: Stack(
         children: [
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            children: List.generate(
-              homeModule.records != null ? homeModule.records!.length : 0,
-              (index) {
-                return Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Card(
-                        elevation: 10,
-                        child: Container(
-                          height: 300,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: GestureDetector(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
+          homeModule.records?.isNotEmpty == true
+              ? GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  children: List.generate(
+                    homeModule.records != null ? homeModule.records!.length : 0,
+                    (index) {
+                      return Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Card(
+                              elevation: 10,
+                              child: Container(
+                                height: 300,
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: GestureDetector(
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
+                                        ),
+                                        custom_text(
+                                          text: homeModule.records![index].fields!.moduleTitle.toString(),
+                                          alignment: Alignment.center,
+                                          textStyles: blackTextSemiBold14,
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      if (homeModule.records![index].fields?.moduleId == "DM01")
+                                        Get.to(ManageUser());
+                                      else if (homeModule.records![index].fields?.moduleId == "DM05") Get.to(ManageSpecializations());
+                                    },
                                   ),
-                                  custom_text(
-                                    text: homeModule.records![index].fields!.moduleTitle.toString(),
-                                    alignment: Alignment.center,
-                                    textStyles: blackTextSemiBold14,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                if (homeModule.records![index].fields?.moduleId == "DM01") Get.to(ManageUser());
-                              },
-                            ),
-                          ),
-                        )));
-              },
-            ),
-          ),
+                                ),
+                              )));
+                    },
+                  ),
+                )
+              : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_module, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
           )

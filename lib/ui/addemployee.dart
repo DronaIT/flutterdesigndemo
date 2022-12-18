@@ -16,6 +16,7 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 
 class AddEmployee extends StatefulWidget {
   const AddEmployee({Key? key}) : super(key: key);
@@ -87,7 +88,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                       textInputAction: TextInputAction.next,
                       controller: nameController,
                       topValue: 5,
-
                     ),
                     SizedBox(height: 5.h),
                     custom_text(
@@ -150,7 +150,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                           flex: 1,
                           child: RadioListTile(
                             activeColor: colors_name.colorPrimary,
-
                             title: custom_text(
                               text: strings_name.str_female,
                               textStyles: blackTextSemiBold16,
@@ -159,7 +158,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                               leftValue: 5,
                               rightValue: 5,
                             ),
-                            value:strings_name.str_female,
+                            value: strings_name.str_female,
                             groupValue: gender,
                             onChanged: (value) {
                               setState(() {
@@ -204,7 +203,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                     SizedBox(height: 5.h),
@@ -226,7 +224,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                               elevation: 16,
                               style: blackText16,
                               focusColor: colors_name.colorPrimary,
-
                               onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                                 setState(() {
                                   hubValue = newValue!.fields!.hubId!.toString();
@@ -242,7 +239,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                     SizedBox(height: 20.h),
@@ -300,6 +296,9 @@ class _AddEmployeeState extends State<AddEmployee> {
         setState(() {
           isVisible = false;
         });
+        Utils.showSnackBar(context, strings_name.str_employee_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true);
       } else {
         setState(() {
           isVisible = false;
@@ -309,7 +308,7 @@ class _AddEmployeeState extends State<AddEmployee> {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_employee_exists);
+      Utils.showSnackBarDuration(context, strings_name.str_employee_exists, 5);
     }
   }
 }
