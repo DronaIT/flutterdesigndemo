@@ -152,7 +152,8 @@ class _HomeState extends State<Home> {
                                     onTap: () {
                                       if (homeModule.records![index].fields?.moduleId == "DM01")
                                         Get.to(ManageUser());
-                                      else if (homeModule.records![index].fields?.moduleId == "DM05") Get.to(AcademicDetails());
+                                      else if (homeModule.records![index].fields?.moduleId == "DM05")
+                                        Get.to(AcademicDetails());
                                       else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) Get.to(SetupCollage());
                                     },
                                   ),

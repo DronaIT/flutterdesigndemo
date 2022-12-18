@@ -8,7 +8,6 @@ class TableNames {
 
   static const MODULE_SETUP_COLLAGE = "DM02";
 
-
   static const TB_STUDENT = "TBL_STUDENT";
   static const TBL_MODULE = "TBL_MODULE";
   static const TBL_ROLE = "TBL_ROLE";
@@ -21,6 +20,7 @@ class TableNames {
   static const TB_USERS_PASSWORD = "password";
   static const CLM_ROLE_ID = "role_ids";
   static const CLM_HUB_IDS = "hub_ids";
+  static const CLM_SPE_ID = "specialization_id";
   static const CLM_SPE_IDS = "specialization_ids";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
@@ -29,11 +29,7 @@ class TableNames {
   static const PERMISSION_ID_ADD_STUDENT = "DP0104";
   static const PERMISSION_ID_VIEW_STUDENT = "DP0105";
 
-
-
   static const PERMISSION_ID_ADD_HUB = "DP0201";
   static const PERMISSION_ID_UPDATE_HUB = "DP0202";
   static const PERMISSION_ID_VIEW_HUB = "DP0203";
-
-
 }

@@ -35,7 +35,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND('${Get.arguments}', ${TableNames.TBL_SPECIALIZATION}, 0)";
+    var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
     var data = await apiRepository.getSpecializationDetailApi(query);
     if (data.records!.isNotEmpty) {
       specializationData = data.records;
@@ -53,7 +53,15 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
       body: Stack(children: [
-        specializationData!.isNotEmpty ? Container() : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+        specializationData?.isNotEmpty == true
+            ? Column(
+                children: [
+                  custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
+                  custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
+                  custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
+                ],
+              )
+            : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
