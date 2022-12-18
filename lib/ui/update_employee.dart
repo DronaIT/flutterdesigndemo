@@ -299,9 +299,12 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                             setState(() {
                               isVisible = false;
                             });
-                            Get.back(result: true);
+                            Utils.showSnackBar(context, strings_name.str_employee_update);
+                            await Future.delayed(const Duration(milliseconds: 2000));
+                            Get.back(closeOverlays: true, result: true);
+                           // Get.back(result: true);
 
-                            // Utils.showSnackBar(context, strings_name.str_employee_update);
+                            //
                           }else{
                             setState(() {
                               isVisible = false;

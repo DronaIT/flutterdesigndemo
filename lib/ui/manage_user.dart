@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
+import 'package:flutterdesigndemo/ui/addsinglestudent.dart';
 import 'package:flutterdesigndemo/ui/create_students.dart';
 import 'package:flutterdesigndemo/ui/update_employee.dart';
 import 'package:flutterdesigndemo/ui/view_employee.dart';
@@ -131,7 +132,37 @@ class _ManageUserState extends State<ManageUser> {
                     ),
                   ),
                   onTap: () {
-                    Get.to(const CreateStudent());
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Text(strings_name.str_add_student, style: centerTextStyle20),
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text(
+                                strings_name.str_add_multiple_student,
+                                style: whiteText13,
+                              ),
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colors_name.colorPrimary)),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Get.to(const CreateStudent());
+                              },
+                            ),
+                            TextButton(
+                              child: const Text(strings_name.str_add_single_student, style: whiteText13),
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colors_name.colorPrimary)),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Get.to(const AddSingleStudent());
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ),

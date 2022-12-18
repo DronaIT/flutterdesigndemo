@@ -34,7 +34,7 @@ class custom_edittext extends StatefulWidget {
       this.enabled = true,
       this.readOnly = false,
       this.isPassword = false,
-      this.maxLength = 20,
+      this.maxLength = 50,
       this.fontWeight = FontWeight.w700});
 
   @override

@@ -1,10 +1,18 @@
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterdesigndemo/values/strings_name.dart';
 
 const centerTextStyle = TextStyle(
   fontSize: 28,
   fontWeight: FontWeight.bold,
   color: colors_name.colorPrimary,
+);
+
+const centerTextStyle20 = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+  color: colors_name.colorPrimary,
+
 );
 
 const centerTextStyle30 = TextStyle(
@@ -29,6 +37,19 @@ const blackText16 = TextStyle(
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
+
+const whiteText16 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: Colors.white,
+);
+
+const whiteText13 = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w400,
+  color: Colors.white,
+);
+
 const blackTextSemiBold16 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w600,
@@ -56,11 +77,6 @@ const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, c
 
 const primaryColorSubtitleStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorPrimary, height: 1.45);
 
-const whiteText16 = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w400,
-  color: Colors.white,
-);
 
 const whiteText18 = TextStyle(
   fontSize: 18,

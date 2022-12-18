@@ -169,7 +169,9 @@ class _AddEmployeeState extends State<AddEmployee> {
                         ),
                       ],
                     ),
+
                     SizedBox(height: 5.h),
+
                     custom_text(
                       text: strings_name.str_select_role,
                       alignment: Alignment.topLeft,
@@ -280,7 +282,7 @@ class _AddEmployeeState extends State<AddEmployee> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND('${phoneController.text.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+    var query = "FIND('${phoneController.text.toString()}',${TableNames.TB_USERS_PHONE}, 0)";
     var checkMobile = await apiRepository.loginEmployeeApi(query);
     if (checkMobile.records?.isEmpty == true) {
       AddEmployeeRequest request = AddEmployeeRequest();
