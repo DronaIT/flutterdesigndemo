@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/ui/academic_details.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
+import 'package:flutterdesigndemo/ui/setup_collage.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
@@ -152,6 +153,7 @@ class _HomeState extends State<Home> {
                                       if (homeModule.records![index].fields?.moduleId == "DM01")
                                         Get.to(ManageUser());
                                       else if (homeModule.records![index].fields?.moduleId == "DM05") Get.to(AcademicDetails());
+                                      else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) Get.to(SetupCollage());
                                     },
                                   ),
                                 ),
