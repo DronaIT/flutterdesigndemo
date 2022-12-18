@@ -45,6 +45,8 @@ class strings_name {
 
   static const String str_manage_users = "Manage User";
   static const String str_add_students = "Add students";
+  static const String str_add_student = "Add student";
+
   static const String str_view_students = "View students";
   static const String str_add_employee = "Add employee";
   static const String str_view_employee = "View employee";
@@ -96,4 +98,16 @@ class strings_name {
 
   static const String str_specializations = "Specializations";
   static const String str_academic_detail = "Academic Details";
+
+  static const String str_add_multiple_student = "Add multiple student";
+  static const String str_add_single_student = "Add single student";
+  static const String str_student_name = "Student name";
+  static const String str_address = "Address";
+
+
+  static const String str_joining_year = "Joining year";
+  static const String str_empty_sname = "Please enter student name";
+  static const String str_empty_address = "Please enter address";
+  static const String str_empty_joing_year = "Please enter joing year";
+  static const String str_student_added = "New student added successfully.";
 }
