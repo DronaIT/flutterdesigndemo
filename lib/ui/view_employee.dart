@@ -95,8 +95,8 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                       } else {
                         setState(() {
                           isVisible = false;
+                          viewEmployee = [];
                         });
-                        Utils.showSnackBar(context, strings_name.str_something_wrong);
                       }
                     }
                   },
