@@ -110,4 +110,6 @@ class strings_name {
   static const String str_empty_address = "Please enter address";
   static const String str_empty_joing_year = "Please enter joing year";
   static const String str_student_added = "New student added successfully.";
+  static const String str_setup_collage = "Setup collage";
+  static const String str_add_hub = "Add hub";
 }
