@@ -65,7 +65,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                     focusColor: colors_name.colorPrimary,
                     onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                       setState(() {
-                        hubValue = newValue!.fields!.hubId!.toString();
+                        hubValue = newValue!.fields!.id!.toString();
                         hubResponse = newValue;
                       });
                     },

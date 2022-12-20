@@ -70,7 +70,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.specializationId);
+                        Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
                       },
                     ),
                   );

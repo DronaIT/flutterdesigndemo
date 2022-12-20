@@ -3,17 +3,18 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/ui/addhub.dart';
+import 'package:flutterdesigndemo/ui/updatehub.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 
 class SetupCollage extends StatefulWidget {
   const SetupCollage({Key? key}) : super(key: key);
@@ -75,6 +76,8 @@ class _SetupCollageState extends State<SetupCollage> {
     setState(() {
       isVisible = false;
     });
+
+    print("updates==>${canViewHub}==>${canUpdateHub}==>${canAddHub}");
   }
 
   @override
@@ -86,56 +89,54 @@ class _SetupCollageState extends State<SetupCollage> {
           children: [
             Column(
               children: [
-              canViewHub && hubResponse.records?.isNotEmpty == true
+                canViewHub && hubResponse.records?.isNotEmpty == true
                     ? Expanded(
-                     child: ListView.builder(
-                      itemCount: hubResponse.records?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Column(
+                        child: ListView.builder(
+                            itemCount: hubResponse.records?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 5,
+                                child: Row(
                                   children: [
-                                    custom_text(text: "${hubResponse.records![index].fields!.hubName! }", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                    custom_text(text: hubResponse.records![index].fields!.city!, textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0),
-                                    custom_text(text: hubResponse.records![index].fields!.address!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                    Flexible(
+                                      child: Column(
+                                        children: [
+                                          custom_text(text: "${hubResponse.records![index].fields!.hubName!}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                          custom_text(text: hubResponse.records![index].fields!.city!, textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0),
+                                          custom_text(text: hubResponse.records![index].fields!.address!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                        ],
+                                      ),
+                                    ),
+                                    canUpdateHub
+                                        ? GestureDetector(
+                                            onTap: () async {
+                                              var response = await Get.to(const UpdateHub(), arguments: hubResponse.records?[index]);
+                                              if (response && canViewHub) {
+                                                getRecords();
+                                              }
+                                            },
+                                            child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
+                                        : Container(),
                                   ],
                                 ),
-                              ),
-                              canUpdateHub ? GestureDetector(
-                                  onTap: () async {
-                                    // var response = await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);
-                                    // if (response) {
-                                    //   setState(() async {
-                                    //     var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_IDS},0)";
-                                    //     setState(() {
-                                    //       isVisible = true;
-                                    //     });
-                                    //     var data = await apiRepository.viewEmployeeApi(query);
-                                    //     if (data.records!.isNotEmpty) {
-                                    //       setState(() {
-                                    //         isVisible = false;
-                                    //         viewEmployee = data.records;
-                                    //       });
-                                    //     } else {
-                                    //       setState(() {
-                                    //         isVisible = false;
-                                    //         viewEmployee = [];
-                                    //       });
-                                    //       Utils.showSnackBar(context, strings_name.str_something_wrong);
-                                    //     }
-                                    //   });
-                                    // }
-                                  },
-                                  child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit))) : Container(),
-                            ],
-                          ),
-                        );
-                      }),)
-                    : canViewHub  ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)) : Container(),
-                canAddHub ? Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_hub, click: () {})) : Container()
+                              );
+                            }),
+                      )
+                    : canViewHub
+                        ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
+                        : Container(),
+                canAddHub
+                    ? Container(
+                        alignment: Alignment.bottomCenter,
+                        child: CustomButton(
+                            text: strings_name.str_add_hub,
+                            click: () async {
+                              var response = await Get.to(const AddHub());
+                              if (response && canViewHub) {
+                                getRecords();
+                              }
+                            }))
+                    : Container()
               ],
             ),
             Center(

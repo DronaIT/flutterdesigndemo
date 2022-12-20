@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
+import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
@@ -15,6 +16,7 @@ import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
@@ -186,6 +188,30 @@ class ApiRequest {
 
       final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, queryParameters: someMap, options: Options(headers: header));
       return BaseLoginResponse<SpecializationResponse>.fromJson(response.data, (response) => SpecializationResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  Future<BaseApiResponseWithSerializable<HubResponse>> addHubApi(AddHubRequest addHubRequest) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": addHubRequest};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_HUB, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<HubResponse>.fromJson(response.data, (response) => HubResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UpdateHub> updateHubApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": loginFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_HUB + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateHub.fromJson(response);
     } catch (e) {
       rethrow;
     }

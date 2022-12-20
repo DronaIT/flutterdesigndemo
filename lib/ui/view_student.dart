@@ -72,7 +72,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     focusColor: colors_name.colorPrimary,
                     onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                       setState(() {
-                        hubValue = newValue!.fields!.hubId!.toString();
+                        hubValue = newValue!.fields!.id!.toString();
                         hubResponse = newValue;
                       });
                     },
@@ -101,7 +101,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     focusColor: colors_name.colorPrimary,
                     onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                       setState(() {
-                        speValue = newValue!.fields!.specializationId.toString();
+                        speValue = newValue!.fields!.id.toString();
                         speResponse = newValue;
                       });
                     },

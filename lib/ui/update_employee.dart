@@ -302,9 +302,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                             Utils.showSnackBar(context, strings_name.str_employee_update);
                             await Future.delayed(const Duration(milliseconds: 2000));
                             Get.back(closeOverlays: true, result: true);
-                           // Get.back(result: true);
-
-                            //
                           }else{
                             setState(() {
                               isVisible = false;
