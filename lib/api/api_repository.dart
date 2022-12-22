@@ -14,6 +14,7 @@ import 'package:flutterdesigndemo/models/createpassword.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
@@ -183,7 +184,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseApiResponseWithSerializable<HubResponse>>addHubApi(AddHubRequest addHubRequest) async {
+  Future<BaseApiResponseWithSerializable<HubResponse>> addHubApi(AddHubRequest addHubRequest) async {
     try {
       final response = await userApi.addHubApi(addHubRequest);
       return response;
@@ -192,7 +193,6 @@ class ApiRepository {
       throw errorMessage;
     }
   }
-
 
   Future<UpdateHub> updateHubApi(Map<String, dynamic> loginFormula, String recordId) async {
     try {
@@ -204,4 +204,13 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<SubjectResponse>> getSubjectsForSpecializationApi(String detailFormula) async {
+    try {
+      final response = await userApi.getSubjectsForSpecializationApi(detailFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

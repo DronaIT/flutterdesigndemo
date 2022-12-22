@@ -16,6 +16,7 @@ import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -193,7 +194,6 @@ class ApiRequest {
     }
   }
 
-
   Future<BaseApiResponseWithSerializable<HubResponse>> addHubApi(AddHubRequest addHubRequest) async {
     try {
       Map<String, dynamic> someMap = {"fields": addHubRequest};
@@ -212,6 +212,18 @@ class ApiRequest {
 
       Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_HUB + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
       return UpdateHub.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<SubjectResponse>> getSubjectsForSpecializationApi(String detailFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": detailFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_SUBJECT, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<SubjectResponse>.fromJson(response.data, (response) => SubjectResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
