@@ -15,6 +15,7 @@ class TableNames {
   static const TBL_SPECIALIZATION = "TBL_SPECIALIZATION";
   static const TBL_EMPLOYEE = "TBL_EMPLOYEE";
   static const TBL_PERMISSION = "TBL_PERMISSION";
+  static const TBL_SUBJECT = "TBL_SUBJECT";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_PASSWORD = "password";
