@@ -7,6 +7,7 @@ class LoginFieldsResponse {
   String? name;
   String? address;
   String? mobileNumber;
+  String? email =" ";
   List<String>? specializationIds;
   String? gender;
   String? createdOn;
@@ -15,7 +16,7 @@ class LoginFieldsResponse {
   List<String>? hubIdFromHubIds;
   List<String>? specializationIdFromSpecializationIds;
 
-  LoginFieldsResponse({this.city, this.joiningYear, this.password, this.studentId, this.hubIds, this.name, this.address, this.mobileNumber, this.specializationIds, this.gender, this.createdOn, this.updatedOn, this.enrollmentNumber, this.hubIdFromHubIds, this.specializationIdFromSpecializationIds});
+  LoginFieldsResponse({this.city, this.joiningYear, this.password, this.studentId, this.hubIds, this.name, this.address, this.mobileNumber,this.email, this.specializationIds, this.gender, this.createdOn, this.updatedOn, this.enrollmentNumber, this.hubIdFromHubIds, this.specializationIdFromSpecializationIds});
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -26,6 +27,7 @@ class LoginFieldsResponse {
     name = json['name'];
     address = json['address'];
     mobileNumber = json['mobile_number'];
+    email = json['email'];
     specializationIds = json['specialization_ids']?.cast<String>();
     gender = json['gender'];
     createdOn = json['created_on'];
@@ -45,6 +47,7 @@ class LoginFieldsResponse {
     data['name'] = this.name;
     data['address'] = this.address;
     data['mobile_number'] = this.mobileNumber;
+    data['email'] = this.email;
     data['specialization_ids'] = this.specializationIds;
     data['gender'] = this.gender;
     data['created_on'] = this.createdOn;

@@ -4,6 +4,7 @@ class ViewEmployeeResponse {
   String? city;
   List<String>? roleIds;
   String? mobileNumber;
+  String? email;
   String? employeeName;
   String? password;
   List<String>? hubIds;
@@ -18,7 +19,7 @@ class ViewEmployeeResponse {
       this.employeeId,
       this.city,
       this.roleIds,
-      this.mobileNumber,
+      this.mobileNumber, this.email,
       this.employeeName,
       this.password,
       this.hubIds,
@@ -32,6 +33,7 @@ class ViewEmployeeResponse {
     gender = json['gender'];
     employeeId = json['employee_id'];
     city = json['city'];
+    email = json['email'];
     roleIds = json['role_ids'].cast<String>();
     mobileNumber = json['mobile_number'];
     employeeName = json['employee_name'];
@@ -49,6 +51,7 @@ class ViewEmployeeResponse {
     data['gender'] = this.gender;
     data['employee_id'] = this.employeeId;
     data['city'] = this.city;
+    data['email'] = this.email;
     data['role_ids'] = this.roleIds;
     data['mobile_number'] = this.mobileNumber;
     data['employee_name'] = this.employeeName;

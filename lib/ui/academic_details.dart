@@ -55,26 +55,29 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
       body: Stack(children: [
         specializationData!.isNotEmpty
-            ? ListView.builder(
-                itemCount: specializationData?.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    elevation: 5,
-                    child: GestureDetector(
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+            ? Container(
+            margin: const EdgeInsets.all(15),
+              child: ListView.builder(
+                  itemCount: specializationData?.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 5,
+                      child: GestureDetector(
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
+                        onTap: () {
+                          Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                        },
                       ),
-                      onTap: () {
-                        Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                      },
-                    ),
-                  );
-                })
+                    );
+                  }),
+            )
             : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),

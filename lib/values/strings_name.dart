@@ -119,4 +119,7 @@ class strings_name {
 
   static const String str_update_hub = "Update hub";
 
+  static const String str_email = "Email";
+  static const String str_empty_email = "Please enter valid email";
+
 }

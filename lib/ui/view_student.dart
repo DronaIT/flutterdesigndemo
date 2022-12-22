@@ -149,7 +149,10 @@ class _ViewStudentState extends State<ViewStudent> {
                                 elevation: 5,
                                 child: Column(
                                   children: [
-                                    custom_text(text: "${viewStudent![index].fields!.name! + " (" + viewStudent![index].fields!.enrollmentNumber! + ")"}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                    custom_text(text: "${viewStudent![index].fields!.name!} (${viewStudent![index].fields!.enrollmentNumber!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                    Visibility(visible: viewStudent![index].fields!.email != null ,
+                                        child: custom_text(text: viewStudent![index].fields!.email != null ? viewStudent![index].fields!.email! : "",
+                                            textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
                                     custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                   ],
                                 ),

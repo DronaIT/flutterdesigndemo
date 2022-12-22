@@ -115,6 +115,9 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                       child: Column(
                                         children: [
                                           custom_text(text: "${viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")"}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                          Visibility(visible: viewEmployee![index].fields!.email != null ,
+                                              child: custom_text(text: viewEmployee![index].fields!.email != null ? viewEmployee![index].fields!.email! : "",
+                                                  textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
                                           custom_text(text: viewEmployee![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                         ],
                                       ),

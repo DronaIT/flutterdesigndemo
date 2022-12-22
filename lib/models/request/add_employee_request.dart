@@ -3,16 +3,18 @@ class AddEmployeeRequest {
   String? city;
   String? mobileNumber;
   String? gender;
+  String? email;
   List<String>? hubIds;
   List<String>? roleIds;
 
-  AddEmployeeRequest({this.employee_name, this.city, this.mobileNumber, this.gender, this.hubIds, this.roleIds});
+  AddEmployeeRequest({this.employee_name, this.city, this.mobileNumber, this.gender,this.email, this.hubIds, this.roleIds});
 
   AddEmployeeRequest.fromJson(Map<String, dynamic> json) {
     employee_name = json['employee_name'];
     city = json['city'];
     mobileNumber = json['mobile_number'];
     gender = json['gender'];
+    email = json['email'];
     hubIds = json['hub_ids'].cast<String>();
     roleIds = json['role_ids'].cast<String>();
   }
@@ -23,6 +25,7 @@ class AddEmployeeRequest {
     data['city'] = this.city;
     data['mobile_number'] = this.mobileNumber;
     data['gender'] = this.gender;
+    data['email'] = this.email;
     data['hub_ids'] = this.hubIds;
     data['role_ids'] = this.roleIds;
     return data;

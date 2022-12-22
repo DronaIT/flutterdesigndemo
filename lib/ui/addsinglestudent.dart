@@ -27,6 +27,7 @@ class AddSingleStudent extends StatefulWidget {
 
 class _AddSingleStudentState extends State<AddSingleStudent> {
   TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   bool isVisible = false;
   TextEditingController cityController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -74,6 +75,19 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     type: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     controller: nameController,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_email,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    controller: emailController,
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
@@ -261,21 +275,24 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     text: strings_name.str_submit,
                     click: () async {
                       var phone = FormValidator.validatePhone(phoneController.text.toString().trim());
+                      var email = FormValidator.validateEmail(emailController.text.toString().trim());
                       if (nameController.text.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_sname);
+                      } else if (!email) {
+                        Utils.showSnackBar(context, strings_name.str_empty_email);
                       } else if (phone.isNotEmpty) {
                         Utils.showSnackBar(context, phone);
-                      } else if (addressController.text.isEmpty) {
+                      } else if (addressController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_address);
-                      } else if (cityController.text.isEmpty) {
+                      } else if (cityController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
-                      } else if (gender.isEmpty) {
+                      } else if (gender.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_gender);
-                      } else if (joingYearController.text.isEmpty) {
+                      } else if (joingYearController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_joing_year);
-                      } else if (speValue.isEmpty) {
+                      } else if (speValue.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_spe);
-                      } else if (hubValue.isEmpty) {
+                      } else if (hubValue.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_hub);
                       } else {
                         setState(() {
@@ -284,6 +301,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         CreateStudentRequest response = CreateStudentRequest();
                         response.name = nameController.text.trim().toString();
                         response.mobileNumber = phoneController.text.trim().toString();
+                        response.email = emailController.text.trim().toString();
                         response.gender = gender.trim().toString();
                         response.city = cityController.text.trim().toString();
                         response.address = addressController.text.trim().toString();

@@ -36,7 +36,7 @@ class _AddEmployeeState extends State<AddEmployee> {
   String hubValue = "";
   List<BaseApiResponseWithSerializable<RoleResponse>>? roleResponseArray = [];
   List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
-
+  TextEditingController emailController = TextEditingController();
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -87,7 +87,21 @@ class _AddEmployeeState extends State<AddEmployee> {
                       type: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       controller: nameController,
-                      topValue: 5,
+                      topValue: 2,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_email,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                      topValue: 2,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      controller: emailController,
+                      topValue: 2,
                     ),
                     SizedBox(height: 5.h),
                     custom_text(
@@ -100,7 +114,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       textInputAction: TextInputAction.next,
                       controller: cityController,
                       maxLength: 30,
-                      topValue: 5,
+                      topValue: 2,
                     ),
                     SizedBox(height: 5.h),
                     custom_text(
@@ -113,7 +127,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       textInputAction: TextInputAction.next,
                       controller: phoneController,
                       maxLength: 10,
-                      topValue: 5,
+                      topValue: 2,
                     ),
                     SizedBox(height: 5.h),
                     custom_text(
@@ -184,7 +198,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                           fit: FlexFit.loose,
                           child: Container(
                             width: viewWidth,
-                            margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<RoleResponse>>(
                               value: roleResponse,
                               elevation: 16,
@@ -219,7 +233,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                         Flexible(
                           fit: FlexFit.loose,
                           child: Container(
-                            margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                             width: viewWidth,
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                               value: hubResponse,
@@ -248,17 +262,20 @@ class _AddEmployeeState extends State<AddEmployee> {
                       text: strings_name.str_submit,
                       click: () {
                         var phone = FormValidator.validatePhone(phoneController.text.toString().trim());
-                        if (nameController.text.isEmpty) {
+                        var email = FormValidator.validateEmail(emailController.text.toString().trim());
+                        if (nameController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_name);
-                        } else if (cityController.text.isEmpty) {
+                        }else if (!email) {
+                          Utils.showSnackBar(context, strings_name.str_empty_email);
+                        } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
                         } else if (phone.isNotEmpty) {
                           Utils.showSnackBar(context, phone);
-                        } else if (gender.isEmpty) {
+                        } else if (gender.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_gender);
-                        } else if (roleValue.isEmpty) {
+                        } else if (roleValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_role);
-                        } else if (hubValue.isEmpty) {
+                        } else if (hubValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_hub);
                         } else {
                           addRecord();
@@ -290,9 +307,9 @@ class _AddEmployeeState extends State<AddEmployee> {
       request.mobileNumber = phoneController.text.toString().replaceAll(" ", "").replaceAll("-", "");
       request.city = cityController.text.toString();
       request.gender = gender;
+      request.email = emailController.text.toString();
       request.hubIds = Utils.getHubId(hubValue)!.split(",");
       request.roleIds = Utils.getRoleId(roleValue)!.split(",");
-
       var resp = await apiRepository.addEmployeeApi(request);
       if (resp.id!.isNotEmpty) {
         setState(() {
