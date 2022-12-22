@@ -104,7 +104,6 @@ class strings_name {
   static const String str_student_name = "Student name";
   static const String str_address = "Address";
 
-
   static const String str_joining_year = "Joining year";
   static const String str_empty_sname = "Please enter student name";
   static const String str_empty_address = "Please enter address";
@@ -123,5 +122,8 @@ class strings_name {
   static const String str_empty_email = "Please enter valid email";
   static const String str_add_specilization = "Add specialization";
   static const String str_add_subjects = "Add subject";
+  static const String str_add_units = "Add units";
+  static const String str_add_topics = "Add topics";
 
+  static const String str_no_units_added = "No Units were added";
 }

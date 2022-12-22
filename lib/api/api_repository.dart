@@ -15,6 +15,8 @@ import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/models/topics_response.dart';
+import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
@@ -207,6 +209,26 @@ class ApiRepository {
   Future<BaseLoginResponse<SubjectResponse>> getSubjectsForSpecializationApi(String detailFormula) async {
     try {
       final response = await userApi.getSubjectsForSpecializationApi(detailFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseLoginResponse<UnitsResponse>> getUnitsApi(String unitsFormula) async {
+    try {
+      final response = await userApi.getUnitsApi(unitsFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseLoginResponse<TopicsResponse>> getTopicsApi(String topicsFormula) async {
+    try {
+      final response = await userApi.getTopicsApi(topicsFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

@@ -16,6 +16,8 @@ class TableNames {
   static const TBL_EMPLOYEE = "TBL_EMPLOYEE";
   static const TBL_PERMISSION = "TBL_PERMISSION";
   static const TBL_SUBJECT = "TBL_SUBJECT";
+  static const TBL_UNITS = "TBL_UNITS";
+  static const TBL_TOPICS = "TBL_TOPICS";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_PASSWORD = "password";
@@ -23,6 +25,8 @@ class TableNames {
   static const CLM_HUB_IDS = "hub_ids";
   static const CLM_SPE_ID = "specialization_id";
   static const CLM_SPE_IDS = "specialization_ids";
+  static const CLM_SUBJECT_IDS = "subject_ids";
+  static const CLM_UNIT_IDS = "unit_ids";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";

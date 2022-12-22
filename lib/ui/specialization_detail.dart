@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/ui/subject_detail.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -85,7 +86,9 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                         children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                       ),
                                     ),
-                                    onTap: () {},
+                                    onTap: () {
+                                      Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
+                                    },
                                   ),
                                 );
                               }),

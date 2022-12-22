@@ -17,6 +17,8 @@ import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/models/topics_response.dart';
+import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -224,6 +226,30 @@ class ApiRequest {
 
       final Response response = await dioClient.get(TableNames.TBL_SUBJECT, queryParameters: someMap, options: Options(headers: header));
       return BaseLoginResponse<SubjectResponse>.fromJson(response.data, (response) => SubjectResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<UnitsResponse>> getUnitsApi(String unitsFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": unitsFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_UNITS, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<UnitsResponse>.fromJson(response.data, (response) => UnitsResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<TopicsResponse>> getTopicsApi(String topicsFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": topicsFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_TOPICS, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<TopicsResponse>.fromJson(response.data, (response) => TopicsResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
