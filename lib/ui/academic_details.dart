@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
+import 'package:flutterdesigndemo/ui/add_specilization.dart';
+import 'package:flutterdesigndemo/ui/add_subject.dart';
 import 'package:flutterdesigndemo/ui/specialization_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -54,31 +57,56 @@ class _AcademicDetailsState extends State<AcademicDetails> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
       body: Stack(children: [
-        specializationData!.isNotEmpty
-            ? Container(
-            margin: const EdgeInsets.all(15),
-              child: ListView.builder(
-                  itemCount: specializationData?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      elevation: 5,
-                      child: GestureDetector(
-                        child: Container(
-                          color: colors_name.colorWhite,
-                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                          ),
-                        ),
-                        onTap: () {
-                          Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                        },
-                      ),
-                    );
-                  }),
+        Column(
+          children: [
+            specializationData!.isNotEmpty
+                ? Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: ListView.builder(
+                        itemCount: specializationData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            child: GestureDetector(
+                              child: Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                ),
+                              ),
+                              onTap: () {
+                                Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                              },
+                            ),
+                          );
+                        }),
+                  ),
+                ) : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            Container(
+              margin: const EdgeInsets.only(bottom: 30,top: 10,left: 5,right: 5),
+              child: Row(
+                children: [
+                  Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_specilization,fontSize: 15, click: () async {
+                        Get.to(const AddSpecilization());
+                      }))),
+                  const SizedBox(width: 2),
+                  Flexible(
+                      fit: FlexFit.tight,
+                      child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_subjects,fontSize: 15, click: () async {
+                        Get.to(const AddSubject());
+
+                      }))),
+
+                ],
+              ),
             )
-            : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+          ],
+        ),
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )

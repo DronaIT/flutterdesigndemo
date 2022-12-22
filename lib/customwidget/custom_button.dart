@@ -42,7 +42,7 @@ class _CustomButtonState extends State<CustomButton> {
         child: Text(
           widget.text,
           textAlign: widget.textAlign,
-          style: TextStyle(fontSize: 20, color: widget.color, fontWeight: widget.fontWeight),
+          style: TextStyle(fontSize: widget.fontSize, color: widget.color, fontWeight: widget.fontWeight),
         ),
       ),
     );

@@ -91,36 +91,39 @@ class _SetupCollageState extends State<SetupCollage> {
               children: [
                 canViewHub && hubResponse.records?.isNotEmpty == true
                     ? Expanded(
-                        child: ListView.builder(
-                            itemCount: hubResponse.records?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 5,
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        children: [
-                                          custom_text(text: "${hubResponse.records![index].fields!.hubName!}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                          custom_text(text: hubResponse.records![index].fields!.city!, textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0),
-                                          custom_text(text: hubResponse.records![index].fields!.address!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
-                                        ],
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          child: ListView.builder(
+                              itemCount: hubResponse.records?.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 5,
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: Column(
+                                          children: [
+                                            custom_text(text: "${hubResponse.records![index].fields!.hubName!}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                            custom_text(text: "Address: ${hubResponse.records![index].fields!.address!}", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0,maxLines: 2,),
+                                            custom_text(text: "City: ${hubResponse.records![index].fields!.city!}", textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    canUpdateHub
-                                        ? GestureDetector(
-                                            onTap: () async {
-                                              var response = await Get.to(const UpdateHub(), arguments: hubResponse.records?[index]);
-                                              if (response && canViewHub) {
-                                                getRecords();
-                                              }
-                                            },
-                                            child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
-                                        : Container(),
-                                  ],
-                                ),
-                              );
-                            }),
+                                      canUpdateHub
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                var response = await Get.to(const UpdateHub(), arguments: hubResponse.records?[index]);
+                                                if (response && canViewHub) {
+                                                  getRecords();
+                                                }
+                                              },
+                                              child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
+                                          : Container(),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
                       )
                     : canViewHub
                         ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))

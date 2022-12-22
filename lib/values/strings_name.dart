@@ -121,5 +121,7 @@ class strings_name {
 
   static const String str_email = "Email";
   static const String str_empty_email = "Please enter valid email";
+  static const String str_add_specilization = "Add specialization";
+  static const String str_add_subjects = "Add subject";
 
 }
