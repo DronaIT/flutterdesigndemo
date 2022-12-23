@@ -12,8 +12,8 @@ class SpecializationResponse {
     id = json['id'];
     specializationId = json['specialization_id'];
     specializationName = json['specialization_name'];
-    hubIds = json['hub_ids'].cast<String>();
-    hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
+    hubIds = json['hub_ids']?.cast<String>();
+    hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     specializationDesc = json['specialization_desc'];
   }
 

@@ -18,6 +18,8 @@ class custom_edittext extends StatefulWidget {
   final double size;
   final FontWeight fontWeight;
   final int maxLength;
+  final int maxLines;
+  final int minLines;
   final bool isPassword;
 
   custom_edittext(
@@ -35,6 +37,8 @@ class custom_edittext extends StatefulWidget {
       this.readOnly = false,
       this.isPassword = false,
       this.maxLength = 50,
+      this.maxLines = 1,
+      this.minLines = 1,
       this.fontWeight = FontWeight.w700});
 
   @override
@@ -54,11 +58,12 @@ class _customState extends State<custom_edittext> {
         controller: widget.controller,
         enabled: widget.enabled,
         readOnly: widget.readOnly,
+        maxLines: widget.maxLines,
         cursorColor: colors_name.colorPrimary,
         inputFormatters: [
           LengthLimitingTextInputFormatter(widget.maxLength), // for mobile
         ],
-        minLines: 1,
+        minLines: widget.minLines,
         decoration: InputDecoration(
             suffixIcon: widget.isPassword
                 ? IconButton(
@@ -75,19 +80,14 @@ class _customState extends State<custom_edittext> {
                 : null,
             border: const OutlineInputBorder(),
             enabledBorder: const OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: colors_name.textColorGreyLight, width: 1.5),
+              borderSide: BorderSide(color: colors_name.textColorGreyLight, width: 1.5),
             ),
             focusedBorder: const OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: colors_name.colorPrimary, width: 1.5),
+              borderSide: BorderSide(color: colors_name.colorPrimary, width: 1.5),
             ),
             labelText: widget.labelText,
             hintText: widget.hintText,
-            labelStyle: TextStyle(
-                color: widget.color,
-                fontSize: widget.size,
-                fontWeight: widget.fontWeight),
+            labelStyle: TextStyle(color: widget.color, fontSize: widget.size, fontWeight: widget.fontWeight),
             floatingLabelBehavior: FloatingLabelBehavior.always),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/api_request.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
+import 'package:flutterdesigndemo/models/request/add_specialization_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
@@ -229,6 +230,16 @@ class ApiRepository {
   Future<BaseLoginResponse<TopicsResponse>> getTopicsApi(String topicsFormula) async {
     try {
       final response = await userApi.getTopicsApi(topicsFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<SpecializationResponse>> addSpecializationApi(AddSpecializationRequest addSpecializationRequest) async {
+    try {
+      final response = await userApi.addSpecializationApi(addSpecializationRequest);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

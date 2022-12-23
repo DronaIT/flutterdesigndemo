@@ -4,6 +4,7 @@ class SubjectResponse {
   int? ids;
   List<int>? specializationIdFromSpecializationIds;
   String? subjectId;
+  bool selected = false;
 
   SubjectResponse({this.subjectTitle, this.specializationIds, this.ids, this.specializationIdFromSpecializationIds, this.subjectId});
 

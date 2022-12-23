@@ -127,9 +127,20 @@ class strings_name {
 
   static const String str_no_units_added = "No Units were added";
 
+  static const String str_specialization_title = "Specialization Name";
+  static const String str_specialization_desc = "Specialization Description";
+  static const String str_subjects = "Subject";
+  static const String str_no_subjects = "No subjects";
+  static const String str_add = "Add";
+  static const String str_update = "Update";
+
+  static const String str_empty_specialization_title = "Please enter title";
+  static const String str_empty_specialization_desc = "Please enter desc";
+  static const String str_select_subject = "Please select subject";
+  static const String str_specialization_added = "New specialization added successfully.";
+
   static const String str_name = "Name";
   static const String str_role = "Role";
   static const String str_student = "Student";
   static const String str_code = "Code";
-
 }

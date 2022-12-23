@@ -6,7 +6,7 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
-import 'package:flutterdesigndemo/ui/add_specilization.dart';
+import 'package:flutterdesigndemo/ui/add_specialization.dart';
 import 'package:flutterdesigndemo/ui/add_subject.dart';
 import 'package:flutterdesigndemo/ui/specialization_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -29,7 +29,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
-  bool canAddSpe = false, canAddSubject = false , canViewSpe = false ,canEditSpe = false;
+  bool canAddSpe = false, canAddSubject = false, canViewSpe = false, canEditSpe = false;
   @override
   void initState() {
     super.initState();
@@ -73,8 +73,6 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     setState(() {
       isVisible = false;
     });
-
-
   }
 
   Future<void> initialization() async {
@@ -101,60 +99,71 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       body: Stack(children: [
         Column(
           children: [
-            Visibility(visible: canViewSpe,
-              child:  specializationData!.isNotEmpty
-                ? Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                child: ListView.builder(
-                    itemCount: specializationData?.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 5,
-                        child: GestureDetector(
-                          child: Container(
-                            color: colors_name.colorWhite,
-                            padding: const EdgeInsets.all(18),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16),
-                                 Visibility(visible: canEditSpe,
-                                     child: const Icon(Icons.edit, size: 22, color: colors_name.colorPrimary))],
-                            ),
-                          ),
-                          onTap: () {
-                            Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                          },
-                        ),
-                      );
-                    }),
-              ),
-            ) : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            Visibility(
+              visible: canViewSpe,
+              child: specializationData!.isNotEmpty
+                  ? Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        child: ListView.builder(
+                            itemCount: specializationData?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 5,
+                                child: GestureDetector(
+                                  child: Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.all(18),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16), Visibility(visible: canEditSpe, child: const Icon(Icons.edit, size: 22, color: colors_name.colorPrimary))],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                                  },
+                                ),
+                              );
+                            }),
+                      ),
+                    )
+                  : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 30,top: 10,left: 5,right: 5),
+              margin: const EdgeInsets.only(bottom: 30, top: 10, left: 5, right: 5),
               child: Row(
                 children: [
                   Visibility(
                     visible: canAddSpe,
                     child: Flexible(
                         fit: FlexFit.loose,
-                        child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_specilization,fontSize: 15, click: () async {
-                          Get.to(const AddSpecilization());
-                        }))),
+                        child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: CustomButton(
+                                text: strings_name.str_add_specilization,
+                                fontSize: 15,
+                                click: () async {
+                                  Get.to(const AddSpecialization())?.then((result) {
+                                    if (result != null && result) {
+                                      initialization();
+                                    }
+                                  });
+                                }))),
                   ),
                   const SizedBox(width: 2),
                   Visibility(
                     visible: canAddSubject,
                     child: Flexible(
                         fit: FlexFit.tight,
-                        child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_subjects,fontSize: 15, click: () async {
-                          Get.to(const AddSubject());
-
-                        }))),
+                        child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: CustomButton(
+                                text: strings_name.str_add_subjects,
+                                fontSize: 15,
+                                click: () async {
+                                  Get.to(const AddSubject());
+                                }))),
                   ),
-
                 ],
               ),
             )

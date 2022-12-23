@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
+import 'package:flutterdesigndemo/models/request/add_specialization_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
@@ -250,6 +251,17 @@ class ApiRequest {
 
       final Response response = await dioClient.get(TableNames.TBL_TOPICS, queryParameters: someMap, options: Options(headers: header));
       return BaseLoginResponse<TopicsResponse>.fromJson(response.data, (response) => TopicsResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<SpecializationResponse>> addSpecializationApi(AddSpecializationRequest addSpecializationRequest) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": addSpecializationRequest};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_SPECIALIZATION, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<SpecializationResponse>.fromJson(response.data, (response) => SpecializationResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
