@@ -10,6 +10,8 @@ class LoginEmployeResponse {
   String? employeeCode;
   String? mobileNumber;
   String? password;
+  String? email =" ";
+  String? address;
 
   LoginEmployeResponse(
       {this.gender,
@@ -22,6 +24,7 @@ class LoginEmployeResponse {
       this.hubIdFromHubIds,
       this.employeeCode,
       this.mobileNumber,
+        this.email,
       this.password});
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
@@ -36,6 +39,8 @@ class LoginEmployeResponse {
     employeeCode = json['employee_code'];
     mobileNumber = json['mobile_number'];
     password = json['password'];
+    email = json['email'];
+    address = json['address'];
   }
 
   Map<String, dynamic> toJson() {
@@ -51,6 +56,8 @@ class LoginEmployeResponse {
     data['employee_code'] = this.employeeCode;
     data['mobile_number'] = this.mobileNumber;
     data['password'] = this.password;
+    data['email'] = this.email;
+    data['address'] = this.address;
     return data;
   }
 }

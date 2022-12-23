@@ -5,6 +5,7 @@ class ViewEmployeeResponse {
   List<String>? roleIds;
   String? mobileNumber;
   String? email;
+  String? address;
   String? employeeName;
   String? password;
   List<String>? hubIds;
@@ -27,6 +28,7 @@ class ViewEmployeeResponse {
       this.hubIdFromHubIds,
       this.employeeCode,
       this.createdOn,
+        this.address,
       this.updatedOn});
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class ViewEmployeeResponse {
     employeeId = json['employee_id'];
     city = json['city'];
     email = json['email'];
+    address = json['address'];
     roleIds = json['role_ids'].cast<String>();
     mobileNumber = json['mobile_number'];
     employeeName = json['employee_name'];
@@ -52,6 +55,7 @@ class ViewEmployeeResponse {
     data['employee_id'] = this.employeeId;
     data['city'] = this.city;
     data['email'] = this.email;
+    data['address'] = this.address;
     data['role_ids'] = this.roleIds;
     data['mobile_number'] = this.mobileNumber;
     data['employee_name'] = this.employeeName;

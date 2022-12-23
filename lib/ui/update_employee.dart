@@ -31,7 +31,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
   TextEditingController cityController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   String gender = "Male";
-
+  String employeeCode = " ";
   String roleValue = "";
   BaseApiResponseWithSerializable<RoleResponse>? roleResponse;
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
@@ -39,6 +39,8 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
   List<BaseApiResponseWithSerializable<RoleResponse>>? roleResponseArray = [];
   List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
   final apiRepository = getIt.get<ApiRepository>();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
@@ -65,8 +67,12 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
     var data = Get.arguments;
     nameController.text = data.fields!.employeeName!;
     phoneController.text = data.fields!.mobileNumber;
+    emailController.text = data.fields!.email;
+    addressController.text = data.fields!.address;
     cityController.text = data.fields!.city;
     gender = data.fields!.gender;
+    employeeCode = data.fields!.employeeCode;
+    cityController.text = data.fields!.city;
     for( var i = 0 ; i < roleResponseArray!.length; i++){
       if(data.fields!.roleIdFromRoleIds[0] == roleResponseArray![i].fields!.roleId){
          setState(() {
@@ -105,7 +111,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                   children: [
                     SizedBox(height: 10.h),
                     custom_text(
-                      text: strings_name.str_employee_name +" ("+Get.arguments.fields!.employeeCode+")",
+                      text: strings_name.str_employee_name +" ("+employeeCode+")",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
@@ -113,19 +119,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       type: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       controller: nameController,
-                      topValue: 5,
-                    ),
-                    SizedBox(height: 5.h),
-                    custom_text(
-                      text: strings_name.str_city,
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextSemiBold16,
-                    ),
-                    custom_edittext(
-                      type: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      controller: cityController,
-                      maxLength: 30,
                       topValue: 5,
                     ),
                     SizedBox(height: 5.h),
@@ -143,6 +136,48 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       readOnly: true,
                       enabled: false ,
                     ),
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_email,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                      topValue: 2,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      controller: emailController,
+                      topValue: 2,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_address,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      controller: addressController,
+                      topValue: 2,
+                    ),
+
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_city,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      controller: cityController,
+                      maxLength: 30,
+                      topValue: 5,
+                    ),
+
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_gender,
@@ -273,8 +308,13 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                     CustomButton(
                       text: strings_name.str_submit,
                       click: () async {
+                        var email = FormValidator.validateEmail(emailController.text.toString().trim());
                         if (nameController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_name);
+                        } else if (!email) {
+                          Utils.showSnackBar(context, strings_name.str_empty_city);
+                        } else if (addressController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_address);
                         } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
                         }  else if (gender.isEmpty) {
@@ -286,6 +326,8 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                         } else {
                           Map<String, dynamic> updateEmployee = {
                             "employee_name" : nameController.text.toString(),
+                            "address" : addressController.text.toString(),
+                            "email" : emailController.text.toString(),
                             "gender" : gender,
                             "city" : cityController.text.toString(),
                             "role_ids" : Utils.getRoleId(roleValue)!.split(","),

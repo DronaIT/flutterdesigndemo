@@ -43,7 +43,7 @@ class strings_name {
   static const String poorNetworkError = "Poor network connection, please try again!";
   static const String sessionExpired = "Session expired";
 
-  static const String str_manage_users = "Manage User";
+  static const String str_manage_users = "Manage user";
   static const String str_add_students = "Add students";
   static const String str_add_student = "Add student";
 
@@ -64,7 +64,7 @@ class strings_name {
   static const String str_yes = "Yes";
   static const String str_cancle = "Cancel";
 
-  static const String str_settings = "Settings";
+  static const String str_settings = "Profile";
   static const String str_logout = "Logout";
   static const String str_home = "Home";
 
@@ -97,7 +97,7 @@ class strings_name {
   static const String str_empty_spe = "Please select specialization";
 
   static const String str_specializations = "Specializations";
-  static const String str_academic_detail = "Academic Details";
+  static const String str_academic_detail = "Academic details";
 
   static const String str_add_multiple_student = "Add multiple student";
   static const String str_add_single_student = "Add single student";
@@ -126,4 +126,10 @@ class strings_name {
   static const String str_add_topics = "Add topics";
 
   static const String str_no_units_added = "No Units were added";
+
+  static const String str_name = "Name";
+  static const String str_role = "Role";
+  static const String str_student = "Student";
+  static const String str_code = "Code";
+
 }

@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/ui/add_specilization.dart';
 import 'package:flutterdesigndemo/ui/add_subject.dart';
 import 'package:flutterdesigndemo/ui/specialization_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -28,11 +29,52 @@ class _AcademicDetailsState extends State<AcademicDetails> {
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
-
+  bool canAddSpe = false, canAddSubject = false , canViewSpe = false ,canEditSpe = false;
   @override
   void initState() {
     super.initState();
+    getPermission();
     initialization();
+  }
+
+  Future<void> getPermission() async {
+    setState(() {
+      isVisible = true;
+    });
+    var loginData = PreferenceUtils.getLoginDataEmployee();
+    var query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
+    var data = await apiRepository.getPermissionsApi(query);
+    if (data.records!.isNotEmpty) {
+      for (var i = 0; i < data.records!.length; i++) {
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SPECILIZATION) {
+          setState(() {
+            canAddSpe = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_SPECILIZATION) {
+          setState(() {
+            canEditSpe = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_SPECILIZATION) {
+          setState(() {
+            canViewSpe = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SUBJECT) {
+          setState(() {
+            canAddSubject = true;
+          });
+        }
+      }
+    } else {
+      Utils.showSnackBar(context, strings_name.str_something_wrong);
+    }
+    setState(() {
+      isVisible = false;
+    });
+
+
   }
 
   Future<void> initialization() async {
@@ -59,48 +101,59 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       body: Stack(children: [
         Column(
           children: [
-            specializationData!.isNotEmpty
+            Visibility(visible: canViewSpe,
+              child:  specializationData!.isNotEmpty
                 ? Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: ListView.builder(
-                        itemCount: specializationData?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: GestureDetector(
-                              child: Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                                ),
-                              ),
-                              onTap: () {
-                                Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                              },
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: ListView.builder(
+                    itemCount: specializationData?.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        elevation: 5,
+                        child: GestureDetector(
+                          child: Container(
+                            color: colors_name.colorWhite,
+                            padding: const EdgeInsets.all(18),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                 Visibility(visible: canEditSpe,
+                                     child: const Icon(Icons.edit, size: 22, color: colors_name.colorPrimary))],
                             ),
-                          );
-                        }),
-                  ),
-                ) : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                          ),
+                          onTap: () {
+                            Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                          },
+                        ),
+                      );
+                    }),
+              ),
+            ) : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            ),
             Container(
               margin: const EdgeInsets.only(bottom: 30,top: 10,left: 5,right: 5),
               child: Row(
                 children: [
-                  Flexible(
-                      fit: FlexFit.loose,
-                      child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_specilization,fontSize: 15, click: () async {
-                        Get.to(const AddSpecilization());
-                      }))),
+                  Visibility(
+                    visible: canAddSpe,
+                    child: Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_specilization,fontSize: 15, click: () async {
+                          Get.to(const AddSpecilization());
+                        }))),
+                  ),
                   const SizedBox(width: 2),
-                  Flexible(
-                      fit: FlexFit.tight,
-                      child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_subjects,fontSize: 15, click: () async {
-                        Get.to(const AddSubject());
+                  Visibility(
+                    visible: canAddSubject,
+                    child: Flexible(
+                        fit: FlexFit.tight,
+                        child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_subjects,fontSize: 15, click: () async {
+                          Get.to(const AddSubject());
 
-                      }))),
+                        }))),
+                  ),
 
                 ],
               ),

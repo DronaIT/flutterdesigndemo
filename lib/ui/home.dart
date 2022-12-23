@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
 
   String name = "";
   String phone = "";
-
+  String roleName = "";
   Future<void> getRecords(String roleId) async {
     var query = "SEARCH('${roleId}',${TableNames.CLM_ROLE_ID},0)";
     setState(() {
@@ -107,7 +107,7 @@ class _HomeState extends State<Home> {
             ),
             buildMenuItem(
               text: strings_name.str_settings,
-              icon: Icons.settings,
+              icon: Icons.person,
               onClicked: () => selectedItem(context, 0),
             ),
             buildMenuItem(

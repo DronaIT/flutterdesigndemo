@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -165,6 +163,18 @@ class Utils {
       }
     }
     return roleId;
+  }
+
+  static String? getRoleName(String? roleId) {
+    final roleList = PreferenceUtils.getRoleList();
+    String? roleName;
+    for (int i = 0; i < roleList.records!.length; i++) {
+      if (roleList.records![i].fields!.roleId == roleId) {
+        roleName = roleList.records![i].fields?.roleTitle!;
+        break;
+      }
+    }
+    return roleName;
   }
 }
 

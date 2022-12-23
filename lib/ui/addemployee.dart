@@ -28,6 +28,7 @@ class AddEmployee extends StatefulWidget {
 class _AddEmployeeState extends State<AddEmployee> {
   TextEditingController nameController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   String gender = "Male";
   String roleValue = "";
@@ -89,7 +90,19 @@ class _AddEmployeeState extends State<AddEmployee> {
                       controller: nameController,
                       topValue: 2,
                     ),
-
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_phone,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      controller: phoneController,
+                      maxLength: 10,
+                      topValue: 2,
+                    ),
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_email,
@@ -105,6 +118,18 @@ class _AddEmployeeState extends State<AddEmployee> {
                     ),
                     SizedBox(height: 5.h),
                     custom_text(
+                      text: strings_name.str_address,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      controller: addressController,
+                      topValue: 2,
+                    ),
+                    SizedBox(height: 5.h),
+                    custom_text(
                       text: strings_name.str_city,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
@@ -116,19 +141,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       maxLength: 30,
                       topValue: 2,
                     ),
-                    SizedBox(height: 5.h),
-                    custom_text(
-                      text: strings_name.str_phone,
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextSemiBold16,
-                    ),
-                    custom_edittext(
-                      type: TextInputType.phone,
-                      textInputAction: TextInputAction.next,
-                      controller: phoneController,
-                      maxLength: 10,
-                      topValue: 2,
-                    ),
+
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_gender,
@@ -265,12 +278,14 @@ class _AddEmployeeState extends State<AddEmployee> {
                         var email = FormValidator.validateEmail(emailController.text.toString().trim());
                         if (nameController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_name);
-                        }else if (!email) {
+                        }else if (phone.isNotEmpty) {
+                          Utils.showSnackBar(context, phone);
+                        }  else if (!email) {
                           Utils.showSnackBar(context, strings_name.str_empty_email);
+                        }else if (addressController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_address);
                         } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
-                        } else if (phone.isNotEmpty) {
-                          Utils.showSnackBar(context, phone);
                         } else if (gender.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_gender);
                         } else if (roleValue.trim().isEmpty) {
@@ -306,6 +321,7 @@ class _AddEmployeeState extends State<AddEmployee> {
       request.employee_name = nameController.text.toString();
       request.mobileNumber = phoneController.text.toString().replaceAll(" ", "").replaceAll("-", "");
       request.city = cityController.text.toString();
+      request.address = addressController.text.toString();
       request.gender = gender;
       request.email = emailController.text.toString();
       request.hubIds = Utils.getHubId(hubValue)!.split(",");

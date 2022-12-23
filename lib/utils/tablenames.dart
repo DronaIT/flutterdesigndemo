@@ -8,6 +8,8 @@ class TableNames {
 
   static const MODULE_SETUP_COLLAGE = "DM02";
 
+  static const MODULE_ACADEMIC_DETAIL = "DM05";
+
   static const TB_STUDENT = "TBL_STUDENT";
   static const TBL_MODULE = "TBL_MODULE";
   static const TBL_ROLE = "TBL_ROLE";
@@ -18,6 +20,7 @@ class TableNames {
   static const TBL_SUBJECT = "TBL_SUBJECT";
   static const TBL_UNITS = "TBL_UNITS";
   static const TBL_TOPICS = "TBL_TOPICS";
+
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_PASSWORD = "password";
@@ -37,4 +40,10 @@ class TableNames {
   static const PERMISSION_ID_ADD_HUB = "DP0201";
   static const PERMISSION_ID_UPDATE_HUB = "DP0202";
   static const PERMISSION_ID_VIEW_HUB = "DP0203";
+
+
+  static const PERMISSION_ID_ADD_SPECILIZATION = "DP0501";
+  static const PERMISSION_ID_UPDATE_SPECILIZATION = "DP0502";
+  static const PERMISSION_ID_VIEW_SPECILIZATION = "DP0503";
+  static const PERMISSION_ID_ADD_SUBJECT = "DP0504";
 }
