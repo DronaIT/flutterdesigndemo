@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/ui/add_specialization.dart';
 import 'package:flutterdesigndemo/ui/add_subject.dart';
 import 'package:flutterdesigndemo/ui/specialization_detail.dart';
+import 'package:flutterdesigndemo/ui/view_subject.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -172,10 +173,10 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                         child: Container(
                             alignment: Alignment.bottomCenter,
                             child: CustomButton(
-                                text: strings_name.str_add_subjects,
+                                text: strings_name.str_v_subjects,
                                 fontSize: 15,
                                 click: () async {
-                                  Get.to(const AddSubject());
+                                  Get.to(const ViewSubjects());
                                 }))),
                   ),
                 ],

@@ -71,7 +71,7 @@ class _UpdateHubState extends State<UpdateHub> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_hub),
+        appBar: AppWidgets.appBarWithoutBack(strings_name.str_update_hub),
         body: Stack(
           children: [
             Column(

@@ -166,4 +166,9 @@ class strings_name {
   static const String str_empty_topic_title = "Please enter topic name";
   static const String str_select_topics = "Please select topics";
   static const String str_topic_added = "New topic added successfully.";
+
+  static const String str_view_subjects = "View subjects";
+  static const String str_v_subjects = "Subjects";
+
+
 }
