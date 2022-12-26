@@ -5,9 +5,11 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/add_specialization_request.dart';
+import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/ui/subject_detail.dart';
 import 'package:flutterdesigndemo/ui/subject_selection.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -29,9 +31,48 @@ class _AddSpecializationState extends State<AddSpecialization> {
   TextEditingController descController = TextEditingController();
 
   bool isVisible = false;
+  bool fromEdit = false;
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  Future<void> initialization() async {
+    if (Get.arguments != null) {
+      setState(() {
+        isVisible = true;
+      });
+      var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
+      var data = await apiRepository.getSpecializationDetailApi(query);
+      if (data.records?.isNotEmpty == true) {
+        fromEdit = true;
+
+        specializationData = data.records;
+        if (specializationData?.isNotEmpty == true) {
+          fromEdit = true;
+          titleController.text = specializationData![0].fields!.specializationName.toString();
+          descController.text = specializationData![0].fields!.specializationDesc.toString();
+
+          var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
+          var data = await apiRepository.getSubjectsForSpecializationApi(query);
+          if (data.records?.isNotEmpty == true) {
+            subjectData = data.records;
+          }
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+      setState(() {
+        isVisible = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,18 +197,34 @@ class _AddSpecializationState extends State<AddSpecialization> {
     }
     request.tBLSUBJECT = selectedSubjectData;
 
-    var resp = await apiRepository.addSpecializationApi(request);
-    if (resp.id!.isNotEmpty) {
-      setState(() {
-        isVisible = false;
-      });
-      Utils.showSnackBar(context, strings_name.str_specialization_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
+    if (!fromEdit) {
+      var resp = await apiRepository.addSpecializationApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_specialization_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     } else {
-      setState(() {
-        isVisible = false;
-      });
+      var resp = await apiRepository.updateSpecializationApi(request.toJson(), specializationData![0].id.toString());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_specialization_updated);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     }
   }
 }

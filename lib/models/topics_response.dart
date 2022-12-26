@@ -4,15 +4,16 @@ class TopicsResponse {
   String? topicTitle;
   String? topicId;
   List<String>? unitIdFromUnitIds;
+  bool selected = false;
 
   TopicsResponse({this.unitIds, this.ids, this.topicTitle, this.topicId, this.unitIdFromUnitIds});
 
   TopicsResponse.fromJson(Map<String, dynamic> json) {
-    unitIds = json['unit_ids'].cast<String>();
+    unitIds = json['unit_ids']?.cast<String>();
     ids = json['ids'];
     topicTitle = json['topic_title'];
     topicId = json['topic_id'];
-    unitIdFromUnitIds = json['unit_id (from unit_ids)'].cast<String>();
+    unitIdFromUnitIds = json['unit_id (from unit_ids)']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

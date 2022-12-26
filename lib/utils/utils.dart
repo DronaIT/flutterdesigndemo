@@ -176,6 +176,16 @@ class Utils {
     }
     return roleName;
   }
+
+  static String? getHubIds(String? hubId) {
+    final hubList = PreferenceUtils.getHubList();
+    for (int i = 0; i < hubList.records!.length; i++) {
+      if (hubList.records![i].id == hubId) {
+        return hubList.records![i].fields?.id!.toString();
+      }
+    }
+    return hubId;
+  }
 }
 
 class DateFormate {

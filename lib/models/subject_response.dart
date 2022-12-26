@@ -10,9 +10,9 @@ class SubjectResponse {
 
   SubjectResponse.fromJson(Map<String, dynamic> json) {
     subjectTitle = json['subject_title'];
-    specializationIds = json['specialization_ids'].cast<String>();
+    specializationIds = json['specialization_ids']?.cast<String>();
     ids = json['ids'];
-    specializationIdFromSpecializationIds = json['specialization_id (from specialization_ids)'].cast<int>();
+    specializationIdFromSpecializationIds = json['specialization_id (from specialization_ids)']?.cast<int>();
     subjectId = json['subject_id'];
   }
 

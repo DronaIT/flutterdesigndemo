@@ -9,8 +9,8 @@ class AddSpecializationRequest {
   AddSpecializationRequest.fromJson(Map<String, dynamic> json) {
     specializationName = json['specialization_name'];
     specializationDesc = json['specialization_desc'];
-    tBLSUBJECT = json['TBL_SUBJECT'].cast<String>();
-    hubIds = json['hub_ids'].cast<String>();
+    tBLSUBJECT = json['TBL_SUBJECT']?.cast<String>();
+    hubIds = json['hub_ids']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

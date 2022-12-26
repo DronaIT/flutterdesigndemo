@@ -91,6 +91,7 @@ class strings_name {
   static const String str_no_data = "No items";
   static const String str_no_module = "No module assigned";
   static const String str_no_employee = "No employee";
+  static const String str_no_hub = "No hubs";
   static const String str_no_students = "No students";
   static const String str_employee_update = "Employee details updated successfully";
   static const String str_select_spelization = "Select specialization";
@@ -115,8 +116,10 @@ class strings_name {
   static const String str_empty_hubname = "Please enter hub name";
   static const String str_hub_added = "New hub added successfully.";
   static const String str_hub_update = "Hub updated successfully";
+  static const String str_no_view_hub_permission = "Please contact admin to provide you Hub Access permission";
 
   static const String str_update_hub = "Update hub";
+  static const String str_no_specialization = "No specialization";
 
   static const String str_email = "Email";
   static const String str_empty_email = "Please enter valid email";
@@ -134,13 +137,33 @@ class strings_name {
   static const String str_add = "Add";
   static const String str_update = "Update";
 
-  static const String str_empty_specialization_title = "Please enter title";
-  static const String str_empty_specialization_desc = "Please enter desc";
+  static const String str_empty_specialization_title = "Please enter specialization name";
+  static const String str_empty_specialization_desc = "Please enter specialization description";
   static const String str_select_subject = "Please select subject";
   static const String str_specialization_added = "New specialization added successfully.";
+  static const String str_specialization_updated = "Specialization updated successfully.";
 
   static const String str_name = "Name";
   static const String str_role = "Role";
   static const String str_student = "Student";
   static const String str_code = "Code";
+
+  static const String str_units = "Units";
+  static const String str_topics = "Topics";
+
+  static const String str_subject_title = "Subject Name";
+  static const String str_empty_subject_title = "Please enter subject name";
+  static const String str_select_units = "Please select units";
+  static const String str_subject_added = "New subject added successfully.";
+  static const String str_no_units = "No units";
+
+  static const String str_unit_title = "Unit Name";
+  static const String str_empty_unit_title = "Please enter unit name";
+  static const String str_unit_added = "New unit added successfully.";
+  static const String str_no_topic = "No topics";
+
+  static const String str_topic_title = "Topic Name";
+  static const String str_empty_topic_title = "Please enter topic name";
+  static const String str_select_topics = "Please select topics";
+  static const String str_topic_added = "New topic added successfully.";
 }

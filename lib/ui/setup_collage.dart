@@ -104,7 +104,13 @@ class _SetupCollageState extends State<SetupCollage> {
                                         child: Column(
                                           children: [
                                             custom_text(text: "${hubResponse.records![index].fields!.hubName!}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                            custom_text(text: "Address: ${hubResponse.records![index].fields!.address!}", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0,maxLines: 2,),
+                                            custom_text(
+                                              text: "Address: ${hubResponse.records![index].fields!.address!}",
+                                              textStyles: blackTextSemiBold14,
+                                              bottomValue: 5,
+                                              topValue: 0,
+                                              maxLines: 2,
+                                            ),
                                             custom_text(text: "City: ${hubResponse.records![index].fields!.city!}", textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                           ],
                                         ),
@@ -126,7 +132,7 @@ class _SetupCollageState extends State<SetupCollage> {
                         ),
                       )
                     : canViewHub
-                        ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
+                        ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_hub, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
                         : Container(),
                 canAddHub
                     ? Container(

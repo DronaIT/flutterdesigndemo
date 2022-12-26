@@ -7,6 +7,9 @@ import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
 import 'package:flutterdesigndemo/models/request/add_specialization_request.dart';
+import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
+import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
+import 'package:flutterdesigndemo/models/request/add_units_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
@@ -20,6 +23,8 @@ import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
+import 'package:flutterdesigndemo/models/update_specialization.dart';
+import 'package:flutterdesigndemo/models/update_subject.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -262,6 +267,63 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.post(TableNames.TBL_SPECIALIZATION, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseApiResponseWithSerializable<SpecializationResponse>.fromJson(response.data, (response) => SpecializationResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UpdateSpecialization> updateSpecializationApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_SPECIALIZATION + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateSpecialization.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<SubjectResponse>> addSubjectApi(AddSubjectRequest addSubjectRequest) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": addSubjectRequest};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_SUBJECT, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<SubjectResponse>.fromJson(response.data, (response) => SubjectResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UpdateSubject> updateSubjectApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_SUBJECT + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateSubject.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<UnitsResponse>> addUnitsApi(AddUnitsRequest addUnitsRequest) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": addUnitsRequest};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_UNITS, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<UnitsResponse>.fromJson(response.data, (response) => UnitsResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<TopicsResponse>> addTopicApi(AddTopicsRequest addTopicsRequest) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": addTopicsRequest};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_TOPICS, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<TopicsResponse>.fromJson(response.data, (response) => TopicsResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

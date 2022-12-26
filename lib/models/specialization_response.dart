@@ -5,6 +5,7 @@ class SpecializationResponse {
   List<String>? hubIds;
   List<String>? hubIdFromHubIds;
   String? specializationDesc;
+  bool selected = false;
 
   SpecializationResponse({this.id, this.specializationId, this.specializationName, this.hubIds, this.hubIdFromHubIds, this.specializationDesc});
 

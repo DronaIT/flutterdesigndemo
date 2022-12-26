@@ -5,6 +5,9 @@ import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
 import 'package:flutterdesigndemo/models/request/add_specialization_request.dart';
+import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
+import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
+import 'package:flutterdesigndemo/models/request/add_units_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
@@ -18,6 +21,8 @@ import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
+import 'package:flutterdesigndemo/models/update_specialization.dart';
+import 'package:flutterdesigndemo/models/update_subject.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
@@ -240,6 +245,56 @@ class ApiRepository {
   Future<BaseApiResponseWithSerializable<SpecializationResponse>> addSpecializationApi(AddSpecializationRequest addSpecializationRequest) async {
     try {
       final response = await userApi.addSpecializationApi(addSpecializationRequest);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<UpdateSpecialization> updateSpecializationApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateSpecializationApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<SubjectResponse>> addSubjectApi(AddSubjectRequest addSubjectRequest) async {
+    try {
+      final response = await userApi.addSubjectApi(addSubjectRequest);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<UpdateSubject> updateSubjectApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateSubjectApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<UnitsResponse>> addUnitsApi(AddUnitsRequest addUnitsRequest) async {
+    try {
+      final response = await userApi.addUnitsApi(addUnitsRequest);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<TopicsResponse>> addTopicApi(AddTopicsRequest addTopicsRequest) async {
+    try {
+      final response = await userApi.addTopicApi(addTopicsRequest);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

@@ -4,11 +4,9 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
-import 'package:flutterdesigndemo/models/units_response.dart';
-import 'package:flutterdesigndemo/ui/add_topic.dart';
-import 'package:flutterdesigndemo/ui/add_units.dart';
-import 'package:flutterdesigndemo/ui/unit_selection.dart';
+import 'package:flutterdesigndemo/models/request/add_units_request.dart';
+import 'package:flutterdesigndemo/models/topics_response.dart';
+import 'package:flutterdesigndemo/ui/topic_selection.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -18,18 +16,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
-class AddSubject extends StatefulWidget {
-  const AddSubject({Key? key}) : super(key: key);
+class AddUnits extends StatefulWidget {
+  const AddUnits({Key? key}) : super(key: key);
 
   @override
-  State<AddSubject> createState() => _AddSubjectState();
+  State<AddUnits> createState() => _AddUnitsState();
 }
 
-class _AddSubjectState extends State<AddSubject> {
+class _AddUnitsState extends State<AddUnits> {
   TextEditingController titleController = TextEditingController();
 
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<UnitsResponse>>? unitsData = [];
+  List<BaseApiResponseWithSerializable<TopicsResponse>>? topicsData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -37,12 +35,12 @@ class _AddSubjectState extends State<AddSubject> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_subjects),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_units),
       body: Column(
         children: [
           SizedBox(height: 10.h),
           custom_text(
-            text: strings_name.str_subject_title,
+            text: strings_name.str_unit_title,
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
           ),
@@ -60,21 +58,21 @@ class _AddSubjectState extends State<AddSubject> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 custom_text(
-                  text: strings_name.str_units,
+                  text: strings_name.str_topics,
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
                 GestureDetector(
                   child: custom_text(
-                    text: unitsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                    text: topicsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
                     alignment: Alignment.topLeft,
                     textStyles: primaryTextSemiBold16,
                   ),
                   onTap: () {
-                    Get.to(const UnitSelection(), arguments: unitsData)?.then((result) {
+                    Get.to(const TopicSelection(), arguments: topicsData)?.then((result) {
                       if (result != null) {
                         setState(() {
-                          unitsData = result;
+                          topicsData = result;
                         });
                       }
                     });
@@ -83,11 +81,11 @@ class _AddSubjectState extends State<AddSubject> {
               ],
             ),
           ),
-          unitsData!.isNotEmpty
+          topicsData!.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: unitsData?.length,
+                      itemCount: topicsData?.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 5,
@@ -97,7 +95,7 @@ class _AddSubjectState extends State<AddSubject> {
                               padding: const EdgeInsets.all(15),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [Text("${topicsData![index].fields!.topicTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
                             ),
                             onTap: () {
@@ -112,41 +110,13 @@ class _AddSubjectState extends State<AddSubject> {
             text: strings_name.str_submit,
             click: () {
               if (titleController.text.trim().isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_empty_subject_title);
-              } else if (unitsData!.isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_select_units);
+                Utils.showSnackBar(context, strings_name.str_empty_unit_title);
+              } else if (topicsData!.isEmpty) {
+                Utils.showSnackBar(context, strings_name.str_select_topics);
               } else {
                 addRecord();
               }
             },
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 30, top: 10, left: 5, right: 5),
-            child: Row(
-              children: [
-                Flexible(
-                    fit: FlexFit.loose,
-                    child: Container(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomButton(
-                            text: strings_name.str_add_units,
-                            fontSize: 15,
-                            click: () async {
-                              Get.to(const AddUnits());
-                            }))),
-                const SizedBox(width: 2),
-                Flexible(
-                    fit: FlexFit.tight,
-                    child: Container(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomButton(
-                            text: strings_name.str_add_topics,
-                            fontSize: 15,
-                            click: () async {
-                              Get.to(const AddTopic());
-                            }))),
-              ],
-            ),
           )
         ],
       ),
@@ -157,21 +127,21 @@ class _AddSubjectState extends State<AddSubject> {
     setState(() {
       isVisible = true;
     });
-    AddSubjectRequest request = AddSubjectRequest();
-    request.subjectTitle = titleController.text.toString();
+    AddUnitsRequest request = AddUnitsRequest();
+    request.unitTitle = titleController.text.toString();
 
     List<String> selectedSubjectData = [];
-    for (var i = 0; i < unitsData!.length; i++) {
-      selectedSubjectData.add(unitsData![i].id.toString());
+    for (var i = 0; i < topicsData!.length; i++) {
+      selectedSubjectData.add(topicsData![i].id.toString());
     }
-    request.tBLUNITS = selectedSubjectData;
+    request.tBLTOPICS = selectedSubjectData;
 
-    var resp = await apiRepository.addSubjectApi(request);
+    var resp = await apiRepository.addUnitsApi(request);
     if (resp.id!.isNotEmpty) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_subject_added);
+      Utils.showSnackBar(context, strings_name.str_unit_added);
       await Future.delayed(const Duration(milliseconds: 2000));
       Get.back(closeOverlays: true, result: true);
     } else {

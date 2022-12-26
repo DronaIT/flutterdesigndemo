@@ -5,7 +5,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/models/specialization_response.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -13,16 +14,16 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class SubjectSelection extends StatefulWidget {
-  const SubjectSelection({Key? key}) : super(key: key);
+class SpecializationSelection extends StatefulWidget {
+  const SpecializationSelection({Key? key}) : super(key: key);
 
   @override
-  State<SubjectSelection> createState() => _SubjectSelectionState();
+  State<SpecializationSelection> createState() => _SpecializationSelectionState();
 }
 
-class _SubjectSelectionState extends State<SubjectSelection> {
+class _SpecializationSelectionState extends State<SpecializationSelection> {
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -33,20 +34,21 @@ class _SubjectSelectionState extends State<SubjectSelection> {
   }
 
   Future<void> initialization() async {
-    List<BaseApiResponseWithSerializable<SubjectResponse>>? selectedData = [];
+    List<BaseApiResponseWithSerializable<SpecializationResponse>>? selectedData = [];
     selectedData = Get.arguments;
 
     setState(() {
       isVisible = true;
     });
-    var data = await apiRepository.getSubjectsForSpecializationApi("");
+    var data = await apiRepository.getSpecializationApi();
     if (data.records?.isNotEmpty == true) {
+      PreferenceUtils.setSpecializationList(data);
       setState(() {
-        subjectData = data.records;
+        specializationData = data.records;
         for (var i = 0; i < selectedData!.length; i++) {
-          for (var j = 0; j < subjectData!.length; j++) {
-            if (subjectData![j].fields!.subjectId == selectedData[i].fields!.subjectId) {
-              subjectData![j].fields!.selected = true;
+          for (var j = 0; j < specializationData!.length; j++) {
+            if (specializationData![j].fields!.specializationId == selectedData[i].fields!.specializationId) {
+              specializationData![j].fields!.selected = true;
               break;
             }
           }
@@ -62,13 +64,13 @@ class _SubjectSelectionState extends State<SubjectSelection> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_subjects),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_specializations),
       body: Stack(children: [
-        subjectData?.isNotEmpty == true
+        specializationData?.isNotEmpty == true
             ? Column(children: [
                 Expanded(
                   child: ListView.builder(
-                      itemCount: subjectData?.length,
+                      itemCount: specializationData?.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 5,
@@ -79,11 +81,11 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                               padding: const EdgeInsets.all(15),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (subjectData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                                  children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (specializationData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
                             ),
                             onTap: () {
                               setState(() {
-                                subjectData![index].fields!.selected = !subjectData![index].fields!.selected;
+                                specializationData![index].fields!.selected = !specializationData![index].fields!.selected;
                               });
                             },
                           ),
@@ -94,21 +96,21 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                 CustomButton(
                   text: strings_name.str_submit,
                   click: () {
-                    List<BaseApiResponseWithSerializable<SubjectResponse>>? selectedSubjectData = [];
-                    for (var i = 0; i < subjectData!.length; i++) {
-                      if (subjectData![i].fields!.selected) {
-                        selectedSubjectData.add(subjectData![i]);
+                    List<BaseApiResponseWithSerializable<SpecializationResponse>>? selectedSpecializationData = [];
+                    for (var i = 0; i < specializationData!.length; i++) {
+                      if (specializationData![i].fields!.selected) {
+                        selectedSpecializationData.add(specializationData![i]);
                       }
                     }
-                    if (selectedSubjectData.isNotEmpty) {
-                      Get.back(result: selectedSubjectData);
+                    if (selectedSpecializationData.isNotEmpty) {
+                      Get.back(result: selectedSpecializationData);
                     } else {
-                      Utils.showSnackBar(context, strings_name.str_select_subject);
+                      Utils.showSnackBar(context, strings_name.str_select_spelization);
                     }
                   },
                 )
               ])
-            : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_subjects, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_specialization, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )

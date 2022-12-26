@@ -116,7 +116,21 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                                     padding: const EdgeInsets.all(18),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16), Visibility(visible: canEditSpe, child: const Icon(Icons.edit, size: 22, color: colors_name.colorPrimary))],
+                                      children: [
+                                        Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                        Visibility(
+                                            visible: canEditSpe,
+                                            child: GestureDetector(
+                                              child: Icon(Icons.edit, size: 22, color: colors_name.colorPrimary),
+                                              onTap: () {
+                                                Get.to(const AddSpecialization(), arguments: specializationData![index].fields?.id)?.then((result) {
+                                                  if (result != null && result) {
+                                                    initialization();
+                                                  }
+                                                });
+                                              },
+                                            ))
+                                      ],
                                     ),
                                   ),
                                   onTap: () {

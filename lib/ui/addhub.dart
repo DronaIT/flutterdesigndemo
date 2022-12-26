@@ -9,6 +9,8 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
+import 'package:flutterdesigndemo/ui/specialization_detail.dart';
+import 'package:flutterdesigndemo/ui/specialization_selection.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -33,11 +35,7 @@ class _AddHubState extends State<AddHub> {
   BaseApiResponseWithSerializable<SpecializationResponse>? speResponse;
   final apiRepository = getIt.get<ApiRepository>();
 
-  @override
-  void initState() {
-    super.initState();
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
-  }
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -86,42 +84,60 @@ class _AddHubState extends State<AddHub> {
                   controller: cityController,
                   topValue: 2,
                 ),
-                // SizedBox(height: 3.h),
-                // custom_text(
-                //   text: strings_name.str_select_spelization,
-                //   alignment: Alignment.topLeft,
-                //   textStyles: blackTextSemiBold16,
-                // ),
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     Flexible(
-                //       fit: FlexFit.loose,
-                //       child: Container(
-                //         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                //         width: MediaQuery.of(context).size.width,
-                //         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
-                //           value: speResponse,
-                //           elevation: 16,
-                //           style: blackText16,
-                //           focusColor: colors_name.colorPrimary,
-                //           onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
-                //             setState(() {
-                //               speValue = newValue!.fields!.specializationId.toString();
-                //               speResponse = newValue;
-                //             });
-                //           },
-                //           items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
-                //             return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
-                //               value: value,
-                //               child: Text(value.fields!.specializationName.toString()),
-                //             );
-                //           }).toList(),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+                SizedBox(height: 5.h),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      custom_text(
+                        text: strings_name.str_specializations,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                      GestureDetector(
+                        child: custom_text(
+                          text: specializationData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                          alignment: Alignment.topLeft,
+                          textStyles: primaryTextSemiBold16,
+                        ),
+                        onTap: () {
+                          Get.to(const SpecializationSelection(), arguments: specializationData)?.then((result) {
+                            if (result != null) {
+                              setState(() {
+                                specializationData = result;
+                              });
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                specializationData!.isNotEmpty
+                    ? Expanded(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: specializationData?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 5,
+                                child: GestureDetector(
+                                  child: Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.all(15),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                                  },
+                                ),
+                              );
+                            }))
+                    : Container(),
                 SizedBox(height: 20.h),
                 CustomButton(
                     text: strings_name.str_submit,
@@ -132,8 +148,9 @@ class _AddHubState extends State<AddHub> {
                         Utils.showSnackBar(context, strings_name.str_empty_address);
                       } else if (cityController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
+                      } else if (specializationData!.isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_select_spelization);
                       } else {
-
                         addRecord();
                       }
                     })
@@ -156,6 +173,13 @@ class _AddHubState extends State<AddHub> {
     request.hub_name = hubController.text.toString();
     request.city = cityController.text.toString();
     request.address = addressController.text.toString();
+
+    List<String> selectedSpecializationData = [];
+    for (var i = 0; i < specializationData!.length; i++) {
+      selectedSpecializationData.add(specializationData![i].id.toString());
+    }
+    request.tBLSPECIALIZATION = selectedSpecializationData;
+
     var resp = await apiRepository.addHubApi(request);
     if (resp.id!.isNotEmpty) {
       setState(() {
@@ -163,7 +187,7 @@ class _AddHubState extends State<AddHub> {
       });
       Utils.showSnackBar(context, strings_name.str_hub_added);
       await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true,result: true);
+      Get.back(closeOverlays: true, result: true);
     } else {
       setState(() {
         isVisible = false;
