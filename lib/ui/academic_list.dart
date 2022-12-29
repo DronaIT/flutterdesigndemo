@@ -17,19 +17,18 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class AcedemicList extends StatefulWidget {
-  const AcedemicList({Key? key}) : super(key: key);
+class AcademicList extends StatefulWidget {
+  const AcademicList({Key? key}) : super(key: key);
 
   @override
-  State<AcedemicList> createState() => _AcedemicListState();
+  State<AcademicList> createState() => _AcademicListState();
 }
 
-class _AcedemicListState extends State<AcedemicList> {
+class _AcademicListState extends State<AcademicList> {
   bool isVisible = false;
   bool canViewSubject = false, canViewSpe = false;
 
   final apiRepository = getIt.get<ApiRepository>();
-
 
   Future<void> getPermission() async {
     setState(() {
@@ -59,6 +58,7 @@ class _AcedemicListState extends State<AcedemicList> {
       isVisible = false;
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +67,8 @@ class _AcedemicListState extends State<AcedemicList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
       body: Stack(
         children: [
@@ -94,7 +95,6 @@ class _AcedemicListState extends State<AcedemicList> {
                     },
                   ),
                 ),
-                SizedBox(height: 5.h),
                 Visibility(
                   visible: canViewSubject,
                   child: Column(
@@ -102,7 +102,6 @@ class _AcedemicListState extends State<AcedemicList> {
                       GestureDetector(
                         child: Card(
                           elevation: 5,
-
                           child: Container(
                             color: colors_name.colorWhite,
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -148,21 +147,16 @@ class _AcedemicListState extends State<AcedemicList> {
                           Get.to(() => const ViewTopics());
                         },
                       ),
-
                     ],
-
                   ),
                 ),
                 SizedBox(height: 5.h),
-
-
               ],
             ),
           ),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
-
         ],
       ),
     ));

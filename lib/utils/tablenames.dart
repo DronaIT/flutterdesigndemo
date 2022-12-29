@@ -21,7 +21,6 @@ class TableNames {
   static const TBL_UNITS = "TBL_UNITS";
   static const TBL_TOPICS = "TBL_TOPICS";
 
-
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_PASSWORD = "password";
   static const CLM_ROLE_ID = "role_ids";
@@ -30,7 +29,9 @@ class TableNames {
   static const CLM_SPE_IDS = "specialization_ids";
   static const CLM_SUBJECT_IDS = "subject_ids";
   static const CLM_SUBJECT_ID = "subject_id";
+  static const CLM_UNIT_ID = "unit_id";
   static const CLM_UNIT_IDS = "unit_ids";
+  static const CLM_TOPIC_ID = "topic_id";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -42,7 +43,6 @@ class TableNames {
   static const PERMISSION_ID_UPDATE_HUB = "DP0202";
   static const PERMISSION_ID_VIEW_HUB = "DP0203";
 
-
   static const PERMISSION_ID_ADD_SPECILIZATION = "DP0501";
   static const PERMISSION_ID_UPDATE_SPECILIZATION = "DP0502";
   static const PERMISSION_ID_VIEW_SPECILIZATION = "DP0503";
@@ -50,8 +50,4 @@ class TableNames {
   static const PERMISSION_ID_ADD_SUBJECT = "DP0504";
   static const PERMISSION_ID_UPDATE_SUBJECT = "DP0506";
   static const PERMISSION_ID_VIEW_SUBJECT = "DP0505";
-
-
-
-
 }

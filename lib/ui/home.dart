@@ -5,9 +5,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
-import 'package:flutterdesigndemo/ui/acedemic_list.dart';
+import 'package:flutterdesigndemo/ui/academic_list.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
-import 'package:flutterdesigndemo/ui/academic_details.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
 import 'package:flutterdesigndemo/ui/setup_collage.dart';
@@ -154,7 +153,7 @@ class _HomeState extends State<Home> {
                                       if (homeModule.records![index].fields?.moduleId == "DM01") {
                                         Get.to(const ManageUser());
                                       } else if (homeModule.records![index].fields?.moduleId == "DM05") {
-                                        Get.to(const AcedemicList());
+                                        Get.to(const AcademicList());
                                       } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) Get.to(const SetupCollage());
                                     },
                                   ),

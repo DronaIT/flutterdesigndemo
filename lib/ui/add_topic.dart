@@ -8,6 +8,7 @@ import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
 import 'package:flutterdesigndemo/models/request/add_units_request.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/ui/topic_selection.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -27,14 +28,48 @@ class AddTopic extends StatefulWidget {
 class _AddTopicState extends State<AddTopic> {
   TextEditingController titleController = TextEditingController();
   bool isVisible = false;
+  bool fromEdit = false;
 
   final apiRepository = getIt.get<ApiRepository>();
+
+  List<BaseApiResponseWithSerializable<TopicsResponse>>? topicsData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  Future<void> initialization() async {
+    if (Get.arguments != null) {
+      setState(() {
+        isVisible = true;
+      });
+      var query = "FIND('${Get.arguments}', ${TableNames.CLM_TOPIC_ID}, 0)";
+      var data = await apiRepository.getTopicsApi(query);
+      if (data.records?.isNotEmpty == true) {
+        setState(() {
+          fromEdit = true;
+        });
+
+        topicsData = data.records;
+        if (topicsData?.isNotEmpty == true) {
+          titleController.text = topicsData![0].fields!.topicTitle.toString();
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+      setState(() {
+        isVisible = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_topics),
+      appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_topics : strings_name.str_add_topics),
       body: Column(
         children: [
           SizedBox(height: 10.h),
@@ -73,18 +108,34 @@ class _AddTopicState extends State<AddTopic> {
     AddTopicsRequest request = AddTopicsRequest();
     request.topicTitle = titleController.text.toString();
 
-    var resp = await apiRepository.addTopicApi(request);
-    if (resp.id!.isNotEmpty) {
-      setState(() {
-        isVisible = false;
-      });
-      Utils.showSnackBar(context, strings_name.str_topic_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
+    if (!fromEdit) {
+      var resp = await apiRepository.addTopicApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_topic_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     } else {
-      setState(() {
-        isVisible = false;
-      });
+      var resp = await apiRepository.updateTopicsApi(request.toJson(), topicsData![0].id.toString());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_topic_updated);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     }
   }
 }

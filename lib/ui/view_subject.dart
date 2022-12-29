@@ -85,53 +85,54 @@ class _ViewSubjectsState extends State<ViewSubjects> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_v_subjects),
       body: Stack(
         children: [
-          canViewSubject && subjectData.records?.isNotEmpty == true
-              ? Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: ListView.builder(
-                        itemCount: subjectData.records?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                custom_text(text: "${subjectData.records![index].fields!.subjectTitle}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                canUpdateSubject
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          Get.to(const AddSubject(), arguments: subjectData.records?[index].fields?.ids)?.then((result) {
-                                            if (result != null && result) {
-                                              getPermission();
-                                            }
-                                          });
-                                        },
-                                        child: Container(alignment : Alignment.centerRight,margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
-                                    : Container(),
-                              ],
-                            ),
-                          );
-                        }),
-                  ),
-                )
-              : canViewSubject
-                  ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_subjects, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
-                  : Container(),
-          canAddSubject
-              ? Container(
-                  alignment: Alignment.bottomCenter,
-                  child: CustomButton(
-                      text: strings_name.str_add_subjects,
-                      click: () async {
-                        Get.to(const AddSubject())?.then((result) {
-                          if (result != null && result) {
-
-                            getPermission();
-                          }
-                        });
-                      }))
-              : Container(),
+          Column(children: [
+            canViewSubject && subjectData.records?.isNotEmpty == true
+                ? Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: ListView.builder(
+                          itemCount: subjectData.records?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 5,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  custom_text(text: "${subjectData.records![index].fields!.subjectTitle}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                  canUpdateSubject
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            Get.to(const AddSubject(), arguments: subjectData.records?[index].fields?.ids)?.then((result) {
+                                              if (result != null && result) {
+                                                getPermission();
+                                              }
+                                            });
+                                          },
+                                          child: Container(alignment: Alignment.centerRight, margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
+                                      : Container(),
+                                ],
+                              ),
+                            );
+                          }),
+                    ),
+                  )
+                : canViewSubject
+                    ? Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_subjects, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
+                    : Container(),
+            canAddSubject
+                ? Container(
+                    alignment: Alignment.bottomCenter,
+                    child: CustomButton(
+                        text: strings_name.str_add_subjects,
+                        click: () async {
+                          Get.to(const AddSubject())?.then((result) {
+                            if (result != null && result) {
+                              getPermission();
+                            }
+                          });
+                        }))
+                : Container(),
+          ]),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

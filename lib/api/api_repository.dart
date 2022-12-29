@@ -23,6 +23,8 @@ import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/update_specialization.dart';
 import 'package:flutterdesigndemo/models/update_subject.dart';
+import 'package:flutterdesigndemo/models/update_topics.dart';
+import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/addemployee.dart';
@@ -292,9 +294,29 @@ class ApiRepository {
     }
   }
 
+  Future<UpdateUnits> updateUnitsApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateUnitsApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
   Future<BaseApiResponseWithSerializable<TopicsResponse>> addTopicApi(AddTopicsRequest addTopicsRequest) async {
     try {
       final response = await userApi.addTopicApi(addTopicsRequest);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<UpdateTopics> updateTopicsApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateTopicsApi(updateFormula, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

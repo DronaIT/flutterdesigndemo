@@ -25,6 +25,8 @@ import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/update_specialization.dart';
 import 'package:flutterdesigndemo/models/update_subject.dart';
+import 'package:flutterdesigndemo/models/update_topics.dart';
+import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -318,12 +320,36 @@ class ApiRequest {
     }
   }
 
+  Future<UpdateUnits> updateUnitsApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_UNITS + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateUnits.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<BaseApiResponseWithSerializable<TopicsResponse>> addTopicApi(AddTopicsRequest addTopicsRequest) async {
     try {
       Map<String, dynamic> someMap = {"fields": addTopicsRequest};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.post(TableNames.TBL_TOPICS, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseApiResponseWithSerializable<TopicsResponse>.fromJson(response.data, (response) => TopicsResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UpdateTopics> updateTopicsApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_UNITS + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateTopics.fromJson(response);
     } catch (e) {
       rethrow;
     }

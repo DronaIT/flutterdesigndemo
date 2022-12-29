@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
+import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/ui/add_topic.dart';
 import 'package:flutterdesigndemo/ui/add_units.dart';
@@ -32,141 +33,137 @@ class _AddSubjectState extends State<AddSubject> {
 
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<UnitsResponse>>? unitsData = [];
+  List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
 
-  // Future<void> initialization() async {
-  //   if (Get.arguments != null) {
-  //     setState(() {
-  //       isVisible = true;
-  //     });
-  //     var query = "FIND('${Get.arguments}', ${TableNames.CLM_SUBJECT_ID}, 0)";
-  //     var data = await apiRepository.getSpecializationDetailApi(query);
-  //     if (data.records?.isNotEmpty == true) {
-  //       fromEdit = true;
-  //
-  //       specializationData = data.records;
-  //       if (specializationData?.isNotEmpty == true) {
-  //         fromEdit = true;
-  //         titleController.text = specializationData![0].fields!.specializationName.toString();
-  //         descController.text = specializationData![0].fields!.specializationDesc.toString();
-  //
-  //         var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
-  //         var data = await apiRepository.getSubjectsForSpecializationApi(query);
-  //         if (data.records?.isNotEmpty == true) {
-  //           subjectData = data.records;
-  //         }
-  //       }
-  //     } else {
-  //       Utils.showSnackBar(context, strings_name.str_something_wrong);
-  //     }
-  //     setState(() {
-  //       isVisible = false;
-  //     });
-  //   }
-  // }
+  Future<void> initialization() async {
+    if (Get.arguments != null) {
+      setState(() {
+        isVisible = true;
+      });
+      var query = "FIND('${Get.arguments}', ${TableNames.CLM_SUBJECT_ID}, 0)";
+      var data = await apiRepository.getSubjectsForSpecializationApi(query);
+      if (data.records?.isNotEmpty == true) {
+        setState(() {
+          fromEdit = true;
+        });
 
+        subjectData = data.records;
+        if (subjectData?.isNotEmpty == true) {
+          titleController.text = subjectData![0].fields!.subjectTitle.toString();
 
-
+          var query = "FIND('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
+          var data = await apiRepository.getUnitsApi(query);
+          if (data.records?.isNotEmpty == true) {
+            unitsData = data.records;
+          }
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+      setState(() {
+        isVisible = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_subjects),
+      appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_subjects : strings_name.str_add_subjects),
       body: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(height: 10.h),
-                custom_text(
-                  text: strings_name.str_subject_title,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                custom_edittext(
-                  type: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  controller: titleController,
-                  topValue: 2,
-                  maxLength: 200,
-                ),
-                SizedBox(height: 10.h),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      custom_text(
-                        text: strings_name.str_units,
+        children: [
+          Column(
+            children: [
+              SizedBox(height: 10.h),
+              custom_text(
+                text: strings_name.str_subject_title,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
+              ),
+              custom_edittext(
+                type: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                controller: titleController,
+                topValue: 2,
+                maxLength: 200,
+              ),
+              SizedBox(height: 10.h),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    custom_text(
+                      text: strings_name.str_units,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    GestureDetector(
+                      child: custom_text(
+                        text: unitsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
                         alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
+                        textStyles: primaryTextSemiBold16,
                       ),
-                      GestureDetector(
-                        child: custom_text(
-                          text: unitsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                          alignment: Alignment.topLeft,
-                          textStyles: primaryTextSemiBold16,
-                        ),
-                        onTap: () {
-                          Get.to(const UnitSelection(), arguments: unitsData)?.then((result) {
-                            if (result != null) {
-                              setState(() {
-                                unitsData = result;
-                              });
-                            }
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+                      onTap: () {
+                        Get.to(const UnitSelection(), arguments: unitsData)?.then((result) {
+                          if (result != null) {
+                            setState(() {
+                              unitsData = result;
+                            });
+                          }
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                unitsData!.isNotEmpty
-                    ? Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: unitsData?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: GestureDetector(
-                              child: Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.all(15),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+              ),
+              unitsData!.isNotEmpty
+                  ? Expanded(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: unitsData?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 5,
+                              child: GestureDetector(
+                                child: Container(
+                                  color: colors_name.colorWhite,
+                                  padding: const EdgeInsets.all(15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                  ),
                                 ),
+                                onTap: () {
+                                  // Get.to(const (), arguments: unitsData![index].fields?.ids);
+                                },
                               ),
-                              onTap: () {
-                                // Get.to(const (), arguments: unitsData![index].fields?.ids);
-                              },
-                            ),
-                          );
-                        }))
-                    : Container(),
-                SizedBox(height: 20.h),
-                CustomButton(
-                  text: strings_name.str_submit,
-                  click: () {
-                    if (titleController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_subject_title);
-                    } else if (unitsData!.isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_select_units);
-                    } else {
-                      addRecord();
-                    }
-                  },
-                ),
-
-              ],
-            ),
-            Center(
-              child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
-            )
-          ],
-
+                            );
+                          }))
+                  : Container(),
+              SizedBox(height: 20.h),
+              CustomButton(
+                text: strings_name.str_submit,
+                click: () {
+                  if (titleController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_subject_title);
+                  } else if (unitsData!.isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_select_units);
+                  } else {
+                    addRecord();
+                  }
+                },
+              ),
+            ],
+          ),
+          Center(
+            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          )
+        ],
       ),
     ));
   }
@@ -184,18 +181,40 @@ class _AddSubjectState extends State<AddSubject> {
     }
     request.tBLUNITS = selectedSubjectData;
 
-    var resp = await apiRepository.addSubjectApi(request);
-    if (resp.id!.isNotEmpty) {
-      setState(() {
-        isVisible = false;
-      });
-      Utils.showSnackBar(context, strings_name.str_subject_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
+    if (!fromEdit) {
+      var resp = await apiRepository.addSubjectApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_subject_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     } else {
-      setState(() {
-        isVisible = false;
-      });
+      var resp = await apiRepository.updateSubjectApi(request.toJson(), subjectData![0].id.toString());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_subject_updated);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
   }
 }

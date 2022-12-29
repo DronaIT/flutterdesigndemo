@@ -6,7 +6,9 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/add_units_request.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
+import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/ui/topic_selection.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -28,14 +30,53 @@ class _AddUnitsState extends State<AddUnits> {
 
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<TopicsResponse>>? topicsData = [];
+  List<BaseApiResponseWithSerializable<UnitsResponse>>? unitsData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
+  bool fromEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  Future<void> initialization() async {
+    if (Get.arguments != null) {
+      setState(() {
+        isVisible = true;
+      });
+      var query = "FIND('${Get.arguments}', ${TableNames.CLM_UNIT_ID}, 0)";
+      var data = await apiRepository.getUnitsApi(query);
+      if (data.records?.isNotEmpty == true) {
+        setState(() {
+          fromEdit = true;
+        });
+
+        unitsData = data.records;
+        if (unitsData?.isNotEmpty == true) {
+          titleController.text = unitsData![0].fields!.unitTitle.toString();
+
+          var query = "FIND('${unitsData![0].fields!.ids}', ${TableNames.CLM_UNIT_IDS}, 0)";
+          var data = await apiRepository.getTopicsApi(query);
+          if (data.records?.isNotEmpty == true) {
+            topicsData = data.records;
+          }
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+      setState(() {
+        isVisible = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_units),
+      appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_units : strings_name.str_add_units),
       body: Column(
         children: [
           SizedBox(height: 10.h),
@@ -136,18 +177,34 @@ class _AddUnitsState extends State<AddUnits> {
     }
     request.tBLTOPICS = selectedSubjectData;
 
-    var resp = await apiRepository.addUnitsApi(request);
-    if (resp.id!.isNotEmpty) {
-      setState(() {
-        isVisible = false;
-      });
-      Utils.showSnackBar(context, strings_name.str_unit_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
+    if (!fromEdit) {
+      var resp = await apiRepository.addUnitsApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_unit_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     } else {
-      setState(() {
-        isVisible = false;
-      });
+      var resp = await apiRepository.updateUnitsApi(request.toJson(), unitsData![0].id.toString());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_unit_updated);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     }
   }
 }

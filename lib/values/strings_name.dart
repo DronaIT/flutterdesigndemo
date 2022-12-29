@@ -124,9 +124,13 @@ class strings_name {
   static const String str_email = "Email";
   static const String str_empty_email = "Please enter valid email";
   static const String str_add_specilization = "Add specialization";
+  static const String str_update_specilization = "Update specialization";
   static const String str_add_subjects = "Add subject";
+  static const String str_update_subjects = "Update subject";
   static const String str_add_units = "Add units";
+  static const String str_update_units = "Update units";
   static const String str_add_topics = "Add topics";
+  static const String str_update_topics = "Update topics";
 
   static const String str_no_units_added = "No Units were added";
 
@@ -155,23 +159,29 @@ class strings_name {
   static const String str_empty_subject_title = "Please enter subject name";
   static const String str_select_units = "Please select units";
   static const String str_subject_added = "New subject added successfully.";
+  static const String str_subject_updated = "Subject updated successfully.";
   static const String str_no_units = "No units";
 
   static const String str_unit_title = "Unit Name";
   static const String str_empty_unit_title = "Please enter unit name";
   static const String str_unit_added = "New unit added successfully.";
+  static const String str_unit_updated = "Unit updated successfully.";
   static const String str_no_topic = "No topics";
 
   static const String str_topic_title = "Topic Name";
   static const String str_empty_topic_title = "Please enter topic name";
   static const String str_select_topics = "Please select topics";
   static const String str_topic_added = "New topic added successfully.";
+  static const String str_topic_updated = "Topic updated successfully.";
 
   static const String str_view_subjects = "View subjects";
   static const String str_v_subjects = "Subjects";
 
-  static const String str_view_spe = "Specilization";
+  static const String str_view_spe = "Specialization";
 
   static const String str_view_unit = "Units";
   static const String str_view_topic = "Topics";
+
+  static const String str_subject_detail = "Subject detail";
+  static const String str_spe_detail = "Specialization detail";
 }
