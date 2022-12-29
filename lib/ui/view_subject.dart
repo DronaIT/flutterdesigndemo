@@ -101,9 +101,8 @@ class _ViewSubjectsState extends State<ViewSubjects> {
                                 canUpdateSubject
                                     ? GestureDetector(
                                         onTap: () {
-                                          Get.to(const AddSubject(), arguments: subjectData.records?[index])?.then((result) {
+                                          Get.to(const AddSubject(), arguments: subjectData.records?[index].fields?.ids)?.then((result) {
                                             if (result != null && result) {
-                                              print("checlclc=>${result}");
                                               getPermission();
                                             }
                                           });
@@ -127,7 +126,7 @@ class _ViewSubjectsState extends State<ViewSubjects> {
                       click: () async {
                         Get.to(const AddSubject())?.then((result) {
                           if (result != null && result) {
-                            print("checlclc=>${result}");
+
                             getPermission();
                           }
                         });

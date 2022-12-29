@@ -29,6 +29,7 @@ class TableNames {
   static const CLM_SPE_ID = "specialization_id";
   static const CLM_SPE_IDS = "specialization_ids";
   static const CLM_SUBJECT_IDS = "subject_ids";
+  static const CLM_SUBJECT_ID = "subject_id";
   static const CLM_UNIT_IDS = "unit_ids";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
@@ -49,4 +50,8 @@ class TableNames {
   static const PERMISSION_ID_ADD_SUBJECT = "DP0504";
   static const PERMISSION_ID_UPDATE_SUBJECT = "DP0506";
   static const PERMISSION_ID_VIEW_SUBJECT = "DP0505";
+
+
+
+
 }

@@ -79,106 +79,119 @@ class _AddSpecializationState extends State<AddSpecialization> {
     return SafeArea(
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_specilization),
-      body: Column(
+      body:
+
+      Stack(
         children: [
-          SizedBox(height: 10.h),
-          custom_text(
-            text: strings_name.str_specialization_title,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-          ),
-          custom_edittext(
-            type: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            controller: titleController,
-            topValue: 2,
-            maxLength: 200,
-          ),
-          SizedBox(height: 10.h),
-          custom_text(
-            text: strings_name.str_specialization_desc,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-          ),
-          custom_edittext(
-            type: TextInputType.multiline,
-            textInputAction: TextInputAction.newline,
-            maxLines: 3,
-            minLines: 3,
-            controller: descController,
-            topValue: 2,
-            maxLength: 5000,
-          ),
-          SizedBox(height: 10.h),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                custom_text(
-                  text: strings_name.str_subjects,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                GestureDetector(
-                  child: custom_text(
-                    text: subjectData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                    alignment: Alignment.topLeft,
-                    textStyles: primaryTextSemiBold16,
-                  ),
-                  onTap: () {
-                    Get.to(const SubjectSelection(), arguments: subjectData)?.then((result) {
-                      if (result != null) {
-                        setState(() {
-                          subjectData = result;
+          Column(
+            children: [
+              SizedBox(height: 10.h),
+              custom_text(
+                text: strings_name.str_specialization_title,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
+              ),
+              custom_edittext(
+                type: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                controller: titleController,
+                topValue: 2,
+                maxLength: 200,
+              ),
+              SizedBox(height: 10.h),
+              custom_text(
+                text: strings_name.str_specialization_desc,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
+              ),
+              custom_edittext(
+                type: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+                maxLines: 3,
+                minLines: 3,
+                controller: descController,
+                topValue: 2,
+                maxLength: 5000,
+              ),
+              SizedBox(height: 10.h),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    custom_text(
+                      text: strings_name.str_subjects,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    GestureDetector(
+                      child: custom_text(
+                        text: subjectData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                        alignment: Alignment.topLeft,
+                        textStyles: primaryTextSemiBold16,
+                      ),
+                      onTap: () {
+                        Get.to(const SubjectSelection(), arguments: subjectData)?.then((result) {
+                          if (result != null) {
+                            setState(() {
+                              subjectData = result;
+                            });
+                          }
                         });
-                      }
-                    });
-                  },
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          subjectData!.isNotEmpty
-              ? Expanded(
+              ),
+              subjectData!.isNotEmpty
+                  ? Expanded(
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: subjectData?.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          child: GestureDetector(
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          child: Card(
+                            elevation: 5,
+                            child: GestureDetector(
+                              child: Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.all(15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                ),
                               ),
+                              onTap: () {
+                                Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
+                              },
                             ),
-                            onTap: () {
-                              Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
-                            },
                           ),
                         );
                       }))
-              : Container(),
-          SizedBox(height: 20.h),
-          CustomButton(
-            text: strings_name.str_submit,
-            click: () {
-              if (titleController.text.trim().isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_empty_specialization_title);
-              } else if (descController.text.trim().isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_empty_specialization_desc);
-              } else if (subjectData!.isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_select_subject);
-              } else {
-                addRecord();
-              }
-            },
+                  : Container(),
+              SizedBox(height: 20.h),
+              CustomButton(
+                text: strings_name.str_submit,
+                click: () {
+                  if (titleController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_specialization_title);
+                  } else if (descController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_specialization_desc);
+                  } else if (subjectData!.isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_select_subject);
+                  } else {
+                    addRecord();
+                  }
+                },
+              )
+            ],
+          ),
+          Center(
+            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
         ],
+
       ),
     ));
   }

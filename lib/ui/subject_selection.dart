@@ -67,28 +67,30 @@ class _SubjectSelectionState extends State<SubjectSelection> {
         subjectData?.isNotEmpty == true
             ? Column(children: [
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: subjectData?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          margin: EdgeInsets.all(5),
-                          child: GestureDetector(
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(15),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (subjectData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: ListView.builder(
+                        itemCount: subjectData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            child: GestureDetector(
+                              child: Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.all(15),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (subjectData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  subjectData![index].fields!.selected = !subjectData![index].fields!.selected;
+                                });
+                              },
                             ),
-                            onTap: () {
-                              setState(() {
-                                subjectData![index].fields!.selected = !subjectData![index].fields!.selected;
-                              });
-                            },
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                  ),
                 ),
                 SizedBox(height: 20.h),
                 CustomButton(

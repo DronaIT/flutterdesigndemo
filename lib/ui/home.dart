@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
+import 'package:flutterdesigndemo/ui/acedemic_list.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/ui/academic_details.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
@@ -150,11 +151,11 @@ class _HomeState extends State<Home> {
                                       ],
                                     ),
                                     onTap: () {
-                                      if (homeModule.records![index].fields?.moduleId == "DM01")
-                                        Get.to(ManageUser());
-                                      else if (homeModule.records![index].fields?.moduleId == "DM05")
-                                        Get.to(AcademicDetails());
-                                      else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) Get.to(SetupCollage());
+                                      if (homeModule.records![index].fields?.moduleId == "DM01") {
+                                        Get.to(const ManageUser());
+                                      } else if (homeModule.records![index].fields?.moduleId == "DM05") {
+                                        Get.to(const AcedemicList());
+                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) Get.to(const SetupCollage());
                                     },
                                   ),
                                 ),
@@ -162,9 +163,9 @@ class _HomeState extends State<Home> {
                     },
                   ),
                 )
-              : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_module, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_module, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
-            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
+            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
         ],
       ),

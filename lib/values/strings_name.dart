@@ -170,5 +170,8 @@ class strings_name {
   static const String str_view_subjects = "View subjects";
   static const String str_v_subjects = "Subjects";
 
+  static const String str_view_spe = "Specilization";
 
+  static const String str_view_unit = "Units";
+  static const String str_view_topic = "Topics";
 }
