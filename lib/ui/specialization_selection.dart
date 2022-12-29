@@ -69,28 +69,31 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
         specializationData?.isNotEmpty == true
             ? Column(children: [
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: specializationData?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          margin: EdgeInsets.all(5),
-                          child: GestureDetector(
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(15),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (specializationData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: ListView.builder(
+                        itemCount: specializationData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            margin: const EdgeInsets.all(5),
+                            child: GestureDetector(
+                              child: Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (specializationData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  specializationData![index].fields!.selected = !specializationData![index].fields!.selected;
+                                });
+                              },
                             ),
-                            onTap: () {
-                              setState(() {
-                                specializationData![index].fields!.selected = !specializationData![index].fields!.selected;
-                              });
-                            },
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                  ),
                 ),
                 SizedBox(height: 20.h),
                 CustomButton(

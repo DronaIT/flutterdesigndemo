@@ -61,7 +61,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_spe_detail),
       body: Stack(children: [
         specializationData?.isNotEmpty == true
             ? Column(
@@ -72,35 +72,41 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                   Visibility(child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16), visible: subjectData?.isNotEmpty == true),
                   subjectData?.isNotEmpty == true
                       ? Expanded(
-                          child: ListView.builder(
-                              itemCount: subjectData?.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Card(
-                                  elevation: 5,
-                                  child: GestureDetector(
-                                    child: Container(
-                                      color: colors_name.colorWhite,
-                                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: ListView.builder(
+                                itemCount: subjectData?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Card(
+                                    elevation: 5,
+                                    child: GestureDetector(
+                                      child: Container(
+                                        color: colors_name.colorWhite,
+                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
+                                      },
                                     ),
-                                    onTap: () {
-                                      Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
-                                    },
-                                  ),
-                                );
-                              }),
+                                  );
+                                }),
+                          ),
                         )
-                      : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
+                      : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
                 ],
               )
-            : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
-      ]),
+      ]
+
+
+      ),
     ));
   }
 }

@@ -146,27 +146,30 @@ class _UpdateHubState extends State<UpdateHub> {
                 ),
                 specializationData!.isNotEmpty
                     ? Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: specializationData?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 5,
-                                child: GestureDetector(
-                                  child: Container(
-                                    color: colors_name.colorWhite,
-                                    padding: const EdgeInsets.all(15),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: specializationData?.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 5,
+                                  child: GestureDetector(
+                                    child: Container(
+                                      color: colors_name.colorWhite,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                      ),
                                     ),
+                                    onTap: () {
+                                      Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                                    },
                                   ),
-                                  onTap: () {
-                                    Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                                  },
-                                ),
-                              );
-                            }))
+                                );
+                              }),
+                        ))
                     : Container(),
                 SizedBox(height: 20.h),
                 CustomButton(

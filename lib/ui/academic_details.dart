@@ -119,7 +119,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                                 child: GestureDetector(
                                   child: Container(
                                     color: colors_name.colorWhite,
-                                    padding: const EdgeInsets.all(18),
+                                    padding: const EdgeInsets.all(10),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [

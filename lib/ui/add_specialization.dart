@@ -156,7 +156,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
                             child: GestureDetector(
                               child: Container(
                                 color: colors_name.colorWhite,
-                                padding: const EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(8),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],

@@ -86,7 +86,7 @@ class _SubjectDetailState extends State<SubjectDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_subject_detail),
       body: Stack(children: [
         Column(
           children: [
@@ -95,29 +95,21 @@ class _SubjectDetailState extends State<SubjectDetail> {
                     child: ListView.builder(
                         itemCount: listData.entries.toList().length,
                         itemBuilder: (BuildContext context, int mainIndex) {
-                          return ExpansionTile(title: custom_text(text: (listData.entries.toList()[mainIndex].key as UnitsResponse).unitTitle!, textStyles: blackTextSemiBold16), children: <Widget>[
-                            SizedBox(
-                              height: 100,
-                              child: ListView.builder(
-                                  itemCount: listData.entries.toList()[mainIndex].value.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Container(padding: EdgeInsets.all(8), child: custom_text(text: listData.entries.toList()[mainIndex].value[index].topicTitle!, textStyles: blackTextSemiBold14));
-                                  }),
-                            )
+                          return ExpansionTile(
+                              title: custom_text(text: (listData.entries.toList()[mainIndex].key as UnitsResponse).unitTitle!, textStyles: blackTextSemiBold16),
+                              children: <Widget>[
+                            ListView.builder(
+                                shrinkWrap: true, // 1st add
+                                physics: const ClampingScrollPhysics(),
+                                itemCount: listData.entries.toList()[mainIndex].value.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return custom_text(text: listData.entries.toList()[mainIndex].value[index].topicTitle!, textStyles: blackTextSemiBold14 ,leftValue: 20,rightValue: 20,);
+                                })
                           ]);
                         }),
                   )
                 : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
-            Container(
-              margin: const EdgeInsets.only(bottom: 30, top: 10, left: 5, right: 5),
-              child: Row(
-                children: [
-                  Flexible(fit: FlexFit.loose, child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_units, fontSize: 15, click: () async {}))),
-                  const SizedBox(width: 2),
-                  Flexible(fit: FlexFit.tight, child: Container(alignment: Alignment.bottomCenter, child: CustomButton(text: strings_name.str_add_topics, fontSize: 15, click: () async {}))),
-                ],
-              ),
-            )
+
           ],
         ),
         Center(
