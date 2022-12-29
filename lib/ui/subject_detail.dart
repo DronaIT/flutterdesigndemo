@@ -94,7 +94,7 @@ class _SubjectDetailState extends State<SubjectDetail> {
                     child: ListView.builder(
                         itemCount: listData.entries.toList().length,
                         itemBuilder: (BuildContext context, int mainIndex) {
-                          return ExpansionTile(title: custom_text(text: (listData.entries.toList()[mainIndex].key as UnitsResponse).unitTitle!, textStyles: blackTextSemiBold16), children: <Widget>[
+                          return ExpansionTile(title: custom_text(leftValue: 0, text: (listData.entries.toList()[mainIndex].key as UnitsResponse).unitTitle!, textStyles: blackTextSemiBold16), children: <Widget>[
                             ListView.builder(
                                 shrinkWrap: true, // 1st add
                                 physics: const ClampingScrollPhysics(),
