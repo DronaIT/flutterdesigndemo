@@ -53,7 +53,7 @@ class _AddUnitsState extends State<AddUnits> {
           ),
           SizedBox(height: 10.h),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

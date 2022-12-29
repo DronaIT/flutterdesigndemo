@@ -3,7 +3,11 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/ui/academic_details.dart';
+import 'package:flutterdesigndemo/ui/add_topic.dart';
+import 'package:flutterdesigndemo/ui/add_units.dart';
 import 'package:flutterdesigndemo/ui/view_subject.dart';
+import 'package:flutterdesigndemo/ui/viewtopics.dart';
+import 'package:flutterdesigndemo/ui/viewunits.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -86,7 +90,7 @@ class _AcedemicListState extends State<AcedemicList> {
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => AcademicDetails());
+                      Get.to(() => const AcademicDetails());
                     },
                   ),
                 ),
@@ -109,7 +113,7 @@ class _AcedemicListState extends State<AcedemicList> {
                           ),
                         ),
                         onTap: () {
-                          Get.to(() => ViewSubjects());
+                          Get.to(() => const ViewSubjects());
                         },
                       ),
                       GestureDetector(
@@ -125,7 +129,7 @@ class _AcedemicListState extends State<AcedemicList> {
                           ),
                         ),
                         onTap: () {
-                          Get.to(() => ViewSubjects());
+                          Get.to(() => const ViewUnits());
                         },
                       ),
                       GestureDetector(
@@ -141,7 +145,7 @@ class _AcedemicListState extends State<AcedemicList> {
                           ),
                         ),
                         onTap: () {
-                          Get.to(() => ViewSubjects());
+                          Get.to(() => const ViewTopics());
                         },
                       ),
 

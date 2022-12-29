@@ -101,7 +101,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_specializations),
       body: Stack(children: [
         Column(
           children: [
