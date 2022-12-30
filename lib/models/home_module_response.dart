@@ -5,15 +5,14 @@ class homeModuleResponse {
   String? moduleImage;
   List<String>? roleIdFromRoleIds;
 
-  homeModuleResponse(
-      {this.roleIds, this.moduleId, this.moduleTitle, this.roleIdFromRoleIds, this.moduleImage});
+  homeModuleResponse({this.roleIds, this.moduleId, this.moduleTitle, this.roleIdFromRoleIds, this.moduleImage});
 
   homeModuleResponse.fromJson(Map<String, dynamic> json) {
-    roleIds = json['role_ids'].cast<String>();
+    roleIds = json['role_ids']?.cast<String>();
     moduleId = json['module_id'];
     moduleTitle = json['module_title'];
     moduleImage = json['module_image'];
-    roleIdFromRoleIds = json['role_id (from role_ids)'].cast<String>();
+    roleIdFromRoleIds = json['role_id (from role_ids)']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

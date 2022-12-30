@@ -4,11 +4,16 @@ class TableNames {
   static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
   static const STUDENT_ROLE_ID = "DR09";
+
   static const MODULE_MANAGE_USER = "DM01";
-
   static const MODULE_SETUP_COLLAGE = "DM02";
-
   static const MODULE_ACADEMIC_DETAIL = "DM05";
+  static const MODULE_ATTENDANCE = "DM03";
+
+  static const DIVISION_A = "Class A";
+  static const DIVISION_B = "Class B";
+  static const DIVISION_C = "Class C";
+  static const DIVISION_D = "Class D";
 
   static const TB_STUDENT = "TBL_STUDENT";
   static const TBL_MODULE = "TBL_MODULE";
@@ -32,6 +37,7 @@ class TableNames {
   static const CLM_UNIT_ID = "unit_id";
   static const CLM_UNIT_IDS = "unit_ids";
   static const CLM_TOPIC_ID = "topic_id";
+  static const CLM_SEMESTER = "semester";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -50,4 +56,8 @@ class TableNames {
   static const PERMISSION_ID_ADD_SUBJECT = "DP0504";
   static const PERMISSION_ID_UPDATE_SUBJECT = "DP0506";
   static const PERMISSION_ID_VIEW_SUBJECT = "DP0505";
+
+  static const PERMISSION_ID_TAKE_ATTENDANCE = "DP0301";
+  static const PERMISSION_ID_VIEWSELF_ATTENDANCE = "DP0302";
+  static const PERMISSION_ID_VIEW_OTHERS_ATTENDANCE = "DP0303";
 }

@@ -6,7 +6,7 @@ class AddSubjectRequest {
 
   AddSubjectRequest.fromJson(Map<String, dynamic> json) {
     subjectTitle = json['subject_title'];
-    tBLUNITS = json['TBL_UNITS'].cast<String>();
+    tBLUNITS = json['TBL_UNITS']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

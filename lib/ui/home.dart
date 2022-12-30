@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_list.dart';
+import 'package:flutterdesigndemo/ui/attendance.dart';
 import 'package:flutterdesigndemo/ui/login.dart';
 import 'package:flutterdesigndemo/ui/manage_user.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
@@ -150,11 +151,15 @@ class _HomeState extends State<Home> {
                                       ],
                                     ),
                                     onTap: () {
-                                      if (homeModule.records![index].fields?.moduleId == "DM01") {
+                                      if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
                                         Get.to(const ManageUser());
-                                      } else if (homeModule.records![index].fields?.moduleId == "DM05") {
+                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
                                         Get.to(const AcademicList());
-                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) Get.to(const SetupCollage());
+                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
+                                        Get.to(const SetupCollage());
+                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
+                                        Get.to(const Attendance());
+                                      }
                                     },
                                   ),
                                 ),

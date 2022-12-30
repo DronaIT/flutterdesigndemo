@@ -175,7 +175,7 @@ class strings_name {
   static const String str_topic_updated = "Topic updated successfully.";
 
   static const String str_view_subjects = "View subjects";
-  static const String str_v_subjects = "Subjects";
+  static const String str_view_subject = "Subjects";
 
   static const String str_view_spe = "Specialization";
 
@@ -184,4 +184,15 @@ class strings_name {
 
   static const String str_subject_detail = "Subject detail";
   static const String str_spe_detail = "Specialization detail";
+
+  static const String str_attendence = "Attendance";
+
+  static const String str_take_attendence = "Take Attendance";
+  static const String str_viewothers_attendence = "Attendance History";
+  static const String str_viewself_attendence = "My Attendance";
+
+  static const String str_semester = "Semester";
+  static const String str_division = "Division";
+
+  static const String str_get_students = "Get Students";
 }

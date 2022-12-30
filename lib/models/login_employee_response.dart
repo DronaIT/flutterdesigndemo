@@ -10,32 +10,20 @@ class LoginEmployeResponse {
   String? employeeCode;
   String? mobileNumber;
   String? password;
-  String? email =" ";
+  String? email = " ";
   String? address;
 
-  LoginEmployeResponse(
-      {this.gender,
-      this.employeeId,
-      this.city,
-      this.roleIds,
-      this.employeeName,
-      this.hubIds,
-      this.roleIdFromRoleIds,
-      this.hubIdFromHubIds,
-      this.employeeCode,
-      this.mobileNumber,
-        this.email,
-      this.password});
+  LoginEmployeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.employeeName, this.hubIds, this.roleIdFromRoleIds, this.hubIdFromHubIds, this.employeeCode, this.mobileNumber, this.email, this.password});
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
     employeeId = json['employee_id'];
     city = json['city'];
-    roleIds = json['role_ids'].cast<String>();
+    roleIds = json['role_ids']?.cast<String>();
     employeeName = json['employee_name'];
-    hubIds = json['hub_ids'].cast<String>();
-    roleIdFromRoleIds = json['role_id (from role_ids)'].cast<String>();
-    hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
+    hubIds = json['hub_ids']?.cast<String>();
+    roleIdFromRoleIds = json['role_id (from role_ids)']?.cast<String>();
+    hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     employeeCode = json['employee_code'];
     mobileNumber = json['mobile_number'];
     password = json['password'];

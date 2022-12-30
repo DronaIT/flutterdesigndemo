@@ -11,7 +11,7 @@ class CreateStudentRequest {
   List<String>? hubIds;
   List<String>? specializationIds;
 
-  CreateStudentRequest({this.city, this.joiningYear, this.password, this.name, this.address, this.mobileNumber, this.gender,this.email, this.hubIds, this.specializationIds});
+  CreateStudentRequest({this.city, this.joiningYear, this.password, this.name, this.address, this.mobileNumber, this.gender, this.email, this.hubIds, this.specializationIds});
 
   CreateStudentRequest.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -22,8 +22,8 @@ class CreateStudentRequest {
     mobileNumber = json['mobile_number'];
     gender = json['gender'];
     email = json['email'];
-    hubIds = json['hub_ids'].cast<String>();
-    specializationIds = json['specialization_ids'].cast<String>();
+    hubIds = json['hub_ids']?.cast<String>();
+    specializationIds = json['specialization_ids']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

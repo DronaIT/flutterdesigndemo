@@ -82,7 +82,7 @@ class _ViewSubjectsState extends State<ViewSubjects> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_v_subjects),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_subject),
       body: Stack(
         children: [
           Column(children: [

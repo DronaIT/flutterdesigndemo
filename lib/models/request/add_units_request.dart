@@ -6,7 +6,7 @@ class AddUnitsRequest {
 
   AddUnitsRequest.fromJson(Map<String, dynamic> json) {
     unitTitle = json['unit_title'];
-    tBLTOPICS = json['TBL_TOPICS'].cast<String>();
+    tBLTOPICS = json['TBL_TOPICS']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

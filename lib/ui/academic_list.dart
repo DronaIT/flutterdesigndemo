@@ -107,7 +107,7 @@ class _AcademicListState extends State<AcademicList> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [Text(strings_name.str_v_subjects, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: const [Text(strings_name.str_view_subject, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                             ),
                           ),
                         ),

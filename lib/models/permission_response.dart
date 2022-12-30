@@ -9,12 +9,12 @@ class PermissionResponse {
   PermissionResponse({this.roleIds, this.permissionId, this.permissionTitle, this.moduleIds, this.moduleIdFromModuleIds, this.roleIdFromRoleIds});
 
   PermissionResponse.fromJson(Map<String, dynamic> json) {
-    roleIds = json['role_ids'].cast<String>();
+    roleIds = json['role_ids']?.cast<String>();
     permissionId = json['permission_id'];
     permissionTitle = json['permission_title'];
-    moduleIds = json['module_ids'].cast<String>();
-    moduleIdFromModuleIds = json['module_id (from module_ids)'].cast<String>();
-    roleIdFromRoleIds = json['role_id (from role_ids)'].cast<String>();
+    moduleIds = json['module_ids']?.cast<String>();
+    moduleIdFromModuleIds = json['module_id (from module_ids)']?.cast<String>();
+    roleIdFromRoleIds = json['role_id (from role_ids)']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

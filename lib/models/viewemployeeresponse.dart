@@ -15,21 +15,7 @@ class ViewEmployeeResponse {
   String? createdOn;
   String? updatedOn;
 
-  ViewEmployeeResponse(
-      {this.gender,
-      this.employeeId,
-      this.city,
-      this.roleIds,
-      this.mobileNumber, this.email,
-      this.employeeName,
-      this.password,
-      this.hubIds,
-      this.roleIdFromRoleIds,
-      this.hubIdFromHubIds,
-      this.employeeCode,
-      this.createdOn,
-        this.address,
-      this.updatedOn});
+  ViewEmployeeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.mobileNumber, this.email, this.employeeName, this.password, this.hubIds, this.roleIdFromRoleIds, this.hubIdFromHubIds, this.employeeCode, this.createdOn, this.address, this.updatedOn});
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -37,13 +23,13 @@ class ViewEmployeeResponse {
     city = json['city'];
     email = json['email'];
     address = json['address'];
-    roleIds = json['role_ids'].cast<String>();
+    roleIds = json['role_ids']?.cast<String>();
     mobileNumber = json['mobile_number'];
     employeeName = json['employee_name'];
     password = json['password'];
-    hubIds = json['hub_ids'].cast<String>();
-    roleIdFromRoleIds = json['role_id (from role_ids)'].cast<String>();
-    hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
+    hubIds = json['hub_ids']?.cast<String>();
+    roleIdFromRoleIds = json['role_id (from role_ids)']?.cast<String>();
+    hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     employeeCode = json['employee_code'];
     createdOn = json['created_on'];
     updatedOn = json['updated_on'];
