@@ -7,11 +7,12 @@ class AddStudentAttendanceRequest {
   List<String>? topicId;
   String? division;
   String? lectureDate;
+  String? lectureTime;
   List<String>? studentIds;
   List<String>? presentIds;
   List<String>? absentIds;
 
-  AddStudentAttendanceRequest({this.employeeId, this.hubId, this.specializationId, this.subjectId, this.unitId, this.topicId, this.division, this.lectureDate, this.studentIds, this.presentIds, this.absentIds});
+  AddStudentAttendanceRequest({this.employeeId, this.hubId, this.specializationId, this.subjectId, this.unitId, this.topicId, this.division, this.lectureDate, this.studentIds, this.presentIds, this.absentIds, this.lectureTime});
 
   AddStudentAttendanceRequest.fromJson(Map<String, dynamic> json) {
     employeeId = json['employee_id'].cast<String>();
@@ -25,6 +26,7 @@ class AddStudentAttendanceRequest {
     studentIds = json['student_ids'].cast<String>();
     presentIds = json['present_ids'].cast<String>();
     absentIds = json['absent_ids'].cast<String>();
+    lectureTime = json['lecture_time'];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +42,7 @@ class AddStudentAttendanceRequest {
     data['student_ids'] = this.studentIds;
     data['present_ids'] = this.presentIds;
     data['absent_ids'] = this.absentIds;
+    data['lecture_time'] = this.lectureTime;
     return data;
   }
 }

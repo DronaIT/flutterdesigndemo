@@ -44,25 +44,25 @@ class StudentAttendanceResponse {
 
   StudentAttendanceResponse.fromJson(Map<String, dynamic> json) {
     lectureId = json['lecture_id'];
-    employeeId = json['employee_id'].cast<String>();
-    hubId = json['hub_id'].cast<String>();
-    specializationId = json['specialization_id'].cast<String>();
-    subjectId = json['subject_id'].cast<String>();
-    unitId = json['unit_id'].cast<String>();
-    topicId = json['topic_id'].cast<String>();
+    employeeId = json['employee_id']?.cast<String>();
+    hubId = json['hub_id']?.cast<String>();
+    specializationId = json['specialization_id']?.cast<String>();
+    subjectId = json['subject_id']?.cast<String>();
+    unitId = json['unit_id']?.cast<String>();
+    topicId = json['topic_id']?.cast<String>();
     division = json['division'];
     lectureDate = json['lecture_date'];
-    studentIds = json['student_ids'].cast<String>();
-    presentIds = json['present_ids'].cast<String>();
-    subjectTitleFromSubjectId = json['subject_title (from subject_id)'].cast<String>();
-    unitTitleFromUnitId = json['unit_title (from unit_id)'].cast<String>();
-    semesterFromSubjectId = json['semester (from subject_id)'].cast<String>();
-    employeeNameFromEmployeeId = json['employee_name (from employee_id)'].cast<String>();
-    hubNameFromHubId = json['hub_name (from hub_id)'].cast<String>();
-    specializationNameFromSpecializationId = json['specialization_name (from specialization_id)'].cast<String>();
-    topicTitleFromTopicId = json['topic_title (from topic_id)'].cast<String>();
-    enrollmentNumberFromStudentIds = json['enrollment_number (from student_ids)'].cast<String>();
-    nameFromStudentIds = json['name (from student_ids)'].cast<String>();
+    studentIds = json['student_ids']?.cast<String>();
+    presentIds = json['present_ids']?.cast<String>();
+    subjectTitleFromSubjectId = json['subject_title (from subject_id)']?.cast<String>();
+    unitTitleFromUnitId = json['unit_title (from unit_id)']?.cast<String>();
+    semesterFromSubjectId = json['semester (from subject_id)']?.cast<String>();
+    employeeNameFromEmployeeId = json['employee_name (from employee_id)']?.cast<String>();
+    hubNameFromHubId = json['hub_name (from hub_id)']?.cast<String>();
+    specializationNameFromSpecializationId = json['specialization_name (from specialization_id)']?.cast<String>();
+    topicTitleFromTopicId = json['topic_title (from topic_id)']?.cast<String>();
+    enrollmentNumberFromStudentIds = json['enrollment_number (from student_ids)']?.cast<String>();
+    nameFromStudentIds = json['name (from student_ids)']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -29,6 +31,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
   final apiRepository = getIt.get<ApiRepository>();
   String status = "";
   String formattedDate = "";
+  String formattedTime = "";
 
   @override
   void initState() {
@@ -42,6 +45,11 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
     print(formattedDate);
+
+    var timeFormatter = DateFormat('hh:mm aa');
+    var dateTime = DateTime.now();
+    formattedTime = timeFormatter.format(dateTime);
+    print(formattedTime);
   }
 
   @override
@@ -61,9 +69,23 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                   }
                   setState(() {
                     var formatter = DateFormat('yyyy-MM-dd');
-                    setState(() {
-                      formattedDate = formatter.format(pickedDate);
-                    });
+                    formattedDate = formatter.format(pickedDate);
+                  });
+                });
+              },
+            ),
+            GestureDetector(
+              child: custom_text(text: "${strings_name.str_select_time} : $formattedTime", textStyles: blackTextSemiBold16),
+              onTap: () {
+                showTimePicker(context: context, initialTime: TimeOfDay.now()).then((pickedTime) {
+                  if (pickedTime == null) {
+                    return;
+                  }
+                  setState(() {
+                    var formatter = DateFormat('hh:mm aa');
+                    var dateTime = DateTime.now();
+                    var time = DateTime(dateTime.year, dateTime.month, dateTime.day, pickedTime.hour, pickedTime.minute);
+                    formattedTime = formatter.format(time);
                   });
                 });
               },
@@ -110,6 +132,8 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               click: () {
                 if (formattedDate.trim().isEmpty) {
                   Utils.showSnackBar(context, strings_name.str_empty_select_date);
+                } else if (formattedTime.trim().isEmpty) {
+                  Utils.showSnackBar(context, strings_name.str_empty_select_time);
                 } else {
                   var pending = false;
                   for (var i = 0; i < studentList.length; i++) {
@@ -159,6 +183,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     request.presentIds = presentIds;
     request.absentIds = absentIds;
     request.lectureDate = formattedDate;
+    request.lectureTime = formattedTime;
 
     var resp = await apiRepository.addStudentAttendanceApi(request);
     if (resp.id!.isNotEmpty) {
