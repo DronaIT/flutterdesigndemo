@@ -16,8 +16,37 @@ class LoginFieldsResponse {
   List<String>? hubIdFromHubIds;
   List<String>? specializationIdFromSpecializationIds;
 
+  String? division;
+  String? semester;
+  List<String>? lectureIds;
+  List<String>? absentLectureIds;
+  List<String>? absentLectureDate;
+  List<String>? absentSubjectTitle;
+  List<String>? absentSubjectId;
+
+  List<String>? presentLectureIds;
+  List<String>? presentLectureDate;
+  List<String>? presentSubjectTitle;
+  List<String>? presentSubjectId;
+  List<String>? lecture_date;
+
   LoginFieldsResponse(
-      {this.city, this.joiningYear, this.password, this.studentId, this.hubIds, this.name, this.address, this.mobileNumber, this.email, this.specializationIds, this.gender, this.createdOn, this.updatedOn, this.enrollmentNumber, this.hubIdFromHubIds, this.specializationIdFromSpecializationIds});
+      {this.city, this.joiningYear, this.password, this.studentId,
+        this.hubIds, this.name, this.address,
+        this.mobileNumber, this.email, this.specializationIds,
+        this.gender, this.createdOn, this.updatedOn,
+        this.enrollmentNumber, this.hubIdFromHubIds,
+        this.specializationIdFromSpecializationIds,
+
+        this.division, this.semester, this.lectureIds,
+        this.absentLectureIds, this.absentLectureDate,
+        this.absentSubjectTitle, this.absentSubjectId,
+        this.presentLectureIds,
+        this.presentLectureDate,
+        this.presentSubjectTitle,
+        this.presentSubjectId,
+        this.lecture_date,
+      });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -36,6 +65,20 @@ class LoginFieldsResponse {
     enrollmentNumber = json['enrollment_number'];
     hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     specializationIdFromSpecializationIds = json['specialization_id (from specialization_ids)']?.cast<String>();
+
+
+    division = json['division'];
+    semester = json['semester'];
+    lectureIds = json['lecture_ids']?.cast<String>();
+    absentLectureIds = json['absent_lecture_ids']?.cast<String>();
+    absentLectureDate = json['absent_lecture_date']?.cast<String>();
+    absentSubjectTitle = json['absent_subject_title']?.cast<String>();
+    absentSubjectId = json['absent_subject_id']?.cast<String>();
+    presentLectureIds = json['present_lecture_ids']?.cast<String>();
+    presentLectureDate = json['present_lecture_date']?.cast<String>();
+    presentSubjectTitle = json['present_subject_title']?.cast<String>();
+    presentSubjectId = json['present_subject_id']?.cast<String>();
+    lecture_date = json['lecture_date']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -56,6 +99,18 @@ class LoginFieldsResponse {
     data['enrollment_number'] = this.enrollmentNumber;
     data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
     data['specialization_id (from specialization_ids)'] = this.specializationIdFromSpecializationIds;
+    data['division'] = this.division;
+    data['semester'] = this.semester;
+    data['lecture_ids'] = this.lectureIds;
+    data['absent_lecture_ids'] = this.absentLectureIds;
+    data['absent_lecture_date'] = this.absentLectureDate;
+    data['absent_subject_title'] = this.absentSubjectTitle;
+    data['absent_subject_id'] = this.absentSubjectId;
+    data['present_lecture_date'] = this.presentLectureDate;
+    data['present_subject_title'] = this.presentSubjectTitle;
+    data['present_subject_id'] = this.presentSubjectId;
+    data['present_lecture_ids'] = this.presentLectureIds;
+    data['lecture_date'] = this.lecture_date;
     return data;
   }
 }
