@@ -195,4 +195,16 @@ class strings_name {
   static const String str_division = "Division";
 
   static const String str_get_students = "Get Students";
+  static const String str_students = "Students";
+
+  static const String str_empty_semester = "Please select semester";
+  static const String str_empty_division = "Please select division";
+  static const String str_empty_subject = "Please select subject";
+  static const String str_empty_unit = "Please select unit";
+  static const String str_empty_topic = "Please select topic";
+
+  static const String str_present = "Present";
+  static const String str_absent = "Absent";
+
+  static const String str_enrollment = "Enrollment number:";
 }
