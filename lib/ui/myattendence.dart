@@ -12,6 +12,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+
 //https://www.kindacode.com/article/flutter-date-picker/
 class MyAttendence extends StatefulWidget {
   const MyAttendence({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _MyAttendenceState extends State<MyAttendence> {
   String formattedDate = "";
   String semester = "";
 
-  String query="";
+  String query = "";
 
   @override
   void initState() {
@@ -41,11 +42,9 @@ class _MyAttendenceState extends State<MyAttendence> {
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
       phone = loginData.mobileNumber.toString();
-
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       phone = loginData.mobileNumber.toString();
-
     }
     checkCurrentData();
     viewAttendance();
@@ -56,18 +55,16 @@ class _MyAttendenceState extends State<MyAttendence> {
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
     print(formattedDate);
-
-
   }
 
   void viewAttendance() async {
     setState(() {
       isVisible = true;
     });
-    if(Get.arguments[0]["studentEnrollno"] != null){
+    if (Get.arguments != null && Get.arguments[0]["studentEnrollno"] != null) {
       query = "(${TableNames.TB_USERS_ENROLLMENT}='${Get.arguments[0]["studentEnrollno"]}')";
       formattedDate = Get.arguments[1]["date"];
-    }else{
+    } else {
       query = "(${TableNames.TB_USERS_PHONE}='${phone}')";
     }
     data = await apiRepository.loginApi(query);
@@ -77,7 +74,7 @@ class _MyAttendenceState extends State<MyAttendence> {
       });
       viewStudentArray?.clear();
       checkPre_AbsentDetailByDate();
-    }else{
+    } else {
       viewStudentArray?.clear();
     }
   }
@@ -105,9 +102,7 @@ class _MyAttendenceState extends State<MyAttendence> {
   void checkPre_AbsentDetailBySemester() {
     if (data.records != null && data.records!.first.fields != null) {
       for (int i = 0; i < data.records!.length; i++) {
-        if (semester == data.records![i].fields!.semester!) {
-
-        }
+        if (semester == data.records![i].fields!.semester!) {}
       }
     }
   }
@@ -134,9 +129,7 @@ class _MyAttendenceState extends State<MyAttendence> {
                   color: Colors.white,
                   iconSize: 30,
                   onPressed: () {
-                    showDatePicker(
-                        context: context,
-                        initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                    showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
                       if (pickedDate == null) {
                         return;
                       }
@@ -146,7 +139,6 @@ class _MyAttendenceState extends State<MyAttendence> {
                         viewAttendance();
                       });
                     });
-
                   }),
             ),
           ],
@@ -277,14 +269,11 @@ class _MyAttendenceState extends State<MyAttendence> {
                             value: strings_name.str_by_date,
                             groupValue: _isDate,
                             onChanged: (value) {
-                              showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                              showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
                                 if (pickedDate == null) {
                                   return;
                                 }
                                 setState(() {
-
                                   var formatter = DateFormat('yyyy-MM-dd');
                                   formattedDate = formatter.format(pickedDate);
 
