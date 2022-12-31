@@ -13,7 +13,17 @@ class LoginEmployeResponse {
   String? email = " ";
   String? address;
 
-  LoginEmployeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.employeeName, this.hubIds, this.roleIdFromRoleIds, this.hubIdFromHubIds, this.employeeCode, this.mobileNumber, this.email, this.password});
+  List<String>? lectureIds;
+  List<String>? lectureDate;
+  List<String>? unitTitle;
+  List<String>? semester;
+  List<String>? subjectTitle;
+  List<String>? division;
+
+  LoginEmployeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.employeeName, this.hubIds, this.roleIdFromRoleIds,
+    this.hubIdFromHubIds, this.employeeCode, this.mobileNumber, this.email, this.password,
+    this.lectureIds, this.lectureDate, this.unitTitle, this.semester,this.subjectTitle, this.division
+  });
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -29,6 +39,14 @@ class LoginEmployeResponse {
     password = json['password'];
     email = json['email'];
     address = json['address'];
+
+
+    lectureIds = json['lecture_ids']?.cast<String>();
+    lectureDate = json['lecture_date']?.cast<String>();
+    unitTitle = json['unit_title']?.cast<String>();
+    semester = json['semester']?.cast<String>();
+    subjectTitle = json['subject_title']?.cast<String>();
+    division = json['division']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +64,13 @@ class LoginEmployeResponse {
     data['password'] = this.password;
     data['email'] = this.email;
     data['address'] = this.address;
+
+    data['lecture_ids'] = this.lectureIds;
+    data['lecture_date'] = this.lectureDate;
+    data['unit_title'] = this.unitTitle;
+    data['semester'] = this.semester;
+    data['subject_title'] = this.subjectTitle;
+    data['division'] = this.division;
     return data;
   }
 }

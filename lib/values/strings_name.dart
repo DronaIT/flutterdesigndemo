@@ -212,6 +212,7 @@ class strings_name {
   static const String str_by_date= "Date";
   static const String str_by_semester= "Semester";
   static const String str_by_subject= "Subject";
+  static const String str_attendence_his_detail = "Attendance history detail";
 
 
 }

@@ -27,7 +27,7 @@ class _MyAttendenceState extends State<MyAttendence> {
 
   BaseLoginResponse<LoginFieldsResponse> data = BaseLoginResponse();
   List<ViewStudentAttendence>? viewStudentArray = [];
-  ViewStudentAttendence viewStudent = ViewStudentAttendence();
+  var formatterShow = DateFormat('dd-MM-yyyy');
 
   String formattedDate = "";
   String semester = "";
@@ -165,7 +165,7 @@ class _MyAttendenceState extends State<MyAttendence> {
                                       bottomValue: 5,
                                     ),
                                     custom_text(
-                                      text: viewStudentArray![index].lecture_date!,
+                                      text: formatterShow.format(DateTime.parse(viewStudentArray![index].lecture_date!)),
                                       alignment: Alignment.topLeft,
                                       textStyles: blackTextSemiBold12,
                                       topValue: 5,

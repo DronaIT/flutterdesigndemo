@@ -97,6 +97,12 @@ const primaryTextSemiBold16 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const primaryTextSemiBold14 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: colors_name.colorPrimary,
+);
+
 const errorTextStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,

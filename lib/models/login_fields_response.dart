@@ -30,6 +30,7 @@ class LoginFieldsResponse {
   List<String>? presentSubjectId;
   List<String>? lecture_date;
 
+
   LoginFieldsResponse(
       {this.city, this.joiningYear, this.password, this.studentId,
         this.hubIds, this.name, this.address,
@@ -45,7 +46,7 @@ class LoginFieldsResponse {
         this.presentLectureDate,
         this.presentSubjectTitle,
         this.presentSubjectId,
-        this.lecture_date,
+        this.lecture_date
       });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
