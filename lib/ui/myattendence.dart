@@ -11,7 +11,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:intl/intl.dart';
-
+import 'package:get/get.dart';
 //https://www.kindacode.com/article/flutter-date-picker/
 class MyAttendence extends StatefulWidget {
   const MyAttendence({Key? key}) : super(key: key);
@@ -32,6 +32,8 @@ class _MyAttendenceState extends State<MyAttendence> {
   String formattedDate = "";
   String semester = "";
 
+  String query="";
+
   @override
   void initState() {
     super.initState();
@@ -39,9 +41,11 @@ class _MyAttendenceState extends State<MyAttendence> {
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
       phone = loginData.mobileNumber.toString();
+
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       phone = loginData.mobileNumber.toString();
+
     }
     checkCurrentData();
     viewAttendance();
@@ -60,7 +64,12 @@ class _MyAttendenceState extends State<MyAttendence> {
     setState(() {
       isVisible = true;
     });
-    var query = "(${TableNames.TB_USERS_PHONE}='${phone}')";
+    if(Get.arguments[0]["studentEnrollno"] != null){
+      query = "(${TableNames.TB_USERS_ENROLLMENT}='${Get.arguments[0]["studentEnrollno"]}')";
+      formattedDate = Get.arguments[1]["date"];
+    }else{
+      query = "(${TableNames.TB_USERS_PHONE}='${phone}')";
+    }
     data = await apiRepository.loginApi(query);
     if (data != null) {
       setState(() {
@@ -134,7 +143,6 @@ class _MyAttendenceState extends State<MyAttendence> {
                       setState(() {
                         var formatter = DateFormat('yyyy-MM-dd');
                         formattedDate = formatter.format(pickedDate);
-
                         viewAttendance();
                       });
                     });

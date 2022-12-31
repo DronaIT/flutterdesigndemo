@@ -90,6 +90,12 @@ const blackTextSemiBold14 = TextStyle(
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
+const primryTextSemiBold14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: colors_name.colorPrimary,
+);
+
 
 const primaryTextSemiBold16 = TextStyle(
   fontSize: 16,

@@ -78,7 +78,7 @@ class _AttendenceHistoryState extends State<AttendenceHistory> {
         if (formattedDate == data.records!.first.fields!.lectureDate![i]) {
           viewLectureArray?.add(ViewLectureAttendence(subject_title: data.records!.first.fields!.subjectTitle![i],
               lecture_date: data.records!.first.fields!.lectureDate![i], unit_title: data.records!.first.fields!.lectureDate![i],
-              semester: data.records!.first.fields!.semester![i], division:data.records!.first.fields!.division![i] ));
+              semester: data.records!.first.fields!.semester![i], division:data.records!.first.fields!.division![i] , lecture_id: data.records!.first.fields!.lectureIds![i]));
         }
       }
     }
@@ -156,7 +156,8 @@ class _AttendenceHistoryState extends State<AttendenceHistory> {
                               ],
                             )),
                         onTap: (){
-                          Get.to(() => const AttendenceHistoryDetail());
+                          Get.to(() => const AttendenceHistoryDetail(),
+                              arguments: viewLectureArray?[index].lecture_id);
                         },
 
                       );

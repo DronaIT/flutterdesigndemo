@@ -26,8 +26,8 @@ class TableNames {
   static const TBL_UNITS = "TBL_UNITS";
   static const TBL_TOPICS = "TBL_TOPICS";
   static const TBL_STUDENT_ATTENDANCE = "TBL_STUDENT_ATTENDANCE";
-
   static const TB_USERS_PHONE = "mobile_number";
+  static const TB_USERS_ENROLLMENT = "enrollment_number";
   static const TB_USERS_PASSWORD = "password";
   static const CLM_ROLE_ID = "role_ids";
   static const CLM_HUB_IDS = "hub_ids";
@@ -40,6 +40,7 @@ class TableNames {
   static const CLM_TOPIC_ID = "topic_id";
   static const CLM_SEMESTER = "semester";
   static const CLM_DIVISION = "division";
+
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";

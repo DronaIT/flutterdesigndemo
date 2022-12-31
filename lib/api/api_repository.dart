@@ -335,4 +335,15 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> studentAttendanceApi(String recordId) async {
+    try {
+      final response = await userApi.studentAttendanceApi(recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
 }
