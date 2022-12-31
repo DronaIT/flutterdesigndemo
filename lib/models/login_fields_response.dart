@@ -29,25 +29,37 @@ class LoginFieldsResponse {
   List<String>? presentSubjectTitle;
   List<String>? presentSubjectId;
   List<String>? lecture_date;
-
+  int attendanceStatus = -1;
 
   LoginFieldsResponse(
-      {this.city, this.joiningYear, this.password, this.studentId,
-        this.hubIds, this.name, this.address,
-        this.mobileNumber, this.email, this.specializationIds,
-        this.gender, this.createdOn, this.updatedOn,
-        this.enrollmentNumber, this.hubIdFromHubIds,
-        this.specializationIdFromSpecializationIds,
-
-        this.division, this.semester, this.lectureIds,
-        this.absentLectureIds, this.absentLectureDate,
-        this.absentSubjectTitle, this.absentSubjectId,
-        this.presentLectureIds,
-        this.presentLectureDate,
-        this.presentSubjectTitle,
-        this.presentSubjectId,
-        this.lecture_date
-      });
+      {this.city,
+      this.joiningYear,
+      this.password,
+      this.studentId,
+      this.hubIds,
+      this.name,
+      this.address,
+      this.mobileNumber,
+      this.email,
+      this.specializationIds,
+      this.gender,
+      this.createdOn,
+      this.updatedOn,
+      this.enrollmentNumber,
+      this.hubIdFromHubIds,
+      this.specializationIdFromSpecializationIds,
+      this.division,
+      this.semester,
+      this.lectureIds,
+      this.absentLectureIds,
+      this.absentLectureDate,
+      this.absentSubjectTitle,
+      this.absentSubjectId,
+      this.presentLectureIds,
+      this.presentLectureDate,
+      this.presentSubjectTitle,
+      this.presentSubjectId,
+      this.lecture_date});
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -66,7 +78,6 @@ class LoginFieldsResponse {
     enrollmentNumber = json['enrollment_number'];
     hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     specializationIdFromSpecializationIds = json['specialization_id (from specialization_ids)']?.cast<String>();
-
 
     division = json['division'];
     semester = json['semester'];

@@ -127,6 +127,7 @@ class _LoginState extends State<Login> {
                               } else {
                                 await PreferenceUtils.setIsLogin(1);
                                 await PreferenceUtils.setLoginData(data.records!.first.fields!);
+                                await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
                                 Get.offAll(() => Home());
                               }
                             } else if (data.records!.length == 0) {
@@ -143,6 +144,7 @@ class _LoginState extends State<Login> {
                                 } else {
                                   await PreferenceUtils.setIsLogin(2);
                                   await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+                                  await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
                                   Get.offAll(() => Home());
                                 }
                               } else if (dataEmployee.records!.length == 0) {

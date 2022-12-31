@@ -207,12 +207,19 @@ class strings_name {
   static const String str_absent = "Absent";
 
   static const String str_enrollment = "Enrollment number:";
-  static const String str_filter= "Filter by";
+  static const String str_filter = "Filter by";
   static const String str_reset = "Reset";
-  static const String str_by_date= "Date";
-  static const String str_by_semester= "Semester";
-  static const String str_by_subject= "Subject";
+  static const String str_by_date = "Date";
+  static const String str_by_semester = "Semester";
+  static const String str_by_subject = "Subject";
   static const String str_attendence_his_detail = "Attendance history detail";
 
+  static const String str_submit_attendance = "Submit Attendance";
+  static const String str_err_submit_attendance = "Please select attendance for all the students";
+  static const String str_attendance_recorded = "Attendance recorded successfully.";
 
+  static const String str_select_date = "Select Date";
+  static const String str_empty_select_date = "Please select Date";
+  static const String str_select_time = "Select Time";
+  static const String str_empty_select_time = "Please select time";
 }

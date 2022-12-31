@@ -90,6 +90,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       var data = await apiRepository.loginApi(query);
       if (data.records!.isNotEmpty) {
         await PreferenceUtils.setLoginData(data.records!.first.fields!);
+        await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
         Get.offAll(const Home());
       } else {
         Get.offAll(const Login());
@@ -98,6 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       var dataEmployee = await apiRepository.loginEmployeeApi(query);
       if (dataEmployee.records!.isNotEmpty) {
         await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+        await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
         Get.offAll(const Home());
       } else {
         Get.offAll(const Login());

@@ -20,6 +20,7 @@ class PreferenceUtils {
   static const _keyRoleList = 'roleList';
   static const _keyHubList = 'hubList';
   static const _keySpecializationList = 'specializationList';
+  static const _keyLoginRecordId = 'loginRecordId';
 
   static Future init() async => _preferences = await SharedPreferences.getInstance();
 
@@ -68,6 +69,10 @@ class PreferenceUtils {
   static BaseLoginResponse<SpecializationResponse> getSpecializationList() {
     return BaseLoginResponse<SpecializationResponse>.fromJson(jsonDecode(_preferences.getString(_keySpecializationList)!), (response) => SpecializationResponse.fromJson(response));
   }
+
+  static Future setLoginRecordId(String recordId) async => await _preferences.setString(_keyLoginRecordId, recordId);
+
+  static String getLoginRecordId() => _preferences.getString(_keyLoginRecordId) ?? " ";
 
   static clearPreference() {
     var roleList = getRoleList();

@@ -99,6 +99,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                   });
                                   await PreferenceUtils.setIsLogin(1);
                                   await PreferenceUtils.setLoginData(dataUpdate.fields!);
+                                  await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
                                   Get.offAll(Home());
                                 } else {
                                   setState(() {
@@ -120,6 +121,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                   });
                                   await PreferenceUtils.setIsLogin(2);
                                   await PreferenceUtils.setLoginDataEmployee(dataPassword.fields!);
+                                  await PreferenceUtils.setLoginRecordId(dataPassword.id!);
                                   Get.offAll(Home());
                                 } else {
                                   setState(() {

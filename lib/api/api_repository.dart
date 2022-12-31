@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
+import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
 import 'package:flutterdesigndemo/models/request/add_specialization_request.dart';
@@ -18,6 +19,7 @@ import 'package:flutterdesigndemo/models/createpassword.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/student_attendance_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
@@ -317,6 +319,16 @@ class ApiRepository {
   Future<UpdateTopics> updateTopicsApi(Map<String, dynamic> updateFormula, String recordId) async {
     try {
       final response = await userApi.updateTopicsApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> addStudentAttendanceApi(AddStudentAttendanceRequest request) async {
+    try {
+      final response = await userApi.addStudentAttendanceApi(request);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

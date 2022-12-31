@@ -186,6 +186,16 @@ class Utils {
     }
     return hubId;
   }
+
+  static String? getSpecializationIds(String? specializationId) {
+    final specializationList = PreferenceUtils.getSpecializationList();
+    for (int i = 0; i < specializationList.records!.length; i++) {
+      if (specializationList.records![i].id == specializationId) {
+        return specializationList.records![i].fields?.id!.toString();
+      }
+    }
+    return specializationId;
+  }
 }
 
 class DateFormate {

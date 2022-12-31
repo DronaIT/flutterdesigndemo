@@ -7,16 +7,19 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
+import 'package:flutterdesigndemo/ui/attendance_student_list.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 
 class TakeAttendance extends StatefulWidget {
   const TakeAttendance({Key? key}) : super(key: key);
@@ -31,10 +34,12 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
   String hubValue = "";
+  String hubRecordId = "";
 
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationResponseArray = [];
   BaseApiResponseWithSerializable<SpecializationResponse>? specializationResponse;
   String specializationValue = "";
+  String specializationRecordId = "";
 
   List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
   int semesterValue = -1;
@@ -45,14 +50,17 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectResponseArray = [];
   BaseApiResponseWithSerializable<SubjectResponse>? subjectResponse;
   String subjectValue = "";
+  String subjectRecordId = "";
 
   List<BaseApiResponseWithSerializable<UnitsResponse>>? unitResponseArray = [];
   BaseApiResponseWithSerializable<UnitsResponse>? unitResponse;
   String unitValue = "";
+  String unitRecordId = "";
 
   List<BaseApiResponseWithSerializable<TopicsResponse>>? topicResponseArray = [];
   BaseApiResponseWithSerializable<TopicsResponse>? topicResponse;
   String topicValue = "";
+  String topicRecordId = "";
 
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -99,6 +107,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                 setState(() {
                                   hubValue = newValue!.fields!.id!.toString();
                                   hubResponse = newValue;
+                                  hubRecordId = newValue.id!;
                                   getSpecializations();
                                 });
                               },
@@ -137,8 +146,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         focusColor: colors_name.colorPrimary,
                                         onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                                           setState(() {
-                                            specializationValue = newValue!.fields!.specializationId!.toString();
+                                            specializationValue = newValue!.fields!.id!.toString();
                                             specializationResponse = newValue;
+                                            specializationRecordId = newValue.id!;
                                             getSubjects();
                                           });
                                         },
@@ -258,6 +268,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                           setState(() {
                                             subjectValue = newValue!.fields!.ids!.toString();
                                             subjectResponse = newValue;
+                                            subjectRecordId = newValue.id!;
                                             getUnits();
                                           });
                                         },
@@ -301,6 +312,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                           setState(() {
                                             unitValue = newValue!.fields!.ids!.toString();
                                             unitResponse = newValue;
+                                            unitRecordId = newValue.id!;
                                             getTopics();
                                           });
                                         },
@@ -344,6 +356,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                           setState(() {
                                             topicValue = newValue!.fields!.ids!.toString();
                                             topicResponse = newValue;
+                                            topicRecordId = newValue.id!;
                                           });
                                         },
                                         items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>((BaseApiResponseWithSerializable<TopicsResponse> value) {
@@ -366,6 +379,18 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                       click: () {
                         if (hubValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_hub);
+                        } else if (specializationValue.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_spe);
+                        } else if (semesterValue == -1) {
+                          Utils.showSnackBar(context, strings_name.str_empty_semester);
+                        } else if (divisionValue.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_division);
+                        } else if (subjectValue.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_subject);
+                        } else if (unitValue.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_unit);
+                        } else if (topicValue.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_topic);
                         } else {
                           getStudents();
                         }
@@ -385,21 +410,6 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   }
 
   Future<void> getSpecializations() async {
-    if (hubValue.isNotEmpty) {
-      setState(() {
-        isVisible = true;
-      });
-      var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
-      var speData = await apiRepository.getSpecializationDetailApi(query);
-      setState(() {
-        specializationResponse = null;
-        specializationResponseArray = speData.records;
-        isVisible = false;
-      });
-    }
-  }
-
-  Future<void> getSemesters() async {
     if (hubValue.isNotEmpty) {
       setState(() {
         isVisible = true;
@@ -459,5 +469,42 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     }
   }
 
-  Future<void> getStudents() async {}
+  Future<void> getStudents() async {
+    var query = "AND(";
+    query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+    query += ",FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0)";
+    query += ",FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
+    query += ",FIND('${divisionValue}', ${TableNames.CLM_DIVISION}, 0)";
+    query += ")";
+    print(query);
+    var data = await apiRepository.loginApi(query);
+    if (data.records!.isNotEmpty) {
+      setState(() {
+        isVisible = false;
+      });
+
+      AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
+      request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
+      request.hubId = hubRecordId.split(",");
+      request.specializationId = specializationRecordId.split(",");
+      request.division = divisionValue;
+      request.subjectId = subjectRecordId.split(",");
+      request.unitId = unitRecordId.split(",");
+      request.topicId = topicRecordId.split(",");
+
+      Get.to(const AttendanceStudentList(), arguments: [
+        {"studentList": data.records},
+        {"request": request},
+      ])?.then((result) {
+        if (result != null && result) {
+          Get.back(closeOverlays: true);
+        }
+      });
+    } else {
+      Utils.showSnackBar(context, strings_name.str_no_students);
+    }
+    setState(() {
+      isVisible = false;
+    });
+  }
 }

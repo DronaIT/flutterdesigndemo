@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
+import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
@@ -20,6 +21,7 @@ import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/student_attendance_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
@@ -350,6 +352,17 @@ class ApiRequest {
 
       Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_UNITS + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
       return UpdateTopics.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> addStudentAttendanceApi(AddStudentAttendanceRequest request) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": request};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_STUDENT_ATTENDANCE, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<StudentAttendanceResponse>.fromJson(response.data, (response) => StudentAttendanceResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
