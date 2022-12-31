@@ -470,6 +470,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   }
 
   Future<void> getStudents() async {
+    setState(() {
+      isVisible = true;
+    });
     var query = "AND(";
     query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
     query += ",FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0)";
@@ -491,7 +494,6 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       request.subjectId = subjectRecordId.split(",");
       request.unitId = unitRecordId.split(",");
       request.topicId = topicRecordId.split(",");
-
       Get.to(const AttendanceStudentList(), arguments: [
         {"studentList": data.records},
         {"request": request},
