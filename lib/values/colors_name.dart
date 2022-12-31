@@ -24,6 +24,7 @@ abstract class colors_name{
   static const Color colorLightGreen = Color(0xFF00EFA7);
   static const Color lightGreyColor = Color(0xFFC4C4C4);
   static const Color errorColor = Color(0xFFAB0B0B);
+  static const Color presentColor = Color(0xFF008000);
   static const Color colorDark = Color(0xFF323232);
   static const Color centerTextColor = Colors.grey;
   static const Color buttonBgColor = colorPrimary;

@@ -1,5 +1,6 @@
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/ui/myattendence.dart';
 import 'package:flutterdesigndemo/ui/take_attendance.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -117,7 +118,7 @@ class _AttendanceState extends State<Attendance> {
                       ),
                     ),
                     onTap: () {
-                      // Get.to(() => const AcademicDetails());
+                      Get.to(() => const MyAttendence());
                     },
                   ),
                 ),

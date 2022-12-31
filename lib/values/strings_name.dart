@@ -207,4 +207,11 @@ class strings_name {
   static const String str_absent = "Absent";
 
   static const String str_enrollment = "Enrollment number:";
+  static const String str_filter= "Filter by";
+  static const String str_reset = "Reset";
+  static const String str_by_date= "Date";
+  static const String str_by_semester= "Semester";
+  static const String str_by_subject= "Subject";
+
+
 }

@@ -20,6 +20,19 @@ const centerTextStyle30 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const centerTextStyl20 = TextStyle(
+  fontSize: 19,
+  fontWeight: FontWeight.bold,
+  color: colors_name.colorPrimary,
+);
+
+const centerTextStylblack20 = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+
+
 const centerTextStyle24 = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
@@ -35,6 +48,12 @@ const centerTextStyleBlack18 = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w500,
   color: Colors.black,
+);
+
+const centerTextStylePrimary18 = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w500,
+  color: colors_name.colorPrimary,
 );
 
 const blackText16 = TextStyle(
@@ -60,6 +79,12 @@ const blackTextSemiBold16 = TextStyle(
   fontWeight: FontWeight.w600,
   color: Colors.black,
 );
+const blackTextSemiBold12 = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);
+
 const blackTextSemiBold14 = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w400,
