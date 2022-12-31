@@ -31,7 +31,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await PreferenceUtils.init();
   setup();
-  runApp(GetMaterialApp(debugShowCheckedModeBanner: false, home: WelcomeScreen()));
+  runApp(const GetMaterialApp(debugShowCheckedModeBanner: false, home: WelcomeScreen()));
 }
 
 class WelcomeScreen extends StatefulWidget {
