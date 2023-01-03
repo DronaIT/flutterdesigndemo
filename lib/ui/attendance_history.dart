@@ -4,8 +4,8 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
-import 'package:flutterdesigndemo/models/view_lecture_attendence.dart';
-import 'package:flutterdesigndemo/ui/attenhistorydetail.dart';
+import 'package:flutterdesigndemo/models/view_lecture_attendance.dart';
+import 'package:flutterdesigndemo/ui/attendance_history_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -14,20 +14,20 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
-class AttendenceHistory extends StatefulWidget {
-  const AttendenceHistory({Key? key}) : super(key: key);
+class AttendanceHistory extends StatefulWidget {
+  const AttendanceHistory({Key? key}) : super(key: key);
 
   @override
-  State<AttendenceHistory> createState() => _AttendenceHistoryState();
+  State<AttendanceHistory> createState() => _AttendanceHistoryState();
 }
 
-class _AttendenceHistoryState extends State<AttendenceHistory> {
+class _AttendanceHistoryState extends State<AttendanceHistory> {
   BaseLoginResponse<LoginEmployeResponse> data = BaseLoginResponse();
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   String phone = "";
   String formattedDate = "";
-  List<ViewLectureAttendence>? viewLectureArray = [];
+  List<ViewLectureAttendance>? viewLectureArray = [];
   var formatterShow = DateFormat('dd-MM-yyyy');
   @override
   void initState() {
@@ -48,41 +48,42 @@ class _AttendenceHistoryState extends State<AttendenceHistory> {
     setState(() {
       isVisible = true;
     });
-    var query = "(${TableNames.TB_USERS_PHONE}='${phone}')";
+    var query = "(${TableNames.TB_USERS_PHONE}='$phone')";
     data = await apiRepository.loginEmployeeApi(query);
     if (data != null) {
       setState(() {
         isVisible = false;
       });
       viewLectureArray?.clear();
-      lecturebyDate();
+      lectureByDate();
     } else {
       setState(() {
         isVisible = false;
       });
       viewLectureArray?.clear();
     }
-    print("test==>${data}");
   }
 
   void checkCurrentData() {
     var now = DateTime.now();
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
-    print(formattedDate);
   }
 
-  void lecturebyDate() {
+  void lectureByDate() {
     if (data.records != null && data.records!.first.fields != null) {
       for (int i = 0; i < data.records!.first.fields!.lectureDate!.length; i++) {
         if (formattedDate == data.records!.first.fields!.lectureDate![i]) {
-          viewLectureArray?.add(ViewLectureAttendence(subject_title: data.records!.first.fields!.subjectTitle![i],
-              lecture_date: data.records!.first.fields!.lectureDate![i], unit_title: data.records!.first.fields!.lectureDate![i],
-              semester: data.records!.first.fields!.semester![i], division:data.records!.first.fields!.division![i] , lecture_id: data.records!.first.fields!.lectureIds![i]));
+          viewLectureArray?.add(ViewLectureAttendance(
+              subject_title: data.records!.first.fields!.subjectTitle![i],
+              lecture_date: data.records!.first.fields!.lectureDate![i],
+              unit_title: data.records!.first.fields!.lectureDate![i],
+              semester: data.records!.first.fields!.semester![i],
+              division: data.records!.first.fields!.division![i],
+              lecture_id: data.records!.first.fields!.lectureIds![i]));
         }
       }
     }
-
   }
 
   @override
@@ -102,7 +103,6 @@ class _AttendenceHistoryState extends State<AttendenceHistory> {
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(
-                //  icon:  Icon(_isTap ?Icons.filter_alt:Icons.filter_alt_outlined),
                 icon: const Icon(Icons.filter_alt_outlined),
                 color: Colors.white,
                 iconSize: 30,
@@ -155,11 +155,9 @@ class _AttendenceHistoryState extends State<AttendenceHistory> {
                                 ),
                               ],
                             )),
-                        onTap: (){
-                          Get.to(() => const AttendenceHistoryDetail(),
-                              arguments: viewLectureArray?[index].lecture_id);
+                        onTap: () {
+                          Get.to(() => const AttendanceHistoryDetail(), arguments: viewLectureArray?[index].lecture_id);
                         },
-
                       );
                     })
                 : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),

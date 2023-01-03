@@ -30,7 +30,7 @@ class _ViewSubjectsState extends State<ViewSubjects> {
   BaseLoginResponse<SubjectResponse> subjectData = BaseLoginResponse();
 
   Future<void> viewSubjects() async {
-    subjectData = await apiRepository.getSubjectsForSpecializationApi("");
+    subjectData = await apiRepository.getSubjectsApi("");
     if (subjectData.records!.isNotEmpty) {
       setState(() {
         canViewSubject = true;

@@ -44,7 +44,7 @@ class _AddSubjectState extends State<AddSubject> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_SUBJECT_ID}, 0)";
-      var data = await apiRepository.getSubjectsForSpecializationApi(query);
+      var data = await apiRepository.getSubjectsApi(query);
       if (data.records?.isNotEmpty == true) {
         setState(() {
           fromEdit = true;

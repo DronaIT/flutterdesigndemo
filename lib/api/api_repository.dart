@@ -216,9 +216,9 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<SubjectResponse>> getSubjectsForSpecializationApi(String detailFormula) async {
+  Future<BaseLoginResponse<SubjectResponse>> getSubjectsApi(String detailFormula) async {
     try {
-      final response = await userApi.getSubjectsForSpecializationApi(detailFormula);
+      final response = await userApi.getSubjectsApi(detailFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -336,7 +336,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> studentAttendanceApi(String recordId) async {
+  Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> studentAttendanceDetailApi(String recordId) async {
     try {
       final response = await userApi.studentAttendanceApi(recordId);
       return response;
@@ -346,4 +346,13 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<StudentAttendanceResponse>> getStudentAttendanceApi(String attendanceFormula) async {
+    try {
+      final response = await userApi.getStudentAttendanceApi(attendanceFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

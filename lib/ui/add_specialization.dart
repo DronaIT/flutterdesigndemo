@@ -61,7 +61,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
           descController.text = specializationData![0].fields!.specializationDesc.toString();
 
           var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
-          var data = await apiRepository.getSubjectsForSpecializationApi(query);
+          var data = await apiRepository.getSubjectsApi(query);
           if (data.records?.isNotEmpty == true) {
             subjectData = data.records;
           }

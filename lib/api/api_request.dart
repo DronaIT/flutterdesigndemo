@@ -229,7 +229,7 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<SubjectResponse>> getSubjectsForSpecializationApi(String detailFormula) async {
+  Future<BaseLoginResponse<SubjectResponse>> getSubjectsApi(String detailFormula) async {
     try {
       Map<String, dynamic> someMap = {"filterByFormula": detailFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
@@ -368,16 +368,25 @@ class ApiRequest {
     }
   }
 
-
   Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> studentAttendanceApi(String recordId) async {
     try {
-
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
-      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE+"/"+recordId, options: Options(headers: header));
+      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE + "/" + recordId, options: Options(headers: header));
       return BaseApiResponseWithSerializable<StudentAttendanceResponse>.fromJson(response.data, (response) => StudentAttendanceResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
   }
 
+  Future<BaseLoginResponse<StudentAttendanceResponse>> getStudentAttendanceApi(String attendanceFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": attendanceFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<StudentAttendanceResponse>.fromJson(response.data, (response) => StudentAttendanceResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

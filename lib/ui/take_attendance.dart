@@ -430,7 +430,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         isVisible = true;
       });
       var query = "FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
-      var data = await apiRepository.getSubjectsForSpecializationApi(query);
+      var data = await apiRepository.getSubjectsApi(query);
       setState(() {
         subjectResponse = null;
         subjectResponseArray = data.records;

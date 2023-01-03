@@ -44,7 +44,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       specializationData = data.records;
       if (specializationData?.isNotEmpty == true) {
         var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
-        var data = await apiRepository.getSubjectsForSpecializationApi(query);
+        var data = await apiRepository.getSubjectsApi(query);
         if (data.records?.isNotEmpty == true) {
           subjectData = data.records;
         }
@@ -103,10 +103,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
-      ]
-
-
-      ),
+      ]),
     ));
   }
 }

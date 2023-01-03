@@ -39,7 +39,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
     setState(() {
       isVisible = true;
     });
-    var data = await apiRepository.getSubjectsForSpecializationApi("");
+    var data = await apiRepository.getSubjectsApi("");
     if (data.records?.isNotEmpty == true) {
       setState(() {
         subjectData = data.records;

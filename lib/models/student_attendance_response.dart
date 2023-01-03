@@ -61,7 +61,7 @@ class StudentAttendanceResponse {
     hubNameFromHubId = json['hub_name (from hub_id)']?.cast<String>();
     specializationNameFromSpecializationId = json['specialization_name (from specialization_id)']?.cast<String>();
     topicTitleFromTopicId = json['topic_title (from topic_id)']?.cast<String>();
-    enrollmentNumberFromStudentIds = json['enrollment_number (from student_ids)']?.cast<String>();
+    enrollmentNumberFromStudentIds = json['enrollment_numbers']?.cast<String>();
     nameFromStudentIds = json['name (from student_ids)']?.cast<String>();
   }
 
@@ -85,7 +85,7 @@ class StudentAttendanceResponse {
     data['hub_name (from hub_id)'] = this.hubNameFromHubId;
     data['specialization_name (from specialization_id)'] = this.specializationNameFromSpecializationId;
     data['topic_title (from topic_id)'] = this.topicTitleFromTopicId;
-    data['enrollment_number (from student_ids)'] = this.enrollmentNumberFromStudentIds;
+    data['enrollment_numbers'] = this.enrollmentNumberFromStudentIds;
     data['name (from student_ids)'] = this.nameFromStudentIds;
     return data;
   }
