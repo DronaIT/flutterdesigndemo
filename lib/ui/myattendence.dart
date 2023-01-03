@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/view_student_attendence.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -25,15 +26,20 @@ class _MyAttendenceState extends State<MyAttendence> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   String phone = "";
-
+  BaseApiResponseWithSerializable<SubjectResponse>? subjectResponse;
+  List<BaseApiResponseWithSerializable<SubjectResponse>>? subjResponseArray = [];
+  String subjValue = "";
   BaseLoginResponse<LoginFieldsResponse> data = BaseLoginResponse();
   List<ViewStudentAttendence>? viewStudentArray = [];
   var formatterShow = DateFormat('dd-MM-yyyy');
 
   String formattedDate = "";
+  String enrollmentNo = "";
   String semester = "";
-
+  // String arguments = "";
   String query = "";
+
+  var arguments;
 
   @override
   void initState() {
@@ -47,6 +53,11 @@ class _MyAttendenceState extends State<MyAttendence> {
       phone = loginData.mobileNumber.toString();
     }
     checkCurrentData();
+    // arguments = Get.arguments;
+    if(Get.arguments != null){
+      formattedDate = Get.arguments[1]["date"];
+      enrollmentNo = Get.arguments[0]["studentEnrollno"];
+    }
     viewAttendance();
   }
 
@@ -61,9 +72,8 @@ class _MyAttendenceState extends State<MyAttendence> {
     setState(() {
       isVisible = true;
     });
-    if (Get.arguments != null && Get.arguments[0]["studentEnrollno"] != null) {
-      query = "(${TableNames.TB_USERS_ENROLLMENT}='${Get.arguments[0]["studentEnrollno"]}')";
-      formattedDate = Get.arguments[1]["date"];
+    if (enrollmentNo.isNotEmpty) {
+      query = "(${TableNames.TB_USERS_ENROLLMENT}='${enrollmentNo}')";
     } else {
       query = "(${TableNames.TB_USERS_PHONE}='${phone}')";
     }
@@ -83,20 +93,23 @@ class _MyAttendenceState extends State<MyAttendence> {
   String _isDate = "";
 
   void checkPre_AbsentDetailByDate() {
-    if (data.records != null && data.records!.first.fields != null && data.records!.first.fields!.presentLectureDate != null) {
-      for (int i = 0; i < data.records!.first.fields!.presentLectureDate!.length; i++) {
-        if (formattedDate == data.records!.first.fields!.presentLectureDate![i]) {
-          viewStudentArray?.add(ViewStudentAttendence(subject_title: data.records!.first.fields!.presentSubjectTitle![i], lecture_date: data.records!.first.fields!.presentLectureDate![i], status: 1));
+    if(data.records!.isNotEmpty){
+      if (data.records != null && data.records!.first.fields != null && data.records!.first.fields!.presentLectureDate != null) {
+        for (int i = 0; i < data.records!.first.fields!.presentLectureDate!.length; i++) {
+          if (formattedDate == data.records!.first.fields!.presentLectureDate![i]) {
+            viewStudentArray?.add(ViewStudentAttendence(subject_title: data.records!.first.fields!.presentSubjectTitle![i], lecture_date: data.records!.first.fields!.presentLectureDate![i], status: 1));
+          }
+        }
+      }
+      if (data.records != null && data.records!.first.fields != null && data.records!.first.fields!.absentLectureDate != null) {
+        for (int i = 0; i < data.records!.first.fields!.absentLectureDate!.length; i++) {
+          if (formattedDate == data.records!.first.fields!.absentLectureDate![i]) {
+            viewStudentArray?.add(ViewStudentAttendence(subject_title: data.records!.first.fields!.absentSubjectTitle![i], lecture_date: data.records!.first.fields!.absentLectureDate![i], status: 0));
+          }
         }
       }
     }
-    if (data.records != null && data.records!.first.fields != null && data.records!.first.fields!.absentLectureDate != null) {
-      for (int i = 0; i < data.records!.first.fields!.absentLectureDate!.length; i++) {
-        if (formattedDate == data.records!.first.fields!.absentLectureDate![i]) {
-          viewStudentArray?.add(ViewStudentAttendence(subject_title: data.records!.first.fields!.absentSubjectTitle![i], lecture_date: data.records!.first.fields!.absentLectureDate![i], status: 0));
-        }
-      }
-    }
+
   }
 
   void checkPre_AbsentDetailBySemester() {
@@ -129,16 +142,19 @@ class _MyAttendenceState extends State<MyAttendence> {
                   color: Colors.white,
                   iconSize: 30,
                   onPressed: () {
-                    showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
-                      if (pickedDate == null) {
-                        return;
-                      }
-                      setState(() {
-                        var formatter = DateFormat('yyyy-MM-dd');
-                        formattedDate = formatter.format(pickedDate);
-                        viewAttendance();
-                      });
-                    });
+
+
+                    _CreateBottomFilterNew();
+                    // showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                    //   if (pickedDate == null) {
+                    //     return;
+                    //   }
+                    //   setState(() {
+                    //     var formatter = DateFormat('yyyy-MM-dd');
+                    //     formattedDate = formatter.format(pickedDate);
+                    //     viewAttendance();
+                    //   });
+                    // });
                   }),
             ),
           ],
@@ -234,20 +250,20 @@ class _MyAttendenceState extends State<MyAttendence> {
                               textStyles: centerTextStylblack20,
                             ),
                           ),
-                          Expanded(
-                              flex: 0,
-                              child: TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isDate = "Date";
-                                  });
-                                },
-                                child: custom_text(
-                                  text: strings_name.str_reset,
-                                  alignment: Alignment.topLeft,
-                                  textStyles: centerTextStyl20,
-                                ),
-                              ))
+                          // Expanded(
+                          //     flex: 0,
+                          //     child: TextButton(
+                          //       onPressed: () {
+                          //         setState(() {
+                          //           _isDate = "Date";
+                          //         });
+                          //       },
+                          //       child: custom_text(
+                          //         text: strings_name.str_reset,
+                          //         alignment: Alignment.topLeft,
+                          //         textStyles: centerTextStyl20,
+                          //       ),
+                          //     ))
                         ],
                       ),
                       const SizedBox(
@@ -269,58 +285,62 @@ class _MyAttendenceState extends State<MyAttendence> {
                             value: strings_name.str_by_date,
                             groupValue: _isDate,
                             onChanged: (value) {
-                              showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                              _isDate = value.toString();
+                              showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
                                 if (pickedDate == null) {
                                   return;
                                 }
                                 setState(() {
                                   var formatter = DateFormat('yyyy-MM-dd');
                                   formattedDate = formatter.format(pickedDate);
-
-                                  print("test===> ${formattedDate}");
+                                   print("dates==>${formattedDate}");
+                                  viewAttendance();
                                 });
+                                Navigator.pop(context);
                               });
-                            },
-                          ),
-                          RadioListTile(
-                            activeColor: colors_name.colorPrimary,
-                            title: custom_text(
-                              text: strings_name.str_by_semester,
-                              textStyles: blackTextSemiBold16,
-                              bottomValue: 0,
-                              topValue: 0,
-                              leftValue: 0,
-                              rightValue: 5,
-                            ),
-                            value: strings_name.str_by_semester,
-                            groupValue: _isDate,
-                            onChanged: (value) {
-                              setState(() {
-                                _isDate = value.toString();
-                                print("isSemester==> ${_isDate}");
-                              });
+
+
                             },
                           ),
                           // RadioListTile(
-                          //
                           //   activeColor: colors_name.colorPrimary,
                           //   title: custom_text(
-                          //     text: strings_name.str_by_subject,
+                          //     text: strings_name.str_by_semester,
                           //     textStyles: blackTextSemiBold16,
                           //     bottomValue: 0,
                           //     topValue: 0,
-                          //     leftValue: 3,
+                          //     leftValue: 0,
                           //     rightValue: 5,
                           //   ),
-                          //   value: strings_name.str_by_subject,
+                          //   value: strings_name.str_by_semester,
                           //   groupValue: _isDate,
                           //   onChanged: (value) {
                           //     setState(() {
                           //       _isDate = value.toString();
-                          //       print("isSubject==> ${_isDate}");
+                          //       print("isSemester==> ${_isDate}");
                           //     });
                           //   },
                           // ),
+                          RadioListTile(
+                            activeColor: colors_name.colorPrimary,
+                            title: custom_text(
+                              text: strings_name.str_by_subject,
+                              textStyles: blackTextSemiBold16,
+                              bottomValue: 0,
+                              topValue: 0,
+                              leftValue: 3,
+                              rightValue: 5,
+                            ),
+                            value: strings_name.str_by_subject,
+                            groupValue: _isDate,
+                            onChanged: (value) {
+                              setState(() {
+                                _isDate = value.toString();
+                                print("isSubject==> ${_isDate}");
+
+                              });
+                            },
+                          ),
                         ],
                       ))
                     ],
@@ -329,4 +349,30 @@ class _MyAttendenceState extends State<MyAttendence> {
           );
         });
   }
+
+
+  // createSubjectList(){
+  //   Container(
+  //     width: MediaQuery.of(context).size.width,
+  //     margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+  //     child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
+  //       value: subjectResponse,
+  //       elevation: 16,
+  //       style: blackText16,
+  //       focusColor: colors_name.colorPrimary,
+  //       onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
+  //         setState(() {
+  //           subjValue = newValue!.fields!.subjectId!.toString();
+  //           subjectResponse = newValue;
+  //         });
+  //       },
+  //       items: subjResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+  //         return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
+  //           value: value,
+  //           child: Text(value.fields!.subjectTitle!),
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 }
