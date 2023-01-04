@@ -8,15 +8,12 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
 }
-
-
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController phoneController = TextEditingController();
@@ -33,8 +30,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 SizedBox(height: 60.h),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: AppImage.load(AppImage.ic_launcher,
-                      width: 80.w, height: 80.h),
+                  child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
                 ),
                 custom_text(
                   text: strings_name.str_forgot_password,

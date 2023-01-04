@@ -44,6 +44,12 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   List<Map<String, CreateStudentRequest>> list = [];
   final addStudentRepository = getIt.get<ApiRepository>();
 
+  List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
+  int semesterValue = -1;
+
+  List<String> divisionResponseArray = <String>[TableNames.DIVISION_A, TableNames.DIVISION_B, TableNames.DIVISION_C, TableNames.DIVISION_D];
+  String divisionValue = "";
+
   @override
   void initState() {
     super.initState();
@@ -270,6 +276,74 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 5.h),
+                  custom_text(
+                    text: strings_name.str_semester,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                          width: viewWidth,
+                          child: DropdownButtonFormField<int>(
+                            elevation: 16,
+                            style: blackText16,
+                            focusColor: colors_name.colorPrimary,
+                            onChanged: (int? newValue) {
+                              setState(() {
+                                semesterValue = newValue!;
+                              });
+                            },
+                            items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
+                              return DropdownMenuItem<int>(
+                                value: value,
+                                child: Text("Semester $value"),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
+                  custom_text(
+                    text: strings_name.str_division,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                          width: viewWidth,
+                          child: DropdownButtonFormField<String>(
+                            elevation: 16,
+                            style: blackText16,
+                            focusColor: colors_name.colorPrimary,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                divisionValue = newValue!;
+                              });
+                            },
+                            items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 20.h),
                   CustomButton(
                     text: strings_name.str_submit,
@@ -294,6 +368,10 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         Utils.showSnackBar(context, strings_name.str_empty_spe);
                       } else if (hubValue.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_hub);
+                      } else if (semesterValue == -1) {
+                        Utils.showSnackBar(context, strings_name.str_empty_semester);
+                      } else if (divisionValue.trim().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_division);
                       } else {
                         setState(() {
                           isVisible = true;
@@ -308,13 +386,16 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.specializationIds = Utils.getSpecializationId(speValue)!.split(",");
                         response.joiningYear = joingYearController.text.trim().toString();
                         response.hubIds = Utils.getHubId(hubValue)!.split(",");
+                        response.semester = semesterValue.toString();
+                        response.division = divisionValue;
+
                         var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
                         var checkMobile = await addStudentRepository.loginApi(query);
                         if (checkMobile.records?.isEmpty == true) {
                           Map<String, CreateStudentRequest> map = Map();
                           map["fields"] = response;
                           list.add(map);
-                        } else{
+                        } else {
                           setState(() {
                             isVisible = false;
                           });
@@ -334,7 +415,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                               isVisible = false;
                             });
                           }
-                        }else{
+                        } else {
                           setState(() {
                             isVisible = false;
                           });

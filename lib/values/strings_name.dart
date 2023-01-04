@@ -222,4 +222,9 @@ class strings_name {
   static const String str_empty_select_date = "Please select Date";
   static const String str_select_time = "Select Time";
   static const String str_empty_select_time = "Please select time";
+
+  static const String str_no_specialization_assigned = "No specialization assigned.";
+  static const String str_no_subject_assigned = "No subject assigned.";
+  static const String str_no_unit_assigned = "No unit assigned.";
+  static const String str_no_topic_assigned = "No topic assigned.";
 }

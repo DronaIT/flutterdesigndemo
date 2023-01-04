@@ -421,6 +421,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         specializationResponseArray = speData.records;
         isVisible = false;
       });
+      if (speData.records?.isEmpty == true) {
+        Utils.showSnackBar(context, strings_name.str_no_specialization_assigned);
+      }
     }
   }
 
@@ -436,6 +439,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         subjectResponseArray = data.records;
         isVisible = false;
       });
+      if (data.records?.isEmpty == true) {
+        Utils.showSnackBar(context, strings_name.str_no_subject_assigned);
+      }
     }
   }
 
@@ -451,6 +457,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         unitResponseArray = data.records;
         isVisible = false;
       });
+      if (data.records?.isEmpty == true) {
+        Utils.showSnackBar(context, strings_name.str_no_unit_assigned);
+      }
     }
   }
 
@@ -466,6 +475,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         topicResponseArray = data.records;
         isVisible = false;
       });
+      if (data.records?.isEmpty == true) {
+        Utils.showSnackBar(context, strings_name.str_no_topic_assigned);
+      }
     }
   }
 

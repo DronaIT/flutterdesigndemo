@@ -149,7 +149,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
                               itemCount: subjectData?.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Container(
-                                  margin: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                                   child: Card(
                                     elevation: 5,
                                     child: GestureDetector(
@@ -177,8 +177,10 @@ class _AddSpecializationState extends State<AddSpecialization> {
                         Utils.showSnackBar(context, strings_name.str_empty_specialization_title);
                       } else if (descController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_specialization_desc);
+/*
                       } else if (subjectData!.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_select_subject);
+*/
                       } else {
                         addRecord();
                       }

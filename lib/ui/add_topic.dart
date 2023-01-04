@@ -70,34 +70,39 @@ class _AddTopicState extends State<AddTopic> {
     return SafeArea(
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_topics : strings_name.str_add_topics),
-      body: Column(
-        children: [
-          SizedBox(height: 10.h),
-          custom_text(
-            text: strings_name.str_topic_title,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-          ),
-          custom_edittext(
-            type: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            controller: titleController,
-            topValue: 2,
-            maxLength: 200,
-          ),
-          SizedBox(height: 20.h),
-          CustomButton(
-            text: strings_name.str_submit,
-            click: () {
-              if (titleController.text.trim().isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_empty_topic_title);
-              } else {
-                addRecord();
-              }
-            },
-          )
-        ],
-      ),
+      body: Stack(children: [
+        Column(
+          children: [
+            SizedBox(height: 10.h),
+            custom_text(
+              text: strings_name.str_topic_title,
+              alignment: Alignment.topLeft,
+              textStyles: blackTextSemiBold16,
+            ),
+            custom_edittext(
+              type: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              controller: titleController,
+              topValue: 2,
+              maxLength: 200,
+            ),
+            SizedBox(height: 20.h),
+            CustomButton(
+              text: strings_name.str_submit,
+              click: () {
+                if (titleController.text.trim().isEmpty) {
+                  Utils.showSnackBar(context, strings_name.str_empty_topic_title);
+                } else {
+                  addRecord();
+                }
+              },
+            )
+          ],
+        ),
+        Center(
+          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+        )
+      ]),
     ));
   }
 

@@ -147,29 +147,29 @@ class _UpdateHubState extends State<UpdateHub> {
                 specializationData!.isNotEmpty
                     ? Expanded(
                         child: Container(
-                          margin: const EdgeInsets.all(10),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: specializationData?.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Card(
-                                  elevation: 5,
-                                  child: GestureDetector(
-                                    child: Container(
-                                      color: colors_name.colorWhite,
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                                      ),
+                        margin: const EdgeInsets.all(10),
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: specializationData?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 5,
+                                child: GestureDetector(
+                                  child: Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                     ),
-                                    onTap: () {
-                                      Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                                    },
                                   ),
-                                );
-                              }),
-                        ))
+                                  onTap: () {
+                                    Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                                  },
+                                ),
+                              );
+                            }),
+                      ))
                     : Container(),
                 SizedBox(height: 20.h),
                 CustomButton(
@@ -181,8 +181,10 @@ class _UpdateHubState extends State<UpdateHub> {
                         Utils.showSnackBar(context, strings_name.str_empty_address);
                       } else if (cityController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
+/*
                       } else if (specializationData!.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_select_spelization);
+*/
                       } else {
                         List<String> selectedSpecializationData = [];
                         for (var i = 0; i < specializationData!.length; i++) {

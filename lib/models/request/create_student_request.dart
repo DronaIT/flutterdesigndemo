@@ -7,11 +7,13 @@ class CreateStudentRequest {
   String? mobileNumber;
   String? gender;
   String? email;
+  String? semester;
+  String? division;
 
   List<String>? hubIds;
   List<String>? specializationIds;
 
-  CreateStudentRequest({this.city, this.joiningYear, this.password, this.name, this.address, this.mobileNumber, this.gender, this.email, this.hubIds, this.specializationIds});
+  CreateStudentRequest({this.city, this.joiningYear, this.password, this.name, this.address, this.mobileNumber, this.gender, this.email, this.hubIds, this.specializationIds, this.semester, this.division});
 
   CreateStudentRequest.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -22,6 +24,8 @@ class CreateStudentRequest {
     mobileNumber = json['mobile_number'];
     gender = json['gender'];
     email = json['email'];
+    semester = json['semester'];
+    division = json['division'];
     hubIds = json['hub_ids']?.cast<String>();
     specializationIds = json['specialization_ids']?.cast<String>();
   }
@@ -37,6 +41,8 @@ class CreateStudentRequest {
     data['gender'] = this.gender;
     data['hub_ids'] = this.hubIds;
     data['email'] = this.email;
+    data['semester'] = this.semester;
+    data['division'] = this.division;
     data['specialization_ids'] = this.specializationIds;
     return data;
   }

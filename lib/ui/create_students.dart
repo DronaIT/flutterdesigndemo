@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:excel/excel.dart';
@@ -20,9 +21,9 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:get/get.dart';
 
 class CreateStudent extends StatefulWidget {
   const CreateStudent({Key? key}) : super(key: key);
@@ -48,12 +49,12 @@ class _AddStudent extends State<CreateStudent> {
     hubResponseArray = PreferenceUtils.getHubList().records;
   }
 
-  Future<void> createStudents() async {
+  Future<void> createStudents(List<Map<String, CreateStudentRequest>> list, bool canClose) async {
     setState(() {
       isVisible = true;
     });
     resp = await createStudentRepository.createStudentApi(list);
-    if (resp.records!.isNotEmpty) {
+    if (resp.records!.isNotEmpty && canClose) {
       setState(() {
         isVisible = false;
       });
@@ -108,6 +109,7 @@ class _AddStudent extends State<CreateStudent> {
               },
             ),
           ),
+/*
           SizedBox(height: 8.h),
           custom_text(
             text: strings_name.str_select_hub,
@@ -144,6 +146,7 @@ class _AddStudent extends State<CreateStudent> {
               ),
             ],
           ),
+*/
           SizedBox(height: 10.h),
           GestureDetector(
               child: custom_text(
@@ -159,12 +162,29 @@ class _AddStudent extends State<CreateStudent> {
             text: strings_name.str_submit,
             click: () {
               print("test=>${hubValue}");
-              if (hubValue.isEmpty) {
-                Utils.showSnackBar(context, strings_name.str_empty_hub);
-              } else if (list.isEmpty) {
+              // if (hubValue.isEmpty) {
+              //   Utils.showSnackBar(context, strings_name.str_empty_hub);
+              // } else
+              if (list.isEmpty) {
                 Utils.showSnackBar(context, strings_name.str_empty_file);
               } else {
-                createStudents();
+                if (list.length <= 10) {
+                  createStudents(list, true);
+                } else {
+                  List<Map<String, CreateStudentRequest>> tempList = [];
+                  for (var i = 0; i < list.length; i++) {
+                    if (tempList.length < 10) {
+                      tempList.add(list[i]);
+                    }
+
+                    if (tempList.length == 10) {
+                      createStudents(tempList, i == list.length - 1);
+                      tempList.clear();
+                    } else if (i == list.length - 1) {
+                      createStudents(tempList, true);
+                    }
+                  }
+                }
               }
             },
           )
@@ -210,10 +230,12 @@ class _AddStudent extends State<CreateStudent> {
           response.gender = excel.tables[table]?.rows[row][2]?.value.toString();
           response.city = excel.tables[table]?.rows[row][3]?.value.toString();
           response.address = excel.tables[table]?.rows[row][4]?.value.toString();
-          response.password = excel.tables[table]?.rows[row][5]?.value.toString();
+          // response.hubIds = Utils.getHubId(hubValue)!.split(",");
+          response.hubIds = Utils.getHubId(excel.tables[table]?.rows[row][5]?.value.toString())!.split(",");
           response.specializationIds = Utils.getSpecializationId(excel.tables[table]?.rows[row][6]?.value.toString())!.split(",");
           response.joiningYear = excel.tables[table]?.rows[row][7]?.value.toString();
-          response.hubIds = Utils.getHubId(hubValue)!.split(",");
+          response.semester = excel.tables[table]?.rows[row][8]?.value.toString();
+          response.division = excel.tables[table]?.rows[row][9]?.value.toString();
 
           var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
           var checkMobile = await createStudentRepository.loginApi(query);

@@ -29,7 +29,7 @@ class LoginFieldsResponse {
   List<String>? presentSubjectTitle;
   List<String>? presentSubjectId;
   List<String>? lecture_date;
-  int attendanceStatus = -1;
+  int attendanceStatus = 1;
 
   LoginFieldsResponse(
       {this.city,

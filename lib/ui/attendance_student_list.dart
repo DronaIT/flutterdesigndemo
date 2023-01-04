@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -106,18 +104,22 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     custom_text(text: "${studentList[index].fields?.name}", textStyles: blackTextSemiBold16),
+                                    custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
                                     CustomRadioButton(
                                       unSelectedColor: Theme.of(context).cardColor,
                                       buttonLables: [strings_name.str_present, strings_name.str_absent],
                                       buttonValues: [strings_name.str_present, strings_name.str_absent],
                                       radioButtonValue: (value) {
-                                        if (value == strings_name.str_present) {
-                                          studentList[index].fields?.attendanceStatus = 1;
-                                        } else if (value == strings_name.str_absent) {
-                                          studentList[index].fields?.attendanceStatus = 0;
-                                        }
+                                        setState(() {
+                                          if (value == strings_name.str_present) {
+                                            studentList[index].fields?.attendanceStatus = 1;
+                                          } else if (value == strings_name.str_absent) {
+                                            studentList[index].fields?.attendanceStatus = 0;
+                                          }
+                                        });
                                       },
                                       selectedColor: colors_name.colorPrimary,
+                                      defaultSelected: studentList[index].fields?.attendanceStatus == 1 ? strings_name.str_present : strings_name.str_absent,
                                     ),
                                   ],
                                 ),

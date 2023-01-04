@@ -84,9 +84,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> doLogin() async {
-    var loginData = PreferenceUtils.getLoginDataEmployee();
-    var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
     if (isLogin == 1) {
+      var loginData = PreferenceUtils.getLoginData();
+      var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
       var data = await apiRepository.loginApi(query);
       if (data.records!.isNotEmpty) {
         await PreferenceUtils.setLoginData(data.records!.first.fields!);
@@ -96,6 +96,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         Get.offAll(const Login());
       }
     } else if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
       var dataEmployee = await apiRepository.loginEmployeeApi(query);
       if (dataEmployee.records!.isNotEmpty) {
         await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
@@ -146,36 +148,3 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
-
-//   body: Stack(
-//           fit: StackFit.loose,
-//           children: [
-//             Image.asset("${AppImage.ic_welcome}"),
-//             Container(
-//               decoration: BoxDecoration(
-//                   gradient: LinearGradient(
-//                       begin: Alignment.topCenter,
-//                       end: Alignment.bottomCenter,
-//                       colors: <Color>[
-//                     colors_name.searchFieldTextColor,
-//                     colors_name.colorPrimary,
-//                     colors_name.colorPrimary
-//                   ])),
-//             ),
-//             Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Image.asset("${AppImage.ic_avtar}", width: 200, height: 200),
-//                 custom_text(
-//                   text: strings_name.str_welcome,
-//                   size: 30,
-//                   fontWeight: FontWeight.w600,
-//                   alignment: Alignment.center,
-//                   textStyles: centerTextStyleWhite,
-//                 ),
-//
-//               ],
-//             ),
-//           ],
-//         ),

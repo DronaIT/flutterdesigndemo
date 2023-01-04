@@ -148,8 +148,10 @@ class _AddHubState extends State<AddHub> {
                         Utils.showSnackBar(context, strings_name.str_empty_address);
                       } else if (cityController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
+/*
                       } else if (specializationData!.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_select_spelization);
+*/
                       } else {
                         addRecord();
                       }

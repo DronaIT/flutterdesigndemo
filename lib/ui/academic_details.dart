@@ -41,8 +41,17 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     setState(() {
       isVisible = true;
     });
-    var loginData = PreferenceUtils.getLoginDataEmployee();
-    var query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
+
+    var roleId = "";
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      roleId = TableNames.STUDENT_ROLE_ID;
+    } else if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      roleId = loginData.roleIdFromRoleIds!.join(',');
+    }
+
+    var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
     var data = await apiRepository.getPermissionsApi(query);
     if (data.records!.isNotEmpty) {
       for (var i = 0; i < data.records!.length; i++) {
@@ -93,7 +102,6 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
     }
   }
 

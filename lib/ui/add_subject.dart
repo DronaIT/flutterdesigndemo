@@ -38,6 +38,9 @@ class _AddSubjectState extends State<AddSubject> {
   final apiRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
 
+  List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
+  int semesterValue = -1;
+
   Future<void> initialization() async {
     if (Get.arguments != null) {
       setState(() {
@@ -71,6 +74,7 @@ class _AddSubjectState extends State<AddSubject> {
 
   @override
   Widget build(BuildContext context) {
+    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_subjects : strings_name.str_add_subjects),
@@ -90,6 +94,40 @@ class _AddSubjectState extends State<AddSubject> {
                 controller: titleController,
                 topValue: 2,
                 maxLength: 200,
+              ),
+              SizedBox(height: 10.h),
+              custom_text(
+                text: strings_name.str_semester,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                      width: viewWidth,
+                      child: DropdownButtonFormField<int>(
+                        elevation: 16,
+                        style: blackText16,
+                        focusColor: colors_name.colorPrimary,
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            semesterValue = newValue!;
+                          });
+                        },
+                        items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text("Semester $value"),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 10.h),
               Container(
@@ -151,8 +189,12 @@ class _AddSubjectState extends State<AddSubject> {
                 click: () {
                   if (titleController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_subject_title);
+                  } else if (semesterValue == -1) {
+                    Utils.showSnackBar(context, strings_name.str_empty_semester);
+/*
                   } else if (unitsData!.isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_select_units);
+*/
                   } else {
                     addRecord();
                   }
@@ -174,6 +216,7 @@ class _AddSubjectState extends State<AddSubject> {
     });
     AddSubjectRequest request = AddSubjectRequest();
     request.subjectTitle = titleController.text.toString();
+    request.semester = semesterValue.toString();
 
     List<String> selectedSubjectData = [];
     for (var i = 0; i < unitsData!.length; i++) {
