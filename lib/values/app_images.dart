@@ -8,18 +8,12 @@ import '../utils/image_dialog.dart';
 class AppImage {
   static String commanName = "assets/images/";
   static String LOGO = "assets/images/test.jpg";
-  static String ic_splash = "${commanName}ic_splash.png";
+  // static String ic_splash = "${commanName}ic_splash.png";
   static String ic_welcome = "${commanName}welcome.json";
   static String ic_avtar = "${commanName}ic_avtar.png";
   static String ic_launcher = "${commanName}ic_launcher.png";
 
-
-  static Widget loadSVG(String image,
-      {double width = double.maxFinite,
-      double height = double.maxFinite,
-      BoxFit fit = BoxFit.contain,
-      double radius = 0,
-      Color? color}) {
+  static Widget loadSVG(String image, {double width = double.maxFinite, double height = double.maxFinite, BoxFit fit = BoxFit.contain, double radius = 0, Color? color}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: SvgPicture.asset(
@@ -32,12 +26,7 @@ class AppImage {
     );
   }
 
-  static Widget loadSVGRotation(String image,
-      {double width = double.maxFinite,
-      double height = double.maxFinite,
-      BoxFit fit = BoxFit.contain,
-      double radius = 0,
-      Color? color}) {
+  static Widget loadSVGRotation(String image, {double width = double.maxFinite, double height = double.maxFinite, BoxFit fit = BoxFit.contain, double radius = 0, Color? color}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: Transform(
@@ -54,11 +43,7 @@ class AppImage {
     );
   }
 
-  static Widget load(String image,
-      {double width = double.maxFinite,
-      double height = double.maxFinite,
-      BoxFit fit = BoxFit.contain,
-      double radius = 0}) {
+  static Widget load(String image, {double width = double.maxFinite, double height = double.maxFinite, BoxFit fit = BoxFit.contain, double radius = 0}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: Image.asset(
@@ -70,12 +55,7 @@ class AppImage {
     );
   }
 
-  static Widget network(String image,
-      {BoxFit fit = BoxFit.cover,
-      double radius = 0,
-      double width = double.maxFinite,
-      double height = double.maxFinite,
-      required BuildContext context}) {
+  static Widget network(String image, {BoxFit fit = BoxFit.cover, double radius = 0, double width = double.maxFinite, double height = double.maxFinite, required BuildContext context}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: GestureDetector(

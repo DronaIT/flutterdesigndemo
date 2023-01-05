@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdesigndemo/ui/welcome.dart';
+import 'package:flutterdesigndemo/main.dart';
 import 'package:get/get.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 

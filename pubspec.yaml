@@ -36,10 +36,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-
-dev_dependencies:
+  flutter_native_splash: ^2.2.16
   get:
-
   flutter_svg:
   cached_network_image:
   flutter_screenutil:
@@ -47,7 +45,13 @@ dev_dependencies:
   another_flushbar:
   dart_airtable: ^1.1.0
   lottie: ^2.0.0
-  flutter_native_splash:
+  flutter_lints: ^2.0.0
+  excel:
+  file_picker: ^5.2.4
+  open_filex:
+  path_provider:
+  intl: ^0.18.0
+  custom_radio_grouped_button:
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.15
   dio: ^4.0.6
@@ -55,6 +59,9 @@ dev_dependencies:
   pretty_dio_logger: ^1.1.1
   logger:
   json_annotation: ^3.1.1
+
+dev_dependencies:
+
   flutter_test:
     sdk: flutter
 
@@ -63,13 +70,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-  excel:
-  file_picker: ^5.2.4
-  open_filex:
-  path_provider:
-  intl: ^0.18.0
-  custom_radio_grouped_button:
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
