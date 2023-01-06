@@ -11,7 +11,6 @@ import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/ui/specialization_detail.dart';
 import 'package:flutterdesigndemo/ui/specialization_selection.dart';
-import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
