@@ -102,7 +102,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                               value: hubResponse,
                               elevation: 16,
                               style: blackText16,
-                              focusColor: colors_name.colorPrimary,
+                              focusColor: Colors.white,
                               onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                                 setState(() {
                                   hubValue = newValue!.fields!.id!.toString();
@@ -143,7 +143,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         value: specializationResponse,
                                         elevation: 16,
                                         style: blackText16,
-                                        focusColor: colors_name.colorPrimary,
+                                        focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                                           setState(() {
                                             specializationValue = newValue!.fields!.id!.toString();
@@ -186,7 +186,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                       child: DropdownButtonFormField<int>(
                                         elevation: 16,
                                         style: blackText16,
-                                        focusColor: colors_name.colorPrimary,
+                                        focusColor: Colors.white,
                                         onChanged: (int? newValue) {
                                           setState(() {
                                             semesterValue = newValue!;
@@ -221,7 +221,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                       child: DropdownButtonFormField<String>(
                                         elevation: 16,
                                         style: blackText16,
-                                        focusColor: colors_name.colorPrimary,
+                                        focusColor: Colors.white,
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             divisionValue = newValue!;
@@ -263,7 +263,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         value: subjectResponse,
                                         elevation: 16,
                                         style: blackText16,
-                                        focusColor: colors_name.colorPrimary,
+                                        focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
                                           setState(() {
                                             subjectValue = newValue!.fields!.ids!.toString();
@@ -307,7 +307,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         value: unitResponse,
                                         elevation: 16,
                                         style: blackText16,
-                                        focusColor: colors_name.colorPrimary,
+                                        focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<UnitsResponse>? newValue) {
                                           setState(() {
                                             unitValue = newValue!.fields!.ids!.toString();
@@ -351,7 +351,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         value: topicResponse,
                                         elevation: 16,
                                         style: blackText16,
-                                        focusColor: colors_name.colorPrimary,
+                                        focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<TopicsResponse>? newValue) {
                                           setState(() {
                                             topicValue = newValue!.fields!.ids!.toString();

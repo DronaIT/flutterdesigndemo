@@ -69,7 +69,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     value: hubResponse,
                     elevation: 16,
                     style: blackText16,
-                    focusColor: colors_name.colorPrimary,
+                    focusColor: Colors.white,
                     onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                       setState(() {
                         hubValue = newValue!.fields!.id!.toString();
@@ -98,7 +98,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     value: speResponse,
                     elevation: 16,
                     style: blackText16,
-                    focusColor: colors_name.colorPrimary,
+                    focusColor: Colors.white,
                     onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                       setState(() {
                         speValue = newValue!.fields!.id.toString();

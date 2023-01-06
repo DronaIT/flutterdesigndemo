@@ -112,7 +112,7 @@ class _AddSubjectState extends State<AddSubject> {
                       child: DropdownButtonFormField<int>(
                         elevation: 16,
                         style: blackText16,
-                        focusColor: colors_name.colorPrimary,
+                        focusColor: Colors.white,
                         onChanged: (int? newValue) {
                           setState(() {
                             semesterValue = newValue!;

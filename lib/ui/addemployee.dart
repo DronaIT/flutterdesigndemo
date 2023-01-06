@@ -216,7 +216,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                               value: roleResponse,
                               elevation: 16,
                               style: blackText16,
-                              focusColor: colors_name.colorPrimary,
+                              focusColor: Colors.white,
                               onChanged: (BaseApiResponseWithSerializable<RoleResponse>? newValue) {
                                 setState(() {
                                   roleValue = newValue!.fields!.roleId!.toString();
@@ -252,7 +252,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                               value: hubResponse,
                               elevation: 16,
                               style: blackText16,
-                              focusColor: colors_name.colorPrimary,
+                              focusColor: Colors.white,
                               onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                                 setState(() {
                                   hubValue = newValue!.fields!.hubId!.toString();

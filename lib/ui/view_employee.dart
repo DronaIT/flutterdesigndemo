@@ -62,7 +62,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                     value: hubResponse,
                     elevation: 16,
                     style: blackText16,
-                    focusColor: colors_name.colorPrimary,
+                    focusColor: Colors.white,
                     onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                       setState(() {
                         hubValue = newValue!.fields!.id!.toString();
@@ -114,7 +114,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                     Flexible(
                                       child: Column(
                                         children: [
-                                          custom_text(text: "${viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")"}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                          custom_text(text: viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
                                           Visibility(visible: viewEmployee![index].fields!.email != null ,
                                               child: custom_text(text: viewEmployee![index].fields!.email != null ? viewEmployee![index].fields!.email! : "",
                                                   textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
@@ -155,7 +155,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                               );
                             }),
                       )
-                    : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),

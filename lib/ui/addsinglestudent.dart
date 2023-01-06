@@ -222,7 +222,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                             value: hubResponse,
                             elevation: 16,
                             style: blackText16,
-                            focusColor: colors_name.colorPrimary,
+                            focusColor: Colors.white,
                             onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                               setState(() {
                                 hubValue = newValue!.fields!.hubId!.toString();
@@ -258,7 +258,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                             value: speResponse,
                             elevation: 16,
                             style: blackText16,
-                            focusColor: colors_name.colorPrimary,
+                            focusColor: Colors.white,
                             onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                               setState(() {
                                 speValue = newValue!.fields!.specializationId.toString();
@@ -293,7 +293,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           child: DropdownButtonFormField<int>(
                             elevation: 16,
                             style: blackText16,
-                            focusColor: colors_name.colorPrimary,
+                            focusColor: Colors.white,
                             onChanged: (int? newValue) {
                               setState(() {
                                 semesterValue = newValue!;
@@ -327,7 +327,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           child: DropdownButtonFormField<String>(
                             elevation: 16,
                             style: blackText16,
-                            focusColor: colors_name.colorPrimary,
+                            focusColor: Colors.white,
                             onChanged: (String? newValue) {
                               setState(() {
                                 divisionValue = newValue!;
