@@ -122,51 +122,56 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: [
           homeModule.records?.isNotEmpty == true
-              ? GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  children: List.generate(
-                    homeModule.records != null ? homeModule.records!.length : 0,
-                    (index) {
-                      return Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Card(
-                              elevation: 10,
-                              child: Container(
-                                height: 300,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: GestureDetector(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
-                                        ),
-                                        custom_text(
-                                          text: homeModule.records![index].fields!.moduleTitle.toString(),
-                                          alignment: Alignment.center,
-                                          textStyles: centerTextStyleBlack18,
-                                        ),
-                                      ],
+              ? Container(
+            margin: EdgeInsets.only(left: 10,right: 10),
+                child: GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    children: List.generate(
+                      homeModule.records != null ? homeModule.records!.length : 0,
+                      (index) {
+                        return Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Card(
+                                elevation: 10,
+                                child: Container(
+                                  height: 300,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(0),
+                                    child: GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
+                                          ),
+                                          custom_text(
+                                            text: homeModule.records![index].fields!.moduleTitle.toString(),
+                                            alignment: Alignment.center,
+                                            textStyles: blackTextbold14,
+                                            topValue: 10,
+                                            bottomValue: 10,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
+                                          Get.to(const ManageUser());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
+                                          Get.to(const AcademicList());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
+                                          Get.to(const SetupCollage());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
+                                          Get.to(const Attendance());
+                                        }
+                                      },
                                     ),
-                                    onTap: () {
-                                      if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
-                                        Get.to(const ManageUser());
-                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
-                                        Get.to(const AcademicList());
-                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
-                                        Get.to(const SetupCollage());
-                                      } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
-                                        Get.to(const Attendance());
-                                      }
-                                    },
                                   ),
-                                ),
-                              )));
-                    },
+                                )));
+                      },
+                    ),
                   ),
-                )
+              )
               : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_module, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
