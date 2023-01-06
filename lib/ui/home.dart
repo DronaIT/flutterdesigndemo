@@ -146,7 +146,7 @@ class _HomeState extends State<Home> {
                                         custom_text(
                                           text: homeModule.records![index].fields!.moduleTitle.toString(),
                                           alignment: Alignment.center,
-                                          textStyles: blackTextSemiBold14,
+                                          textStyles: centerTextStyleBlack18,
                                         ),
                                       ],
                                     ),

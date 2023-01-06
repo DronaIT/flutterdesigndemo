@@ -103,8 +103,8 @@ class _SetupCollageState extends State<SetupCollage> {
                                       Flexible(
                                         child: Column(
                                           children: [
-                                            custom_text(text: "${hubResponse.records![index].fields!.hubName!}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                            custom_text(text: "Hub ID: ${hubResponse.records![index].fields!.hubId!}", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0),
+                                            custom_text(text: "${hubResponse.records![index].fields!.hubName!}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
+                                            custom_text(text: "Code : ${hubResponse.records![index].fields!.hubId!}", textStyles: blackTextSemiBold16, bottomValue: 5, topValue: 0),
                                             custom_text(
                                               text: "Address: ${hubResponse.records![index].fields!.address!}",
                                               textStyles: blackTextSemiBold14,
