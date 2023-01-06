@@ -62,6 +62,13 @@ const blackText16 = TextStyle(
   color: Colors.black,
 );
 
+const blackTextbold14 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);
+
+
 const whiteText16 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w400,
