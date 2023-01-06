@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:excel/excel.dart';
@@ -236,6 +235,7 @@ class _AddStudent extends State<CreateStudent> {
           response.joiningYear = excel.tables[table]?.rows[row][7]?.value.toString();
           response.semester = excel.tables[table]?.rows[row][8]?.value.toString();
           response.division = excel.tables[table]?.rows[row][9]?.value.toString();
+          response.email = excel.tables[table]?.rows[row][10]?.value.toString();
 
           var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
           var checkMobile = await createStudentRepository.loginApi(query);

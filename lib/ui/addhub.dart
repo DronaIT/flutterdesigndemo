@@ -43,119 +43,120 @@ class _AddHubState extends State<AddHub> {
         appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_hub),
         body: Stack(
           children: [
-            Column(
-              children: [
-                SizedBox(height: 10.h),
-                custom_text(
-                  text: strings_name.str_hub_name,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                custom_edittext(
-                  type: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  controller: hubController,
-                  topValue: 5,
-                ),
-                SizedBox(height: 3.h),
-                custom_text(
-                  text: strings_name.str_address,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 5,
-                ),
-                custom_edittext(
-                  type: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  controller: addressController,
-                  topValue: 2,
-                ),
-                SizedBox(height: 3.h),
-                custom_text(
-                  text: strings_name.str_city,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 5,
-                ),
-                custom_edittext(
-                  type: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  controller: cityController,
-                  topValue: 2,
-                ),
-                SizedBox(height: 5.h),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      custom_text(
-                        text: strings_name.str_specializations,
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
-                      ),
-                      GestureDetector(
-                        child: custom_text(
-                          text: specializationData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                          alignment: Alignment.topLeft,
-                          textStyles: primaryTextSemiBold16,
-                        ),
-                        onTap: () {
-                          Get.to(const SpecializationSelection(), arguments: specializationData)?.then((result) {
-                            if (result != null) {
-                              setState(() {
-                                specializationData = result;
-                              });
-                            }
-                          });
-                        },
-                      ),
-                    ],
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 10.h),
+                  custom_text(
+                    text: strings_name.str_hub_name,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
                   ),
-                ),
-                specializationData!.isNotEmpty
-                    ? Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: specializationData?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 5,
-                                child: GestureDetector(
-                                  child: Container(
-                                    color: colors_name.colorWhite,
-                                    padding: const EdgeInsets.all(15),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                                    ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: hubController,
+                    topValue: 5,
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_address,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: addressController,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_city,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: cityController,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 5.h),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        custom_text(
+                          text: strings_name.str_specializations,
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
+                        ),
+                        GestureDetector(
+                          child: custom_text(
+                            text: specializationData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                            alignment: Alignment.topLeft,
+                            textStyles: primaryTextSemiBold16,
+                          ),
+                          onTap: () {
+                            Get.to(const SpecializationSelection(), arguments: specializationData)?.then((result) {
+                              if (result != null) {
+                                setState(() {
+                                  specializationData = result;
+                                });
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  specializationData!.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: specializationData?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 5,
+                              child: GestureDetector(
+                                child: Container(
+                                  color: colors_name.colorWhite,
+                                  padding: const EdgeInsets.all(15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                   ),
-                                  onTap: () {
-                                    Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
-                                  },
                                 ),
-                              );
-                            }))
-                    : Container(),
-                SizedBox(height: 20.h),
-                CustomButton(
-                    text: strings_name.str_submit,
-                    click: () {
-                      if (hubController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_hubname);
-                      } else if (addressController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_address);
-                      } else if (cityController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_city);
+                                onTap: () {
+                                  Get.to(const SpecializationDetail(), arguments: specializationData![index].fields?.id);
+                                },
+                              ),
+                            );
+                          })
+                      : Container(),
+                  SizedBox(height: 20.h),
+                  CustomButton(
+                      text: strings_name.str_submit,
+                      click: () {
+                        if (hubController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_hubname);
+                        } else if (addressController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_address);
+                        } else if (cityController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_city);
 /*
-                      } else if (specializationData!.isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_select_spelization);
+                        } else if (specializationData!.isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_select_spelization);
 */
-                      } else {
-                        addRecord();
-                      }
-                    })
-              ],
+                        } else {
+                          addRecord();
+                        }
+                      })
+                ],
+              ),
             ),
             Center(
               child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
