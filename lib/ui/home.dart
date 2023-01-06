@@ -123,8 +123,8 @@ class _HomeState extends State<Home> {
         children: [
           homeModule.records?.isNotEmpty == true
               ? Container(
-            margin: EdgeInsets.only(left: 10,right: 10),
-                child: GridView.count(
+                  margin: EdgeInsets.only(left: 10, right: 10),
+                  child: GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
                     children: List.generate(
@@ -171,7 +171,7 @@ class _HomeState extends State<Home> {
                       },
                     ),
                   ),
-              )
+                )
               : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_module, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),

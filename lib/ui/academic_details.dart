@@ -135,7 +135,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                                         Visibility(
                                             visible: canEditSpe,
                                             child: GestureDetector(
-                                              child: Icon(Icons.edit, size: 22, color: colors_name.colorPrimary),
+                                              child: Icon(Icons.edit, size: 22, color: Colors.black),
                                               onTap: () {
                                                 Get.to(const AddSpecialization(), arguments: specializationData![index].fields?.id)?.then((result) {
                                                   if (result != null && result) {
