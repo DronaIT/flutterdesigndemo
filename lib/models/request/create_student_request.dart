@@ -13,7 +13,42 @@ class CreateStudentRequest {
   List<String>? hubIds;
   List<String>? specializationIds;
 
-  CreateStudentRequest({this.city, this.joiningYear, this.password, this.name, this.address, this.mobileNumber, this.gender, this.email, this.hubIds, this.specializationIds, this.semester, this.division});
+  String? pinCode;
+  String? srNumber;
+  String? birthdate;
+  String? aadharCardNumber;
+  String? caste;
+  String? hscSchool;
+  String? hscSchoolCity;
+  String? hscPercentage;
+  String? motherName;
+  String? motherNumber;
+  String? fatherNumber;
+
+  CreateStudentRequest(
+      {this.city,
+      this.joiningYear,
+      this.password,
+      this.name,
+      this.address,
+      this.mobileNumber,
+      this.gender,
+      this.email,
+      this.hubIds,
+      this.specializationIds,
+      this.semester,
+      this.division,
+      this.pinCode,
+      this.srNumber,
+      this.birthdate,
+      this.aadharCardNumber,
+      this.caste,
+      this.hscSchool,
+      this.hscSchoolCity,
+      this.hscPercentage,
+      this.motherName,
+      this.motherNumber,
+      this.fatherNumber});
 
   CreateStudentRequest.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -28,6 +63,18 @@ class CreateStudentRequest {
     division = json['division'];
     hubIds = json['hub_ids']?.cast<String>();
     specializationIds = json['specialization_ids']?.cast<String>();
+
+    pinCode = json['pin_code'];
+    srNumber = json['sr_number'];
+    birthdate = json['birthdate'];
+    aadharCardNumber = json['aadhar_card_number'];
+    caste = json['caste'];
+    hscSchool = json['hsc_school'];
+    hscSchoolCity = json['hsc_school_city'];
+    hscPercentage = json['hsc_percentage'];
+    motherName = json['mother_name'];
+    motherNumber = json['mother_number'];
+    fatherNumber = json['father_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +91,17 @@ class CreateStudentRequest {
     data['semester'] = this.semester;
     data['division'] = this.division;
     data['specialization_ids'] = this.specializationIds;
+
+    data['pin_code'] = this.pinCode;
+    data['sr_number'] = this.srNumber;
+    data['birthdate'] = this.birthdate;
+    data['aadhar_card_number'] = this.aadharCardNumber;
+    data['caste'] = this.caste;
+    data['hsc_school'] = this.hscSchool;
+    data['hsc_school_city'] = this.hscSchoolCity;
+    data['hsc_percentage'] = this.hscPercentage;
+    data['mother_name'] = this.motherName;
+    data['mother_number'] = this.motherNumber;
     return data;
   }
 }
