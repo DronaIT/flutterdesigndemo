@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
+import 'package:flutterdesigndemo/ui/addsinglestudent.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:get/get.dart';
 
 class ViewStudent extends StatefulWidget {
   const ViewStudent({Key? key}) : super(key: key);
@@ -37,11 +39,15 @@ class _ViewStudentState extends State<ViewStudent> {
 
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
 
+  bool canUpdateStudent = false;
+
   @override
   void initState() {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
+    canUpdateStudent = Get.arguments ;
+    print("chech=>${canUpdateStudent}");
   }
 
   @override
@@ -147,19 +153,33 @@ class _ViewStudentState extends State<ViewStudent> {
                             itemBuilder: (BuildContext context, int index) {
                               return Card(
                                 elevation: 5,
-                                child: Column(
+                                child:
+                                Row(
                                   children: [
-                                    custom_text(text: "${viewStudent![index].fields!.name!} (${viewStudent![index].fields!.enrollmentNumber!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                    Visibility(visible: viewStudent![index].fields!.email != null ,
-                                        child: custom_text(text: viewStudent![index].fields!.email != null ? viewStudent![index].fields!.email! : "",
-                                            textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
-                                    custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                    Flexible(
+                                      child: Column(
+                                        children: [
+                                          custom_text(text: "${viewStudent![index].fields!.name!} (${viewStudent![index].fields!.enrollmentNumber!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                          Visibility(visible: viewStudent![index].fields!.email != null ,
+                                              child: custom_text(text: viewStudent![index].fields!.email != null ? viewStudent![index].fields!.email! : "",
+                                                  textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
+                                          custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
+                                        ],
+                                      ),
+                                    ),
+                                    canUpdateStudent ? GestureDetector(
+                                        onTap: () async {
+                                          var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index]);
+
+                                        },
+                                        child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit))) :Container()
                                   ],
+
                                 ),
                               );
                             }),
                       )
-                    : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),

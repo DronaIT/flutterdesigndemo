@@ -33,6 +33,20 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController joingYearController = TextEditingController();
+
+
+  TextEditingController srnumberController = TextEditingController();
+  TextEditingController birthdateController = TextEditingController();
+  TextEditingController aadharcardnumberController = TextEditingController();
+  TextEditingController casteController = TextEditingController();
+  TextEditingController hscschoolController = TextEditingController();
+
+  TextEditingController hscschoolcityController = TextEditingController();
+  TextEditingController hscpercentageController = TextEditingController();
+  TextEditingController mothernameController = TextEditingController();
+  TextEditingController fathernumberController = TextEditingController();
+  TextEditingController mothernumberController = TextEditingController();
+
   String gender = "Male";
   BaseApiResponseWithSerializable<SpecializationResponse>? speResponse;
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
@@ -204,6 +218,23 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                     maxLength: 4,
                   ),
+
+
+                  SizedBox(height: 2.h),
+                  custom_text(
+                    text: strings_name.str_serial_number,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    controller: joingYearController,
+                    topValue: 2,
+                    maxLength: 4,
+                  ),
+
+
                   SizedBox(height: 5.h),
                   custom_text(
                     text: strings_name.str_select_hub,

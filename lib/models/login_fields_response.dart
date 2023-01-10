@@ -31,35 +31,59 @@ class LoginFieldsResponse {
   List<String>? lecture_date;
   int attendanceStatus = 1;
 
-  LoginFieldsResponse(
-      {this.city,
-      this.joiningYear,
-      this.password,
-      this.studentId,
-      this.hubIds,
-      this.name,
-      this.address,
-      this.mobileNumber,
-      this.email,
-      this.specializationIds,
-      this.gender,
-      this.createdOn,
-      this.updatedOn,
-      this.enrollmentNumber,
-      this.hubIdFromHubIds,
-      this.specializationIdFromSpecializationIds,
-      this.division,
-      this.semester,
-      this.lectureIds,
-      this.absentLectureIds,
-      this.absentLectureDate,
-      this.absentSubjectTitle,
-      this.absentSubjectId,
-      this.presentLectureIds,
-      this.presentLectureDate,
-      this.presentSubjectTitle,
-      this.presentSubjectId,
-      this.lecture_date});
+  String? sr_number;
+  String? birthdate;
+  String? aadhar_card_number;
+  String? caste;
+  String? hsc_school;
+  String? hsc_school_city;
+  String? hsc_percentage;
+  String? mother_name;
+  String? mother_number;
+  String? father_number;
+  String? pin_code;
+
+  LoginFieldsResponse({
+    this.city,
+    this.joiningYear,
+    this.password,
+    this.studentId,
+    this.hubIds,
+    this.name,
+    this.address,
+    this.mobileNumber,
+    this.email,
+    this.specializationIds,
+    this.gender,
+    this.createdOn,
+    this.updatedOn,
+    this.enrollmentNumber,
+    this.hubIdFromHubIds,
+    this.specializationIdFromSpecializationIds,
+    this.division,
+    this.semester,
+    this.lectureIds,
+    this.absentLectureIds,
+    this.absentLectureDate,
+    this.absentSubjectTitle,
+    this.absentSubjectId,
+    this.presentLectureIds,
+    this.presentLectureDate,
+    this.presentSubjectTitle,
+    this.presentSubjectId,
+    this.lecture_date,
+    this.sr_number,
+    this.birthdate,
+    this.aadhar_card_number,
+    this.caste,
+    this.hsc_school,
+    this.hsc_school_city,
+    this.hsc_percentage,
+    this.mother_name,
+    this.mother_number,
+    this.father_number,
+    this.pin_code,
+  });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -91,6 +115,18 @@ class LoginFieldsResponse {
     presentSubjectTitle = json['present_subject_title']?.cast<String>();
     presentSubjectId = json['present_subject_id']?.cast<String>();
     lecture_date = json['lecture_date']?.cast<String>();
+
+    sr_number = json['sr_number'];
+    birthdate = json['birthdate'];
+    aadhar_card_number = json['aadhar_card_number'];
+    caste = json['caste'];
+    hsc_school = json['hsc_school'];
+    hsc_school_city = json['hsc_school_city'];
+    hsc_percentage = json['hsc_percentage'];
+    mother_name = json['mother_name'];
+    mother_number = json['mother_number'];
+    father_number = json['father_number'];
+    pin_code = json['pin_code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +159,20 @@ class LoginFieldsResponse {
     data['present_subject_id'] = this.presentSubjectId;
     data['present_lecture_ids'] = this.presentLectureIds;
     data['lecture_date'] = this.lecture_date;
+
+
+
+    data['sr_number'] = this.sr_number;
+    data['birthdate'] = this.birthdate;
+    data['aadhar_card_number'] = this.aadhar_card_number;
+    data['caste'] = this.caste;
+    data['hsc_school'] = this.hsc_school;
+    data['hsc_school_city'] = this.hsc_school_city;
+    data['hsc_percentage'] = this.hsc_percentage;
+    data['mother_name'] = this.mother_name;
+    data['mother_number'] = this.mother_number;
+    data['father_number'] = this.father_number;
+    data['pin_code'] = this.pin_code;
     return data;
   }
 }

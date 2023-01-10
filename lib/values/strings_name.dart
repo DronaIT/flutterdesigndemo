@@ -227,4 +227,17 @@ class strings_name {
   static const String str_no_subject_assigned = "No subject assigned.";
   static const String str_no_unit_assigned = "No unit assigned.";
   static const String str_no_topic_assigned = "No topic assigned.";
+
+
+  static const String str_serial_number = "Serial number";
+  static const String str_brithday = "Birthdate";
+  static const String str_adharcard_number = "Aadhaar card number";
+  static const String str_caste = "Caste";
+  static const String str_hsc_school = "HSC School";
+  static const String str_hsc_school_city = "HSC School city";
+  static const String str_hsc_percentage = "HSC percentage";
+  static const String str_mother_name = "Mother name";
+
+  static const String str_mother_number = "Mother number";
+  static const String str_father_name = "Father name";
 }

@@ -26,7 +26,7 @@ class ManageUser extends StatefulWidget {
 class _ManageUserState extends State<ManageUser> {
   bool isVisible = false;
   bool canAddEmployee = false, canUpdateEmployee = false, canViewEmployee = false;
-  bool canAddStudent = false, canViewStudent = false;
+  bool canAddStudent = false, canViewStudent = false , canUpdateStudent = false;
 
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -69,6 +69,11 @@ class _ManageUserState extends State<ManageUser> {
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_STUDENT) {
           setState(() {
             canViewStudent = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_STUDENT) {
+          setState(() {
+            canUpdateStudent = true;
           });
         }
       }
@@ -228,7 +233,7 @@ class _ManageUserState extends State<ManageUser> {
                     ),
                   ),
                   onTap: () {
-                    Get.to(const ViewStudent());
+                    Get.to(const ViewStudent() , arguments: canUpdateEmployee);
                   },
                 ),
               ),
