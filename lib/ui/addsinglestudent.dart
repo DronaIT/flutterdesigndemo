@@ -34,7 +34,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController joingYearController = TextEditingController();
 
-
+  TextEditingController pincodeController = TextEditingController();
   TextEditingController srnumberController = TextEditingController();
   TextEditingController birthdateController = TextEditingController();
   TextEditingController aadharcardnumberController = TextEditingController();
@@ -59,17 +59,101 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   final addStudentRepository = getIt.get<ApiRepository>();
 
   List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
-  int semesterValue = -1;
-
+  int semesterValue = 1;
   List<String> divisionResponseArray = <String>[TableNames.DIVISION_A, TableNames.DIVISION_B, TableNames.DIVISION_C, TableNames.DIVISION_D];
-  String divisionValue = "";
+  String divisionValue = TableNames.DIVISION_A;
+  bool fromEdit = false;
+  final apiRepository = getIt.get<ApiRepository>();
+  var addStudentId;
 
   @override
   void initState() {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
+    initialization();
   }
+
+  Future<void> initialization() async {
+    if (Get.arguments != null) {
+      setState(() {
+        isVisible = true;
+      });
+      var query = "FIND('${Get.arguments}', ${TableNames.TB_USERS_PHONE}, 0)";
+      var data = await apiRepository.loginApi(query);
+      if (data.records?.isNotEmpty == true) {
+        setState(() {
+          fromEdit = true;
+          if( data.records?.first.fields != null){
+            addStudentId = data.records?.first.id;
+            nameController.text = data.records!.first.fields!.name.toString() ;
+            emailController.text = data.records!.first.fields!.email.toString() ;
+            phoneController.text = data.records!.first.fields!.mobileNumber.toString() ;
+            cityController.text = data.records!.first.fields!.city.toString() ;
+            addressController.text = data.records!.first.fields!.address.toString() ;
+            pincodeController.text = data.records!.first.fields!.pin_code.toString() ;
+            joingYearController.text = data.records!.first.fields!.joiningYear.toString() ;
+            srnumberController.text = data.records!.first.fields!.sr_number.toString() ;
+            birthdateController.text = data.records!.first.fields!.birthdate.toString() ;
+            aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number.toString() ;
+            casteController.text = data.records!.first.fields!.caste.toString() ;
+            hscpercentageController.text = data.records!.first.fields!.hsc_percentage.toString() ;
+            hscschoolcityController.text = data.records!.first.fields!.hsc_school_city.toString() ;
+            hscschoolController.text = data.records!.first.fields!.hsc_school.toString() ;
+            mothernumberController.text = data.records!.first.fields!.mother_number.toString() ;
+            fathernumberController.text = data.records!.first.fields!.father_number.toString() ;
+            mothernameController.text = data.records!.first.fields!.mother_name.toString() ;
+            for( var i = 0 ; i < speResponseArray!.length; i++){
+              if(data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId){
+                setState(() {
+                  speResponse = speResponseArray![i];
+                  speValue =speResponseArray![i].fields!.specializationId!.toString();
+                });
+                break;
+              }
+            }
+            for( var i = 0 ; i < hubResponseArray!.length; i++){
+              if(data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId){
+                setState(() {
+                  hubResponse = hubResponseArray![i];
+                  hubValue =hubResponseArray![i].fields!.hubId!.toString();
+                });
+                break;
+              }
+            }
+
+            for( var i = 0 ; i < semesterResponseArray.length; i++){
+              if(data.records!.first.fields!.semester == semesterResponseArray[i].toString()){
+                setState(() {
+                  semesterValue =semesterResponseArray[i];
+                });
+                break;
+              }
+            }
+            for( var i = 0 ; i < divisionResponseArray.length; i++){
+              if(data.records!.first.fields!.division == divisionResponseArray[i].toString()){
+                setState(() {
+                  divisionValue =divisionResponseArray[i];
+                });
+                break;
+              }
+            }
+
+          }
+        });
+
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+      setState(() {
+        isVisible = false;
+      });
+    }
+
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +165,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
         children: [
           SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.only(left: 10, right: 10),
+              margin: const EdgeInsets.only(left: 10, right: 10),
               child: Column(
                 children: [
                   SizedBox(height: 10.h),
@@ -126,6 +210,80 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
+                    text: strings_name.str_brithday,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: custom_edittext(
+                      type: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: birthdateController,
+                      maxLength: 10,
+                      topValue: 2,
+                    ),
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_mother_name,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: mothernameController,
+                    maxLength: 10,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 3.h),
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              custom_text(
+                                text: strings_name.str_father_number,
+                                alignment: Alignment.topLeft,
+                                textStyles: blackTextSemiBold16,
+                                topValue: 5,
+                              ),
+                              custom_edittext(
+                                type: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                controller: fathernumberController,
+                                maxLength: 10,
+                                topValue: 2,
+                              ),
+                            ],
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              custom_text(
+                                text: strings_name.str_mother_number,
+                                alignment: Alignment.topLeft,
+                                textStyles: blackTextSemiBold16,
+                                topValue: 5,
+                              ),
+                              custom_edittext(
+                                type: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                controller: mothernumberController,
+                                maxLength: 10,
+                                topValue: 2,
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
                     text: strings_name.str_address,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -138,17 +296,47 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
-                    text: strings_name.str_city,
-                    alignment: Alignment.topLeft,
-                    textStyles: blackTextSemiBold16,
-                    topValue: 5,
-                  ),
-                  custom_edittext(
-                    type: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    controller: cityController,
-                    topValue: 2,
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 6,
+                          child: Column(
+                            children: [
+                              custom_text(
+                                text: strings_name.str_city,
+                                alignment: Alignment.topLeft,
+                                textStyles: blackTextSemiBold16,
+                                topValue: 5,
+                              ),
+                              custom_edittext(
+                                type: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                controller: cityController,
+                                topValue: 2,
+                              ),
+                            ],
+                          )),
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          children: [
+                            custom_text(
+                              text: strings_name.str_pincode,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                              topValue: 5,
+                            ),
+                            custom_edittext(
+                              type: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              controller: pincodeController,
+                              topValue: 2,
+                              maxLength: 6,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
@@ -218,8 +406,6 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                     maxLength: 4,
                   ),
-
-
                   SizedBox(height: 2.h),
                   custom_text(
                     text: strings_name.str_serial_number,
@@ -229,12 +415,10 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   custom_edittext(
                     type: TextInputType.number,
                     textInputAction: TextInputAction.next,
-                    controller: joingYearController,
+                    controller: srnumberController,
                     topValue: 2,
                     maxLength: 4,
                   ),
-
-
                   SizedBox(height: 5.h),
                   custom_text(
                     text: strings_name.str_select_hub,
@@ -322,6 +506,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                           width: viewWidth,
                           child: DropdownButtonFormField<int>(
+                            value:  semesterValue,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,
@@ -357,6 +542,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           width: viewWidth,
                           child: DropdownButtonFormField<String>(
                             elevation: 16,
+                            value:  divisionValue,
                             style: blackText16,
                             focusColor: Colors.white,
                             onChanged: (String? newValue) {
@@ -375,6 +561,87 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_adharcard_number,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    controller: aadharcardnumberController,
+                    maxLength: 12,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_caste,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: casteController,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 3.h),
+                  custom_text(
+                    text: strings_name.str_hsc_school,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 5,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: hscschoolController,
+                    topValue: 2,
+                  ),
+                  SizedBox(height: 3.h),
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 7,
+                          child: Column(
+                            children: [
+                              custom_text(
+                                text: strings_name.str_hsc_school_city,
+                                alignment: Alignment.topLeft,
+                                textStyles: blackTextSemiBold16,
+                                topValue: 5,
+                              ),
+                              custom_edittext(
+                                type: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                controller: hscschoolcityController,
+                                topValue: 2,
+                              ),
+                            ],
+                          )),
+                      Expanded(
+                          flex: 3,
+                          child: Column(
+                            children: [
+                              custom_text(
+                                text: strings_name.str_hsc_percentage,
+                                alignment: Alignment.topLeft,
+                                textStyles: blackTextSemiBold16,
+                                topValue: 5,
+                              ),
+                              custom_edittext(
+                                type: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                controller: hscpercentageController,
+                                topValue: 2,
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
                   SizedBox(height: 20.h),
                   CustomButton(
                     text: strings_name.str_submit,
@@ -387,9 +654,13 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         Utils.showSnackBar(context, strings_name.str_empty_email);
                       } else if (phone.isNotEmpty) {
                         Utils.showSnackBar(context, phone);
+                      } else if (birthdateController.text.trim().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_brithdate);
                       } else if (addressController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_address);
                       } else if (cityController.text.trim().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_city);
+                      } else if (pincodeController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
                       } else if (gender.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_gender);
@@ -419,38 +690,69 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.hubIds = Utils.getHubId(hubValue)!.split(",");
                         response.semester = semesterValue.toString();
                         response.division = divisionValue;
-
-                        var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-                        var checkMobile = await addStudentRepository.loginApi(query);
-                        if (checkMobile.records?.isEmpty == true) {
-                          Map<String, CreateStudentRequest> map = Map();
-                          map["fields"] = response;
-                          list.add(map);
-                        } else {
-                          setState(() {
-                            isVisible = false;
-                          });
-                          Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
-                        }
-                        if (list.isNotEmpty) {
-                          var resp = await addStudentRepository.createStudentApi(list);
-                          if (resp.records!.isNotEmpty) {
+                        response.pinCode = pincodeController.text.trim().toString();
+                        response.birthdate = birthdateController.text.trim().toString();
+                        response.motherName = mothernameController.text.trim().toString();
+                        response.motherNumber = mothernumberController.text.trim().toString();
+                        response.fatherNumber = fathernumberController.text.trim().toString();
+                        response.aadharCardNumber = aadharcardnumberController.text.trim().toString();
+                        response.caste = casteController.text.trim().toString();
+                        response.hscSchool = hscschoolController.text.trim().toString();
+                        response.hscSchoolCity = hscschoolcityController.text.trim().toString();
+                        response.hscPercentage = hscpercentageController.text.trim().toString();
+                        response.srNumber = srnumberController.text.trim().toString();
+                        if(!fromEdit){
+                          var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+                          var checkMobile = await addStudentRepository.loginApi(query);
+                          if (checkMobile.records?.isEmpty == true) {
+                            Map<String, CreateStudentRequest> map = Map();
+                            map["fields"] = response;
+                            list.add(map);
+                          } else {
                             setState(() {
                               isVisible = false;
                             });
-                            Utils.showSnackBar(context, strings_name.str_student_added);
-                            await Future.delayed(const Duration(milliseconds: 2000));
-                            Get.back(closeOverlays: true);
+                            Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
+                          }
+                          if (list.isNotEmpty) {
+                            var resp = await addStudentRepository.createStudentApi(list);
+                            if (resp.records!.isNotEmpty) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_student_added);
+                              await Future.delayed(const Duration(milliseconds: 2000));
+                              Get.back(closeOverlays: true);
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                              });
+                            }
                           } else {
                             setState(() {
                               isVisible = false;
                             });
                           }
-                        } else {
-                          setState(() {
-                            isVisible = false;
-                          });
+                        }else{
+                          Map<String, CreateStudentRequest> map = Map();
+                          map["fields"] = response;
+                          var updateStudent = await apiRepository.updateStudentApi(map,addStudentId);
+                          if(updateStudent != null){
+                            setState(() {
+                              isVisible = false;
+                            });
+                            Utils.showSnackBar(context, strings_name.str_student_update);
+                            await Future.delayed(const Duration(milliseconds: 2000));
+                            Get.back(closeOverlays: true, result: true);
+                          }else{
+                            setState(() {
+                              isVisible = false;
+                            });
+                            Utils.showSnackBar(context, strings_name.str_something_wrong);
+                          }
                         }
+
+
                       }
                     },
                   )

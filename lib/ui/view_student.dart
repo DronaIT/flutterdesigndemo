@@ -169,7 +169,25 @@ class _ViewStudentState extends State<ViewStudent> {
                                     ),
                                     canUpdateStudent ? GestureDetector(
                                         onTap: () async {
-                                          var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index]);
+                                          var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index].fields?.mobileNumber);
+                                          if(response){
+                                            var query = "AND(${TableNames.CLM_HUB_IDS}='${hubValue}',${TableNames.CLM_SPE_IDS}='${speValue}')";
+                                            setState(() {
+                                              isVisible = true;
+                                            });
+                                            var data = await apiRepository.loginApi(query);
+                                            if (data.records!.isNotEmpty) {
+                                              setState(() {
+                                                isVisible = false;
+                                                viewStudent = data.records;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                isVisible = false;
+                                                viewStudent = [];
+                                              });
+                                            }
+                                          }
 
                                         },
                                         child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit))) :Container()

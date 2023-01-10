@@ -113,6 +113,18 @@ class ApiRequest {
     }
   }
 
+  Future<CreatePasswordResponse> updateStudentApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      // Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(updateFormula));
+      return CreatePasswordResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<BaseLoginResponse<RoleResponse>> getRolesApi() async {
     try {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};

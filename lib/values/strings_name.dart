@@ -235,9 +235,15 @@ class strings_name {
   static const String str_caste = "Caste";
   static const String str_hsc_school = "HSC School";
   static const String str_hsc_school_city = "HSC School city";
-  static const String str_hsc_percentage = "HSC percentage";
+  static const String str_hsc_percentage = "HSC %";
   static const String str_mother_name = "Mother name";
 
   static const String str_mother_number = "Mother number";
-  static const String str_father_name = "Father name";
+  static const String str_father_number = "Father number";
+  static const String str_pincode = "Pincode";
+
+  static const String str_empty_pincode = "Please enter pin code";
+  static const String str_empty_brithdate = "Please enter birthdate";
+  static const String str_empty_aadharcard = "Please enter aadhaar card number";
+  static const String str_student_update = "Student details updated successfully";
 }
