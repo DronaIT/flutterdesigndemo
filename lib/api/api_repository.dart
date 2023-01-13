@@ -116,6 +116,7 @@ class ApiRepository {
     }
   }
 
+
   Future<BaseLoginResponse<RoleResponse>> getRolesApi() async {
     try {
       final response = await userApi.getRolesApi();
@@ -185,6 +186,17 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<CreatePasswordResponse> updateStudentApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.updateStudentApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationDetailApi(String detailFormula) async {
     try {
