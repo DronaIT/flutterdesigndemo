@@ -1,4 +1,4 @@
-import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
@@ -43,7 +43,10 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
   void initState() {
     super.initState();
     attendanceHistoryDetail();
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,21 +64,50 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                       return GestureDetector(
                         child: Card(
                             elevation: 5,
-                            child: Column(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                custom_text(
-                                  text: data.fields!.nameFromStudentIds![index],
-                                  alignment: Alignment.topLeft,
-                                  textStyles: primryTextSemiBold14,
-                                  bottomValue: 5,
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      custom_text(
+                                        text: data.fields!.nameFromStudentIds![index],
+                                        alignment: Alignment.topLeft,
+                                        textStyles: primryTextSemiBold14,
+                                        bottomValue: 5,
+                                      ),
+                                      custom_text(
+                                        text: data.fields!.enrollmentNumberFromStudentIds![index],
+                                        alignment: Alignment.topLeft,
+                                        textStyles: blackTextSemiBold14,
+                                        topValue: 5,
+                                      ),
+
+
+                                    ],
+                                  ),
                                 ),
-                                custom_text(
-                                  text: data.fields!.enrollmentNumberFromStudentIds![index],
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold14,
-                                  topValue: 5,
+                                Container(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      primary:data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![index]) ? colors_name.presentColor : colors_name.errorColor,
+                                      padding: const EdgeInsets.all(10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      elevation: 7.0,
+                                    ),
+                                    child: Text(
+                                      data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![index]) ? strings_name.str_present : strings_name.str_absent,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
                                 ),
                               ],
+
                             )),
                         onTap: () {
                           Get.to(() => const MyAttendance(), arguments: [

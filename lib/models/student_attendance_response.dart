@@ -10,6 +10,7 @@ class StudentAttendanceResponse {
   String? lectureDate;
   List<String>? studentIds;
   List<String>? presentIds;
+  List<String>? absent_ids;
   List<String>? subjectTitleFromSubjectId;
   List<String>? unitTitleFromUnitId;
   List<String>? semesterFromSubjectId;
@@ -40,7 +41,9 @@ class StudentAttendanceResponse {
       this.specializationNameFromSpecializationId,
       this.topicTitleFromTopicId,
       this.enrollmentNumberFromStudentIds,
-      this.nameFromStudentIds});
+      this.nameFromStudentIds,
+      this.absent_ids
+      });
 
   StudentAttendanceResponse.fromJson(Map<String, dynamic> json) {
     lectureId = json['lecture_id'];
@@ -63,6 +66,7 @@ class StudentAttendanceResponse {
     topicTitleFromTopicId = json['topic_title (from topic_id)']?.cast<String>();
     enrollmentNumberFromStudentIds = json['enrollment_numbers']?.cast<String>();
     nameFromStudentIds = json['name (from student_ids)']?.cast<String>();
+    absent_ids = json['absent_ids']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +91,7 @@ class StudentAttendanceResponse {
     data['topic_title (from topic_id)'] = this.topicTitleFromTopicId;
     data['enrollment_numbers'] = this.enrollmentNumberFromStudentIds;
     data['name (from student_ids)'] = this.nameFromStudentIds;
+    data['absent_ids'] = this.absent_ids;
     return data;
   }
 }

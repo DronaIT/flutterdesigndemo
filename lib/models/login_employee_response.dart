@@ -20,9 +20,15 @@ class LoginEmployeResponse {
   List<String>? subjectTitle;
   List<String>? division;
 
+  String? parents_mobile_number;
+  String? spouse_mobile_number = " ";
+  String? pin_code;
+
+
   LoginEmployeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.employeeName, this.hubIds, this.roleIdFromRoleIds,
     this.hubIdFromHubIds, this.employeeCode, this.mobileNumber, this.email, this.password,
-    this.lectureIds, this.lectureDate, this.unitTitle, this.semester,this.subjectTitle, this.division
+    this.lectureIds, this.lectureDate, this.unitTitle, this.semester,this.subjectTitle, this.division,
+    this.parents_mobile_number,this.spouse_mobile_number, this.pin_code
   });
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
@@ -39,14 +45,16 @@ class LoginEmployeResponse {
     password = json['password'];
     email = json['email'];
     address = json['address'];
-
-
     lectureIds = json['lecture_ids']?.cast<String>();
     lectureDate = json['lecture_date']?.cast<String>();
     unitTitle = json['unit_title']?.cast<String>();
     semester = json['semester']?.cast<String>();
     subjectTitle = json['subject_title']?.cast<String>();
     division = json['division']?.cast<String>();
+    parents_mobile_number = json['parents_mobile_number'];
+    spouse_mobile_number = json['spouse_mobile_number'];
+    pin_code = json['pin_code'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -64,13 +72,16 @@ class LoginEmployeResponse {
     data['password'] = this.password;
     data['email'] = this.email;
     data['address'] = this.address;
-
     data['lecture_ids'] = this.lectureIds;
     data['lecture_date'] = this.lectureDate;
     data['unit_title'] = this.unitTitle;
     data['semester'] = this.semester;
     data['subject_title'] = this.subjectTitle;
     data['division'] = this.division;
+    data['parents_mobile_number'] = this.parents_mobile_number;
+    data['spouse_mobile_number'] = this.spouse_mobile_number;
+    data['pin_code'] = this.pin_code;
+
     return data;
   }
 }

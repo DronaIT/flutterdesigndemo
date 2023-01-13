@@ -41,7 +41,10 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
   final apiRepository = getIt.get<ApiRepository>();
   TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController pinCodeController = TextEditingController();
 
+  TextEditingController parentController = TextEditingController();
+  TextEditingController spouseController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -73,6 +76,11 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
     gender = data.fields!.gender;
     employeeCode = data.fields!.employeeCode;
     cityController.text = data.fields!.city;
+
+    pinCodeController.text = data.fields!.pin_code;
+    spouseController.text = data.fields!.spouse_mobile_number;
+    parentController.text = data.fields!.parents_mobile_number;
+
     for( var i = 0 ; i < roleResponseArray!.length; i++){
       if(data.fields!.roleIdFromRoleIds[0] == roleResponseArray![i].fields!.roleId){
          setState(() {
@@ -177,6 +185,48 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       maxLength: 30,
                       topValue: 5,
                     ),
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_pincode,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      controller: pinCodeController,
+                      maxLength: 6,
+                      topValue: 2,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_parent_number,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: parentController,
+                      maxLength: 10,
+                      topValue: 2,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_spouse_number,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: spouseController,
+                      maxLength: 10,
+                      topValue: 2,
+                    ),
+
 
                     SizedBox(height: 5.h),
                     custom_text(
@@ -317,7 +367,9 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                           Utils.showSnackBar(context, strings_name.str_empty_address);
                         } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
-                        }  else if (gender.isEmpty) {
+                        } else if (pinCodeController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_pincode);
+                        } else if (gender.isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_gender);
                         } else if (roleValue.isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_role);
@@ -332,6 +384,10 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                             "city" : cityController.text.toString(),
                             "role_ids" : Utils.getRoleId(roleValue)!.split(","),
                             "hub_ids" : Utils.getHubId(hubValue)!.split(","),
+                            "pin_code" : pinCodeController.text.toString(),
+                            "parents_mobile_number" : parentController.text.toString(),
+                            "spouse_mobile_number" : spouseController.text.toString(),
+
                           };
                           setState(() {
                             isVisible = true;

@@ -28,6 +28,11 @@ class AddEmployee extends StatefulWidget {
 class _AddEmployeeState extends State<AddEmployee> {
   TextEditingController nameController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  TextEditingController pinCodeController = TextEditingController();
+
+  TextEditingController parentController = TextEditingController();
+  TextEditingController spouseController = TextEditingController();
+
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   String gender = "Male";
@@ -141,6 +146,48 @@ class _AddEmployeeState extends State<AddEmployee> {
                       maxLength: 30,
                       topValue: 2,
                     ),
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_pincode,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      controller: pinCodeController,
+                      maxLength: 6,
+                      topValue: 2,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_parent_number,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: parentController,
+                      maxLength: 10,
+                      topValue: 2,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_spouse_number,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    custom_edittext(
+                      type: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: spouseController,
+                      maxLength: 10,
+                      topValue: 2,
+                    ),
+
 
                     SizedBox(height: 5.h),
                     custom_text(
@@ -286,7 +333,12 @@ class _AddEmployeeState extends State<AddEmployee> {
                           Utils.showSnackBar(context, strings_name.str_empty_address);
                         } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
-                        } else if (gender.trim().isEmpty) {
+                        }
+                        else if (pinCodeController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_pincode);
+                        }
+
+                        else if (gender.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_gender);
                         } else if (roleValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_role);
@@ -326,6 +378,10 @@ class _AddEmployeeState extends State<AddEmployee> {
       request.email = emailController.text.toString();
       request.hubIds = Utils.getHubId(hubValue)!.split(",");
       request.roleIds = Utils.getRoleId(roleValue)!.split(",");
+      request.spouse_mobile_number = spouseController.text.toString();
+      request.pin_code = pinCodeController.text.toString();
+      request.parents_mobile_number = parentController.text.toString();
+
       var resp = await apiRepository.addEmployeeApi(request);
       if (resp.id!.isNotEmpty) {
         setState(() {

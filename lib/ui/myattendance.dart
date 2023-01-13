@@ -228,21 +228,23 @@ class _MyAttendanceState extends State<MyAttendance> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  children: [
-                                    custom_text(
-                                      text: studentAttendanceArray![index].subject_title!,
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold12,
-                                      bottomValue: 5,
-                                    ),
-                                    custom_text(
-                                      text: formatterShow.format(DateTime.parse(studentAttendanceArray![index].lecture_date!)),
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold12,
-                                      topValue: 5,
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      custom_text(
+                                        text: studentAttendanceArray![index].subject_title!,
+                                        alignment: Alignment.topLeft,
+                                        textStyles: blackTextSemiBold12,
+                                        bottomValue: 5,
+                                      ),
+                                      custom_text(
+                                        text: formatterShow.format(DateTime.parse(studentAttendanceArray![index].lecture_date!)),
+                                        alignment: Alignment.topLeft,
+                                        textStyles: blackTextSemiBold12,
+                                        topValue: 5,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.all(10),

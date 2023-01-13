@@ -246,4 +246,9 @@ class strings_name {
   static const String str_empty_brithdate = "Please enter birthdate";
   static const String str_empty_aadharcard = "Please enter aadhaar card number";
   static const String str_student_update = "Student details updated successfully";
+
+
+  static const String str_parent_number = "Parent number";
+  static const String str_spouse_number = "Spouse number";
+
 }

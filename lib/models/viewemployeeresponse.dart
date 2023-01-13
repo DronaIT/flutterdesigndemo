@@ -14,8 +14,15 @@ class ViewEmployeeResponse {
   String? employeeCode;
   String? createdOn;
   String? updatedOn;
+  String? parents_mobile_number;
+  String? spouse_mobile_number = " ";
+  String? pin_code;
+  ViewEmployeeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.mobileNumber,
+    this.email, this.employeeName, this.password, this.hubIds, this.roleIdFromRoleIds,
+    this.hubIdFromHubIds, this.employeeCode, this.createdOn, this.address, this.updatedOn,
+    this.parents_mobile_number,this.spouse_mobile_number, this.pin_code
 
-  ViewEmployeeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.mobileNumber, this.email, this.employeeName, this.password, this.hubIds, this.roleIdFromRoleIds, this.hubIdFromHubIds, this.employeeCode, this.createdOn, this.address, this.updatedOn});
+  });
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -33,6 +40,9 @@ class ViewEmployeeResponse {
     employeeCode = json['employee_code'];
     createdOn = json['created_on'];
     updatedOn = json['updated_on'];
+    parents_mobile_number = json['parents_mobile_number'];
+    spouse_mobile_number = json['spouse_mobile_number'];
+    pin_code = json['pin_code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +62,9 @@ class ViewEmployeeResponse {
     data['employee_code'] = this.employeeCode;
     data['created_on'] = this.createdOn;
     data['updated_on'] = this.updatedOn;
+    data['parents_mobile_number'] = this.parents_mobile_number;
+    data['spouse_mobile_number'] = this.spouse_mobile_number;
+    data['pin_code'] = this.pin_code;
     return data;
   }
 }
