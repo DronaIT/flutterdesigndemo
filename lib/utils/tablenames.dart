@@ -42,6 +42,8 @@ class TableNames {
   static const CLM_SEMESTER = "semester";
   static const CLM_DIVISION = "division";
   static const CLM_ENROLLMENT_NUMBERS = "enrollment_numbers";
+  static const CLM_MOTHER_NUMBER = "enrollment_numbers";
+  static const CLM_FATHER_NUMBERS = "enrollment_numbers";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -49,7 +51,6 @@ class TableNames {
   static const PERMISSION_ID_ADD_STUDENT = "DP0104";
   static const PERMISSION_ID_VIEW_STUDENT = "DP0105";
   static const PERMISSION_ID_UPDATE_STUDENT = "DP0106";
-
 
   static const PERMISSION_ID_ADD_HUB = "DP0201";
   static const PERMISSION_ID_UPDATE_HUB = "DP0202";

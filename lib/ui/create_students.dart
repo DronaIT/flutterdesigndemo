@@ -229,15 +229,26 @@ class _AddStudent extends State<CreateStudent> {
           response.gender = excel.tables[table]?.rows[row][2]?.value.toString();
           response.city = excel.tables[table]?.rows[row][3]?.value.toString();
           response.address = excel.tables[table]?.rows[row][4]?.value.toString();
-          // response.hubIds = Utils.getHubId(hubValue)!.split(",");
-          response.hubIds = Utils.getHubId(excel.tables[table]?.rows[row][5]?.value.toString())!.split(",");
-          response.specializationIds = Utils.getSpecializationId(excel.tables[table]?.rows[row][6]?.value.toString())!.split(",");
-          response.joiningYear = excel.tables[table]?.rows[row][7]?.value.toString();
-          response.semester = excel.tables[table]?.rows[row][8]?.value.toString();
-          response.division = excel.tables[table]?.rows[row][9]?.value.toString();
-          response.email = excel.tables[table]?.rows[row][10]?.value.toString();
+          response.pinCode = excel.tables[table]?.rows[row][5]?.value.toString();
+          response.hubIds = Utils.getHubId(excel.tables[table]?.rows[row][6]?.value.toString())!.split(",");
+          response.specializationIds = Utils.getSpecializationId(excel.tables[table]?.rows[row][7]?.value.toString())!.split(",");
+          response.joiningYear = excel.tables[table]?.rows[row][8]?.value.toString();
+          response.email = excel.tables[table]?.rows[row][9]?.value.toString();
+          response.semester = excel.tables[table]?.rows[row][10]?.value.toString();
+          response.division = excel.tables[table]?.rows[row][11]?.value.toString();
+          response.srNumber = excel.tables[table]?.rows[row][12]?.value.toString();
+          response.birthdate = excel.tables[table]?.rows[row][13]?.value.toString();
+          response.aadharCardNumber = excel.tables[table]?.rows[row][14]?.value.toString();
+          response.caste = excel.tables[table]?.rows[row][15]?.value.toString();
+          response.hscSchool = excel.tables[table]?.rows[row][16]?.value.toString();
+          response.hscSchoolCity = excel.tables[table]?.rows[row][17]?.value.toString();
+          response.hscPercentage = excel.tables[table]?.rows[row][18]?.value.toString();
+          response.motherName = excel.tables[table]?.rows[row][19]?.value.toString();
+          response.motherNumber = excel.tables[table]?.rows[row][20]?.value.toString();
+          response.fatherNumber = excel.tables[table]?.rows[row][21]?.value.toString();
 
-          var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+          // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
+          var query = "FIND(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}')";
           var checkMobile = await createStudentRepository.loginApi(query);
           if (checkMobile.records?.isEmpty == true) {
             Map<String, CreateStudentRequest> map = Map();
