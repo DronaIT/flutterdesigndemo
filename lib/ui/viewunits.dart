@@ -109,7 +109,7 @@ class _ViewUnitsState extends State<ViewUnits> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    custom_text(text: "${unitData.records![index].fields!.unitTitle}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                    Expanded(child: custom_text(text: "${unitData.records![index].fields!.unitTitle}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2)),
                                     canUpdateSubject
                                         ? GestureDetector(
                                             onTap: () {

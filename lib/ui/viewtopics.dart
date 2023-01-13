@@ -107,7 +107,7 @@ class _ViewTopicsState extends State<ViewTopics> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    custom_text(text: "${topicData.records![index].fields!.topicTitle}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                    Expanded(child: custom_text(text: "${topicData.records![index].fields!.topicTitle}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2)),
                                     canUpdateSubject
                                         ? GestureDetector(
                                             onTap: () {

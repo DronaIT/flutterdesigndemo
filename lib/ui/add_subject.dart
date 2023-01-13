@@ -30,6 +30,8 @@ class AddSubject extends StatefulWidget {
 
 class _AddSubjectState extends State<AddSubject> {
   TextEditingController titleController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
+  TextEditingController creditController = TextEditingController();
 
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<UnitsResponse>>? unitsData = [];
@@ -38,8 +40,8 @@ class _AddSubjectState extends State<AddSubject> {
   final apiRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
 
-  List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
-  int semesterValue = -1;
+  List<String> semesterResponseArray = <String>["1", "2", "3", "4", "5", "6"];
+  String semesterValue = "1";
 
   Future<void> initialization() async {
     if (Get.arguments != null) {
@@ -55,7 +57,12 @@ class _AddSubjectState extends State<AddSubject> {
 
         subjectData = data.records;
         if (subjectData?.isNotEmpty == true) {
-          titleController.text = subjectData![0].fields!.subjectTitle.toString();
+          setState(() {
+            titleController.text = subjectData![0].fields!.subjectTitle.toString();
+            codeController.text = subjectData![0].fields!.subjectCode.toString();
+            creditController.text = subjectData![0].fields!.subjectCredit.toString();
+            semesterValue = subjectData![0].fields!.semester!;
+          });
 
           var query = "FIND('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
           var data = await apiRepository.getUnitsApi(query);
@@ -80,127 +87,156 @@ class _AddSubjectState extends State<AddSubject> {
       appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_subjects : strings_name.str_add_subjects),
       body: Stack(
         children: [
-          Column(
-            children: [
-              SizedBox(height: 10.h),
-              custom_text(
-                text: strings_name.str_subject_title,
-                alignment: Alignment.topLeft,
-                textStyles: blackTextSemiBold16,
-              ),
-              custom_edittext(
-                type: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                controller: titleController,
-                topValue: 2,
-                maxLength: 200,
-              ),
-              SizedBox(height: 10.h),
-              custom_text(
-                text: strings_name.str_semester,
-                alignment: Alignment.topLeft,
-                textStyles: blackTextSemiBold16,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                      width: viewWidth,
-                      child: DropdownButtonFormField<int>(
-                        elevation: 16,
-                        style: blackText16,
-                        focusColor: Colors.white,
-                        onChanged: (int? newValue) {
-                          setState(() {
-                            semesterValue = newValue!;
-                          });
-                        },
-                        items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
-                          return DropdownMenuItem<int>(
-                            value: value,
-                            child: Text("Semester $value"),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.h),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 10.h),
+                custom_text(
+                  text: strings_name.str_subject_title,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+                custom_edittext(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  controller: titleController,
+                  topValue: 2,
+                  maxLength: 200,
+                ),
+                SizedBox(height: 10.h),
+                custom_text(
+                  text: strings_name.str_subject_code,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+                custom_edittext(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  controller: codeController,
+                  topValue: 2,
+                  maxLength: 200,
+                  capitalization: TextCapitalization.characters,
+                ),
+                SizedBox(height: 10.h),
+                custom_text(
+                  text: strings_name.str_subject_credit,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+                custom_edittext(
+                  type: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  controller: creditController,
+                  topValue: 2,
+                  maxLength: 200,
+                ),
+                SizedBox(height: 10.h),
+                custom_text(
+                  text: strings_name.str_semester,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    custom_text(
-                      text: strings_name.str_units,
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextSemiBold16,
-                    ),
-                    GestureDetector(
-                      child: custom_text(
-                        text: unitsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                        alignment: Alignment.topLeft,
-                        textStyles: primaryTextSemiBold16,
-                      ),
-                      onTap: () {
-                        Get.to(const UnitSelection(), arguments: unitsData)?.then((result) {
-                          if (result != null) {
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                        width: viewWidth,
+                        child: DropdownButtonFormField<String>(
+                          elevation: 16,
+                          style: blackText16,
+                          value: semesterValue,
+                          focusColor: Colors.white,
+                          onChanged: (String? newValue) {
                             setState(() {
-                              unitsData = result;
+                              semesterValue = newValue!;
                             });
-                          }
-                        });
-                      },
+                          },
+                          items: semesterResponseArray.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text("Semester $value"),
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              unitsData!.isNotEmpty
-                  ? Expanded(
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: unitsData?.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 5,
-                              child: GestureDetector(
-                                child: Container(
-                                  color: colors_name.colorWhite,
-                                  padding: const EdgeInsets.all(15),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                                  ),
+                SizedBox(height: 10.h),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      custom_text(
+                        text: strings_name.str_units,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                      GestureDetector(
+                        child: custom_text(
+                          text: unitsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                          alignment: Alignment.topLeft,
+                          textStyles: primaryTextSemiBold16,
+                        ),
+                        onTap: () {
+                          Get.to(const UnitSelection(), arguments: unitsData)?.then((result) {
+                            if (result != null) {
+                              setState(() {
+                                unitsData = result;
+                              });
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                unitsData!.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: unitsData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            child: GestureDetector(
+                              child: Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.all(15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                 ),
-                                onTap: () {
-                                  // Get.to(const (), arguments: unitsData![index].fields?.ids);
-                                },
                               ),
-                            );
-                          }))
-                  : Container(),
-              SizedBox(height: 20.h),
-              CustomButton(
-                text: strings_name.str_submit,
-                click: () {
-                  if (titleController.text.trim().isEmpty) {
-                    Utils.showSnackBar(context, strings_name.str_empty_subject_title);
-                  } else if (semesterValue == -1) {
-                    Utils.showSnackBar(context, strings_name.str_empty_semester);
+                              onTap: () {
+                                // Get.to(const (), arguments: unitsData![index].fields?.ids);
+                              },
+                            ),
+                          );
+                        })
+                    : Container(),
+                SizedBox(height: 20.h),
+                CustomButton(
+                  text: strings_name.str_submit,
+                  click: () {
+                    if (titleController.text.trim().isEmpty) {
+                      Utils.showSnackBar(context, strings_name.str_empty_subject_title);
+                    } else if (semesterValue.isEmpty) {
+                      Utils.showSnackBar(context, strings_name.str_empty_semester);
 /*
-                  } else if (unitsData!.isEmpty) {
-                    Utils.showSnackBar(context, strings_name.str_select_units);
+                    } else if (unitsData!.isEmpty) {
+                      Utils.showSnackBar(context, strings_name.str_select_units);
 */
-                  } else {
-                    addRecord();
-                  }
-                },
-              ),
-            ],
+                    } else {
+                      addRecord();
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
@@ -216,6 +252,8 @@ class _AddSubjectState extends State<AddSubject> {
     });
     AddSubjectRequest request = AddSubjectRequest();
     request.subjectTitle = titleController.text.toString();
+    request.code = codeController.text.toString();
+    request.credit = creditController.text.toString();
     request.semester = semesterValue.toString();
 
     List<String> selectedSubjectData = [];

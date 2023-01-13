@@ -131,7 +131,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                        Expanded(child: custom_text(text: "${specializationData![index].fields!.specializationName}", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2)),
                                         Visibility(
                                             visible: canEditSpe,
                                             child: GestureDetector(

@@ -156,6 +156,8 @@ class strings_name {
   static const String str_topics = "Topics";
 
   static const String str_subject_title = "Subject Name";
+  static const String str_subject_code = "Subject Code";
+  static const String str_subject_credit = "Subject Credit";
   static const String str_empty_subject_title = "Please enter subject name";
   static const String str_select_units = "Please select units";
   static const String str_subject_added = "New subject added successfully.";
@@ -228,7 +230,6 @@ class strings_name {
   static const String str_no_unit_assigned = "No unit assigned.";
   static const String str_no_topic_assigned = "No topic assigned.";
 
-
   static const String str_serial_number = "Serial number";
   static const String str_brithday = "Birthdate";
   static const String str_adharcard_number = "Aadhaar card number";
@@ -247,8 +248,6 @@ class strings_name {
   static const String str_empty_aadharcard = "Please enter aadhaar card number";
   static const String str_student_update = "Student details updated successfully";
 
-
   static const String str_parent_number = "Parent number";
   static const String str_spouse_number = "Spouse number";
-
 }
