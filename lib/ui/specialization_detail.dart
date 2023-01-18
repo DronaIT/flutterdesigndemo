@@ -64,17 +64,19 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_spe_detail),
       body: Stack(children: [
         specializationData?.isNotEmpty == true
-            ? Column(
-                children: [
-                  custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
-                  custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
-                  custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
-                  Visibility(child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16), visible: subjectData?.isNotEmpty == true),
-                  subjectData?.isNotEmpty == true
-                      ? Expanded(
-                          child: Container(
+            ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
+                    custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
+                    custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
+                    Visibility(visible: subjectData?.isNotEmpty == true, child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16)),
+                    subjectData?.isNotEmpty == true
+                        ? Container(
                             margin: const EdgeInsets.all(10),
                             child: ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
                                 itemCount: subjectData?.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Card(
@@ -85,7 +87,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold14), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                          children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                         ),
                                       ),
                                       onTap: () {
@@ -94,11 +96,11 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                     ),
                                   );
                                 }),
-                          ),
-                        )
-                      : Container(),
-                  // Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
-                ],
+                          )
+                        : Container(),
+                    // Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
+                  ],
+                ),
               )
             : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         Center(

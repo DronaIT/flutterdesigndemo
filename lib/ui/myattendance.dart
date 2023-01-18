@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/student_attendance_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/view_student_attendance.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -26,7 +27,8 @@ class _MyAttendanceState extends State<MyAttendance> {
   final apiRepository = getIt.get<ApiRepository>();
   String myEnrollmentNo = "", mySemester = "";
 
-  BaseLoginResponse<LoginFieldsResponse> data = BaseLoginResponse();
+  BaseLoginResponse<LoginFieldsResponse> dataByDate = BaseLoginResponse();
+  BaseLoginResponse<StudentAttendanceResponse> dataBySubject = BaseLoginResponse();
 
   List<ViewStudentAttendance>? studentAttendanceArray = [];
   List<ViewStudentAttendance>? studentAttendanceBySubjectArray = [];
@@ -36,6 +38,9 @@ class _MyAttendanceState extends State<MyAttendance> {
 
   String formattedDate = "";
   String enrollmentNo = "", name = "";
+
+  int totalLectures = 0, totalPresentLectures = 0;
+  double totalPresentPercentage = 0;
 
   @override
   void initState() {
@@ -53,7 +58,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       formattedDate = Get.arguments[1]["date"];
       name = Get.arguments[2]["name"];
     }
-    viewAttendance();
+    viewAttendanceByDate();
   }
 
   void checkCurrentData() {
@@ -62,7 +67,7 @@ class _MyAttendanceState extends State<MyAttendance> {
     formattedDate = formatter.format(now);
   }
 
-  void viewAttendance() async {
+  void viewAttendanceByDate() async {
     setState(() {
       isVisible = true;
     });
@@ -72,14 +77,15 @@ class _MyAttendanceState extends State<MyAttendance> {
     } else {
       query = "(${TableNames.TB_USERS_ENROLLMENT}='$myEnrollmentNo')";
     }
-    data = await apiRepository.loginApi(query);
-    if (data.records?.isNotEmpty == true) {
+    dataByDate = await apiRepository.loginApi(query);
+    if (dataByDate.records?.isNotEmpty == true) {
       setState(() {
         isVisible = false;
       });
       studentAttendanceArray?.clear();
       studentAttendanceBySubjectArray?.clear();
       checkPresentAbsentDetailByDate();
+      checkTotalPercentage();
     } else {
       setState(() {
         isVisible = false;
@@ -99,8 +105,8 @@ class _MyAttendanceState extends State<MyAttendance> {
     } else {
       query = "SEARCH('${myEnrollmentNo.toUpperCase()}', ARRAYJOIN(${TableNames.CLM_ENROLLMENT_NUMBERS}), 0)";
     }
-    var data = await apiRepository.getStudentAttendanceApi(query);
-    if (data.records?.isNotEmpty == true) {
+    dataBySubject = await apiRepository.getStudentAttendanceApi(query);
+    if (dataBySubject.records?.isNotEmpty == true) {
       setState(() {
         isVisible = false;
       });
@@ -119,18 +125,18 @@ class _MyAttendanceState extends State<MyAttendance> {
   String _isDate = "";
 
   void checkPresentAbsentDetailByDate() {
-    if (data.records!.isNotEmpty) {
-      if (data.records != null && data.records!.first.fields != null && data.records!.first.fields!.presentLectureDate != null) {
-        for (int i = 0; i < data.records!.first.fields!.presentLectureDate!.length; i++) {
-          if (formattedDate == data.records!.first.fields!.presentLectureDate![i]) {
-            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: data.records!.first.fields!.presentSubjectId![i], subject_title: data.records!.first.fields!.presentSubjectTitle![i], lecture_date: data.records!.first.fields!.presentLectureDate![i], status: 1));
+    if (dataByDate.records!.isNotEmpty) {
+      if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.presentLectureDate != null) {
+        for (int i = 0; i < dataByDate.records!.first.fields!.presentLectureDate!.length; i++) {
+          if (formattedDate == dataByDate.records!.first.fields!.presentLectureDate![i]) {
+            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.presentSubjectId![i], subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.presentLectureDate![i], status: 1));
           }
         }
       }
-      if (data.records != null && data.records!.first.fields != null && data.records!.first.fields!.absentLectureDate != null) {
-        for (int i = 0; i < data.records!.first.fields!.absentLectureDate!.length; i++) {
-          if (formattedDate == data.records!.first.fields!.absentLectureDate![i]) {
-            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: data.records!.first.fields!.absentSubjectId![i], subject_title: data.records!.first.fields!.absentSubjectTitle![i], lecture_date: data.records!.first.fields!.absentLectureDate![i], status: 0));
+      if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.absentLectureDate != null) {
+        for (int i = 0; i < dataByDate.records!.first.fields!.absentLectureDate!.length; i++) {
+          if (formattedDate == dataByDate.records!.first.fields!.absentLectureDate![i]) {
+            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.absentSubjectId![i], subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.absentLectureDate![i], status: 0));
           }
         }
       }
@@ -138,8 +144,9 @@ class _MyAttendanceState extends State<MyAttendance> {
   }
 
   void checkPresentAbsentDetailBySubject() {
-    if (data.records!.isNotEmpty) {
-      var records = data.records?.first.fields;
+    var total_lecture = 0, present_lecture = 0, absent_lecture = 0;
+    if (dataByDate.records!.isNotEmpty) {
+      var records = dataByDate.records?.first.fields;
       if (records != null && records.presentSubjectId != null) {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
           var isAdded = false;
@@ -179,12 +186,81 @@ class _MyAttendanceState extends State<MyAttendance> {
         }
       }
     }
+    for (int i = 0; i < studentAttendanceBySubjectArray!.length; i++) {
+      total_lecture += studentAttendanceBySubjectArray![i].total_lectures;
+      present_lecture += studentAttendanceBySubjectArray![i].present_lectures;
+      absent_lecture += studentAttendanceBySubjectArray![i].absent_lectures;
+    }
+
+    setState(() {
+      totalLectures = total_lecture;
+      totalPresentLectures = present_lecture;
+      totalPresentPercentage = ((present_lecture * 100) / total_lecture);
+    });
+  }
+
+  void checkTotalPercentage() {
+    var total_lecture = 0, present_lecture = 0, absent_lecture = 0;
+    List<ViewStudentAttendance>? studentAttendanceBySubjectArray = [];
+
+    if (dataByDate.records!.isNotEmpty) {
+      var records = dataByDate.records?.first.fields;
+      if (records != null && records.presentSubjectId != null) {
+        for (int i = 0; i < records.presentSubjectId!.length; i++) {
+          var isAdded = false;
+          for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
+            if (studentAttendanceBySubjectArray[j].subject_id == records.presentSubjectId![i]) {
+              isAdded = true;
+              studentAttendanceBySubjectArray[j].total_lectures += 1;
+              studentAttendanceBySubjectArray[j].present_lectures += 1;
+              break;
+            }
+          }
+          if (!isAdded) {
+            var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
+            attendanceData.total_lectures += 1;
+            attendanceData.present_lectures += 1;
+            studentAttendanceBySubjectArray.add(attendanceData);
+          }
+        }
+      }
+      if (records != null && records.absentSubjectId != null) {
+        for (int i = 0; i < records.absentSubjectId!.length; i++) {
+          var isAdded = false;
+          for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
+            if (studentAttendanceBySubjectArray[j].subject_id == records.absentSubjectId![i]) {
+              isAdded = true;
+              studentAttendanceBySubjectArray[j].total_lectures += 1;
+              studentAttendanceBySubjectArray[j].absent_lectures += 1;
+              break;
+            }
+          }
+          if (!isAdded) {
+            var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
+            attendanceData.total_lectures += 1;
+            attendanceData.absent_lectures += 1;
+            studentAttendanceBySubjectArray.add(attendanceData);
+          }
+        }
+      }
+    }
+    for (int i = 0; i < studentAttendanceBySubjectArray.length; i++) {
+      total_lecture += studentAttendanceBySubjectArray[i].total_lectures;
+      present_lecture += studentAttendanceBySubjectArray[i].present_lectures;
+      absent_lecture += studentAttendanceBySubjectArray[i].absent_lectures;
+    }
+
+    setState(() {
+      totalLectures = total_lecture;
+      totalPresentLectures = present_lecture;
+      totalPresentPercentage = ((present_lecture * 100) / total_lecture);
+    });
   }
 
   void checkPresentAbsentDetailBySemester() {
-    if (data.records != null && data.records!.first.fields != null) {
-      for (int i = 0; i < data.records!.length; i++) {
-        if (mySemester == data.records![i].fields!.semester!) {}
+    if (dataByDate.records != null && dataByDate.records!.first.fields != null) {
+      for (int i = 0; i < dataByDate.records!.length; i++) {
+        if (mySemester == dataByDate.records![i].fields!.semester!) {}
       }
     }
   }
@@ -215,105 +291,117 @@ class _MyAttendanceState extends State<MyAttendance> {
             ),
           ],
         ),
-        body: Stack(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: studentAttendanceArray!.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: studentAttendanceArray?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            elevation: 5,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      custom_text(
-                                        text: studentAttendanceArray![index].subject_title!,
-                                        alignment: Alignment.topLeft,
-                                        textStyles: blackTextSemiBold12,
-                                        bottomValue: 5,
+        body: SingleChildScrollView(
+          child: Column(children: [
+            custom_text(text: name, alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            custom_text(text: "Total Lectures : $totalLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            custom_text(text: "Total Present Lectures : $totalPresentLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            custom_text(text: "Total Present : $totalPresentPercentage%", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: studentAttendanceArray!.isNotEmpty
+                      ? ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: studentAttendanceArray?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                                elevation: 5,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          custom_text(
+                                            text: studentAttendanceArray![index].subject_title!,
+                                            alignment: Alignment.topLeft,
+                                            textStyles: blackTextSemiBold12,
+                                            bottomValue: 5,
+                                          ),
+                                          custom_text(
+                                            text: formatterShow.format(DateTime.parse(studentAttendanceArray![index].lecture_date!)),
+                                            alignment: Alignment.topLeft,
+                                            textStyles: blackTextSemiBold12,
+                                            topValue: 5,
+                                          ),
+                                        ],
                                       ),
-                                      custom_text(
-                                        text: formatterShow.format(DateTime.parse(studentAttendanceArray![index].lecture_date!)),
-                                        alignment: Alignment.topLeft,
-                                        textStyles: blackTextSemiBold12,
-                                        topValue: 5,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.all(10),
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      primary: studentAttendanceArray![index].status == 1 ? colors_name.presentColor : colors_name.errorColor,
-                                      padding: const EdgeInsets.all(10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      elevation: 7.0,
                                     ),
-                                    child: Text(
-                                      studentAttendanceArray![index].status == 1 ? strings_name.str_present : strings_name.str_absent,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
+                                    Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          primary: studentAttendanceArray![index].status == 1 ? colors_name.presentColor : colors_name.errorColor,
+                                          padding: const EdgeInsets.all(10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          elevation: 7.0,
+                                        ),
+                                        child: Text(
+                                          studentAttendanceArray![index].status == 1 ? strings_name.str_present : strings_name.str_absent,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ));
-                      })
-                  : Container(),
+                                  ],
+                                ));
+                          })
+                      : Container(),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: studentAttendanceBySubjectArray!.isNotEmpty
+                      ? ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: studentAttendanceBySubjectArray?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                                elevation: 5,
+                                child: Column(
+                                  children: [
+                                    custom_text(
+                                      text: studentAttendanceBySubjectArray![index].subject_title!,
+                                      alignment: Alignment.topLeft,
+                                      textStyles: blackTextSemiBold16,
+                                      bottomValue: 5,
+                                    ),
+                                    custom_text(
+                                      text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
+                                      alignment: Alignment.topLeft,
+                                      textStyles: blackTextSemiBold12,
+                                      bottomValue: 0,
+                                    ),
+                                    custom_text(
+                                      text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
+                                      alignment: Alignment.topLeft,
+                                      textStyles: blackTextSemiBold12,
+                                      bottomValue: 0,
+                                    ),
+                                    custom_text(
+                                      text: "Present : ${(studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures}%",
+                                      alignment: Alignment.topLeft,
+                                      textStyles: blackTextSemiBold12,
+                                      bottomValue: 10,
+                                    ),
+                                  ],
+                                ));
+                          })
+                      : Container(),
+                ),
+                (studentAttendanceArray.isBlank == true && studentAttendanceBySubjectArray.isBlank == true) ? Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)) : Container(),
+                Center(
+                  child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+                )
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: studentAttendanceBySubjectArray!.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: studentAttendanceBySubjectArray?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                custom_text(
-                                  text: studentAttendanceBySubjectArray![index].subject_title!,
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold16,
-                                  bottomValue: 5,
-                                ),
-                                custom_text(
-                                  text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold12,
-                                  bottomValue: 0,
-                                ),
-                                custom_text(
-                                  text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold12,
-                                  bottomValue: 0,
-                                ),
-                                custom_text(
-                                  text: "Present : ${(studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures}%",
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold12,
-                                  bottomValue: 10,
-                                ),
-                              ],
-                            ));
-                      })
-                  : Container(),
-            ),
-            (studentAttendanceArray.isBlank == true && studentAttendanceBySubjectArray.isBlank == true) ? Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)) : Container(),
-            Center(
-              child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
-            )
-          ],
+          ]),
         ),
       ),
     );
@@ -377,7 +465,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                                 setState(() {
                                   var formatter = DateFormat('yyyy-MM-dd');
                                   formattedDate = formatter.format(pickedDate);
-                                  viewAttendance();
+                                  viewAttendanceByDate();
                                 });
                                 Navigator.pop(context);
                               });

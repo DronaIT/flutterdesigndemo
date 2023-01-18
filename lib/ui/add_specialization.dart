@@ -145,6 +145,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
                     ),
                     subjectData!.isNotEmpty
                         ? ListView.builder(
+                            primary: false,
                             shrinkWrap: true,
                             itemCount: subjectData?.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -158,7 +159,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
                                       padding: const EdgeInsets.all(8),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                        children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                       ),
                                     ),
                                     onTap: () {

@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -67,41 +68,39 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
         }
       }
     }
-    var data = Get.arguments;
+    BaseApiResponseWithSerializable<ViewEmployeeResponse> data = Get.arguments;
     nameController.text = data.fields!.employeeName!;
-    phoneController.text = data.fields!.mobileNumber;
-    emailController.text = data.fields!.email;
-    addressController.text = data.fields!.address;
-    cityController.text = data.fields!.city;
-    gender = data.fields!.gender;
-    employeeCode = data.fields!.employeeCode;
-    cityController.text = data.fields!.city;
+    phoneController.text = data.fields!.mobileNumber!;
+    emailController.text = data.fields!.email!;
+    addressController.text = data.fields!.address ?? "";
+    cityController.text = data.fields!.city ?? "";
+    gender = data.fields!.gender ?? "";
+    employeeCode = data.fields!.employeeCode!;
+    cityController.text = data.fields!.city ?? "";
 
-    pinCodeController.text = data.fields!.pin_code;
-    spouseController.text = data.fields!.spouse_mobile_number;
-    parentController.text = data.fields!.parents_mobile_number;
+    pinCodeController.text = data.fields!.pin_code ?? "";
+    spouseController.text = data.fields!.spouse_mobile_number ?? "";
+    parentController.text = data.fields!.parents_mobile_number ?? "";
 
-    for( var i = 0 ; i < roleResponseArray!.length; i++){
-      if(data.fields!.roleIdFromRoleIds[0] == roleResponseArray![i].fields!.roleId){
-         setState(() {
-            roleResponse = roleResponseArray![i];
-            roleValue =roleResponseArray![i].fields!.roleId!.toString();
-          });
-          break;
+    for (var i = 0; i < roleResponseArray!.length; i++) {
+      if (data.fields!.roleIdFromRoleIds![0] == roleResponseArray![i].fields!.roleId) {
+        setState(() {
+          roleResponse = roleResponseArray![i];
+          roleValue = roleResponseArray![i].fields!.roleId!.toString();
+        });
+        break;
       }
     }
-    for( var i = 0 ; i < hubResponseArray!.length; i++){
-      if(data.fields!.hubIdFromHubIds[0] == hubResponseArray![i].fields!.hubId){
+    for (var i = 0; i < hubResponseArray!.length; i++) {
+      if (data.fields!.hubIdFromHubIds![0] == hubResponseArray![i].fields!.hubId) {
         setState(() {
           hubResponse = hubResponseArray![i];
-          hubValue =hubResponseArray![i].fields!.hubId!.toString();
+          hubValue = hubResponseArray![i].fields!.hubId!.toString();
         });
         break;
       }
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +118,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                   children: [
                     SizedBox(height: 10.h),
                     custom_text(
-                      text: strings_name.str_employee_name +" ("+employeeCode+")",
+                      text: strings_name.str_employee_name + " (" + employeeCode + ")",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
@@ -142,7 +141,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       maxLength: 10,
                       topValue: 5,
                       readOnly: true,
-                      enabled: false ,
+                      enabled: false,
                     ),
                     SizedBox(height: 5.h),
                     custom_text(
@@ -157,7 +156,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       controller: emailController,
                       topValue: 2,
                     ),
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_address,
@@ -170,8 +168,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       controller: addressController,
                       topValue: 2,
                     ),
-
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_city,
@@ -198,7 +194,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       maxLength: 6,
                       topValue: 2,
                     ),
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_parent_number,
@@ -212,7 +207,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       maxLength: 10,
                       topValue: 2,
                     ),
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_spouse_number,
@@ -226,8 +220,6 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       maxLength: 10,
                       topValue: 2,
                     ),
-
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_gender,
@@ -377,30 +369,29 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                           Utils.showSnackBar(context, strings_name.str_empty_hub);
                         } else {
                           Map<String, dynamic> updateEmployee = {
-                            "employee_name" : nameController.text.toString(),
-                            "address" : addressController.text.toString(),
-                            "email" : emailController.text.toString(),
-                            "gender" : gender,
-                            "city" : cityController.text.toString(),
-                            "role_ids" : Utils.getRoleId(roleValue)!.split(","),
-                            "hub_ids" : Utils.getHubId(hubValue)!.split(","),
-                            "pin_code" : pinCodeController.text.toString(),
-                            "parents_mobile_number" : parentController.text.toString(),
-                            "spouse_mobile_number" : spouseController.text.toString(),
-
+                            "employee_name": nameController.text.toString(),
+                            "address": addressController.text.toString(),
+                            "email": emailController.text.toString(),
+                            "gender": gender,
+                            "city": cityController.text.toString(),
+                            "role_ids": Utils.getRoleId(roleValue)!.split(","),
+                            "hub_ids": Utils.getHubId(hubValue)!.split(","),
+                            "pin_code": pinCodeController.text.toString(),
+                            "parents_mobile_number": parentController.text.toString(),
+                            "spouse_mobile_number": spouseController.text.toString(),
                           };
                           setState(() {
                             isVisible = true;
                           });
-                          var updateEmployees = await apiRepository.updateEmployeeApi(updateEmployee,Get.arguments.id);
-                          if(updateEmployees != null){
+                          var updateEmployees = await apiRepository.updateEmployeeApi(updateEmployee, Get.arguments.id);
+                          if (updateEmployees != null) {
                             setState(() {
                               isVisible = false;
                             });
                             Utils.showSnackBar(context, strings_name.str_employee_update);
                             await Future.delayed(const Duration(milliseconds: 2000));
                             Get.back(closeOverlays: true, result: true);
-                          }else{
+                          } else {
                             setState(() {
                               isVisible = false;
                             });

@@ -67,4 +67,27 @@ class TableNames {
   static const PERMISSION_ID_TAKE_ATTENDANCE = "DP0301";
   static const PERMISSION_ID_VIEWSELF_ATTENDANCE = "DP0302";
   static const PERMISSION_ID_VIEW_OTHERS_ATTENDANCE = "DP0303";
+
+  static const EXCEL_COL_NAME = "name";
+  static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
+  static const EXCEL_COL_GENDER = "gender";
+  static const EXCEL_COL_CITY = "city";
+  static const EXCEL_COL_ADDRESS = "address";
+  static const EXCEL_COL_PIN_CODE = "pin_code";
+  static const EXCEL_COL_HUB_IDS = "hub_ids";
+  static const EXCEL_COL_SPECIALIZATION_IDS = "specialization_ids";
+  static const EXCEL_COL_JOINING_YEAR = "joining_year";
+  static const EXCEL_COL_EMAIL = "email";
+  static const EXCEL_COL_SEMESTER = "semester";
+  static const EXCEL_COL_DIVISION = "division";
+  static const EXCEL_COL_SR_NUMBER = "sr_number";
+  static const EXCEL_COL_BIRTHDATE = "birthdate(dd/mm/yyyy)";
+  static const EXCEL_COL_AADHAR_CARD_NUMBER = "aadhar_card_number";
+  static const EXCEL_COL_CASTE = "caste";
+  static const EXCEL_COL_HSC_SCHOOL = "hsc_school";
+  static const EXCEL_COL_HSC_SCHOOL_CITY = "hsc_school_city";
+  static const EXCEL_COL_HSC_PERCENTAGE = "hsc_percentage";
+  static const EXCEL_COL_MOTHER_NAME = "mother_name";
+  static const EXCEL_COL_MOTHER_NUMBER = "mother_number";
+  static const EXCEL_COL_FATHER_NUMBER = "father_number";
 }

@@ -80,7 +80,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                                 padding: const EdgeInsets.all(15),
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (subjectData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                                    children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold16)), if (subjectData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
                               ),
                               onTap: () {
                                 setState(() {

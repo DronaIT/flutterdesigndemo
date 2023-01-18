@@ -5,7 +5,6 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -80,7 +79,7 @@ class _TopicSelectionState extends State<TopicSelection> {
                               padding: const EdgeInsets.all(15),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${topicData![index].fields!.topicTitle}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (topicData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                                  children: [Expanded(child: Text("${topicData![index].fields!.topicTitle}", textAlign: TextAlign.start, style: blackTextSemiBold16)), if (topicData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
                             ),
                             onTap: () {
                               setState(() {

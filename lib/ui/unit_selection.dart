@@ -81,7 +81,7 @@ class _UnitSelectionState extends State<UnitSelection> {
                               padding: const EdgeInsets.all(15),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (unitsData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                                  children: [Expanded(child: Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.start, style: blackTextSemiBold16)), if (unitsData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
                             ),
                             onTap: () {
                               setState(() {

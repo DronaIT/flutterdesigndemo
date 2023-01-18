@@ -14,15 +14,28 @@ class ViewEmployeeResponse {
   String? employeeCode;
   String? createdOn;
   String? updatedOn;
-  String? parents_mobile_number;
-  String? spouse_mobile_number = " ";
-  String? pin_code;
-  ViewEmployeeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.mobileNumber,
-    this.email, this.employeeName, this.password, this.hubIds, this.roleIdFromRoleIds,
-    this.hubIdFromHubIds, this.employeeCode, this.createdOn, this.address, this.updatedOn,
-    this.parents_mobile_number,this.spouse_mobile_number, this.pin_code
-
-  });
+  String? parents_mobile_number = "";
+  String? spouse_mobile_number = "";
+  String? pin_code = "";
+  ViewEmployeeResponse(
+      {this.gender,
+      this.employeeId,
+      this.city,
+      this.roleIds,
+      this.mobileNumber,
+      this.email,
+      this.employeeName,
+      this.password,
+      this.hubIds,
+      this.roleIdFromRoleIds,
+      this.hubIdFromHubIds,
+      this.employeeCode,
+      this.createdOn,
+      this.address,
+      this.updatedOn,
+      this.parents_mobile_number,
+      this.spouse_mobile_number,
+      this.pin_code});
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];

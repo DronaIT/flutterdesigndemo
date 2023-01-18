@@ -46,8 +46,7 @@ class _ViewStudentState extends State<ViewStudent> {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
-    canUpdateStudent = Get.arguments ;
-    print("chech=>${canUpdateStudent}");
+    canUpdateStudent = Get.arguments;
   }
 
   @override
@@ -153,46 +152,43 @@ class _ViewStudentState extends State<ViewStudent> {
                             itemBuilder: (BuildContext context, int index) {
                               return Card(
                                 elevation: 5,
-                                child:
-                                Row(
+                                child: Row(
                                   children: [
                                     Flexible(
                                       child: Column(
                                         children: [
                                           custom_text(text: "${viewStudent![index].fields!.name!} (${viewStudent![index].fields!.enrollmentNumber!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                          Visibility(visible: viewStudent![index].fields!.email != null ,
-                                              child: custom_text(text: viewStudent![index].fields!.email != null ? viewStudent![index].fields!.email! : "",
-                                                  textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
+                                          Visibility(visible: viewStudent![index].fields!.email != null, child: custom_text(text: viewStudent![index].fields!.email != null ? viewStudent![index].fields!.email! : "", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
                                           custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                         ],
                                       ),
                                     ),
-                                    canUpdateStudent ? GestureDetector(
-                                        onTap: () async {
-                                          var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index].fields?.mobileNumber);
-                                          if(response){
-                                            var query = "AND(${TableNames.CLM_HUB_IDS}='${hubValue}',${TableNames.CLM_SPE_IDS}='${speValue}')";
-                                            setState(() {
-                                              isVisible = true;
-                                            });
-                                            var data = await apiRepository.loginApi(query);
-                                            if (data.records!.isNotEmpty) {
-                                              setState(() {
-                                                isVisible = false;
-                                                viewStudent = data.records;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                isVisible = false;
-                                                viewStudent = [];
-                                              });
-                                            }
-                                          }
-
-                                        },
-                                        child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit))) :Container()
+                                    canUpdateStudent
+                                        ? GestureDetector(
+                                            onTap: () async {
+                                              var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index].fields?.mobileNumber);
+                                              if (response) {
+                                                var query = "AND(${TableNames.CLM_HUB_IDS}='${hubValue}',${TableNames.CLM_SPE_IDS}='${speValue}')";
+                                                setState(() {
+                                                  isVisible = true;
+                                                });
+                                                var data = await apiRepository.loginApi(query);
+                                                if (data.records!.isNotEmpty) {
+                                                  setState(() {
+                                                    isVisible = false;
+                                                    viewStudent = data.records;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    isVisible = false;
+                                                    viewStudent = [];
+                                                  });
+                                                }
+                                              }
+                                            },
+                                            child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
+                                        : Container()
                                   ],
-
                                 ),
                               );
                             }),

@@ -84,64 +84,62 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
       if (data.records?.isNotEmpty == true) {
         setState(() {
           fromEdit = true;
-          if( data.records?.first.fields != null){
+          if (data.records?.first.fields != null) {
             addStudentId = data.records?.first.id;
-            nameController.text = data.records!.first.fields!.name.toString() ;
-            emailController.text = data.records!.first.fields!.email.toString() ;
-            phoneController.text = data.records!.first.fields!.mobileNumber.toString() ;
-            cityController.text = data.records!.first.fields!.city.toString() ;
-            addressController.text = data.records!.first.fields!.address.toString() ;
-            pincodeController.text = data.records!.first.fields!.pin_code.toString() ;
-            joingYearController.text = data.records!.first.fields!.joiningYear.toString() ;
-            srnumberController.text = data.records!.first.fields!.sr_number.toString() ;
-            birthdateController.text = data.records!.first.fields!.birthdate.toString() ;
-            aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number.toString() ;
-            casteController.text = data.records!.first.fields!.caste.toString() ;
-            hscpercentageController.text = data.records!.first.fields!.hsc_percentage.toString() ;
-            hscschoolcityController.text = data.records!.first.fields!.hsc_school_city.toString() ;
-            hscschoolController.text = data.records!.first.fields!.hsc_school.toString() ;
-            mothernumberController.text = data.records!.first.fields!.mother_number.toString() ;
-            fathernumberController.text = data.records!.first.fields!.father_number.toString() ;
-            mothernameController.text = data.records!.first.fields!.mother_name.toString() ;
-            for( var i = 0 ; i < speResponseArray!.length; i++){
-              if(data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId){
+            nameController.text = data.records!.first.fields!.name ?? "";
+            emailController.text = data.records!.first.fields!.email ?? "";
+            phoneController.text = data.records!.first.fields!.mobileNumber ?? "";
+            cityController.text = data.records!.first.fields!.city ?? "";
+            addressController.text = data.records!.first.fields!.address ?? "";
+            pincodeController.text = data.records!.first.fields!.pin_code ?? "";
+            joingYearController.text = data.records!.first.fields!.joiningYear ?? "";
+            srnumberController.text = data.records!.first.fields!.sr_number ?? "";
+            birthdateController.text = data.records!.first.fields!.birthdate ?? "";
+            aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number ?? "";
+            casteController.text = data.records!.first.fields!.caste ?? "";
+            hscpercentageController.text = data.records!.first.fields!.hsc_percentage ?? "";
+            hscschoolcityController.text = data.records!.first.fields!.hsc_school_city ?? "";
+            hscschoolController.text = data.records!.first.fields!.hsc_school ?? "";
+            mothernumberController.text = data.records!.first.fields!.mother_number ?? "";
+            fathernumberController.text = data.records!.first.fields!.father_number ?? "";
+            mothernameController.text = data.records!.first.fields!.mother_name ?? "";
+            for (var i = 0; i < speResponseArray!.length; i++) {
+              if (data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId) {
                 setState(() {
                   speResponse = speResponseArray![i];
-                  speValue =speResponseArray![i].fields!.specializationId!.toString();
+                  speValue = speResponseArray![i].fields!.specializationId!.toString();
                 });
                 break;
               }
             }
-            for( var i = 0 ; i < hubResponseArray!.length; i++){
-              if(data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId){
+            for (var i = 0; i < hubResponseArray!.length; i++) {
+              if (data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId) {
                 setState(() {
                   hubResponse = hubResponseArray![i];
-                  hubValue =hubResponseArray![i].fields!.hubId!.toString();
+                  hubValue = hubResponseArray![i].fields!.hubId!.toString();
                 });
                 break;
               }
             }
 
-            for( var i = 0 ; i < semesterResponseArray.length; i++){
-              if(data.records!.first.fields!.semester == semesterResponseArray[i].toString()){
+            for (var i = 0; i < semesterResponseArray.length; i++) {
+              if (data.records!.first.fields!.semester == semesterResponseArray[i].toString()) {
                 setState(() {
-                  semesterValue =semesterResponseArray[i];
+                  semesterValue = semesterResponseArray[i];
                 });
                 break;
               }
             }
-            for( var i = 0 ; i < divisionResponseArray.length; i++){
-              if(data.records!.first.fields!.division == divisionResponseArray[i].toString()){
+            for (var i = 0; i < divisionResponseArray.length; i++) {
+              if (data.records!.first.fields!.division == divisionResponseArray[i].toString()) {
                 setState(() {
-                  divisionValue =divisionResponseArray[i];
+                  divisionValue = divisionResponseArray[i];
                 });
                 break;
               }
             }
-
           }
         });
-
       } else {
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
@@ -149,11 +147,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
         isVisible = false;
       });
     }
-
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +500,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                           width: viewWidth,
                           child: DropdownButtonFormField<int>(
-                            value:  semesterValue,
+                            value: semesterValue,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,
@@ -542,7 +536,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           width: viewWidth,
                           child: DropdownButtonFormField<String>(
                             elevation: 16,
-                            value:  divisionValue,
+                            value: divisionValue,
                             style: blackText16,
                             focusColor: Colors.white,
                             onChanged: (String? newValue) {
@@ -701,7 +695,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.hscSchoolCity = hscschoolcityController.text.trim().toString();
                         response.hscPercentage = hscpercentageController.text.trim().toString();
                         response.srNumber = srnumberController.text.trim().toString();
-                        if(!fromEdit){
+                        if (!fromEdit) {
                           var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
                           var checkMobile = await addStudentRepository.loginApi(query);
                           if (checkMobile.records?.isEmpty == true) {
@@ -733,26 +727,24 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                               isVisible = false;
                             });
                           }
-                        }else{
+                        } else {
                           Map<String, CreateStudentRequest> map = Map();
                           map["fields"] = response;
-                          var updateStudent = await apiRepository.updateStudentApi(map,addStudentId);
-                          if(updateStudent != null){
+                          var updateStudent = await apiRepository.updateStudentApi(map, addStudentId);
+                          if (updateStudent != null) {
                             setState(() {
                               isVisible = false;
                             });
                             Utils.showSnackBar(context, strings_name.str_student_update);
                             await Future.delayed(const Duration(milliseconds: 2000));
                             Get.back(closeOverlays: true, result: true);
-                          }else{
+                          } else {
                             setState(() {
                               isVisible = false;
                             });
                             Utils.showSnackBar(context, strings_name.str_something_wrong);
                           }
                         }
-
-
                       }
                     },
                   )
