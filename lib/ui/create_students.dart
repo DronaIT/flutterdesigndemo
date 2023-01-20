@@ -247,7 +247,7 @@ class _AddStudent extends State<CreateStudent> {
                 request.mobileNumber = excel.tables[table]?.rows[row][col]?.value.toString().replaceAll(" ", "").replaceAll("-", "");
                 break;
               case TableNames.EXCEL_COL_GENDER:
-                request.gender = toBeginningOfSentenceCase(excel.tables[table]?.rows[row][col]?.value.toString());
+                request.gender = capitalize(excel.tables[table]?.rows[row][col]?.value.toString());
                 break;
               case TableNames.EXCEL_COL_CITY:
                 request.city = excel.tables[table]?.rows[row][col]?.value.toString();
@@ -316,9 +316,6 @@ class _AddStudent extends State<CreateStudent> {
             map["fields"] = request;
 
             list.add(map);
-          } else {
-            list.clear();
-            break;
           }
         }
       }
@@ -337,4 +334,6 @@ class _AddStudent extends State<CreateStudent> {
       FilePicker.platform.clearTemporaryFiles();
     }
   }
+
+  String capitalize(String? s) => s![0].toUpperCase() + s.substring(1).toLowerCase();
 }

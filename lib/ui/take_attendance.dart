@@ -262,6 +262,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                       child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
                                         value: subjectResponse,
                                         elevation: 16,
+                                        isExpanded: true,
                                         style: blackText16,
                                         focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
@@ -306,6 +307,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                       child: DropdownButtonFormField<BaseApiResponseWithSerializable<UnitsResponse>>(
                                         value: unitResponse,
                                         elevation: 16,
+                                        isExpanded: true,
                                         style: blackText16,
                                         focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<UnitsResponse>? newValue) {
@@ -350,6 +352,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                       child: DropdownButtonFormField<BaseApiResponseWithSerializable<TopicsResponse>>(
                                         value: topicResponse,
                                         elevation: 16,
+                                        isExpanded: true,
                                         style: blackText16,
                                         focusColor: Colors.white,
                                         onChanged: (BaseApiResponseWithSerializable<TopicsResponse>? newValue) {
