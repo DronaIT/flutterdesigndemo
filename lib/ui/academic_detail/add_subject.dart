@@ -195,6 +195,7 @@ class _AddSubjectState extends State<AddSubject> {
                 ),
                 unitsData!.isNotEmpty
                     ? ListView.builder(
+                        primary: false,
                         shrinkWrap: true,
                         itemCount: unitsData?.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -206,7 +207,7 @@ class _AddSubjectState extends State<AddSubject> {
                                 padding: const EdgeInsets.all(15),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                  children: [Expanded(child: Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                 ),
                               ),
                               onTap: () {

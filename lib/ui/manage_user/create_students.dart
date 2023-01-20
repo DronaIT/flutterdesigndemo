@@ -274,7 +274,7 @@ class _AddStudent extends State<CreateStudent> {
                 request.semester = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_DIVISION:
-                request.division = excel.tables[table]?.rows[row][col]?.value.toString();
+                request.division = capitalizeFL(excel.tables[table]?.rows[row][col]?.value.toString());
                 break;
               case TableNames.EXCEL_COL_SR_NUMBER:
                 request.srNumber = excel.tables[table]?.rows[row][col]?.value.toString();
@@ -336,4 +336,19 @@ class _AddStudent extends State<CreateStudent> {
   }
 
   String capitalize(String? s) => s![0].toUpperCase() + s.substring(1).toLowerCase();
+
+  String capitalizeFL(String? s) {
+    if (equalsIgnoreCase(s, TableNames.DIVISION_A)) {
+      return TableNames.DIVISION_A;
+    } else if (equalsIgnoreCase(s, TableNames.DIVISION_B)) {
+      return TableNames.DIVISION_B;
+    } else if (equalsIgnoreCase(s, TableNames.DIVISION_C)) {
+      return TableNames.DIVISION_C;
+    } else if (equalsIgnoreCase(s, TableNames.DIVISION_D)) {
+      return TableNames.DIVISION_D;
+    }
+    return s.toString();
+  }
+
+  bool equalsIgnoreCase(String? a, String? b) => (a == null && b == null) || (a != null && b != null && a.toLowerCase() == b.toLowerCase());
 }
