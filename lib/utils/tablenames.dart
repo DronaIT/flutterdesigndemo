@@ -9,6 +9,7 @@ class TableNames {
   static const MODULE_SETUP_COLLAGE = "DM02";
   static const MODULE_ACADEMIC_DETAIL = "DM05";
   static const MODULE_ATTENDANCE = "DM03";
+  static const MODULE_PLACEMENT = "DM04";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -67,6 +68,14 @@ class TableNames {
   static const PERMISSION_ID_TAKE_ATTENDANCE = "DP0301";
   static const PERMISSION_ID_VIEWSELF_ATTENDANCE = "DP0302";
   static const PERMISSION_ID_VIEW_OTHERS_ATTENDANCE = "DP0303";
+
+
+
+  static const PERMISSION_ID_COMPANY_APPROCH = "DP0401";
+  static const PERMISSION_ID_CREATE_COMPANY = "DP0402";
+  static const PERMISSION_ID_JOBALERTS = "DP0403";
+  static const PERMISSION_ID_APPLY_INTERNSHIP = "DP0404";
+  static const PERMISSION_ID_UPDATE_INTERNSHIP = "DP0405";
 
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";

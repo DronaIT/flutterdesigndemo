@@ -22,6 +22,7 @@ class custom_edittext extends StatefulWidget {
   final int minLines;
   final bool isPassword;
   final TextCapitalization capitalization;
+  final TextAlign textalign;
 
   custom_edittext(
       {this.labelText = "",
@@ -41,7 +42,9 @@ class custom_edittext extends StatefulWidget {
       this.maxLines = 1,
       this.minLines = 1,
       this.capitalization = TextCapitalization.sentences,
-      this.fontWeight = FontWeight.w700});
+      this.fontWeight = FontWeight.w700,
+      this.textalign= TextAlign.start
+      });
 
   @override
   State<custom_edittext> createState() => _customState();
@@ -61,6 +64,7 @@ class _customState extends State<custom_edittext> {
         enabled: widget.enabled,
         readOnly: widget.readOnly,
         maxLines: widget.maxLines,
+        textAlign: widget.textalign,
         textCapitalization: widget.capitalization,
         cursorColor: colors_name.colorPrimary,
         inputFormatters: [

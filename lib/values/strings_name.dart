@@ -250,4 +250,23 @@ class strings_name {
 
   static const String str_parent_number = "Parent number";
   static const String str_spouse_number = "Spouse number";
+
+  static const String str_company_approch = "Company approach";
+  static const String str_name_of_company = "Name of company";
+  static const String str_type_of_inducstry = "Type of industry/sector";
+  static const String str_contact_person = "Contact person's name";
+  static const String str_contact_person_number = "Contact person's number";
+  static const String str_contact_person_wanumber = "Contact person's whatsapp no.";
+  static const String str_dashboard = "Dashboard";
+  static const String str_create_company = "Create company";
+  static const String str_create_job_alert = "Create job alert";
+  static const String str_apply_internship = "Apply for Internships";
+  static const String str_update_internship = "Update internship";
+
+
+  static const String str_empty_company_name = "Please enter company name";
+  static const String str_empty_type_of = "Please enter type of industry";
+  static const String str_contact_person_name = "Please enter name of contact person";
+  static const String str_contact_person_num = "Please enter number of contact person";
+  static const String str_contact_person_wnum = "Please enter Whatsapp no. of contact person";
 }
