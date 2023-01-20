@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/ui/academic_detail/academic_list.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentucation/login.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
+import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
 import 'package:flutterdesigndemo/ui/setting.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -163,6 +164,8 @@ class _HomeState extends State<Home> {
                                           Get.to(const SetupCollage());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
                                           Get.to(const Attendance());
+                                        }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
+                                          Get.to(const PlacementDashboard());
                                         }
                                       },
                                     ),

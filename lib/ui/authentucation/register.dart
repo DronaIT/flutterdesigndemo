@@ -55,19 +55,19 @@ class _RegisterState extends State<Register> {
                     ),
                     Row(
                       children: [
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
+                        Expanded(
+                          flex: 3,
+                          child: Center(
                           child: custom_edittext(
                             type: TextInputType.phone,
                             textInputAction: TextInputAction.next,
                             controller: TextEditingController(),
                             readOnly: true,
                             hintText: "+91",
+                            textalign: TextAlign.center,
                           ),
-                        ),
-                        Flexible(
-                          fit: FlexFit.loose,
+                        ),),
+                        Expanded(
                           flex: 8,
                           child: custom_edittext(
                             type: TextInputType.phone,

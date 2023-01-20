@@ -4,8 +4,6 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
-import 'package:flutterdesigndemo/ui/academic_detail/add_topic.dart';
-import 'package:flutterdesigndemo/ui/academic_detail/add_units.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/view_subject.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/viewtopics.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/viewunits.dart';
