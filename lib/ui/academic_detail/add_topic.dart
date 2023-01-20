@@ -7,7 +7,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
 import 'package:flutterdesigndemo/models/request/add_units_request.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
-import 'package:flutterdesigndemo/ui/topic_selection.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/topic_selection.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';

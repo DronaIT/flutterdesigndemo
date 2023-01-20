@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/ui/academic_details.dart';
-import 'package:flutterdesigndemo/ui/add_topic.dart';
-import 'package:flutterdesigndemo/ui/add_units.dart';
-import 'package:flutterdesigndemo/ui/view_subject.dart';
-import 'package:flutterdesigndemo/ui/viewtopics.dart';
-import 'package:flutterdesigndemo/ui/viewunits.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/add_topic.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/add_units.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/view_subject.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/viewtopics.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/viewunits.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class AcademicList extends StatefulWidget {

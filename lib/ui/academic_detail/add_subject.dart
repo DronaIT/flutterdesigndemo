@@ -7,7 +7,8 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
-import 'package:flutterdesigndemo/ui/unit_selection.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/unit_selection.dart';
+
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';

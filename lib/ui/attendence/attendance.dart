@@ -1,8 +1,8 @@
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
-import 'package:flutterdesigndemo/ui/attendance_history.dart';
-import 'package:flutterdesigndemo/ui/myattendance.dart';
-import 'package:flutterdesigndemo/ui/take_attendance.dart';
+import 'package:flutterdesigndemo/ui/attendence/attendance_history.dart';
+import 'package:flutterdesigndemo/ui/attendence/myattendance.dart';
+import 'package:flutterdesigndemo/ui/attendence/take_attendance.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';

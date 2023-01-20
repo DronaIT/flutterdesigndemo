@@ -5,7 +5,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/view_lecture_attendance.dart';
-import 'package:flutterdesigndemo/ui/attendance_history_detail.dart';
+import 'package:flutterdesigndemo/ui/attendence/attendance_history_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';

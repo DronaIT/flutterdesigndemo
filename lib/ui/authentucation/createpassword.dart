@@ -14,7 +14,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
-import '../utils/preference.dart';
+import '../../utils/preference.dart';
 
 class CreatePassword extends StatefulWidget {
   const CreatePassword({Key? key}) : super(key: key);

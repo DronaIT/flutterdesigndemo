@@ -3,7 +3,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/student_attendance_response.dart';
-import 'package:flutterdesigndemo/ui/myattendance.dart';
+import 'package:flutterdesigndemo/ui/attendence/myattendance.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutter/material.dart';
