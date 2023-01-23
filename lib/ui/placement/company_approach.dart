@@ -9,6 +9,10 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 
+import '../../models/base_api_response.dart';
+import '../../models/typeofsectoreresponse.dart';
+import '../../utils/preference.dart';
+
 class CompanyApproch extends StatefulWidget {
   const CompanyApproch({Key? key}) : super(key: key);
 
@@ -23,9 +27,16 @@ class _CompanyApprochState extends State<CompanyApproch> {
   TextEditingController contactPnumberController = TextEditingController();
   TextEditingController contactPWanumberController = TextEditingController();
   bool isVisible = false;
+  List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
+  BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
 
-  List<String> typeofResponseArray = <String>["1", "2", "3", "4", "5", "6"];
   String typeofValue = "1";
+
+  @override
+  void initState() {
+    super.initState();
+    typeofResponseArray = PreferenceUtils.getTypeOFSectoreList().records;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +83,21 @@ class _CompanyApprochState extends State<CompanyApproch> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                         width: viewWidth,
-                        child: DropdownButtonFormField<String>(
+                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>(
                           elevation: 16,
                           style: blackText16,
-                          value: typeofValue,
+                          value: typeOfResponse,
                           focusColor: Colors.white,
-                          onChanged: (String? newValue) {
+                          onChanged: (BaseApiResponseWithSerializable<TypeOfsectoreResponse>? newValue) {
                             setState(() {
-                              typeofValue = newValue!;
+                              typeofValue = newValue!.id!;
+                              typeOfResponse = newValue;
                             });
                           },
-                          items: typeofResponseArray.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
+                          items: typeofResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>>((BaseApiResponseWithSerializable<TypeOfsectoreResponse> value) {
+                            return DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>(
                               value: value,
-                              child: Text("Semester $value"),
+                              child: Text(value.fields!.sectorTitle!.toString()),
                             );
                           }).toList(),
                         ),
@@ -115,9 +127,10 @@ class _CompanyApprochState extends State<CompanyApproch> {
                   textStyles: blackTextSemiBold16,
                 ),
                 custom_edittext(
-                  type: TextInputType.text,
+                  type: TextInputType.number,
                   textInputAction: TextInputAction.next,
                   controller: contactPnumberController,
+                  maxLength: 10,
                   topValue: 5,
                 ),
                 SizedBox(height: 3.h),
@@ -128,26 +141,32 @@ class _CompanyApprochState extends State<CompanyApproch> {
                   textStyles: blackTextSemiBold16,
                 ),
                 custom_edittext(
-                  type: TextInputType.text,
+                  type: TextInputType.number,
                   textInputAction: TextInputAction.next,
                   controller: contactPWanumberController,
+                  maxLength: 10,
                   topValue: 5,
                 ),
                 SizedBox(height: 20.h),
                 CustomButton(
                     text: strings_name.str_submit,
                     click: () {
+                      var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
                       if (nameofCompanyController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_company_name);
                       } else if (typeofValue.toString().trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_type_of);
                       } else if (nameOfContactPController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_contact_person_name);
-                      } else if (contactPnumberController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_contact_person_num);
-                      } else if (contactPWanumberController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_contact_person_wnum);
-                      }else{
+                      } else if (phone.isNotEmpty) {
+                        Utils.showSnackBar(context,phone);
+                      }
+                      //
+                      // else if (contactPWanumberController.text.trim().isEmpty) {
+                      //   Utils.showSnackBar(context, strings_name.str_contact_person_wnum);
+                      // }
+
+                      else{
 
                       }
                     })

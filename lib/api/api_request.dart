@@ -24,6 +24,7 @@ import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/student_attendance_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
+import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/update_specialization.dart';
 import 'package:flutterdesigndemo/models/update_subject.dart';
@@ -146,6 +147,19 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectoreApi() async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_SECTOR, options: Options(headers: header));
+      return BaseLoginResponse<TypeOfsectoreResponse>.fromJson(response.data, (response) => TypeOfsectoreResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {

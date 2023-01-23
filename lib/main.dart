@@ -11,6 +11,7 @@ import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/authentucation/login.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -81,6 +82,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       PreferenceUtils.setSpecializationList(specializationResponse);
       print("Specialization ${PreferenceUtils.getSpecializationList().records!.length}");
     }
+
+
   }
 
   Future<void> doLogin() async {

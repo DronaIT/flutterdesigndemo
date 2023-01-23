@@ -253,7 +253,7 @@ class strings_name {
 
   static const String str_company_approch = "Company approach";
   static const String str_name_of_company = "Name of company";
-  static const String str_type_of_inducstry = "Type of industry/sector";
+  static const String str_type_of_inducstry = "Select type of industry/sector";
   static const String str_contact_person = "Contact person's name";
   static const String str_contact_person_number = "Contact person's number";
   static const String str_contact_person_wanumber = "Contact person's whatsapp no.";
@@ -262,11 +262,25 @@ class strings_name {
   static const String str_create_job_alert = "Create job alert";
   static const String str_apply_internship = "Apply for Internships";
   static const String str_update_internship = "Update internship";
+  static const String str_contact_person_designation = "Contact person's designation";
 
+  static const String str_company_lan_num = "Company's landline no.";
+  static const String str_contact_person_email = "Contact person's email";
+  static const String str_company_website = "Company's website";
 
+  static const String str_reporting_branch = "Reporting branch";
+  static const String str_reporting_address = "Reporting address";
+  static const String str_logo_of_company= "Logo of company";
+  static const String str_company_detail = "Company details";
   static const String str_empty_company_name = "Please enter company name";
   static const String str_empty_type_of = "Please enter type of industry";
-  static const String str_contact_person_name = "Please enter name of contact person";
-  static const String str_contact_person_num = "Please enter number of contact person";
-  static const String str_contact_person_wnum = "Please enter Whatsapp no. of contact person";
+  static const String str_contact_person_name = "Please enter contact person's name";
+  static const String str_empaty_contact_desi = "Please enter contact person's designation";
+  static const String str_contact_person_num = "Please enter contact person's number";
+  static const String str_contact_person_wnum = "Please enter contact person's whatsapp no.";
+
+  static const String str_company_email = "Please enter company's email";
+  static const String str_empty_reporting_branch = "Please enter reporting branch";
+  static const String str_empty_reporting_address = "Please enter reporting address";
+
 }

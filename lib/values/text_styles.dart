@@ -103,6 +103,11 @@ const primryTextSemiBold14 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const grayTextstyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w300,
+  color: colors_name.colorDark,
+);
 
 const primaryTextSemiBold16 = TextStyle(
   fontSize: 16,

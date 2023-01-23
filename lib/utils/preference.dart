@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtils {
@@ -20,6 +21,8 @@ class PreferenceUtils {
   static const _keyRoleList = 'roleList';
   static const _keyHubList = 'hubList';
   static const _keySpecializationList = 'specializationList';
+  static const _keySectoreList = 'sectoreList';
+
   static const _keyLoginRecordId = 'loginRecordId';
 
   static Future init() async => _preferences = await SharedPreferences.getInstance();
@@ -68,6 +71,12 @@ class PreferenceUtils {
 
   static BaseLoginResponse<SpecializationResponse> getSpecializationList() {
     return BaseLoginResponse<SpecializationResponse>.fromJson(jsonDecode(_preferences.getString(_keySpecializationList)!), (response) => SpecializationResponse.fromJson(response));
+  }
+
+  static Future setTypeofList(BaseLoginResponse<TypeOfsectoreResponse> typeofResponse) async => await _preferences.setString(_keySectoreList, jsonEncode(typeofResponse));
+
+  static BaseLoginResponse<TypeOfsectoreResponse> getTypeOFSectoreList() {
+    return BaseLoginResponse<TypeOfsectoreResponse>.fromJson(jsonDecode(_preferences.getString(_keySectoreList)!), (response) => TypeOfsectoreResponse.fromJson(response));
   }
 
   static Future setLoginRecordId(String recordId) async => await _preferences.setString(_keyLoginRecordId, recordId);

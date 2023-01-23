@@ -22,6 +22,7 @@ import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/student_attendance_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
+import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/update_specialization.dart';
 import 'package:flutterdesigndemo/models/update_subject.dart';
@@ -140,6 +141,15 @@ class ApiRepository {
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {
       final response = await userApi.getSpecializationApi();
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+  Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectorApi() async {
+    try {
+      final response = await userApi.getSectoreApi();
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

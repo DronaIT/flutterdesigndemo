@@ -3,6 +3,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
+import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -12,6 +13,9 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../models/base_api_response.dart';
+import '../../models/typeofsectoreresponse.dart';
 
 class PlacementDashboard extends StatefulWidget {
   const PlacementDashboard({Key? key}) : super(key: key);
@@ -25,6 +29,8 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
   bool companyApproch = false, createCompany = false, createJobsAlerts = false;
   bool applyInternship = false, updateInternship = false;
+  BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +41,11 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     setState(() {
       isVisible = true;
     });
+    typeOfResponse =  await apiRepository.getSectorApi();
+    if (typeOfResponse.records!.isNotEmpty) {
+      PreferenceUtils.setTypeofList(typeOfResponse);
+      print("sectore ${PreferenceUtils.getTypeOFSectoreList().records!.length}");
+    }
     var query = "";
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
@@ -133,14 +144,11 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                       ),
                     ),
                     onTap: () {
-
+                      Get.to(() => const CompanyDetail());
                     },
                   ),
                 ),
                 SizedBox(height: 5.h),
-
-
-
                 Visibility(
                   visible: createJobsAlerts,
                   child: GestureDetector(
