@@ -24,6 +24,7 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
   bool isVisible = false;
   bool canViewSelfAttendance = false, canViewOthersAttendance = false, canTakeAttendance = false;
+  bool canViewAccessibleAttendance = false, canUpdateAccessibleAttendance = false;
 
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -63,6 +64,16 @@ class _AttendanceState extends State<Attendance> {
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_OTHERS_ATTENDANCE) {
           setState(() {
             canViewOthersAttendance = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_ACCESSIBLE_ATTENDANCE) {
+          setState(() {
+            canViewAccessibleAttendance = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_ACCESSIBLE_ATTENDANCE) {
+          setState(() {
+            canUpdateAccessibleAttendance = true;
           });
         }
       }
@@ -138,7 +149,10 @@ class _AttendanceState extends State<Attendance> {
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const AttendanceHistory());
+                      Get.to(() => const AttendanceHistory(), arguments: [
+                        {"canViewAccessibleAttendance": canViewAccessibleAttendance},
+                        {"canUpdateAccessibleAttendance": canUpdateAccessibleAttendance}
+                      ]);
                     },
                   ),
                 ),

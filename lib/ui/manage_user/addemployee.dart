@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
+import 'package:flutterdesigndemo/ui/manage_user/hub_selection.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -35,6 +36,9 @@ class _AddEmployeeState extends State<AddEmployee> {
 
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
+  List<BaseApiResponseWithSerializable<HubResponse>>? accessibleHubsData = [];
+
   String gender = "Male";
   String roleValue = "";
   BaseApiResponseWithSerializable<RoleResponse>? roleResponse;
@@ -67,6 +71,37 @@ class _AddEmployeeState extends State<AddEmployee> {
         }
       }
     }
+
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
   }
 
   @override
@@ -78,7 +113,7 @@ class _AddEmployeeState extends State<AddEmployee> {
       body: Stack(children: [
         SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.only(left: 10, right: 10),
             child: Column(
               children: [
                 Column(
@@ -159,7 +194,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                       maxLength: 6,
                       topValue: 2,
                     ),
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_parent_number,
@@ -173,7 +207,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                       maxLength: 10,
                       topValue: 2,
                     ),
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_spouse_number,
@@ -187,8 +220,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                       maxLength: 10,
                       topValue: 2,
                     ),
-
-
                     SizedBox(height: 5.h),
                     custom_text(
                       text: strings_name.str_select_gender,
@@ -243,9 +274,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                         ),
                       ],
                     ),
-
                     SizedBox(height: 5.h),
-
                     custom_text(
                       text: strings_name.str_select_role,
                       alignment: Alignment.topLeft,
@@ -317,6 +346,60 @@ class _AddEmployeeState extends State<AddEmployee> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 5.h),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          custom_text(
+                            text: strings_name.str_select_accessible_hub,
+                            alignment: Alignment.topLeft,
+                            textStyles: blackTextSemiBold16,
+                          ),
+                          GestureDetector(
+                            child: custom_text(
+                              text: accessibleHubsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                              alignment: Alignment.topLeft,
+                              textStyles: primaryTextSemiBold16,
+                            ),
+                            onTap: () {
+                              Get.to(const HubSelection(), arguments: accessibleHubsData)?.then((result) {
+                                if (result != null) {
+                                  setState(() {
+                                    accessibleHubsData = result;
+                                  });
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    accessibleHubsData!.isNotEmpty
+                        ? ListView.builder(
+                            primary: false,
+                            shrinkWrap: true,
+                            itemCount: accessibleHubsData?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 5,
+                                child: GestureDetector(
+                                  child: Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.all(15),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [Expanded(child: Text("${accessibleHubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    // Get.to(const (), arguments: unitsData![index].fields?.ids);
+                                  },
+                                ),
+                              );
+                            })
+                        : Container(),
                     SizedBox(height: 20.h),
                     CustomButton(
                       text: strings_name.str_submit,
@@ -325,20 +408,17 @@ class _AddEmployeeState extends State<AddEmployee> {
                         var email = FormValidator.validateEmail(emailController.text.toString().trim());
                         if (nameController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_name);
-                        }else if (phone.isNotEmpty) {
+                        } else if (phone.isNotEmpty) {
                           Utils.showSnackBar(context, phone);
-                        }  else if (!email) {
+                        } else if (!email) {
                           Utils.showSnackBar(context, strings_name.str_empty_email);
-                        }else if (addressController.text.trim().isEmpty) {
+                        } else if (addressController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_address);
                         } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
-                        }
-                        else if (pinCodeController.text.trim().isEmpty) {
+                        } else if (pinCodeController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_pincode);
-                        }
-
-                        else if (gender.trim().isEmpty) {
+                        } else if (gender.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_gender);
                         } else if (roleValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_role);
@@ -381,6 +461,12 @@ class _AddEmployeeState extends State<AddEmployee> {
       request.spouse_mobile_number = spouseController.text.toString();
       request.pin_code = pinCodeController.text.toString();
       request.parents_mobile_number = parentController.text.toString();
+
+      List<String> accessibleHubList = [];
+      for (var i = 0; i < accessibleHubsData!.length; i++) {
+        accessibleHubList.add(accessibleHubsData![i].id.toString());
+      }
+      request.accessible_hub_ids = accessibleHubList;
 
       var resp = await apiRepository.addEmployeeApi(request);
       if (resp.id!.isNotEmpty) {

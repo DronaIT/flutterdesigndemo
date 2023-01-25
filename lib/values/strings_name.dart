@@ -58,6 +58,7 @@ class strings_name {
 
   static const String str_select_role = "Select role";
   static const String str_select_hub = "Select hub";
+  static const String str_select_accessible_hub = "Select accessible hubs";
 
   static const String str_sure_want_logout = "Are you sure want to logout ?";
 
@@ -152,13 +153,16 @@ class strings_name {
   static const String str_student = "Student";
   static const String str_code = "Code";
 
+  static const String str_hubs = "Hubs";
   static const String str_units = "Units";
   static const String str_topics = "Topics";
+  static const String str_accessible_hub = "Accessible hubs";
 
   static const String str_subject_title = "Subject Name";
   static const String str_subject_code = "Subject Code";
   static const String str_subject_credit = "Subject Credit";
   static const String str_empty_subject_title = "Please enter subject name";
+  static const String str_select_hubs = "Please select hubs";
   static const String str_select_units = "Please select units";
   static const String str_subject_added = "New subject added successfully.";
   static const String str_subject_updated = "Subject updated successfully.";
@@ -212,6 +216,7 @@ class strings_name {
   static const String str_filter = "Filter by";
   static const String str_reset = "Reset";
   static const String str_by_date = "Date";
+  static const String str_taken_by = "Taken by : ";
   static const String str_by_semester = "Semester";
   static const String str_by_subject = "Subject";
   static const String str_attendence_his_detail = "Attendance history detail";
@@ -270,7 +275,7 @@ class strings_name {
 
   static const String str_reporting_branch = "Reporting branch";
   static const String str_reporting_address = "Reporting address";
-  static const String str_logo_of_company= "Logo of company";
+  static const String str_logo_of_company = "Logo of company";
   static const String str_company_detail = "Company details";
   static const String str_empty_company_name = "Please enter company name";
   static const String str_empty_type_of = "Please enter type of industry";
@@ -287,5 +292,4 @@ class strings_name {
   static const String str_empty_company_id_no = "Please enter company indentification no.";
   static const String str_company_det_added = "Company detail added successfully";
   static const String str_view_create_company = "View company detail";
-
 }

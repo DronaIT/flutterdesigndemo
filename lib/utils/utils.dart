@@ -144,6 +144,7 @@ class Utils {
     }
     return hubId;
   }
+
   static String? getTypeOfIndustryId(String? typeofId) {
     final typeOfList = PreferenceUtils.getTypeOFSectoreList();
     for (int i = 0; i < typeOfList.records!.length; i++) {
@@ -194,6 +195,18 @@ class Utils {
       }
     }
     return hubId;
+  }
+
+  static String? getHubName(String? hubId) {
+    final hubList = PreferenceUtils.getHubList();
+    String? hubName;
+    for (int i = 0; i < hubList.records!.length; i++) {
+      if (hubList.records![i].fields!.hubId == hubId) {
+        hubName = hubList.records![i].fields?.hubName!;
+        break;
+      }
+    }
+    return hubName;
   }
 
   static String? getSpecializationIds(String? specializationId) {

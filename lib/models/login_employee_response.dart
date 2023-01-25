@@ -23,13 +23,33 @@ class LoginEmployeResponse {
   String? parents_mobile_number;
   String? spouse_mobile_number = " ";
   String? pin_code;
+  List<String>? accessible_hub_ids;
+  List<String>? hub_id_from_lecture;
 
-
-  LoginEmployeResponse({this.gender, this.employeeId, this.city, this.roleIds, this.employeeName, this.hubIds, this.roleIdFromRoleIds,
-    this.hubIdFromHubIds, this.employeeCode, this.mobileNumber, this.email, this.password,
-    this.lectureIds, this.lectureDate, this.unitTitle, this.semester,this.subjectTitle, this.division,
-    this.parents_mobile_number,this.spouse_mobile_number, this.pin_code
-  });
+  LoginEmployeResponse(
+      {this.gender,
+      this.employeeId,
+      this.city,
+      this.roleIds,
+      this.employeeName,
+      this.hubIds,
+      this.roleIdFromRoleIds,
+      this.hubIdFromHubIds,
+      this.employeeCode,
+      this.mobileNumber,
+      this.email,
+      this.password,
+      this.lectureIds,
+      this.lectureDate,
+      this.unitTitle,
+      this.semester,
+      this.subjectTitle,
+      this.division,
+      this.parents_mobile_number,
+      this.spouse_mobile_number,
+      this.pin_code,
+      this.accessible_hub_ids,
+      this.hub_id_from_lecture});
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -54,7 +74,8 @@ class LoginEmployeResponse {
     parents_mobile_number = json['parents_mobile_number'];
     spouse_mobile_number = json['spouse_mobile_number'];
     pin_code = json['pin_code'];
-
+    accessible_hub_ids = json['accessible_hub_ids']?.cast<String>();
+    hub_id_from_lecture = json['hub_id_from_lecture']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -81,7 +102,8 @@ class LoginEmployeResponse {
     data['parents_mobile_number'] = this.parents_mobile_number;
     data['spouse_mobile_number'] = this.spouse_mobile_number;
     data['pin_code'] = this.pin_code;
-
+    data['accessible_hub_ids'] = this.accessible_hub_ids;
+    data['hub_id_from_lecture'] = this.hub_id_from_lecture;
     return data;
   }
 }

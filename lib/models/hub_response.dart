@@ -4,6 +4,7 @@ class HubResponse {
   String? city;
   String? hubId;
   String? address;
+  bool selected = false;
 
   HubResponse({this.id, this.hubName, this.city, this.hubId, this.address});
 

@@ -3,6 +3,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/view_lecture_attendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance_history_detail.dart';
@@ -13,6 +14,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AttendanceHistory extends StatefulWidget {
   const AttendanceHistory({Key? key}) : super(key: key);
@@ -29,6 +31,13 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
   String formattedDate = "";
   List<ViewLectureAttendance>? viewLectureArray = [];
   var formatterShow = DateFormat('dd-MM-yyyy');
+  bool canViewAccessibleAttendance = false, canUpdateAccessibleAttendance = false;
+
+  List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
+  BaseApiResponseWithSerializable<HubResponse>? hubResponse;
+  String hubValue = "";
+  String hubRecordId = "";
+
   @override
   void initState() {
     super.initState();
@@ -39,18 +48,66 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       phone = loginData.mobileNumber.toString();
+
+      hubResponseArray = PreferenceUtils.getHubList().records;
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
     }
+
     checkCurrentData();
-    viewEmpLectures();
+    if (Get.arguments != null) {
+      setState(() {
+        canViewAccessibleAttendance = Get.arguments[0]["canViewAccessibleAttendance"];
+        canUpdateAccessibleAttendance = Get.arguments[1]["canUpdateAccessibleAttendance"];
+
+        viewEmpLectures();
+      });
+    } else {
+      viewEmpLectures();
+    }
   }
 
   void viewEmpLectures() async {
     setState(() {
       isVisible = true;
     });
-    var query = "(${TableNames.TB_USERS_PHONE}='$phone')";
+    var query = "";
+    if (canViewAccessibleAttendance) {
+      var queryCheck = "SEARCH('$formattedDate', ARRAYJOIN(lecture_date))";
+      if (hubValue.isNotEmpty) {
+        queryCheck += ",SEARCH('$hubValue', ARRAYJOIN(hub_id_from_lecture))";
+      }
+      query = "AND($queryCheck)";
+    } else {
+      query = "(${TableNames.TB_USERS_PHONE}='$phone')";
+    }
+    print(query);
     data = await apiRepository.loginEmployeeApi(query);
-    if (data != null) {
+    if (data.records != null) {
       setState(() {
         isVisible = false;
       });
@@ -71,16 +128,27 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
   }
 
   void lectureByDate() {
-    if (data.records != null && data.records!.first.fields != null) {
-      for (int i = 0; i < data.records!.first.fields!.lectureDate!.length; i++) {
-        if (formattedDate == data.records!.first.fields!.lectureDate![i]) {
-          viewLectureArray?.add(ViewLectureAttendance(
-              subject_title: data.records!.first.fields!.subjectTitle![i],
-              lecture_date: data.records!.first.fields!.lectureDate![i],
-              unit_title: data.records!.first.fields!.lectureDate![i],
-              semester: data.records!.first.fields!.semester![i],
-              division: data.records!.first.fields!.division![i],
-              lecture_id: data.records!.first.fields!.lectureIds![i]));
+    if (data.records != null && (data.records?.length ?? 0) > 0) {
+      for (int j = 0; j < data.records!.length; j++) {
+        for (int i = 0; i < (data.records![j].fields!.lectureDate?.length ?? 0); i++) {
+          var canAdd = false;
+          if (formattedDate == data.records![j].fields!.lectureDate![i]) {
+            if (hubRecordId.isNotEmpty) {
+              canAdd = hubRecordId == data.records![j].fields!.hub_id_from_lecture![i];
+            } else {
+              canAdd = true;
+            }
+          }
+          if (canAdd) {
+            viewLectureArray?.add(ViewLectureAttendance(
+                subject_title: data.records![j].fields!.subjectTitle![i],
+                lecture_date: data.records![j].fields!.lectureDate![i],
+                unit_title: data.records![j].fields!.lectureDate![i],
+                semester: data.records![j].fields!.semester![i],
+                division: data.records![j].fields!.division![i],
+                lecture_id: data.records![j].fields!.lectureIds![i],
+                employee_name: data.records![j].fields!.employeeName));
+          }
         }
       }
     }
@@ -88,6 +156,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
 
   @override
   Widget build(BuildContext context) {
+    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -114,6 +183,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                     setState(() {
                       var formatter = DateFormat('yyyy-MM-dd');
                       formattedDate = formatter.format(pickedDate);
+
                       viewEmpLectures();
                     });
                   });
@@ -123,44 +193,105 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
       ),
       body: Stack(
         children: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: viewLectureArray!.isNotEmpty
-                ? ListView.builder(
-                    itemCount: viewLectureArray?.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                custom_text(
-                                  text: viewLectureArray![index].subject_title!,
-                                  alignment: Alignment.topLeft,
-                                  textStyles: primaryTextSemiBold14,
-                                  bottomValue: 5,
-                                ),
-                                custom_text(
-                                  text: "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold12,
-                                  topValue: 5,
-                                  bottomValue: 0,
-                                ),
-                                custom_text(
-                                  text: "${strings_name.str_semester}: ${viewLectureArray![index].semester!} ${" , "} ${strings_name.str_division}: ${viewLectureArray![index].division!}",
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold12,
-                                  topValue: 5,
-                                ),
-                              ],
-                            )),
-                        onTap: () {
-                          Get.to(() => const AttendanceHistoryDetail(), arguments: viewLectureArray?[index].lecture_id);
-                        },
-                      );
-                    })
-                : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+          SingleChildScrollView(
+            child: Column(children: [
+              SizedBox(height: 10.h),
+              Visibility(
+                visible: canViewAccessibleAttendance,
+                child: custom_text(
+                  text: strings_name.str_select_hub,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+              ),
+              Visibility(
+                visible: canViewAccessibleAttendance,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                        width: viewWidth,
+                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                          value: hubResponse,
+                          elevation: 16,
+                          style: blackText16,
+                          focusColor: Colors.white,
+                          onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                            setState(() {
+                              hubValue = newValue!.fields!.id!.toString();
+                              hubResponse = newValue;
+                              hubRecordId = newValue.id!;
+
+                              viewEmpLectures();
+                            });
+                          },
+                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                            return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                              value: value,
+                              child: Text(value.fields!.hubName!.toString()),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: viewLectureArray!.isNotEmpty
+                    ? ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: viewLectureArray?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            child: Card(
+                                elevation: 5,
+                                child: Column(
+                                  children: [
+                                    custom_text(
+                                      text: viewLectureArray![index].subject_title!,
+                                      alignment: Alignment.topLeft,
+                                      textStyles: primaryTextSemiBold14,
+                                      bottomValue: 5,
+                                    ),
+                                    custom_text(
+                                      text: "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",
+                                      alignment: Alignment.topLeft,
+                                      textStyles: blackTextSemiBold12,
+                                      topValue: 5,
+                                      bottomValue: 0,
+                                    ),
+                                    Visibility(
+                                      visible: canViewAccessibleAttendance,
+                                      child: custom_text(
+                                        text: "${strings_name.str_taken_by}: ${viewLectureArray![index].employee_name!}",
+                                        textStyles: blackTextSemiBold12,
+                                        topValue: 5,
+                                        bottomValue: 0,
+                                      ),
+                                    ),
+                                    custom_text(
+                                      text: "${strings_name.str_semester}: ${viewLectureArray![index].semester!} ${", "} ${strings_name.str_division}: ${viewLectureArray![index].division!}",
+                                      alignment: Alignment.topLeft,
+                                      textStyles: blackTextSemiBold12,
+                                      topValue: 5,
+                                    ),
+                                  ],
+                                )),
+                            onTap: () {
+                              Get.to(() => const AttendanceHistoryDetail(), arguments: viewLectureArray?[index].lecture_id);
+                            },
+                          );
+                        })
+                    : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              ),
+            ]),
           ),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),

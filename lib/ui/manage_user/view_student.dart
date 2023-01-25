@@ -50,6 +50,37 @@ class _ViewStudentState extends State<ViewStudent> {
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
     canUpdateStudent = Get.arguments;
+
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
   }
 
   @override

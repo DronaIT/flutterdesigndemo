@@ -7,17 +7,18 @@ import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 
-class Setting extends StatefulWidget {
-  const Setting({Key? key}) : super(key: key);
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
 
   @override
-  State<Setting> createState() => _SettingState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _SettingState extends State<Setting> {
+class _ProfileState extends State<Profile> {
   String name = "";
   String phone = "";
   String roleName = "";
+  String hubName = "";
   String employeeCode = "";
   String city = "";
   String email = "";
@@ -32,6 +33,7 @@ class _SettingState extends State<Setting> {
       email = loginData.email.toString();
       phone = loginData.mobileNumber.toString();
       roleName = strings_name.str_student;
+      hubName = Utils.getHubName(loginData.hubIdFromHubIds![0]) ?? "";
       employeeCode = loginData.enrollmentNumber.toString();
       city = loginData.city.toString();
       address = loginData.address.toString();
@@ -41,6 +43,7 @@ class _SettingState extends State<Setting> {
       phone = loginData.mobileNumber.toString();
       email = loginData.email.toString();
       roleName = Utils.getRoleName(loginData.roleIdFromRoleIds![0])!;
+      hubName = Utils.getHubName(loginData.hubIdFromHubIds![0]) ?? "";
       employeeCode = loginData.employeeCode.toString();
       address = loginData.address.toString();
       city = loginData.city.toString();
@@ -61,7 +64,7 @@ class _SettingState extends State<Setting> {
             width: 120,
           ),
           const SizedBox(height: 20),
-        //  AppWidgets.spannableText(strings_name.str_name+ ": ", name, primaryTextSemiBold16),
+          //  AppWidgets.spannableText(strings_name.str_name+ ": ", name, primaryTextSemiBold16),
           custom_text(
             text: strings_name.str_name + ": " + name,
             alignment: Alignment.topLeft,
@@ -79,6 +82,14 @@ class _SettingState extends State<Setting> {
           ),
           custom_text(
             text: strings_name.str_email + ": " + email,
+            alignment: Alignment.topLeft,
+            textStyles: blackTextSemiBold16,
+            topValue: 10,
+            bottomValue: 0,
+            leftValue: 20,
+          ),
+          custom_text(
+            text: strings_name.str_hub_name + ": " + hubName,
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             topValue: 10,

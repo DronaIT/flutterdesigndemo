@@ -143,7 +143,6 @@ class ApiRequest {
     }
   }
 
-
   Future<CreatePasswordResponse> updateStudentApi(Map<String, dynamic> updateFormula, String recordId) async {
     try {
       // Map<String, dynamic> someMap = {"fields": updateFormula};
@@ -188,7 +187,6 @@ class ApiRequest {
     }
   }
 
-
   Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectoreApi() async {
     try {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
@@ -199,8 +197,6 @@ class ApiRequest {
       rethrow;
     }
   }
-
-
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {

@@ -71,6 +71,36 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
     initialization();
   }
 
@@ -655,7 +685,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                       } else if (cityController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
                       } else if (pincodeController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_city);
+                        Utils.showSnackBar(context, strings_name.str_empty_pincode);
                       } else if (gender.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_gender);
                       } else if (joingYearController.text.trim().isEmpty) {

@@ -40,7 +40,6 @@ class _SetupCollageState extends State<SetupCollage> {
     hubResponse = await apiRepository.getHubApi();
     if (hubResponse.records!.isNotEmpty) {
       PreferenceUtils.setHubList(hubResponse);
-      print("Hub ${PreferenceUtils.getHubList().records!.length}");
       setState(() {
         canViewHub = true;
       });

@@ -11,11 +11,9 @@ class AddEmployeeRequest {
   String? parents_mobile_number;
   String? spouse_mobile_number = " ";
   String? pin_code;
+  List<String>? accessible_hub_ids;
 
-  AddEmployeeRequest({this.employee_name, this.city, this.mobileNumber, this.gender, this.email,
-    this.hubIds, this.roleIds, this.address,
-    this.parents_mobile_number,this.spouse_mobile_number, this.pin_code
-  });
+  AddEmployeeRequest({this.employee_name, this.city, this.mobileNumber, this.gender, this.email, this.hubIds, this.roleIds, this.address, this.parents_mobile_number, this.spouse_mobile_number, this.pin_code, this.accessible_hub_ids});
 
   AddEmployeeRequest.fromJson(Map<String, dynamic> json) {
     employee_name = json['employee_name'];
@@ -29,6 +27,7 @@ class AddEmployeeRequest {
     parents_mobile_number = json['parents_mobile_number'];
     spouse_mobile_number = json['spouse_mobile_number'];
     pin_code = json['pin_code'];
+    accessible_hub_ids = json['accessible_hub_ids']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +43,7 @@ class AddEmployeeRequest {
     data['parents_mobile_number'] = this.parents_mobile_number;
     data['spouse_mobile_number'] = this.spouse_mobile_number;
     data['pin_code'] = this.pin_code;
+    data['accessible_hub_ids'] = this.accessible_hub_ids;
     return data;
   }
 }

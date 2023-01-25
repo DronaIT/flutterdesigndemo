@@ -5,8 +5,9 @@ class ViewLectureAttendance {
   String? semester;
   String? division;
   String? lecture_id;
+  String? employee_name;
   //1= present, 0= absent
-  ViewLectureAttendance({this.subject_title, this.lecture_date, this.unit_title, this.semester, this.division, this.lecture_id});
+  ViewLectureAttendance({this.subject_title, this.lecture_date, this.unit_title, this.semester, this.division, this.lecture_id, this.employee_name});
 
   ViewLectureAttendance.fromJson(Map<String, dynamic> json) {
     subject_title = json['subject_title'];
@@ -15,6 +16,7 @@ class ViewLectureAttendance {
     semester = json['semester'];
     division = json['division'];
     lecture_id = json['lecture_id'];
+    employee_name = json['employee_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class ViewLectureAttendance {
     data['semester'] = this.semester;
     data['division'] = this.division;
     data['lecture_id'] = this.lecture_id;
+    data['employee_name'] = this.employee_name;
     return data;
   }
 }

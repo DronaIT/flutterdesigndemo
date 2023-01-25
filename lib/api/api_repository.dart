@@ -131,6 +131,7 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
   Future<BaseLoginResponse<CompanyDetailResponse>> createCopmanyDetailApi(List<Map<String, CreateCompanyDetailRequest>> createCompFormula) async {
     try {
       final response = await userApi.createCopmanyDetailApi(createCompFormula);
@@ -140,7 +141,6 @@ class ApiRepository {
       throw errorMessage;
     }
   }
-
 
   Future<BaseLoginResponse<RoleResponse>> getRolesApi() async {
     try {
@@ -181,6 +181,7 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
   Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectorApi() async {
     try {
       final response = await userApi.getSectoreApi();
@@ -240,7 +241,6 @@ class ApiRepository {
       throw errorMessage;
     }
   }
-
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationDetailApi(String detailFormula) async {
     try {
