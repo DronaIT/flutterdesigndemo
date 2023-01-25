@@ -293,4 +293,8 @@ class strings_name {
   static const String str_company_det_added = "Company detail added successfully";
   static const String str_view_create_company = "View company detail";
   static const String str_company_updated = "Company detail updated successfully.";
+  static const String str_job_opp_detail = "Job opportunity form";
+  static const String str_create_job_opp_detail = "Create job opportunity";
+  static const String str_list_job_opp_detail = "Job opportunity list";
+
 }

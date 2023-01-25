@@ -37,7 +37,6 @@ class _CompanyDetailState extends State<CompanyDetail> {
   TextEditingController emailContactperController = TextEditingController();
   TextEditingController companyWebsiteController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-
   TextEditingController repotBranchController = TextEditingController();
   TextEditingController reportAddressController = TextEditingController();
   bool isVisible = false;
