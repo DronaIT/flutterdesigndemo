@@ -8,8 +8,12 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 
+import '../../api/api_repository.dart';
+import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
+import '../../models/request/create_company_approch.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
 
@@ -29,8 +33,9 @@ class _CompanyApprochState extends State<CompanyApproch> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
-
+  List<Map<String, CreateCompanyaRequest>> list = [];
   String typeofValue = "1";
+  final companyaRepository = getIt.get<ApiRepository>();
 
   @override
   void initState() {
@@ -150,7 +155,7 @@ class _CompanyApprochState extends State<CompanyApproch> {
                 SizedBox(height: 20.h),
                 CustomButton(
                     text: strings_name.str_submit,
-                    click: () {
+                    click: () async {
                       var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
                       if (nameofCompanyController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_company_name);
@@ -160,14 +165,32 @@ class _CompanyApprochState extends State<CompanyApproch> {
                         Utils.showSnackBar(context, strings_name.str_contact_person_name);
                       } else if (phone.isNotEmpty) {
                         Utils.showSnackBar(context,phone);
-                      }
-                      //
-                      // else if (contactPWanumberController.text.trim().isEmpty) {
-                      //   Utils.showSnackBar(context, strings_name.str_contact_person_wnum);
-                      // }
-
-                      else{
-
+                      } else{
+                        setState(() {
+                          isVisible = true;
+                        });
+                        CreateCompanyaRequest response = CreateCompanyaRequest();
+                        response.company_name = nameofCompanyController.text.trim().toString();
+                        response.contact_person_name = nameOfContactPController.text.trim().toString();
+                        response.contact_person_no = contactPnumberController.text.trim().toString();
+                        response.contact_person_whatsapp_no = contactPWanumberController.text.trim().toString();
+                        response.type_of_industory = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
+                        Map<String, CreateCompanyaRequest> map = Map();
+                        map["fields"] = response;
+                        list.add(map);
+                        var resp = await companyaRepository.creCompanyApprochApi(list);
+                        if (resp.records!.isNotEmpty) {
+                          setState(() {
+                            isVisible = false;
+                          });
+                          Utils.showSnackBar(context, strings_name.str_company_a_added);
+                          await Future.delayed(const Duration(milliseconds: 2000));
+                          Get.back(closeOverlays: true);
+                        } else {
+                          setState(() {
+                            isVisible = false;
+                          });
+                        }
                       }
                     })
               ],

@@ -282,5 +282,6 @@ class strings_name {
   static const String str_company_email = "Please enter company's email";
   static const String str_empty_reporting_branch = "Please enter reporting branch";
   static const String str_empty_reporting_address = "Please enter reporting address";
+  static const String str_company_a_added = "Company approch added successfully";
 
 }

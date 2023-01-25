@@ -32,6 +32,9 @@ import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/manage_user/addemployee.dart';
 
+import '../models/company_approch_response.dart';
+import '../models/request/create_company_approch.dart';
+
 class ApiRepository {
   final ApiRequest userApi;
 
@@ -116,6 +119,17 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<BaseLoginResponse<CompanyApprochResponse>> creCompanyApprochApi(List<Map<String, CreateCompanyaRequest>> createCompFormula) async {
+    try {
+      final response = await userApi.createCopmanyApprochApi(createCompFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
 
 
   Future<BaseLoginResponse<RoleResponse>> getRolesApi() async {

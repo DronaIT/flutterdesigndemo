@@ -144,6 +144,15 @@ class Utils {
     }
     return hubId;
   }
+  static String? getTypeOfIndustryId(String? typeofId) {
+    final typeOfList = PreferenceUtils.getTypeOFSectoreList();
+    for (int i = 0; i < typeOfList.records!.length; i++) {
+      if (typeOfList.records![i].fields!.id == typeofId) {
+        return typeOfList.records![i].id;
+      }
+    }
+    return typeofId;
+  }
 
   static String? getSpecializationId(String? specializationId) {
     final specializationList = PreferenceUtils.getSpecializationList();

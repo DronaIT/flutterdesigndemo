@@ -34,6 +34,9 @@ import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
+import '../models/company_approch_response.dart';
+import '../models/request/create_company_approch.dart';
+
 class ApiRequest {
   final DioClient dioClient;
 
@@ -113,6 +116,19 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<BaseLoginResponse<CompanyApprochResponse>> createCopmanyApprochApi(List<Map<String, CreateCompanyaRequest>> createCompanyFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"records": createCompanyFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.post(TableNames.TBL_COMPANY_APPROCH, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseLoginResponse<CompanyApprochResponse>.fromJson(response.data, (response) => CompanyApprochResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
   Future<CreatePasswordResponse> updateStudentApi(Map<String, dynamic> updateFormula, String recordId) async {
     try {

@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 
 import '../../models/base_api_response.dart';
+import '../../models/request/create_company_approch.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
 import '../../utils/utils.dart';
@@ -275,6 +276,10 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     } else if (cityController.text.trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_city);
                     } else{
+                      setState(() {
+                        isVisible = true;
+                      });
+
 
                     }
 
