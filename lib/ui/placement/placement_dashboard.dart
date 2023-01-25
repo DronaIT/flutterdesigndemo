@@ -43,7 +43,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     setState(() {
       isVisible = true;
     });
-    typeOfResponse =  await apiRepository.getSectorApi();
+    typeOfResponse = await apiRepository.getSectorApi();
     if (typeOfResponse.records!.isNotEmpty) {
       PreferenceUtils.setTypeofList(typeOfResponse);
       print("sectore ${PreferenceUtils.getTypeOFSectoreList().records!.length}");
@@ -64,12 +64,12 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             companyApproch = true;
           });
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CREATE_COMPANY ) {
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CREATE_COMPANY) {
           setState(() {
             createCompany = true;
           });
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_GET_COMPANY_DETAIL ) {
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_GET_COMPANY_DETAIL) {
           setState(() {
             getCompanyDetail = true;
           });
@@ -97,7 +97,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             updateInternship = true;
           });
         }
-
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_something_wrong);
@@ -118,7 +117,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             margin: const EdgeInsets.all(15),
             child: Column(
               children: [
-
                 Visibility(
                   visible: companyApproch,
                   child: GestureDetector(
@@ -129,8 +127,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_company_approch, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_company_approch, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
@@ -139,8 +136,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
-                SizedBox(height: 5.h),
-
                 Visibility(
                   visible: createCompany,
                   child: GestureDetector(
@@ -151,8 +146,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
@@ -161,7 +155,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
-
                 Visibility(
                   visible: getCompanyDetail,
                   child: GestureDetector(
@@ -172,18 +165,15 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_view_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_view_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const GetCompanyDetail() ,arguments: editCompanyDetail);
+                      Get.to(() => const GetCompanyDetail(), arguments: editCompanyDetail);
                     },
                   ),
                 ),
-
-                SizedBox(height: 5.h),
                 // Visibility(
                 //   visible: createJobsAlerts,
                 //   child: GestureDetector(
@@ -205,9 +195,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                 //   ),
                 // ),
                 //SizedBox(height: 5.h),
-
-
-
                 Visibility(
                   visible: applyInternship,
                   child: GestureDetector(
@@ -218,18 +205,13 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_apply_internship, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_apply_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
-                    onTap: () {
-
-                    },
+                    onTap: () {},
                   ),
                 ),
-                SizedBox(height: 5.h),
-
                 Visibility(
                   visible: updateInternship,
                   child: GestureDetector(
@@ -240,30 +222,19 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_update_internship, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_update_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
-                    onTap: () {
-
-                    },
+                    onTap: () {},
                   ),
                 ),
-                SizedBox(height: 5.h),
-
-
-
-
               ],
             ),
           ),
-
-
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
-
         ],
       ),
     ));

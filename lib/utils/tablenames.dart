@@ -3,6 +3,10 @@ class TableNames {
   static const APIKEY = "keyszHTHXMxxKKs9b";
   static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
+  static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";
+  static const CLOUDARY_PRESET = "kgicun2o";
+  static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
+
   static const STUDENT_ROLE_ID = "DR09";
 
   static const MODULE_MANAGE_USER = "DM01";

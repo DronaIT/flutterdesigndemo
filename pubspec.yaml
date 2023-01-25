@@ -59,6 +59,7 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   logger:
   json_annotation: ^3.1.1
+  cloudinary_public: ^0.20.0
 
 dev_dependencies:
 

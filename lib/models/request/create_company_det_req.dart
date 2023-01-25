@@ -13,25 +13,23 @@ class CreateCompanyDetailRequest {
   String? reporting_branch;
   String? reporting_address;
   String? city;
+  List<Map<String, dynamic>>? company_logo;
 
-
-  CreateCompanyDetailRequest({
-    this.company_identity_number,
-    this.company_name,
-    this.contact_name,
-    this.contact_number,
-    this.contact_whatsapp_number,
-    this.company_sector,
-    this.contact_designation,
-    this.company_landline,
-    this.company_website,
-    this.contact_email,
-
-    this.reporting_branch,
-    this.reporting_address,
-    this.city,
-
-  });
+  CreateCompanyDetailRequest(
+      {this.company_identity_number,
+      this.company_name,
+      this.contact_name,
+      this.contact_number,
+      this.contact_whatsapp_number,
+      this.company_sector,
+      this.contact_designation,
+      this.company_landline,
+      this.company_website,
+      this.contact_email,
+      this.reporting_branch,
+      this.reporting_address,
+      this.city,
+      this.company_logo});
 
   CreateCompanyDetailRequest.fromJson(Map<String, dynamic> json) {
     company_identity_number = json['company_identity_number'];
@@ -48,6 +46,7 @@ class CreateCompanyDetailRequest {
     reporting_branch = json['reporting_branch'];
     reporting_address = json['reporting_address'];
     city = json['city'];
+    company_logo = json['company_logo']?.cast<Map<String, dynamic>>();
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +64,7 @@ class CreateCompanyDetailRequest {
     data['reporting_address'] = this.reporting_address;
     data['city'] = this.city;
     data['company_landline'] = this.company_landline;
+    data['company_logo'] = this.company_logo;
     return data;
   }
 }

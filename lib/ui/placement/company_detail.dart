@@ -1,9 +1,12 @@
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
@@ -43,16 +46,19 @@ class _CompanyDetailState extends State<CompanyDetail> {
   List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
   String typeofValue = "1";
-  String path = "test";
+  String path = "", title = "";
   List<Map<String, CreateCompanyDetailRequest>> list = [];
   final companyDetailRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? compnayDetailData = [];
 
+  var cloudinary;
+
   @override
   void initState() {
     super.initState();
     typeofResponseArray = PreferenceUtils.getTypeOFSectoreList().records;
+    cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
     initialization();
   }
 
@@ -78,10 +84,10 @@ class _CompanyDetailState extends State<CompanyDetail> {
             contactPWanumberController.text = compnayDetailData![0].fields!.contactWhatsappNumber.toString();
             companyLandlineController.text = compnayDetailData![0].fields!.company_landline.toString();
             emailContactperController.text = compnayDetailData![0].fields!.contactEmail.toString();
-            companyWebsiteController.text =  compnayDetailData![0].fields!.companyWebsite.toString();
+            companyWebsiteController.text = compnayDetailData![0].fields!.companyWebsite.toString();
             repotBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
-            reportAddressController.text =  compnayDetailData![0].fields!.reporting_address.toString();
-            cityController.text =  compnayDetailData![0].fields!.city.toString();
+            reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
+            cityController.text = compnayDetailData![0].fields!.city.toString();
             for (var i = 0; i < typeofResponseArray!.length; i++) {
               if (compnayDetailData![0].fields!.id == typeofResponseArray![i].fields!.id) {
                 setState(() {
@@ -295,7 +301,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     controller: cityController,
                     topValue: 5,
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 8.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -305,11 +311,16 @@ class _CompanyDetailState extends State<CompanyDetail> {
                         textStyles: blackTextSemiBold16,
                         leftValue: 10,
                       ),
-                      Container(margin: const EdgeInsets.only(right: 30), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                      GestureDetector(
+                        child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                        onTap: () {
+                          picImage();
+                        },
+                      ),
                     ],
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(text: path, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                  custom_text(text: title, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
                   SizedBox(height: 20.h),
                   CustomButton(
                       text: strings_name.str_submit,
@@ -339,6 +350,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           setState(() {
                             isVisible = true;
                           });
+                          var updatedPath = "";
+                          if (path.isNotEmpty) {
+                            CloudinaryResponse response = await cloudinary.uploadFile(
+                              CloudinaryFile.fromFile(path, resourceType: CloudinaryResourceType.Image, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOGO),
+                            );
+                            updatedPath = response.secureUrl;
+                          }
                           CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
                           response.company_name = nameofCompanyController.text.trim().toString();
                           response.company_identity_number = companyIdnoController.text.trim().toString();
@@ -353,11 +371,21 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           response.reporting_branch = repotBranchController.text.trim().toString();
                           response.reporting_address = reportAddressController.text.trim().toString();
                           response.city = cityController.text.trim().toString();
+
+                          if (updatedPath.isNotEmpty) {
+                            Map<String, dynamic> map = Map();
+                            map["url"] = updatedPath;
+                            List<Map<String, dynamic>> listData = [];
+                            listData.add(map);
+
+                            response.company_logo = listData;
+                          }
+
                           Map<String, CreateCompanyDetailRequest> map = Map();
                           map["fields"] = response;
                           list.add(map);
 
-                          if(!fromEdit){
+                          if (!fromEdit) {
                             var resp = await companyDetailRepository.createCopmanyDetailApi(list);
                             if (resp.records!.isNotEmpty) {
                               setState(() {
@@ -371,7 +399,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                                 isVisible = false;
                               });
                             }
-                          }else{
+                          } else {
                             var resp = await companyDetailRepository.updateCompanyDetailApi(response.toJson(), compnayDetailData![0].id.toString());
                             if (resp.id!.isNotEmpty) {
                               setState(() {
@@ -386,7 +414,6 @@ class _CompanyDetailState extends State<CompanyDetail> {
                               });
                             }
                           }
-
                         }
                       }),
                   SizedBox(height: 20.h),
@@ -400,5 +427,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
         ),
       ),
     );
+  }
+
+  picImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null) {
+      title = result.files.single.name;
+      path = result.files.single.path!;
+    }
   }
 }
