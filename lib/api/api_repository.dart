@@ -162,9 +162,9 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi() async {
+  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi(String formula) async {
     try {
-      final response = await userApi.getCompanyDetailApi();
+      final response = await userApi.getCompanyDetailApi(formula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -341,6 +341,17 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<UpdateSubject> updateCompanyDetailApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateCompanyDetailApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
 
   Future<BaseApiResponseWithSerializable<UnitsResponse>> addUnitsApi(AddUnitsRequest addUnitsRequest) async {
     try {

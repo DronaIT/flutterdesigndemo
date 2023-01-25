@@ -64,7 +64,7 @@ class CreateCompanyDetailRequest {
     data['reporting_branch'] = this.reporting_branch;
     data['reporting_address'] = this.reporting_address;
     data['city'] = this.city;
-
+    data['company_landline'] = this.company_landline;
     return data;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
@@ -22,10 +23,12 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   BaseLoginResponse<CompanyDetailResponse> companyDetailResponse = BaseLoginResponse();
+  var update = false;
 
   @override
   void initState() {
     super.initState();
+    update = Get.arguments;
     getRecords();
   }
 
@@ -33,7 +36,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
     setState(() {
       isVisible = true;
     });
-    companyDetailResponse = await apiRepository.getCompanyDetailApi();
+    companyDetailResponse = await apiRepository.getCompanyDetailApi("");
     if (companyDetailResponse.records!.isNotEmpty) {
       setState(() {
         isVisible = false;
@@ -51,7 +54,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
           Container(
             margin: const EdgeInsets.all(10),
             child: ListView.builder(
-                itemCount: companyDetailResponse.records?.length,
+                itemCount: companyDetailResponse.records != null ?companyDetailResponse.records?.length : 0,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                       elevation: 5,
@@ -60,17 +63,23 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                           Flexible(
                             child: Column(
                               children: [
-                                custom_text(text: "${companyDetailResponse.records![index].fields?.companyName}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
-                                custom_text(text: "Name: ${companyDetailResponse.records![index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
-                                custom_text(text: "Contact no.: ${companyDetailResponse.records![index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                custom_text(text: "${companyDetailResponse.records?[index].fields?.companyName}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
+                                custom_text(text: "Name: ${companyDetailResponse.records?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                custom_text(text: "Contact no.: ${companyDetailResponse.records?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
                               ],
                             ),
                           ),
                           Visibility(
-                              visible: Get.arguments,
+                              visible: update,
                               child: GestureDetector(
-                                onTap: () {},
-                                child:  Container(margin: const EdgeInsets.all(10), child: Icon(Icons.edit))),
+                                onTap: () {
+                                  Get.to(const CompanyDetail(), arguments: companyDetailResponse.records?[index].fields?.company_code)?.then((result) {
+                                    if (result != null && result) {
+                                      getRecords();
+                                    }
+                                  });
+                                },
+                                child:  Container(margin: const EdgeInsets.all(10), child: const Icon(Icons.edit))),
                               )
                         ],
                       ));

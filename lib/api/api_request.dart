@@ -177,10 +177,11 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi() async {
+  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi(String updateFormula) async {
     try {
+      Map<String, dynamic> someMap = {"filterByFormula": updateFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
-      final Response response = await dioClient.get(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header));
+      final Response response = await dioClient.get(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header) , queryParameters: someMap);
       return BaseLoginResponse<CompanyDetailResponse>.fromJson(response.data, (response) => CompanyDetailResponse.fromJson(response));
     } catch (e) {
       rethrow;
@@ -373,6 +374,19 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<UpdateSubject> updateCompanyDetailApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_COMPANY_DETAIL + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateSubject.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
   Future<BaseApiResponseWithSerializable<UnitsResponse>> addUnitsApi(AddUnitsRequest addUnitsRequest) async {
     try {

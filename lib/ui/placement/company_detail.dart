@@ -12,10 +12,11 @@ import 'package:get/get.dart';
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
-import '../../models/request/create_company_appr_req.dart';
+import '../../models/company_detail_response.dart';
 import '../../models/request/create_company_det_req.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
+import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 
 class CompanyDetail extends StatefulWidget {
@@ -43,14 +44,63 @@ class _CompanyDetailState extends State<CompanyDetail> {
   List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
   String typeofValue = "1";
-  String path="test";
+  String path = "test";
   List<Map<String, CreateCompanyDetailRequest>> list = [];
   final companyDetailRepository = getIt.get<ApiRepository>();
+  bool fromEdit = false;
+  List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? compnayDetailData = [];
 
   @override
   void initState() {
     super.initState();
     typeofResponseArray = PreferenceUtils.getTypeOFSectoreList().records;
+    initialization();
+  }
+
+  Future<void> initialization() async {
+    if (Get.arguments != null) {
+      setState(() {
+        isVisible = true;
+      });
+      var query = "FIND('${Get.arguments}', ${TableNames.CLM_COMPANY_CODE}, 0)";
+      var data = await companyDetailRepository.getCompanyDetailApi(query);
+      if (data.records?.isNotEmpty == true) {
+        setState(() {
+          fromEdit = true;
+        });
+        compnayDetailData = data.records;
+        if (compnayDetailData?.isNotEmpty == true) {
+          setState(() {
+            nameofCompanyController.text = compnayDetailData![0].fields!.companyName.toString();
+            companyIdnoController.text = compnayDetailData![0].fields!.companyIdentityNumber.toString();
+            nameOfContactPController.text = compnayDetailData![0].fields!.contactName.toString();
+            contactPdesiController.text = compnayDetailData![0].fields!.contactDesignation.toString();
+            contactPnumberController.text = compnayDetailData![0].fields!.contactNumber.toString();
+            contactPWanumberController.text = compnayDetailData![0].fields!.contactWhatsappNumber.toString();
+            companyLandlineController.text = compnayDetailData![0].fields!.company_landline.toString();
+            emailContactperController.text = compnayDetailData![0].fields!.contactEmail.toString();
+            companyWebsiteController.text =  compnayDetailData![0].fields!.companyWebsite.toString();
+            repotBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
+            reportAddressController.text =  compnayDetailData![0].fields!.reporting_address.toString();
+            cityController.text =  compnayDetailData![0].fields!.city.toString();
+            for (var i = 0; i < typeofResponseArray!.length; i++) {
+              if (compnayDetailData![0].fields!.id == typeofResponseArray![i].fields!.id) {
+                setState(() {
+                  typeOfResponse = typeofResponseArray![i];
+                  typeofValue = typeofResponseArray![i].id!.toString();
+                });
+                break;
+              }
+            }
+          });
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+      setState(() {
+        isVisible = false;
+      });
+    }
   }
 
   @override
@@ -89,7 +139,6 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 5.h),
-
                   custom_text(
                     text: strings_name.str_type_of_inducstry,
                     alignment: Alignment.topLeft,
@@ -185,7 +234,6 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     type: TextInputType.phone,
                     textInputAction: TextInputAction.next,
                     controller: companyLandlineController,
-
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
@@ -213,7 +261,6 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-
                   custom_text(
                     text: strings_name.str_reporting_branch,
                     alignment: Alignment.topLeft,
@@ -259,81 +306,90 @@ class _CompanyDetailState extends State<CompanyDetail> {
                         textStyles: blackTextSemiBold16,
                         leftValue: 10,
                       ),
-                      Container(
-                          margin: const EdgeInsets.only(right: 30),
-                          child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
-
+                      Container(margin: const EdgeInsets.only(right: 30), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
                     ],
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
-                      text: path,
-                      alignment: Alignment.topLeft,
-                      textStyles: grayTextstyle,
-                      topValue: 0,bottomValue: 0
-                  ),
+                  custom_text(text: path, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
                   SizedBox(height: 20.h),
-                  CustomButton(text: strings_name.str_submit, click: () async {
-                    var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
-                    if (nameofCompanyController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_company_name);
-                    } else if (companyIdnoController.text.toString().trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_company_id_no);
-                    } else if (typeofValue.toString().trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_type_of);
-                    } else if (nameOfContactPController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_contact_person_name);
-                    }  else if (contactPdesiController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empaty_contact_desi);
-                    } else if (phone.isNotEmpty) {
-                      Utils.showSnackBar(context, phone);
-                    } else if (emailContactperController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_company_email);
-                    } else if (repotBranchController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_reporting_branch);
-                    } else if (reportAddressController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_reporting_address);
-                    } else if (cityController.text.trim().isEmpty) {
-                      Utils.showSnackBar(context, strings_name.str_empty_city);
-                    } else{
-                      setState(() {
-                        isVisible = true;
-                      });
+                  CustomButton(
+                      text: strings_name.str_submit,
+                      click: () async {
+                        var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
+                        if (nameofCompanyController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_company_name);
+                        } else if (companyIdnoController.text.toString().trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_company_id_no);
+                        } else if (typeofValue.toString().trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_type_of);
+                        } else if (nameOfContactPController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_contact_person_name);
+                        } else if (contactPdesiController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empaty_contact_desi);
+                        } else if (phone.isNotEmpty) {
+                          Utils.showSnackBar(context, phone);
+                        } else if (emailContactperController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_company_email);
+                        } else if (repotBranchController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_reporting_branch);
+                        } else if (reportAddressController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_reporting_address);
+                        } else if (cityController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_city);
+                        } else {
+                          setState(() {
+                            isVisible = true;
+                          });
+                          CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
+                          response.company_name = nameofCompanyController.text.trim().toString();
+                          response.company_identity_number = companyIdnoController.text.trim().toString();
+                          response.company_sector = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
+                          response.contact_name = nameOfContactPController.text.trim().toString();
+                          response.contact_designation = contactPdesiController.text.trim().toString();
+                          response.contact_number = contactPnumberController.text.trim().toString();
+                          response.contact_whatsapp_number = contactPWanumberController.text.trim().toString();
+                          response.company_landline = companyLandlineController.text.trim().toString();
+                          response.contact_email = emailContactperController.text.trim().toString();
+                          response.company_website = companyWebsiteController.text.trim().toString();
+                          response.reporting_branch = repotBranchController.text.trim().toString();
+                          response.reporting_address = reportAddressController.text.trim().toString();
+                          response.city = cityController.text.trim().toString();
+                          Map<String, CreateCompanyDetailRequest> map = Map();
+                          map["fields"] = response;
+                          list.add(map);
 
-                      CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
-                      response.company_name = nameofCompanyController.text.trim().toString();
-                      response.company_identity_number = companyIdnoController.text.trim().toString();
-                      response.company_sector = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
-                      response.contact_name = nameOfContactPController.text.trim().toString();
-                      response.contact_designation = contactPdesiController.text.trim().toString();
-                      response.contact_number = contactPnumberController.text.trim().toString();
-                      response.contact_whatsapp_number = contactPWanumberController.text.trim().toString();
-                      response.company_landline = companyLandlineController.text.trim().toString();
-                      response.contact_email = emailContactperController.text.trim().toString();
-                      response.company_website = companyWebsiteController.text.trim().toString();
-                      response.reporting_branch = repotBranchController.text.trim().toString();
-                      response.reporting_address = reportAddressController.text.trim().toString();
-                      response.city = cityController.text.trim().toString();
-                      Map<String, CreateCompanyDetailRequest> map = Map();
-                      map["fields"] = response;
-                      list.add(map);
-                      var resp = await companyDetailRepository.createCopmanyDetailApi(list);
-                      if (resp.records!.isNotEmpty) {
-                        setState(() {
-                          isVisible = false;
-                        });
-                        Utils.showSnackBar(context, strings_name.str_company_det_added);
-                        await Future.delayed(const Duration(milliseconds: 2000));
-                        Get.back(closeOverlays: true);
-                      } else {
-                        setState(() {
-                          isVisible = false;
-                        });
-                      }
-                    }
+                          if(!fromEdit){
+                            var resp = await companyDetailRepository.createCopmanyDetailApi(list);
+                            if (resp.records!.isNotEmpty) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_company_det_added);
+                              await Future.delayed(const Duration(milliseconds: 2000));
+                              Get.back(closeOverlays: true);
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                              });
+                            }
+                          }else{
+                            var resp = await companyDetailRepository.updateCompanyDetailApi(response.toJson(), compnayDetailData![0].id.toString());
+                            if (resp.id!.isNotEmpty) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_company_updated);
+                              await Future.delayed(const Duration(milliseconds: 2000));
+                              Get.back(closeOverlays: true, result: true);
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                              });
+                            }
+                          }
 
-                  }),
-
+                        }
+                      }),
                   SizedBox(height: 20.h),
                 ],
               ),
