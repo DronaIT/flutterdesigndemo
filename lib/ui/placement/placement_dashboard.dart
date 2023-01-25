@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
+import 'package:flutterdesigndemo/ui/placement/getcompany_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -27,7 +28,7 @@ class PlacementDashboard extends StatefulWidget {
 class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
-  bool companyApproch = false, createCompany = false, createJobsAlerts = false;
+  bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
   bool applyInternship = false, updateInternship = false;
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
@@ -67,6 +68,17 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             createCompany = true;
           });
         }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_GET_COMPANY_DETAIL ) {
+          setState(() {
+            getCompanyDetail = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDIT_COMPANY_DETAIL) {
+          setState(() {
+            editCompanyDetail = true;
+          });
+        }
+
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
           setState(() {
             createJobsAlerts = true;
@@ -148,6 +160,28 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
+
+                Visibility(
+                  visible: getCompanyDetail,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_view_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const GetCompanyDetail() ,arguments: editCompanyDetail);
+                    },
+                  ),
+                ),
+
                 SizedBox(height: 5.h),
                 Visibility(
                   visible: createJobsAlerts,

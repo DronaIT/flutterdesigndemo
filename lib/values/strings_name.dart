@@ -286,5 +286,6 @@ class strings_name {
   static const String str_company_id_no = "Company identification no.";
   static const String str_empty_company_id_no = "Please enter company indentification no.";
   static const String str_company_det_added = "Company detail added successfully";
+  static const String str_view_create_company = "View company detail";
 
 }

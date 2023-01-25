@@ -162,6 +162,16 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi() async {
+    try {
+      final response = await userApi.getCompanyDetailApi();
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {
       final response = await userApi.getSpecializationApi();

@@ -178,6 +178,17 @@ class ApiRequest {
     }
   }
 
+  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi() async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.get(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header));
+      return BaseLoginResponse<CompanyDetailResponse>.fromJson(response.data, (response) => CompanyDetailResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
   Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectoreApi() async {
     try {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};

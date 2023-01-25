@@ -80,6 +80,9 @@ class TableNames {
   static const PERMISSION_ID_APPLY_INTERNSHIP = "DP0404";
   static const PERMISSION_ID_UPDATE_INTERNSHIP = "DP0405";
 
+  static const PERMISSION_ID_GET_COMPANY_DETAIL = "DP0406";
+  static const PERMISSION_ID_EDIT_COMPANY_DETAIL = "DP0407";
+
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
   static const EXCEL_COL_GENDER = "gender";
