@@ -29,6 +29,7 @@ class TableNames {
   static const TBL_STUDENT_ATTENDANCE = "TBL_STUDENT_ATTENDANCE";
   static const TBL_SECTOR = "TBL_SECTORS";
   static const TBL_COMPANY_APPROCH = "TBL_COMPANY_APPROCH";
+  static const TBL_COMPANY_DETAIL = "TBL_COMPANY";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";

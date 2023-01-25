@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
-import '../../models/request/create_company_approch.dart';
+import '../../models/request/create_company_appr_req.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
 
@@ -132,7 +132,7 @@ class _CompanyApprochState extends State<CompanyApproch> {
                   textStyles: blackTextSemiBold16,
                 ),
                 custom_edittext(
-                  type: TextInputType.number,
+                  type: TextInputType.phone,
                   textInputAction: TextInputAction.next,
                   controller: contactPnumberController,
                   maxLength: 10,
@@ -146,7 +146,7 @@ class _CompanyApprochState extends State<CompanyApproch> {
                   textStyles: blackTextSemiBold16,
                 ),
                 custom_edittext(
-                  type: TextInputType.number,
+                  type: TextInputType.phone,
                   textInputAction: TextInputAction.next,
                   controller: contactPWanumberController,
                   maxLength: 10,

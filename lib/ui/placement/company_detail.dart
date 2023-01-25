@@ -7,9 +7,13 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 
+import '../../api/api_repository.dart';
+import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
-import '../../models/request/create_company_approch.dart';
+import '../../models/request/create_company_appr_req.dart';
+import '../../models/request/create_company_det_req.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
 import '../../utils/utils.dart';
@@ -23,7 +27,7 @@ class CompanyDetail extends StatefulWidget {
 
 class _CompanyDetailState extends State<CompanyDetail> {
   TextEditingController nameofCompanyController = TextEditingController();
-
+  TextEditingController companyIdnoController = TextEditingController();
   TextEditingController nameOfContactPController = TextEditingController();
   TextEditingController contactPnumberController = TextEditingController();
   TextEditingController contactPWanumberController = TextEditingController();
@@ -40,6 +44,8 @@ class _CompanyDetailState extends State<CompanyDetail> {
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
   String typeofValue = "1";
   String path="test";
+  List<Map<String, CreateCompanyDetailRequest>> list = [];
+  final companyDetailRepository = getIt.get<ApiRepository>();
 
   @override
   void initState() {
@@ -68,6 +74,18 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     type: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     controller: nameofCompanyController,
+                    topValue: 5,
+                  ),
+                  SizedBox(height: 5.h),
+                  custom_text(
+                    text: strings_name.str_company_id_no,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: companyIdnoController,
                     topValue: 5,
                   ),
                   SizedBox(height: 5.h),
@@ -138,7 +156,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     textStyles: blackTextSemiBold16,
                   ),
                   custom_edittext(
-                    type: TextInputType.number,
+                    type: TextInputType.phone,
                     textInputAction: TextInputAction.next,
                     controller: contactPnumberController,
                     maxLength: 10,
@@ -151,7 +169,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     textStyles: blackTextSemiBold16,
                   ),
                   custom_edittext(
-                    type: TextInputType.number,
+                    type: TextInputType.phone,
                     maxLength: 10,
                     textInputAction: TextInputAction.next,
                     controller: contactPWanumberController,
@@ -164,10 +182,10 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     textStyles: blackTextSemiBold16,
                   ),
                   custom_edittext(
-                    type: TextInputType.number,
+                    type: TextInputType.phone,
                     textInputAction: TextInputAction.next,
                     controller: companyLandlineController,
-                    maxLength: 10,
+
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
@@ -255,10 +273,12 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       topValue: 0,bottomValue: 0
                   ),
                   SizedBox(height: 20.h),
-                  CustomButton(text: strings_name.str_submit, click: () {
+                  CustomButton(text: strings_name.str_submit, click: () async {
                     var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
                     if (nameofCompanyController.text.trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_company_name);
+                    } else if (companyIdnoController.text.toString().trim().isEmpty) {
+                      Utils.showSnackBar(context, strings_name.str_empty_company_id_no);
                     } else if (typeofValue.toString().trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_type_of);
                     } else if (nameOfContactPController.text.trim().isEmpty) {
@@ -280,7 +300,36 @@ class _CompanyDetailState extends State<CompanyDetail> {
                         isVisible = true;
                       });
 
-
+                      CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
+                      response.company_name = nameofCompanyController.text.trim().toString();
+                      response.company_identity_number = companyIdnoController.text.trim().toString();
+                      response.company_sector = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
+                      response.contact_name = nameOfContactPController.text.trim().toString();
+                      response.contact_designation = contactPdesiController.text.trim().toString();
+                      response.contact_number = contactPnumberController.text.trim().toString();
+                      response.contact_whatsapp_number = contactPWanumberController.text.trim().toString();
+                      response.company_landline = companyLandlineController.text.trim().toString();
+                      response.contact_email = emailContactperController.text.trim().toString();
+                      response.company_website = companyWebsiteController.text.trim().toString();
+                      response.reporting_branch = repotBranchController.text.trim().toString();
+                      response.reporting_address = reportAddressController.text.trim().toString();
+                      response.city = cityController.text.trim().toString();
+                      Map<String, CreateCompanyDetailRequest> map = Map();
+                      map["fields"] = response;
+                      list.add(map);
+                      var resp = await companyDetailRepository.createCopmanyDetailApi(list);
+                      if (resp.records!.isNotEmpty) {
+                        setState(() {
+                          isVisible = false;
+                        });
+                        Utils.showSnackBar(context, strings_name.str_company_det_added);
+                        await Future.delayed(const Duration(milliseconds: 2000));
+                        Get.back(closeOverlays: true);
+                      } else {
+                        setState(() {
+                          isVisible = false;
+                        });
+                      }
                     }
 
                   }),

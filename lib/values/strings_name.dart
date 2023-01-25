@@ -255,7 +255,7 @@ class strings_name {
   static const String str_name_of_company = "Name of company";
   static const String str_type_of_inducstry = "Select type of industry/sector";
   static const String str_contact_person = "Contact person's name";
-  static const String str_contact_person_number = "Contact person's number";
+  static const String str_contact_person_number = "Contact person's no.";
   static const String str_contact_person_wanumber = "Contact person's whatsapp no.";
   static const String str_dashboard = "Dashboard";
   static const String str_create_company = "Create company";
@@ -279,9 +279,12 @@ class strings_name {
   static const String str_contact_person_num = "Please enter contact person's number";
   static const String str_contact_person_wnum = "Please enter contact person's whatsapp no.";
 
-  static const String str_company_email = "Please enter company's email";
+  static const String str_company_email = "Please enter contact person's email";
   static const String str_empty_reporting_branch = "Please enter reporting branch";
   static const String str_empty_reporting_address = "Please enter reporting address";
   static const String str_company_a_added = "Company approch added successfully";
+  static const String str_company_id_no = "Company identification no.";
+  static const String str_empty_company_id_no = "Please enter company indentification no.";
+  static const String str_company_det_added = "Company detail added successfully";
 
 }

@@ -35,7 +35,9 @@ import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 import '../models/company_approch_response.dart';
-import '../models/request/create_company_approch.dart';
+import '../models/company_detail_response.dart';
+import '../models/request/create_company_appr_req.dart';
+import '../models/request/create_company_det_req.dart';
 
 class ApiRequest {
   final DioClient dioClient;
@@ -124,6 +126,18 @@ class ApiRequest {
 
       final Response response = await dioClient.post(TableNames.TBL_COMPANY_APPROCH, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseLoginResponse<CompanyApprochResponse>.fromJson(response.data, (response) => CompanyApprochResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<CompanyDetailResponse>> createCopmanyDetailApi(List<Map<String, CreateCompanyDetailRequest>> createCompanydFormula) async {
+    try {
+      Map<String, dynamic> someMap = {"records": createCompanydFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.post(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseLoginResponse<CompanyDetailResponse>.fromJson(response.data, (response) => CompanyDetailResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }
