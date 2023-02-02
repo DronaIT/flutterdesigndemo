@@ -444,4 +444,15 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+
+  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String jobFormula) async {
+    try {
+      final response = await userApi.getJoboppoApi(jobFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

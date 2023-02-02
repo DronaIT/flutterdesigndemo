@@ -491,4 +491,14 @@ class ApiRequest {
       rethrow;
     }
   }
+  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String JoboppoFormula) async {
+    try {
+      Map<String, String> someMap = {"filterByFormula": JoboppoFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.get(TableNames.TBL_JOBS, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<JobOpportunityResponse>.fromJson(response.data, (response) => JobOpportunityResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

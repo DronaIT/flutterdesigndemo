@@ -340,4 +340,6 @@ class strings_name {
   static const String str_empty_end_time = "Please select end time of internship";
 
   static const String str_job_added = "New job opportunity added successfully.";
+
+  static const String str_apply = "Apply";
 }

@@ -164,7 +164,13 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                 visible: viewJobAlerts,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => const JobOpportunityList(), arguments: updateJobAlerts);
+                                  //  Get.to(() => const JobOpportunityList(), arguments: updateJobAlerts ,);
+
+                                    Get.to(() => const JobOpportunityList(), arguments: [
+                                      {"updateJobOppList": updateJobAlerts},
+                                      {"companyId": companyDetailResponse.records?[index].fields?.id}
+                                    ]);
+
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: colors_name.presentColor,

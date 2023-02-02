@@ -21,6 +21,9 @@ class JobOpportunityResponse {
   List<String>? specializationIds;
   List<String>? companyCode;
   List<String>? companyName;
+  List<String>?reporting_address;
+  List<String>? reporting_branch;
+  List<String>? city;
 
   JobOpportunityResponse(
       {this.jobDescription,
@@ -44,6 +47,9 @@ class JobOpportunityResponse {
       this.stipendType,
       this.specializationIds,
       this.companyCode,
+      this.reporting_branch,
+      this.reporting_address,
+      this.city,
       this.companyName});
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
@@ -74,6 +80,10 @@ class JobOpportunityResponse {
     specializationIds = json['specialization_ids']?.cast<String>();
     companyCode = json['company_code']?.cast<String>();
     companyName = json['company_name']?.cast<String>();
+
+    reporting_address = json['reporting_address']?.cast<String>();
+    reporting_branch = json['reporting_branch']?.cast<String>();
+    city = json['city']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -102,6 +112,10 @@ class JobOpportunityResponse {
     data['specialization_ids'] = this.specializationIds;
     data['company_code'] = this.companyCode;
     data['company_name'] = this.companyName;
+
+    data['reporting_address'] = this.reporting_address;
+    data['reporting_branch'] = this.reporting_branch;
+    data['city'] = this.city;
     return data;
   }
 }
