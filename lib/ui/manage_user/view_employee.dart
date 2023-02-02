@@ -150,7 +150,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                         ],
                                       ),
                                     ),
-                                    Get.arguments != null
+                                    Get.arguments != null && Get.arguments == true
                                         ? GestureDetector(
                                             onTap: () async {
                                               var response = await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);

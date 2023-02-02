@@ -127,12 +127,12 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_company_approch, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_company_approach, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const CompanyApproch());
+                      Get.to(() => const CompanyApproach());
                     },
                   ),
                 ),

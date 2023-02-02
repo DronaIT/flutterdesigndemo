@@ -17,6 +17,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class AddSingleStudent extends StatefulWidget {
   const AddSingleStudent({Key? key}) : super(key: key);
@@ -66,6 +67,8 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   final apiRepository = getIt.get<ApiRepository>();
   var addStudentId;
 
+  String formattedDate = "";
+
   @override
   void initState() {
     super.initState();
@@ -101,7 +104,14 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
         }
       }
     }
+    checkCurrentData();
     initialization();
+  }
+
+  void checkCurrentData() {
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    formattedDate = formatter.format(now);
   }
 
   Future<void> initialization() async {
@@ -125,6 +135,9 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
             joingYearController.text = data.records!.first.fields!.joiningYear ?? "";
             srnumberController.text = data.records!.first.fields!.sr_number ?? "";
             birthdateController.text = data.records!.first.fields!.birthdate ?? "";
+            if (data.records!.first.fields!.birthdate?.isNotEmpty == true) {
+              formattedDate = data.records!.first.fields!.birthdate ?? "";
+            }
             aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number ?? "";
             casteController.text = data.records!.first.fields!.caste ?? "";
             hscpercentageController.text = data.records!.first.fields!.hsc_percentage ?? "";
@@ -184,7 +197,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_student),
+      appBar: AppWidgets.appBarWithoutBack(fromEdit ? strings_name.str_update_student_details : strings_name.str_add_student),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -234,20 +247,33 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
-                    text: strings_name.str_brithday,
+                    text: strings_name.str_birthday,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                     topValue: 5,
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: custom_edittext(
-                      type: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      controller: birthdateController,
-                      maxLength: 10,
-                      topValue: 2,
+                  InkWell(
+                    child: IgnorePointer(
+                      child: custom_edittext(
+                        type: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        controller: birthdateController,
+                        maxLength: 10,
+                        topValue: 2,
+                      ),
                     ),
+                    onTap: () {
+                      showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(1950), lastDate: DateTime.now()).then((pickedDate) {
+                        if (pickedDate == null) {
+                          return;
+                        }
+                        setState(() {
+                          var formatter = DateFormat('yyyy-MM-dd');
+                          formattedDate = formatter.format(pickedDate);
+                          birthdateController.text = formattedDate;
+                        });
+                      });
+                    },
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
@@ -678,14 +704,14 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         Utils.showSnackBar(context, strings_name.str_empty_email);
                       } else if (phone.isNotEmpty) {
                         Utils.showSnackBar(context, phone);
-                      } else if (birthdateController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_brithdate);
+                        // } else if (birthdateController.text.trim().isEmpty) {
+                        //   Utils.showSnackBar(context, strings_name.str_empty_brithdate);
                       } else if (addressController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_address);
                       } else if (cityController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_city);
-                      } else if (pincodeController.text.trim().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_pincode);
+                        // } else if (pincodeController.text.trim().isEmpty) {
+                        //   Utils.showSnackBar(context, strings_name.str_empty_pincode);
                       } else if (gender.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_gender);
                       } else if (joingYearController.text.trim().isEmpty) {
@@ -715,7 +741,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.semester = semesterValue.toString();
                         response.division = divisionValue;
                         response.pinCode = pincodeController.text.trim().toString();
-                        response.birthdate = birthdateController.text.trim().toString();
+                        if (birthdateController.text.trim().isNotEmpty) response.birthdate = birthdateController.text.trim().toString();
                         response.motherName = mothernameController.text.trim().toString();
                         response.motherNumber = mothernumberController.text.trim().toString();
                         response.fatherNumber = fathernumberController.text.trim().toString();

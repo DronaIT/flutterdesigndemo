@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
+import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
@@ -9,6 +10,7 @@ import 'package:flutterdesigndemo/models/request/add_specialization_request.dart
 import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
 import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
 import 'package:flutterdesigndemo/models/request/add_units_request.dart';
+import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
@@ -25,6 +27,7 @@ import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/models/update_specialization.dart';
+import 'package:flutterdesigndemo/models/update_student_attendance.dart';
 import 'package:flutterdesigndemo/models/update_subject.dart';
 import 'package:flutterdesigndemo/models/update_topics.dart';
 import 'package:flutterdesigndemo/models/update_units.dart';
@@ -184,7 +187,7 @@ class ApiRepository {
 
   Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectorApi() async {
     try {
-      final response = await userApi.getSectoreApi();
+      final response = await userApi.getSectorsApi();
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -352,7 +355,6 @@ class ApiRepository {
     }
   }
 
-
   Future<BaseApiResponseWithSerializable<UnitsResponse>> addUnitsApi(AddUnitsRequest addUnitsRequest) async {
     try {
       final response = await userApi.addUnitsApi(addUnitsRequest);
@@ -416,6 +418,26 @@ class ApiRepository {
   Future<BaseLoginResponse<StudentAttendanceResponse>> getStudentAttendanceApi(String attendanceFormula) async {
     try {
       final response = await userApi.getStudentAttendanceApi(attendanceFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<UpdateStudentAttendance> updateStudentAttendanceApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateStudentAttendanceApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<JobOpportunityResponse>> createJobOpportunityApi(CreateJobOpportunityRequest request) async {
+    try {
+      final response = await userApi.createJobOpportunityApi(request);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

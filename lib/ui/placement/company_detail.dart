@@ -19,7 +19,6 @@ import '../../models/company_detail_response.dart';
 import '../../models/request/create_company_det_req.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
-import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 
 class CompanyDetail extends StatefulWidget {
@@ -145,7 +144,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
-                    text: strings_name.str_type_of_inducstry,
+                    text: strings_name.str_type_of_industry,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),

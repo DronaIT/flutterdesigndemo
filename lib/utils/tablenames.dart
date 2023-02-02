@@ -6,6 +6,8 @@ class TableNames {
   static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";
   static const CLOUDARY_PRESET = "kgicun2o";
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
+  static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
+  static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
 
   static const STUDENT_ROLE_ID = "DR09";
 
@@ -32,8 +34,9 @@ class TableNames {
   static const TBL_TOPICS = "TBL_TOPICS";
   static const TBL_STUDENT_ATTENDANCE = "TBL_STUDENT_ATTENDANCE";
   static const TBL_SECTOR = "TBL_SECTORS";
-  static const TBL_COMPANY_APPROCH = "TBL_COMPANY_APPROCH";
+  static const TBL_COMPANY_APPROACH = "TBL_COMPANY_APPROACH";
   static const TBL_COMPANY_DETAIL = "TBL_COMPANY";
+  static const TBL_JOBS = "TBL_JOBS";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";

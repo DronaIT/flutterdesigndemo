@@ -46,6 +46,7 @@ class strings_name {
   static const String str_manage_users = "Manage user";
   static const String str_add_students = "Add students";
   static const String str_add_student = "Add student";
+  static const String str_update_student_details = "Update student details";
 
   static const String str_view_students = "View students";
   static const String str_add_employee = "Add employee";
@@ -83,11 +84,12 @@ class strings_name {
   // static const String str_add_student_desc = "You can use XLSX files to upload multiple students. and make sure to download and use provided format to create XLSX sheet.";
   static const String str_add_student_desc = "You can use XLSX files to upload multiple students.";
   static const String str_sample_file = "Sample file";
-  static const String str_upload_file = "Select file to upload";
+  static const String str_select_upload_file = "Select file to upload";
   static const String str_students_added = "New students added successfully.";
 
   static const String str_male = "Male";
   static const String str_female = "Female";
+  static const String str_both = "Both";
   static const String str_submit = "Submit";
   static const String str_no_data = "No items";
   static const String str_no_module = "No module assigned";
@@ -224,6 +226,7 @@ class strings_name {
   static const String str_submit_attendance = "Submit Attendance";
   static const String str_err_submit_attendance = "Please select attendance for all the students";
   static const String str_attendance_recorded = "Attendance recorded successfully.";
+  static const String str_attendance_updated = "Attendance updated successfully.";
 
   static const String str_select_date = "Select Date";
   static const String str_empty_select_date = "Please select Date";
@@ -236,7 +239,7 @@ class strings_name {
   static const String str_no_topic_assigned = "No topic assigned.";
 
   static const String str_serial_number = "Serial number";
-  static const String str_brithday = "Birthdate";
+  static const String str_birthday = "Birthdate";
   static const String str_adharcard_number = "Aadhaar card number";
   static const String str_caste = "Caste";
   static const String str_hsc_school = "HSC School";
@@ -256,9 +259,9 @@ class strings_name {
   static const String str_parent_number = "Parent number";
   static const String str_spouse_number = "Spouse number";
 
-  static const String str_company_approch = "Company approach";
+  static const String str_company_approach = "Company approach";
   static const String str_name_of_company = "Name of company";
-  static const String str_type_of_inducstry = "Select type of industry/sector";
+  static const String str_type_of_industry = "Select type of industry/sector";
   static const String str_contact_person = "Contact person's name";
   static const String str_contact_person_number = "Contact person's no.";
   static const String str_contact_person_wanumber = "Contact person's whatsapp no.";
@@ -287,7 +290,7 @@ class strings_name {
   static const String str_company_email = "Please enter contact person's email";
   static const String str_empty_reporting_branch = "Please enter reporting branch";
   static const String str_empty_reporting_address = "Please enter reporting address";
-  static const String str_company_a_added = "Company approch added successfully";
+  static const String str_company_a_added = "Company approach added successfully";
   static const String str_company_id_no = "Company identification no.";
   static const String str_empty_company_id_no = "Please enter company indentification no.";
   static const String str_company_det_added = "Company detail added successfully";
@@ -297,4 +300,44 @@ class strings_name {
   static const String str_create_job_opp_detail = "Create job opportunity";
   static const String str_list_job_opp_detail = "Job opportunity list";
 
+  static const String str_no_semester = "No semester";
+  static const String str_job_title = "Job title";
+  static const String str_job_desc = "Job description";
+  static const String str_job_specific_req = "Specific requirements (IF ANY)";
+  static const String str_stipend_amount = "Stipend amount :";
+  static const String str_amount_type_interview = "Depends on interview";
+  static const String str_amount_type_range = "Select range";
+  static const String str_range_min = "Minimum";
+  static const String str_range_max = "Maximum";
+  static const String str_vacancy = "Vacancy";
+  static const String str_bond_contract = "Bond / Contract :";
+  static const String str_preferred_gender = "Preferred gender";
+  static const String str_min_age_limit = "Minimum age limit";
+  static const String str_incentive_structure = "Incentive structure";
+  static const String str_upload_file = "Upload file";
+  static const String str_internship_timing = "Internship timing";
+  static const String str_start_time = "Start time";
+  static const String str_end_time = "End time";
+  static const String str_internship_mode = "Mode of internship";
+  static const String str_mode_work_from_office = "Work from office";
+  static const String str_mode_work_from_home = "Work from home";
+  static const String str_mode_remote_work = "Remote work";
+  static const String str_mode_project_based_work = "Project based work";
+  static const String str_internship_min_duration = "Min. duration of internship :";
+  static const String str_month_6 = "6 Month";
+  static const String str_month_12 = "12 Month";
+  static const String str_month_18 = "18 Month";
+  static const String str_month_24 = "24 Month";
+  static const String str_month_30 = "30 Month";
+  static const String str_month_36 = "36 Month";
+
+  static const String str_empty_job_title = "Please enter job title";
+  static const String str_empty_job_desc = "Please enter job description";
+  static const String str_empty_vacancies = "Please enter available vacancy";
+  static const String str_empty_stipend_amount = "Please select stipend amount type";
+  static const String str_empty_min_range = "Please enter minimum stipend range";
+  static const String str_empty_start_time = "Please select start time of internship";
+  static const String str_empty_end_time = "Please select end time of internship";
+
+  static const String str_job_added = "New job opportunity added successfully.";
 }

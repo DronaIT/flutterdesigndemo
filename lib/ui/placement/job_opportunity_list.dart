@@ -14,7 +14,11 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_list_job_opp_detail),
+      body: Stack(
+        children: [
 
+        ],
+      ),
     ));
   }
 }

@@ -8,6 +8,7 @@ class StudentAttendanceResponse {
   List<String>? topicId;
   String? division;
   String? lectureDate;
+  String? lectureTime;
   List<String>? studentIds;
   List<String>? presentIds;
   List<String>? absent_ids;
@@ -31,6 +32,7 @@ class StudentAttendanceResponse {
       this.topicId,
       this.division,
       this.lectureDate,
+      this.lectureTime,
       this.studentIds,
       this.presentIds,
       this.subjectTitleFromSubjectId,
@@ -42,8 +44,7 @@ class StudentAttendanceResponse {
       this.topicTitleFromTopicId,
       this.enrollmentNumberFromStudentIds,
       this.nameFromStudentIds,
-      this.absent_ids
-      });
+      this.absent_ids});
 
   StudentAttendanceResponse.fromJson(Map<String, dynamic> json) {
     lectureId = json['lecture_id'];
@@ -55,6 +56,7 @@ class StudentAttendanceResponse {
     topicId = json['topic_id']?.cast<String>();
     division = json['division'];
     lectureDate = json['lecture_date'];
+    lectureTime = json['lecture_time'];
     studentIds = json['student_ids']?.cast<String>();
     presentIds = json['present_ids']?.cast<String>();
     subjectTitleFromSubjectId = json['subject_title (from subject_id)']?.cast<String>();
@@ -80,6 +82,7 @@ class StudentAttendanceResponse {
     data['topic_id'] = this.topicId;
     data['division'] = this.division;
     data['lecture_date'] = this.lectureDate;
+    data['lecture_time'] = this.lectureTime;
     data['student_ids'] = this.studentIds;
     data['present_ids'] = this.presentIds;
     data['subject_title (from subject_id)'] = this.subjectTitleFromSubjectId;

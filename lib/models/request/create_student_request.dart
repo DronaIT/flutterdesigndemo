@@ -102,6 +102,7 @@ class CreateStudentRequest {
     data['hsc_percentage'] = this.hscPercentage;
     data['mother_name'] = this.motherName;
     data['mother_number'] = this.motherNumber;
+    data['father_number'] = this.fatherNumber;
     return data;
   }
 }

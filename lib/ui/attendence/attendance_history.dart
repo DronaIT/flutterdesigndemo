@@ -5,8 +5,10 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
+import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/view_lecture_attendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance_history_detail.dart';
+import 'package:flutterdesigndemo/ui/attendence/attendance_student_list.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -41,6 +43,10 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
   @override
   void initState() {
     super.initState();
+    initialization();
+  }
+
+  void initialization() {
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
@@ -252,38 +258,55 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                           return GestureDetector(
                             child: Card(
                                 elevation: 5,
-                                child: Column(
-                                  children: [
-                                    custom_text(
-                                      text: viewLectureArray![index].subject_title!,
-                                      alignment: Alignment.topLeft,
-                                      textStyles: primaryTextSemiBold14,
-                                      bottomValue: 5,
+                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        custom_text(
+                                          text: viewLectureArray![index].subject_title!,
+                                          alignment: Alignment.topLeft,
+                                          textStyles: primaryTextSemiBold14,
+                                          bottomValue: 5,
+                                        ),
+                                        custom_text(
+                                          text: "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",
+                                          alignment: Alignment.topLeft,
+                                          textStyles: blackTextSemiBold12,
+                                          topValue: 5,
+                                          bottomValue: 0,
+                                        ),
+                                        Visibility(
+                                          visible: canViewAccessibleAttendance,
+                                          child: custom_text(
+                                            text: "${strings_name.str_taken_by}: ${viewLectureArray![index].employee_name!}",
+                                            textStyles: blackTextSemiBold12,
+                                            topValue: 5,
+                                            bottomValue: 0,
+                                          ),
+                                        ),
+                                        custom_text(
+                                          text: "${strings_name.str_semester}: ${viewLectureArray![index].semester!} ${", "} ${strings_name.str_division}: ${viewLectureArray![index].division!}",
+                                          alignment: Alignment.topLeft,
+                                          textStyles: blackTextSemiBold12,
+                                          topValue: 5,
+                                        ),
+                                      ],
                                     ),
-                                    custom_text(
-                                      text: "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold12,
-                                      topValue: 5,
-                                      bottomValue: 0,
-                                    ),
-                                    Visibility(
-                                      visible: canViewAccessibleAttendance,
-                                      child: custom_text(
-                                        text: "${strings_name.str_taken_by}: ${viewLectureArray![index].employee_name!}",
-                                        textStyles: blackTextSemiBold12,
-                                        topValue: 5,
-                                        bottomValue: 0,
-                                      ),
-                                    ),
-                                    custom_text(
-                                      text: "${strings_name.str_semester}: ${viewLectureArray![index].semester!} ${", "} ${strings_name.str_division}: ${viewLectureArray![index].division!}",
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold12,
-                                      topValue: 5,
-                                    ),
-                                  ],
-                                )),
+                                  ),
+                                  canUpdateAccessibleAttendance
+                                      ? GestureDetector(
+                                          onTap: () async {
+                                            Get.to(const AttendanceStudentList(), arguments: [
+                                              {"lectureId": viewLectureArray![index].lecture_id},
+                                            ])?.then((result) {
+                                              if (result) {
+                                                viewEmpLectures();
+                                              }
+                                            });
+                                          },
+                                          child: Container(margin: const EdgeInsets.all(10), child: const Icon(Icons.edit)))
+                                      : Container(),
+                                ])),
                             onTap: () {
                               Get.to(() => const AttendanceHistoryDetail(), arguments: viewLectureArray?[index].lecture_id);
                             },

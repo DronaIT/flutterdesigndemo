@@ -17,14 +17,14 @@ import '../../models/request/create_company_appr_req.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
 
-class CompanyApproch extends StatefulWidget {
-  const CompanyApproch({Key? key}) : super(key: key);
+class CompanyApproach extends StatefulWidget {
+  const CompanyApproach({Key? key}) : super(key: key);
 
   @override
-  State<CompanyApproch> createState() => _CompanyApprochState();
+  State<CompanyApproach> createState() => _CompanyApproachState();
 }
 
-class _CompanyApprochState extends State<CompanyApproch> {
+class _CompanyApproachState extends State<CompanyApproach> {
   TextEditingController nameofCompanyController = TextEditingController();
   TextEditingController typeOfController = TextEditingController();
   TextEditingController nameOfContactPController = TextEditingController();
@@ -48,7 +48,7 @@ class _CompanyApprochState extends State<CompanyApproch> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_company_approch),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_company_approach),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -69,7 +69,7 @@ class _CompanyApprochState extends State<CompanyApproch> {
                 SizedBox(height: 5.h),
 
                 custom_text(
-                  text: strings_name.str_type_of_inducstry,
+                  text: strings_name.str_type_of_industry,
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -164,8 +164,8 @@ class _CompanyApprochState extends State<CompanyApproch> {
                       } else if (nameOfContactPController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_contact_person_name);
                       } else if (phone.isNotEmpty) {
-                        Utils.showSnackBar(context,phone);
-                      } else{
+                        Utils.showSnackBar(context, phone);
+                      } else {
                         setState(() {
                           isVisible = true;
                         });

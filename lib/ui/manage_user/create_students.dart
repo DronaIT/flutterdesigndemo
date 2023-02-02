@@ -188,7 +188,7 @@ class _AddStudent extends State<CreateStudent> {
           ),
           GestureDetector(
               child: custom_text(
-                text: strings_name.str_upload_file,
+                text: strings_name.str_select_upload_file,
                 alignment: Alignment.center,
                 textStyles: blackTextSemiBold16,
               ),

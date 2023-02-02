@@ -81,9 +81,10 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
                               child: Container(
                                 color: colors_name.colorWhite,
                                 padding: const EdgeInsets.all(12),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackTextSemiBold16), if (specializationData![index].fields!.selected) Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                  Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
+                                  if (specializationData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)
+                                ]),
                               ),
                               onTap: () {
                                 setState(() {

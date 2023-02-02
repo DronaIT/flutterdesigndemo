@@ -35,7 +35,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
   void initState() {
     super.initState();
     update = Get.arguments;
-    getRecords();
+    // getRecords();
     getPermission();
   }
 
@@ -83,12 +83,14 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
           });
         }
       }
+
+      getRecords();
     } else {
+      setState(() {
+        isVisible = false;
+      });
       Utils.showSnackBar(context, strings_name.str_something_wrong);
     }
-    setState(() {
-      isVisible = false;
-    });
   }
 
   @override
@@ -140,7 +142,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                 visible: createJobsAlerts,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => const JobOpportunityForm());
+                                    Get.to(() => const JobOpportunityForm(), arguments: companyDetailResponse.records?[index].id);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: colors_name.presentColor,

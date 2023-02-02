@@ -15,17 +15,17 @@ class AddStudentAttendanceRequest {
   AddStudentAttendanceRequest({this.employeeId, this.hubId, this.specializationId, this.subjectId, this.unitId, this.topicId, this.division, this.lectureDate, this.studentIds, this.presentIds, this.absentIds, this.lectureTime});
 
   AddStudentAttendanceRequest.fromJson(Map<String, dynamic> json) {
-    employeeId = json['employee_id'].cast<String>();
-    hubId = json['hub_id'].cast<String>();
-    specializationId = json['specialization_id'].cast<String>();
-    subjectId = json['subject_id'].cast<String>();
-    unitId = json['unit_id'].cast<String>();
-    topicId = json['topic_id'].cast<String>();
+    employeeId = json['employee_id']?.cast<String>();
+    hubId = json['hub_id']?.cast<String>();
+    specializationId = json['specialization_id']?.cast<String>();
+    subjectId = json['subject_id']?.cast<String>();
+    unitId = json['unit_id']?.cast<String>();
+    topicId = json['topic_id']?.cast<String>();
     division = json['division'];
     lectureDate = json['lecture_date'];
-    studentIds = json['student_ids'].cast<String>();
-    presentIds = json['present_ids'].cast<String>();
-    absentIds = json['absent_ids'].cast<String>();
+    studentIds = json['student_ids']?.cast<String>();
+    presentIds = json['present_ids']?.cast<String>();
+    absentIds = json['absent_ids']?.cast<String>();
     lectureTime = json['lecture_time'];
   }
 

@@ -127,7 +127,7 @@ class _AddHubState extends State<AddHub> {
                                   padding: const EdgeInsets.all(15),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                    children: [Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                   ),
                                 ),
                                 onTap: () {

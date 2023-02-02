@@ -466,11 +466,16 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
+      // var query = "FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
+      var query = "AND(FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       var data = await apiRepository.getSubjectsApi(query);
       setState(() {
         subjectResponse = null;
         subjectResponseArray = data.records;
+
+        unitResponse = null;
+        topicResponse = null;
+
         isVisible = false;
       });
       if (data.records?.isEmpty == true) {
@@ -489,6 +494,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       setState(() {
         unitResponse = null;
         unitResponseArray = data.records;
+
+        topicResponse = null;
         isVisible = false;
       });
       if (data.records?.isEmpty == true) {
