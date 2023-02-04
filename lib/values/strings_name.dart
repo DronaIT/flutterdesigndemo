@@ -364,4 +364,21 @@ class strings_name {
 
   static const String str_please_select_one_student = "Please shortlist one student";
   static const String str_schadule_interview = "Schedule interview";
+
+  static const String str_job_interview_job_timing = "Interview job timing";
+  static const String str_enter_time = "Enter date time";
+  static const String str_special_instrcutor = "Special instruction(if any)";
+  static const String str_interview_address = "Interview address";
+  static const String str_google_map_link = "Google map link";
+  static const String str_empty_job_date_time = "Please select interview date & time";
+
+  static const String str_codinator_name = "coordinator name";
+  static const String str_codinator_number = "coordinator number";
+
+  static const String str_empty_postal_Address = "Please enter interview address";
+  static const String str_empty_coori_name = "Please enter coordinator name";
+  static const String str_empty_coori_number = "Please enter coordinator number";
+
+  static const String str_interview_time_schedule = "Interview time scheduled successfully";
+
 }

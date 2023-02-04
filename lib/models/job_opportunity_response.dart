@@ -38,8 +38,8 @@ class JobOpportunityResponse {
   String? jobApplyStartTime;
   String? interviewInstruction;
   List<String>? appliedStudents;
-  List<String>? coordinatorName;
-  List<String>? coordinatorMobileNumber;
+  String? coordinatorName;
+  String? coordinatorMobileNumber;
 
   List<String>? applied_students_email;
   List<String>? applied_students_enrollment_number;
@@ -135,9 +135,8 @@ class JobOpportunityResponse {
     jobApplyStartTime = json['job_apply_start_time'];
     interviewInstruction = json['interview_instruction'];
     appliedStudents = json['applied_students']?.cast<String>();
-    coordinatorName = json['coordinator_name']?.cast<String>();
-    coordinatorMobileNumber = json['coordinator_mobile_number']?.cast<String>();
-
+    coordinatorName = json['coordinator_name'];
+    coordinatorMobileNumber = json['coordinator_mobile_number'];
     applied_students_email = json['applied_students_email']?.cast<String>();
     applied_students_enrollment_number = json['applied_students_enrollment_number']?.cast<String>();
     applied_students_name = json['applied_students_name']?.cast<String>();

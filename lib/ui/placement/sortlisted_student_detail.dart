@@ -5,7 +5,8 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-
+import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
+import 'package:intl/intl.dart';
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
@@ -30,6 +31,13 @@ class _SortListedStudentDetailState extends State<SortListedStudentDetail> {
   BaseLoginResponse<JobOpportunityResponse> jobpportunityData = BaseLoginResponse();
   String company_name = "";
   String jobId = "";
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController specialinstrcutController = TextEditingController();
+  TextEditingController postalAddressController = TextEditingController();
+  TextEditingController googleMaplinkController = TextEditingController();
+
+  TextEditingController cordinatorNameController = TextEditingController();
+  TextEditingController cordinatorNumberController = TextEditingController();
 
   List<JobModuleResponse> studentResponse = [];
 
@@ -134,7 +142,7 @@ class _SortListedStudentDetailState extends State<SortListedStudentDetail> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: (){
-
+                          interviewScheduleDialog();
                         },
                         style: ElevatedButton.styleFrom(
                           primary:colors_name.presentColor,
@@ -144,7 +152,7 @@ class _SortListedStudentDetailState extends State<SortListedStudentDetail> {
                           ),
                           elevation: 7.0,
                         ),
-                        child: Text(
+                        child: const Text(
                           strings_name.str_schadule_interview,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 15, color:Colors.white, fontWeight:FontWeight.w700),
@@ -203,4 +211,164 @@ class _SortListedStudentDetailState extends State<SortListedStudentDetail> {
       ),
     ));
   }
+
+
+  Future<void> interviewScheduleDialog() async {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            custom_text(text:strings_name.str_schadule_interview, textStyles: boldTitlePrimaryColorStyle),
+            custom_text(
+              text: 'Company Name : ${jobpportunityData.records?.first.fields?.companyName?.first.toString()}',
+              textStyles: blackTextSemiBold14,
+              bottomValue: 0,
+              topValue: 0,
+            ),
+            custom_text(
+              text: '${strings_name.str_job_title_} ${jobpportunityData.records?.first.fields?.jobTitle}',
+              textStyles: blackTextSemiBold14,
+              bottomValue: 0,
+              topValue: 3,
+            ),
+            SizedBox(height: 5.h),
+            InkWell(
+              child: IgnorePointer(
+                child: custom_edittext(
+                  hintText: strings_name.str_job_interview_job_timing,
+                  type: TextInputType.none,
+                  textInputAction: TextInputAction.next,
+                  controller: startTimeController,
+                  topValue: 0,
+                ),
+              ),
+              onTap: () {
+                DateTime dateSelected = DateTime.now();
+                TimeOfDay timeSelected = TimeOfDay.now();
+                if (startTimeController.text.isNotEmpty) {
+                  dateSelected = DateFormat("yyyy-MM-dd").parse(startTimeController.text);
+                  DateTime time = DateFormat("hh:mm aa").parse(startTimeController.text);
+                  timeSelected = TimeOfDay.fromDateTime(time);
+                }
+                showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100)).then((pickedDate) {
+                  if (pickedDate == null) {
+                    return;
+                  }
+                  setState(() {
+                    showTimePicker(context: context, initialTime: timeSelected).then((pickedTime) {
+                      if (pickedTime == null) {
+                        return;
+                      }
+                      setState(() {
+                        var dateTime = pickedDate;
+                        var formatter = DateFormat('yyyy-MM-dd hh:mm aa');
+                        var time = DateTime(dateTime.year, dateTime.month, dateTime.day, pickedTime.hour, pickedTime.minute);
+                        startTimeController.text = formatter.format(time);
+                      });
+                    });
+                  });
+                });
+              },
+            ),
+            SizedBox(height: 5.h),
+            custom_edittext(
+              type: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              controller: specialinstrcutController,
+              hintText: strings_name.str_special_instrcutor,
+              maxLines: 2,
+              minLines: 2,
+              maxLength: 50000,
+              topValue: 0,
+            ),
+            SizedBox(height: 5.h),
+            custom_edittext(
+              type: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              controller: postalAddressController,
+              hintText: strings_name.str_interview_address,
+              maxLines: 2,
+              minLines: 2,
+              maxLength: 50000,
+              topValue: 0,
+            ),
+
+            SizedBox(height: 5.h),
+            custom_edittext(
+              type: TextInputType.text,
+              textInputAction: TextInputAction.newline,
+              controller: googleMaplinkController,
+              hintText: strings_name.str_google_map_link,
+              topValue: 0,
+            ),
+            SizedBox(height: 5.h),
+            custom_edittext(
+              type: TextInputType.text,
+              textInputAction: TextInputAction.newline,
+              controller: cordinatorNameController,
+              hintText: strings_name.str_codinator_name,
+              topValue: 0,
+            ),
+            SizedBox(height: 5.h),
+            custom_edittext(
+              type: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              controller: cordinatorNumberController,
+              hintText: strings_name.str_codinator_number,
+              maxLength: 10,
+              topValue: 0,
+            ),
+            CustomButton(
+                text: strings_name.str_submit,
+                click: () {
+                  if (startTimeController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_job_date_time);
+                  } else if (postalAddressController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_postal_Address);
+                  } else if (cordinatorNameController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_coori_name);
+                  } else if (cordinatorNumberController.text.trim().isEmpty) {
+                    Utils.showSnackBar(context, strings_name.str_empty_coori_number);
+                  }
+                  else {
+                    approveNow();
+                  }
+                })
+          ],
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+  void approveNow() async {
+    CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
+    request.interview_datetime = startTimeController.text.trim().toString();
+    request.interview_instruction = specialinstrcutController.text.trim().toString();
+    request.interview_place_address = postalAddressController.text.trim().toString();
+    request.interview_place_url = googleMaplinkController.text.trim().toString();
+    request.coordinator_mobile_number = cordinatorNumberController.text.trim().toString();
+    request.coordinator_name = cordinatorNameController.text.trim().toString();
+    var json = request.toJson();
+    json.removeWhere((key, value) => value == null);
+    setState(() {
+      isVisible = true;
+    });
+    var resp = await apiRepository.updateJobOpportunityApi(json, jobpportunityData.records!.first.id!);
+    if (resp.id!.isNotEmpty) {
+      setState(() {
+        isVisible = false;
+      });
+      Utils.showSnackBar(context, strings_name.str_interview_time_schedule);
+      await Future.delayed(const Duration(milliseconds: 2000));
+      Get.back();
+    } else {
+      setState(() {
+        isVisible = false;
+      });
+    }
+  }
+
 }

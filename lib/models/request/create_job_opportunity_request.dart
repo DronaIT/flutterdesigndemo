@@ -23,30 +23,45 @@ class CreateJobOpportunityRequest {
   String? jobApplyEndTime;
   List<String>? sortlisted;
 
-  CreateJobOpportunityRequest(
-      {this.jobTitle,
-      this.status,
-      this.companyId,
-      this.jobDescription,
-      this.specificRequirements,
-      this.stipendType,
-      this.stipendRangeMin,
-      this.stipendRangeMax,
-      this.vacancies,
-      this.gender,
-      this.minimumAge,
-      this.timingStart,
-      this.timingEnd,
-      this.internshipModes,
-      this.internshipDuration,
-      this.specializationIds,
-      this.semester,
-      this.hubIds,
-      this.bondStructure,
-      this.jobApplyStartTime,
-      this.jobApplyEndTime,
-      this.sortlisted,
-      this.incentiveStructure});
+  String? interview_datetime;
+  String? interview_instruction;
+  String? interview_place_address;
+  String? interview_place_url;
+  String? coordinator_mobile_number;
+  String? coordinator_name;
+
+  CreateJobOpportunityRequest({
+    this.jobTitle,
+    this.status,
+    this.companyId,
+    this.jobDescription,
+    this.specificRequirements,
+    this.stipendType,
+    this.stipendRangeMin,
+    this.stipendRangeMax,
+    this.vacancies,
+    this.gender,
+    this.minimumAge,
+    this.timingStart,
+    this.timingEnd,
+    this.internshipModes,
+    this.internshipDuration,
+    this.specializationIds,
+    this.semester,
+    this.hubIds,
+    this.bondStructure,
+    this.jobApplyStartTime,
+    this.jobApplyEndTime,
+    this.sortlisted,
+    this.incentiveStructure,
+
+    this.interview_datetime,
+    this.interview_instruction,
+    this.interview_place_address,
+    this.interview_place_url,
+    this.coordinator_mobile_number,
+    this.coordinator_name,
+  });
 
   CreateJobOpportunityRequest.fromJson(Map<String, dynamic> json) {
     jobTitle = json['job_title'];
@@ -72,6 +87,13 @@ class CreateJobOpportunityRequest {
     jobApplyStartTime = json['job_apply_start_time'];
     jobApplyEndTime = json['job_apply_end_time'];
     sortlisted = json['shortlisted_students']?.cast<String>();
+
+    interview_datetime = json['interview_datetime'];
+    interview_instruction = json['interview_instruction'];
+    interview_place_address = json['interview_place_address'];
+    interview_place_url = json['interview_place_url'];
+    coordinator_mobile_number = json['coordinator_mobile_number'];
+    coordinator_name = json['coordinator_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +121,16 @@ class CreateJobOpportunityRequest {
     data['job_apply_start_time'] = this.jobApplyStartTime;
     data['job_apply_end_time'] = this.jobApplyEndTime;
     data['shortlisted_students'] = this.sortlisted;
+
+
+
+    data['interview_datetime'] = this.interview_datetime;
+    data['interview_instruction'] = this.interview_instruction;
+    data['interview_place_address'] = this.interview_place_address;
+    data['interview_place_url'] = this.interview_place_url;
+    data['coordinator_mobile_number'] = this.coordinator_mobile_number;
+    data['coordinator_name'] = this.coordinator_name;
+
     return data;
   }
 }
