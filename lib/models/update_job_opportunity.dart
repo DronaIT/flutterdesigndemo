@@ -1,16 +1,16 @@
-import 'package:flutterdesigndemo/models/student_attendance_response.dart';
+import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 
-class UpdateStudentAttendance {
+class UpdateJobOpportunity {
   String? id;
   String? createdTime;
-  StudentAttendanceResponse? fields;
+  JobOpportunityResponse? fields;
 
-  UpdateStudentAttendance({this.id, this.createdTime, this.fields});
+  UpdateJobOpportunity({this.id, this.createdTime, this.fields});
 
-  UpdateStudentAttendance.fromJson(Map<String, dynamic> json) {
+  UpdateJobOpportunity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdTime = json['createdTime'];
-    fields = json['fields'] != null ? new StudentAttendanceResponse.fromJson(json['fields']) : null;
+    fields = json['fields'] != null ? new JobOpportunityResponse.fromJson(json['fields']) : null;
   }
 
   Map<String, dynamic> toJson() {

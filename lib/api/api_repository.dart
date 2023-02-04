@@ -26,6 +26,7 @@ import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
+import 'package:flutterdesigndemo/models/update_job_opportunity.dart';
 import 'package:flutterdesigndemo/models/update_specialization.dart';
 import 'package:flutterdesigndemo/models/update_student_attendance.dart';
 import 'package:flutterdesigndemo/models/update_subject.dart';
@@ -445,10 +446,29 @@ class ApiRepository {
     }
   }
 
-
   Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String jobFormula) async {
     try {
       final response = await userApi.getJoboppoApi(jobFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<UpdateJobOpportunity> updateJobOpportunityApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateJobOpportunityApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseLoginResponse<JobOpportunityResponse>> getJobOpportunityApi(String jobOpportunityFormula) async {
+    try {
+      final response = await userApi.getJobOpportunityApi(jobOpportunityFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

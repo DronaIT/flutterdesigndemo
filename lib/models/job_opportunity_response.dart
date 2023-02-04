@@ -21,7 +21,7 @@ class JobOpportunityResponse {
   List<String>? specializationIds;
   List<String>? companyCode;
   List<String>? companyName;
-  List<String>?reporting_address;
+  List<String>? reporting_address;
   List<String>? reporting_branch;
   List<String>? city;
 

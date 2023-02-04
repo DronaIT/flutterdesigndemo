@@ -5,11 +5,11 @@ class CreateJobOpportunityRequest {
   String? jobDescription;
   String? specificRequirements;
   String? stipendType;
-  String? stipendRangeMin;
-  String? stipendRangeMax;
-  String? vacancies;
+  int? stipendRangeMin;
+  int? stipendRangeMax;
+  int? vacancies;
   String? gender;
-  String? minimumAge;
+  int? minimumAge;
   String? timingStart;
   String? timingEnd;
   String? internshipModes;

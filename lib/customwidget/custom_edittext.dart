@@ -38,13 +38,12 @@ class custom_edittext extends StatefulWidget {
       this.enabled = true,
       this.readOnly = false,
       this.isPassword = false,
-      this.maxLength = 50,
+      this.maxLength = 100,
       this.maxLines = 1,
       this.minLines = 1,
       this.capitalization = TextCapitalization.sentences,
       this.fontWeight = FontWeight.w700,
-      this.textalign= TextAlign.start
-      });
+      this.textalign = TextAlign.start});
 
   @override
   State<custom_edittext> createState() => _customState();

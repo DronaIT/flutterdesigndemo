@@ -142,7 +142,10 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                 visible: createJobsAlerts,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => const JobOpportunityForm(), arguments: companyDetailResponse.records?[index].id);
+                                    Get.to(() => const JobOpportunityForm(), arguments: [
+                                      {"company_id": companyDetailResponse.records?[index].id},
+                                      {"job_code": "DF69941"},
+                                    ]);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: colors_name.presentColor,
@@ -164,13 +167,12 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                 visible: viewJobAlerts,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                  //  Get.to(() => const JobOpportunityList(), arguments: updateJobAlerts ,);
+                                    //  Get.to(() => const JobOpportunityList(), arguments: updateJobAlerts ,);
 
                                     Get.to(() => const JobOpportunityList(), arguments: [
                                       {"updateJobOppList": updateJobAlerts},
                                       {"companyId": companyDetailResponse.records?[index].fields?.id}
                                     ]);
-
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: colors_name.presentColor,

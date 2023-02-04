@@ -47,6 +47,7 @@ class TableNames {
   static const CLM_SPE_IDS = "specialization_ids";
   static const CLM_SUBJECT_IDS = "subject_ids";
   static const CLM_COMPANY_CODE = "company_code";
+  static const CLM_JOB_CODE = "job_code";
 
   static const CLM_SUBJECT_ID = "subject_id";
   static const CLM_UNIT_ID = "unit_id";

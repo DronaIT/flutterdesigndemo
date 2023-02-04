@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
@@ -14,15 +15,15 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/semester_selection.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/specialization_selection.dart';
 import 'package:flutterdesigndemo/ui/manage_user/hub_selection.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import '../../customwidget/app_widgets.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../customwidget/app_widgets.dart';
 import '../../utils/utils.dart';
 
 class JobOpportunityForm extends StatefulWidget {
@@ -64,13 +65,91 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   var cloudinary;
   final apiRepository = getIt.get<ApiRepository>();
 
+  String companyId = "", jobCode = "", jobRecordId = "";
+  bool fromEdit = false;
+
   @override
   void initState() {
     super.initState();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
+    if (Get.arguments[0]["company_id"] != null) {
+      companyId = Get.arguments[0]["company_id"];
+    }
+    if (Get.arguments[1]["job_code"] != null) {
+      jobCode = Get.arguments[1]["job_code"];
+      getJobData();
+    }
   }
 
-  void createJobAlert() async {
+  void getJobData() async {
+    setState(() {
+      isVisible = true;
+    });
+
+    var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
+    var data = await apiRepository.getJobOpportunityApi(query);
+
+    setState(() {
+      isVisible = false;
+      if (data.records?.first != null) {
+        fromEdit = true;
+        jobRecordId = data.records?.first.id ?? "";
+        var jobData = data.records?.first.fields;
+
+        jobTitleController.text = jobData?.jobTitle ?? "";
+        jobDescController.text = jobData?.jobDescription ?? "";
+        jobSpecificReqController.text = jobData?.specificRequirements ?? "";
+        vacancyController.text = "${jobData?.vacancies ?? ''}";
+        minRangeController.text = "${jobData?.stipendRangeMin ?? ''}";
+        maxRangeController.text = "${jobData?.stipendRangeMax ?? ''}";
+        minAgeLimitController.text = "${jobData?.minimumAge ?? ''}";
+        startTimeController.text = jobData?.timingStart ?? "";
+        endTimeController.text = jobData?.timingEnd ?? "";
+
+        stipendType = jobData?.stipendType ?? "";
+        preferredGenderValue = jobData?.gender ?? strings_name.str_both;
+        internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
+        internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
+
+        if (jobData?.specializationIds?.isNotEmpty == true) {
+          var specializationArr = PreferenceUtils.getSpecializationList().records;
+          for (int i = 0; i < jobData!.specializationIds!.length; i++) {
+            for (int j = 0; j < specializationArr!.length; j++) {
+              if (jobData.specializationIds![i] == specializationArr[j].id) {
+                specializationData?.add(specializationArr[j]);
+                break;
+              }
+            }
+          }
+        }
+
+        if (jobData?.hubIds?.isNotEmpty == true) {
+          var hubArr = PreferenceUtils.getHubList().records;
+          for (int i = 0; i < jobData!.hubIds!.length; i++) {
+            for (int j = 0; j < hubArr!.length; j++) {
+              if (jobData.hubIds![i] == hubArr[j].id) {
+                hubsData?.add(hubArr[j]);
+                break;
+              }
+            }
+          }
+        }
+
+        if (jobData?.semester?.isNotEmpty == true) {
+          for (int i = 0; i < jobData!.semester!.length; i++) {
+            SemesterData semData = SemesterData(semester: int.parse(jobData.semester![i]));
+            semData.selected = true;
+
+            semesterData?.add(semData);
+          }
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+    });
+  }
+
+  void submitData() async {
     setState(() {
       isVisible = true;
     });
@@ -90,18 +169,18 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     }
 
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
-    request.companyId = Get.arguments;
+    request.companyId = companyId.trim().split("  ");
     request.jobTitle = jobTitleController.text.trim().toString();
     request.jobDescription = jobDescController.text.trim().toString();
     request.specificRequirements = jobSpecificReqController.text.trim().toString();
     request.stipendType = stipendType.trim().toString();
     if (stipendType == strings_name.str_amount_type_range) {
-      request.stipendRangeMin = minRangeController.text.trim().toString();
-      request.stipendRangeMax = maxRangeController.text.trim().toString();
+      request.stipendRangeMin = int.parse(minRangeController.text.trim().toString());
+      request.stipendRangeMax = int.parse(maxRangeController.text.trim().toString());
     }
-    request.vacancies = vacancyController.text.trim().toString();
+    request.vacancies = int.parse(vacancyController.text.trim().toString());
     request.gender = preferredGenderValue.trim().toString();
-    request.minimumAge = minAgeLimitController.text.trim().toString();
+    request.minimumAge = int.parse(minAgeLimitController.text.trim().toString());
     request.timingStart = startTimeController.text.trim().toString();
     request.timingEnd = endTimeController.text.trim().toString();
     request.internshipModes = internshipModeValue.trim().toString();
@@ -141,18 +220,34 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     }
     request.semester = selectedSemesterData;
 
-    var resp = await apiRepository.createJobOpportunityApi(request);
-    if (resp.id!.isNotEmpty) {
-      setState(() {
-        isVisible = false;
-      });
-      Utils.showSnackBar(context, strings_name.str_job_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
+    if (fromEdit && jobRecordId.isNotEmpty) {
+      var resp = await apiRepository.updateJobOpportunityApi(request.toJson(), jobRecordId);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_job_updated);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     } else {
-      setState(() {
-        isVisible = false;
-      });
+      var resp = await apiRepository.createJobOpportunityApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_job_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
     }
   }
 
@@ -191,6 +286,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                   controller: jobDescController,
                   minLines: 3,
                   maxLines: 3,
+                  maxLength: 50000,
                   topValue: 0,
                 ),
                 SizedBox(height: 5.h),
@@ -205,6 +301,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                   controller: jobSpecificReqController,
                   maxLines: 3,
                   minLines: 3,
+                  maxLength: 50000,
                   topValue: 0,
                 ),
                 SizedBox(height: 5.h),
@@ -537,7 +634,13 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                         ),
                       ),
                       onTap: () {
-                        showTimePicker(context: context, initialTime: TimeOfDay.now()).then((pickedTime) {
+                        TimeOfDay timeOfDay = TimeOfDay.now();
+                        if (startTimeController.text.isNotEmpty) {
+                          DateTime dateTime = DateFormat("hh:mm aa").parse(startTimeController.text);
+                          timeOfDay = TimeOfDay.fromDateTime(dateTime);
+                        }
+
+                        showTimePicker(context: context, initialTime: timeOfDay).then((pickedTime) {
                           if (pickedTime == null) {
                             return;
                           }
@@ -565,7 +668,13 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                         ),
                       ),
                       onTap: () {
-                        showTimePicker(context: context, initialTime: TimeOfDay.now()).then((pickedTime) {
+                        TimeOfDay timeOfDay = TimeOfDay.now();
+                        if (endTimeController.text.isNotEmpty) {
+                          DateTime dateTime = DateFormat("hh:mm aa").parse(endTimeController.text);
+                          timeOfDay = TimeOfDay.fromDateTime(dateTime);
+                        }
+
+                        showTimePicker(context: context, initialTime: timeOfDay).then((pickedTime) {
                           if (pickedTime == null) {
                             return;
                           }
@@ -698,7 +807,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     } else if (endTimeController.text.toString().trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_end_time);
                     } else {
-                      createJobAlert();
+                      submitData();
                     }
                   },
                 )
