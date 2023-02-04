@@ -4,7 +4,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
-import 'package:flutterdesigndemo/ui/placement/getcompany_detail.dart';
+import 'package:flutterdesigndemo/ui/placement/company_list.dart';
 import 'package:flutterdesigndemo/ui/placement/job_opportunity_form.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 
 import '../../models/base_api_response.dart';
 import '../../models/typeofsectoreresponse.dart';
+import 'approved_internship.dart';
 import 'published_internship.dart';
 
 class PlacementDashboard extends StatefulWidget {
@@ -31,7 +32,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool applyInternship = false, publishedList= false;
+  bool applyInternship = false, publishedList= false ,approvedList= false;
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
@@ -97,7 +98,11 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             publishedList = true;
           });
         }
-
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPROVED_INTERSHIP) {
+          setState(() {
+            approvedList = true;
+          });
+        }
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_something_wrong);
@@ -213,6 +218,27 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     onTap: () {},
                   ),
                 ),
+
+                Visibility(
+                  visible: approvedList,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_approved_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const ApprovedInternship());
+
+                    },
+                  ),
+                ),
                 Visibility(
                   visible: publishedList,
                   child: GestureDetector(
@@ -233,6 +259,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
+
+
+
               ],
             ),
           ),

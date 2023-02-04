@@ -41,6 +41,11 @@ class JobOpportunityResponse {
   List<String>? coordinatorName;
   List<String>? coordinatorMobileNumber;
 
+  List<String>? applied_students_email;
+  List<String>? applied_students_enrollment_number;
+  List<String>? applied_students_name;
+
+
   JobOpportunityResponse(
       {this.jobDescription,
         this.internshipDuration,
@@ -82,7 +87,12 @@ class JobOpportunityResponse {
         this.interviewInstruction,
         this.appliedStudents,
         this.coordinatorName,
-        this.coordinatorMobileNumber});
+        this.coordinatorMobileNumber,
+        this.applied_students_email,
+        this.applied_students_enrollment_number,
+        this.applied_students_name
+
+      });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -127,6 +137,11 @@ class JobOpportunityResponse {
     appliedStudents = json['applied_students']?.cast<String>();
     coordinatorName = json['coordinator_name']?.cast<String>();
     coordinatorMobileNumber = json['coordinator_mobile_number']?.cast<String>();
+
+    applied_students_email = json['applied_students_email']?.cast<String>();
+    applied_students_enrollment_number = json['applied_students_enrollment_number']?.cast<String>();
+    applied_students_name = json['applied_students_name']?.cast<String>();
+
   }
 
   Map<String, dynamic> toJson() {
@@ -172,6 +187,11 @@ class JobOpportunityResponse {
     data['applied_students'] = this.appliedStudents;
     data['coordinator_name'] = this.coordinatorName;
     data['coordinator_mobile_number'] = this.coordinatorMobileNumber;
+
+    data['applied_students_email'] = this.applied_students_email;
+    data['applied_students_enrollment_number'] = this.applied_students_enrollment_number;
+    data['applied_students_name'] = this.applied_students_name;
+
     return data;
   }
 }

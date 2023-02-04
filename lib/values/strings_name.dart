@@ -271,7 +271,7 @@ class strings_name {
   static const String str_apply_internship = "Apply for Internships";
   static const String str_published_internship = "Published internship";
   static const String str_contact_person_designation = "Contact person's designation";
-
+  static const String str_approved_internship = "Approved internship";
   static const String str_company_lan_num = "Company's landline no.";
   static const String str_contact_person_email = "Contact person's email";
   static const String str_company_website = "Company's website";
