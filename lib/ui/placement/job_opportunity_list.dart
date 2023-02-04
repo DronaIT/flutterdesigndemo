@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/ui/placement/job_opportunity_form.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
@@ -82,7 +83,12 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                         visible: updateJobOppList,
                                         child: GestureDetector(
                                           child: const Icon(Icons.edit, size: 22, color: Colors.black),
-                                          onTap: () {},
+                                          onTap: () {
+                                            Get.to(() => const JobOpportunityForm(), arguments: [
+                                              {"company_id": companyId.toString()},
+                                              {"job_code": jobpportunityData.records?[index].fields?.jobCode},
+                                            ]);
+                                          },
                                         ))
                                   ],
                                 ),

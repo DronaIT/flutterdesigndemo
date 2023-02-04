@@ -65,7 +65,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   var cloudinary;
   final apiRepository = getIt.get<ApiRepository>();
 
-  String companyId = "", jobCode = "", jobRecordId = "";
+  String companyId = "", companyRecordId = "", jobCode = "", jobRecordId = "";
   bool fromEdit = false;
 
   @override
@@ -110,6 +110,8 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
         preferredGenderValue = jobData?.gender ?? strings_name.str_both;
         internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
         internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
+
+        companyRecordId = jobData?.companyId?.first ?? "";
 
         if (jobData?.specializationIds?.isNotEmpty == true) {
           var specializationArr = PreferenceUtils.getSpecializationList().records;
@@ -169,7 +171,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     }
 
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
-    request.companyId = companyId.trim().split("  ");
+    request.companyId = companyRecordId.trim().split("  ");
     request.jobTitle = jobTitleController.text.trim().toString();
     request.jobDescription = jobDescController.text.trim().toString();
     request.specificRequirements = jobSpecificReqController.text.trim().toString();
@@ -185,6 +187,8 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     request.timingEnd = endTimeController.text.trim().toString();
     request.internshipModes = internshipModeValue.trim().toString();
     request.internshipDuration = internshipDurationValue.trim().toString();
+    request.status = strings_name.str_job_status_pending;
+
     if (bondPath.isNotEmpty) {
       Map<String, dynamic> map = Map();
       map["url"] = bondPath;

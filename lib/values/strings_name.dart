@@ -345,4 +345,10 @@ class strings_name {
   static const String str_apply = "Apply";
   static const String str_job_title_ = "Job title:";
 
+  static const String str_job_status_pending = "pending for approval";
+  static const String str_job_status_approved = "approved";
+  static const String str_job_status_published = "published for students";
+  static const String str_job_status_timeout = "timeout for new application";
+  static const String str_job_status_interview_scheduled = "interview scheduled";
+  static const String str_job_status_process_complete = "process complete";
 }
