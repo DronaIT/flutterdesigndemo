@@ -516,6 +516,18 @@ class ApiRequest {
     }
   }
 
+  Future<UpdateJobOpportunity> updateJobSortListedApi(Map<String, dynamic> updateSortList, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateSortList};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_JOBS + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return UpdateJobOpportunity.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<BaseLoginResponse<JobOpportunityResponse>> getJobOpportunityApi(String jobOpportunityFormula) async {
     try {
       Map<String, dynamic> someMap = {"filterByFormula": jobOpportunityFormula};

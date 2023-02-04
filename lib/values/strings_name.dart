@@ -270,6 +270,9 @@ class strings_name {
   static const String str_create_job_alert = "Create job alert";
   static const String str_apply_internship = "Apply for Internships";
   static const String str_published_internship = "Published internship";
+
+  static const String str_sortlist_student = "Shortlist student";
+
   static const String str_contact_person_designation = "Contact person's designation";
   static const String str_approved_internship = "Approved internship";
   static const String str_company_lan_num = "Company's landline no.";
@@ -339,16 +342,19 @@ class strings_name {
   static const String str_empty_start_time = "Please select start time of internship";
   static const String str_empty_end_time = "Please select end time of internship";
 
-  static const String str_job_added = "New job opportunity added successfully.";
-  static const String str_job_updated = "Job opportunity updated successfully.";
+  static const String str_job_added = "New job opportunity added successfully";
+  static const String str_job_updated = "Job opportunity updated successfully";
 
   static const String str_apply = "Apply";
   static const String str_job_title_ = "Job title:";
-
+  static const String str_job_sortlisted = "Student shortlisted successfully";
   static const String str_job_status_pending = "pending for approval";
   static const String str_job_status_approved = "approved";
   static const String str_job_status_published = "published for students";
   static const String str_job_status_timeout = "timeout for new application";
   static const String str_job_status_interview_scheduled = "interview scheduled";
   static const String str_job_status_process_complete = "process complete";
+
+  static const String str_please_select_one_student = "Please shortlist one student";
+  static const String str_schadule_interview = "Schedule interview";
 }

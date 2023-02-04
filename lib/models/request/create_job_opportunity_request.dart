@@ -19,6 +19,7 @@ class CreateJobOpportunityRequest {
   List<String>? hubIds;
   List<Map<String, dynamic>>? bondStructure;
   List<Map<String, dynamic>>? incentiveStructure;
+  List<String>? sortlisted;
 
   CreateJobOpportunityRequest(
       {this.jobTitle,
@@ -40,6 +41,7 @@ class CreateJobOpportunityRequest {
       this.semester,
       this.hubIds,
       this.bondStructure,
+        this.sortlisted,
       this.incentiveStructure});
 
   CreateJobOpportunityRequest.fromJson(Map<String, dynamic> json) {
@@ -63,6 +65,8 @@ class CreateJobOpportunityRequest {
     hubIds = json['hub_ids']?.cast<String>();
     bondStructure = json['bond_structure']?.cast<Map<String, dynamic>>();
     incentiveStructure = json['incentive_structure']?.cast<Map<String, dynamic>>();
+
+    sortlisted = json['shortlisted_students']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +91,7 @@ class CreateJobOpportunityRequest {
     data['hub_ids'] = this.hubIds;
     data['bond_structure'] = this.bondStructure;
     data['incentive_structure'] = this.incentiveStructure;
+    data['shortlisted_students'] = this.sortlisted;
     return data;
   }
 }

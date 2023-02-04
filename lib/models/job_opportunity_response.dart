@@ -97,7 +97,7 @@ class JobOpportunityResponse {
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
     internshipDuration = json['internship_duration'];
-    companyId = json['company_id'].cast<String>();
+    companyId = json['company_id']?.cast<String>();
     specificRequirements = json['specific_requirements'];
     vacancies = json['vacancies'];
     internshipModes = json['internship_modes'];

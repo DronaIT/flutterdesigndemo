@@ -20,6 +20,7 @@ import '../../models/base_api_response.dart';
 import '../../models/typeofsectoreresponse.dart';
 import 'approved_internship.dart';
 import 'published_internship.dart';
+import 'shortlist_students.dart';
 
 class PlacementDashboard extends StatefulWidget {
   const PlacementDashboard({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool applyInternship = false, publishedList= false ,approvedList= false;
+  bool applyInternship = false, publishedList= false ,approvedList= false, shortListed = false;
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
@@ -103,6 +104,12 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             approvedList = true;
           });
         }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlISTED_INTERSHIP) {
+          setState(() {
+            shortListed = true;
+          });
+        }
+
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_something_wrong);
@@ -259,7 +266,26 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
+                Visibility(
+                  visible: shortListed,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_sortlist_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const ShortListStudent());
 
+                    },
+                  ),
+                ),
 
 
               ],

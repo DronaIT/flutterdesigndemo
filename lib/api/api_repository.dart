@@ -466,6 +466,17 @@ class ApiRepository {
     }
   }
 
+  Future<UpdateJobOpportunity> updateJobSortListedApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateJobSortListedApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+
   Future<BaseLoginResponse<JobOpportunityResponse>> getJobOpportunityApi(String jobOpportunityFormula) async {
     try {
       final response = await userApi.getJobOpportunityApi(jobOpportunityFormula);

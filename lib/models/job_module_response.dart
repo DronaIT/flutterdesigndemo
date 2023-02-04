@@ -4,6 +4,7 @@ class JobModuleResponse {
   String? applied_students_email;
   String? applied_students_enrollment_number;
   String? applied_students_number;
+  bool selected = false;
 
   JobModuleResponse({
     this.applied_students_name,
