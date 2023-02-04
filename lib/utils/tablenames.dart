@@ -95,6 +95,7 @@ class TableNames {
   static const PERMISSION_ID_EDIT_COMPANY_DETAIL = "DP0407";
   static const PERMISSION_ID_VIEWJOBS = "DP0408";
   static const PERMISSION_ID_EDITJOBS = "DP0409";
+  static const PERMISSION_ID_PUBLISHED_INTERSHIP = "DP0412";
 
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";

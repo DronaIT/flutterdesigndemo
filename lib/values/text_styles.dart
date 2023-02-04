@@ -14,6 +14,12 @@ const centerTextStyle20 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const centerTextStyle16 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  color: colors_name.colorPrimary,
+);
+
 const centerTextStyle30 = TextStyle(
   fontSize: 28,
   fontWeight: FontWeight.bold,

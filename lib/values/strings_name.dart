@@ -269,7 +269,7 @@ class strings_name {
   static const String str_create_company = "Create company";
   static const String str_create_job_alert = "Create job alert";
   static const String str_apply_internship = "Apply for Internships";
-  static const String str_update_internship = "Update internship";
+  static const String str_published_internship = "Published internship";
   static const String str_contact_person_designation = "Contact person's designation";
 
   static const String str_company_lan_num = "Company's landline no.";
@@ -294,7 +294,7 @@ class strings_name {
   static const String str_company_id_no = "Company identification no.";
   static const String str_empty_company_id_no = "Please enter company indentification no.";
   static const String str_company_det_added = "Company detail added successfully";
-  static const String str_view_create_company = "View company detail";
+  static const String str_view_create_company = "Company list";
   static const String str_company_updated = "Company detail updated successfully.";
   static const String str_job_opp_detail = "Job opportunity form";
   static const String str_create_job_opp_detail = "Create job opportunity";
@@ -343,4 +343,6 @@ class strings_name {
   static const String str_job_updated = "Job opportunity updated successfully.";
 
   static const String str_apply = "Apply";
+  static const String str_job_title_ = "Job title:";
+
 }

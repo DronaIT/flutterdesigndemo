@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 
 import '../../models/base_api_response.dart';
 import '../../models/typeofsectoreresponse.dart';
+import 'published_internship.dart';
 
 class PlacementDashboard extends StatefulWidget {
   const PlacementDashboard({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool applyInternship = false, updateInternship = false;
+  bool applyInternship = false, publishedList= false;
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
@@ -91,12 +92,12 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             applyInternship = true;
           });
         }
-
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_INTERNSHIP) {
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PUBLISHED_INTERSHIP) {
           setState(() {
-            updateInternship = true;
+            publishedList = true;
           });
         }
+
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_something_wrong);
@@ -213,7 +214,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                   ),
                 ),
                 Visibility(
-                  visible: updateInternship,
+                  visible: publishedList,
                   child: GestureDetector(
                     child: Card(
                       elevation: 5,
@@ -222,11 +223,14 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_update_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_published_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => const PublishIntership());
+
+                    },
                   ),
                 ),
               ],
