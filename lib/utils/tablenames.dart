@@ -59,6 +59,7 @@ class TableNames {
   static const CLM_MOTHER_NUMBER = "enrollment_numbers";
   static const CLM_FATHER_NUMBERS = "enrollment_numbers";
   static const CLM_COMPANY_ID = "company_id";
+  static const CLM_STATUS = "status";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";

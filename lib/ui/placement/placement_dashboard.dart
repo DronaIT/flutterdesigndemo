@@ -33,7 +33,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool applyInternship = false, publishedList= false ,approvedList= false, shortListed = false;
+  bool applyInternship = false, publishedList = false, approvedList = false, shortListed = false;
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
@@ -109,7 +109,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             shortListed = true;
           });
         }
-
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_something_wrong);
@@ -242,7 +241,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     ),
                     onTap: () {
                       Get.to(() => const ApprovedInternship());
-
                     },
                   ),
                 ),
@@ -262,7 +260,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     ),
                     onTap: () {
                       Get.to(() => const PublishIntership());
-
                     },
                   ),
                 ),
@@ -282,12 +279,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     ),
                     onTap: () {
                       Get.to(() => const ShortListStudent());
-
                     },
                   ),
                 ),
-
-
               ],
             ),
           ),

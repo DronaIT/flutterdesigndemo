@@ -346,8 +346,15 @@ class strings_name {
   static const String str_job_updated = "Job opportunity updated successfully";
 
   static const String str_apply = "Apply";
+  static const String str_approve = "Approve";
   static const String str_job_title_ = "Job title:";
   static const String str_job_sortlisted = "Student shortlisted successfully";
+  static const String str_list_pending_job_opp = "Pending list";
+  static const String str_job_apply_timing = "Job apply timing for students:";
+  static const String str_empty_job_apply_start_time = "Please select start time";
+  static const String str_empty_job_apply_end_time = "Please select end time";
+  static const String str_job_approved = "Job opportunity approved successfully.";
+
   static const String str_job_status_pending = "pending for approval";
   static const String str_job_status_approved = "approved";
   static const String str_job_status_published = "published for students";
