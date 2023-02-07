@@ -476,10 +476,19 @@ class ApiRepository {
     }
   }
 
-
   Future<BaseLoginResponse<JobOpportunityResponse>> getJobOpportunityApi(String jobOpportunityFormula) async {
     try {
       final response = await userApi.getJobOpportunityApi(jobOpportunityFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<CreatePasswordResponse> updateStudentDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.updateStudentDataApi(loginFormula, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

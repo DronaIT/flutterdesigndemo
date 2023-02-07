@@ -60,6 +60,13 @@ class TableNames {
   static const CLM_FATHER_NUMBERS = "enrollment_numbers";
   static const CLM_COMPANY_ID = "company_id";
   static const CLM_STATUS = "status";
+  /*
+      0 => Job apply time is yet to come (Now < start time)
+      1 => Job apply time is running (start time < Now < end time)
+      2 => Job apply time is over (end time < Now)
+  */
+  static const CLM_DISPLAY_INTERNSHIP = "display_internship";
+  static const CLM_APPLIED_JOB = "applied_job";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";

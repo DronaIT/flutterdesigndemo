@@ -45,54 +45,51 @@ class JobOpportunityResponse {
   List<String>? applied_students_enrollment_number;
   List<String>? applied_students_name;
 
-
   JobOpportunityResponse(
       {this.jobDescription,
-        this.internshipDuration,
-        this.companyId,
-        this.specificRequirements,
-        this.vacancies,
-        this.internshipModes,
-        this.timingEnd,
-        this.gender,
-        this.semester,
-        this.jobTitle,
-        this.minimumAge,
-        this.timingStart,
-        this.hubIds,
-        this.status,
-        this.jobId,
-        this.stipendType,
-        this.specializationIds,
-        this.companyCode,
-        this.companyName,
-        this.reportingAddress,
-        this.reportingBranch,
-        this.city,
-        this.jobCode,
-        this.contactNameFromCompanyId,
-        this.joiningDate,
-        this.selectedStudents,
-        this.attendance_data,
-        this.stipendRangeMin,
-        this.interviewPlaceAddress,
-        this.interviewCoordinator,
-        this.shortlistedStudents,
-        this.interviewPlaceUrl,
-        this.stipendRangeMax,
-        this.placedStudents,
-        this.interviewDatetime,
-        this.jobApplyEndTime,
-        this.jobApplyStartTime,
-        this.interviewInstruction,
-        this.appliedStudents,
-        this.coordinatorName,
-        this.coordinatorMobileNumber,
-        this.applied_students_email,
-        this.applied_students_enrollment_number,
-        this.applied_students_name
-
-      });
+      this.internshipDuration,
+      this.companyId,
+      this.specificRequirements,
+      this.vacancies,
+      this.internshipModes,
+      this.timingEnd,
+      this.gender,
+      this.semester,
+      this.jobTitle,
+      this.minimumAge,
+      this.timingStart,
+      this.hubIds,
+      this.status,
+      this.jobId,
+      this.stipendType,
+      this.specializationIds,
+      this.companyCode,
+      this.companyName,
+      this.reportingAddress,
+      this.reportingBranch,
+      this.city,
+      this.jobCode,
+      this.contactNameFromCompanyId,
+      this.joiningDate,
+      this.selectedStudents,
+      this.attendance_data,
+      this.stipendRangeMin,
+      this.interviewPlaceAddress,
+      this.interviewCoordinator,
+      this.shortlistedStudents,
+      this.interviewPlaceUrl,
+      this.stipendRangeMax,
+      this.placedStudents,
+      this.interviewDatetime,
+      this.jobApplyEndTime,
+      this.jobApplyStartTime,
+      this.interviewInstruction,
+      this.appliedStudents,
+      this.coordinatorName,
+      this.coordinatorMobileNumber,
+      this.applied_students_email,
+      this.applied_students_enrollment_number,
+      this.applied_students_name});
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -118,8 +115,7 @@ class JobOpportunityResponse {
     reportingBranch = json['reporting_branch']?.cast<String>();
     city = json['city']?.cast<String>();
     jobCode = json['job_code'];
-    contactNameFromCompanyId =
-        json['contact_name (from company_id)']?.cast<String>();
+    contactNameFromCompanyId = json['contact_name (from company_id)']?.cast<String>();
     joiningDate = json['joining_date'];
     selectedStudents = json['selected_students']?.cast<String>();
     attendance_data = json['TBL_PLACEMENT_ATTENDANCE']?.cast<String>();
@@ -140,7 +136,6 @@ class JobOpportunityResponse {
     applied_students_email = json['applied_students_email']?.cast<String>();
     applied_students_enrollment_number = json['applied_students_enrollment_number']?.cast<String>();
     applied_students_name = json['applied_students_name']?.cast<String>();
-
   }
 
   Map<String, dynamic> toJson() {

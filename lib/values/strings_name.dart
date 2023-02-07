@@ -274,7 +274,7 @@ class strings_name {
   static const String str_sortlist_student = "Shortlist student";
 
   static const String str_contact_person_designation = "Contact person's designation";
-  static const String str_approved_internship = "Approved internship";
+  static const String str_approved_internship = "Approve internship";
   static const String str_company_lan_num = "Company's landline no.";
   static const String str_contact_person_email = "Contact person's email";
   static const String str_company_website = "Company's website";
@@ -346,6 +346,7 @@ class strings_name {
   static const String str_job_updated = "Job opportunity updated successfully";
 
   static const String str_apply = "Apply";
+  static const String str_already_applied = "Already Applied";
   static const String str_approve = "Approve";
   static const String str_job_title_ = "Job title:";
   static const String str_job_sortlisted = "Student shortlisted successfully";
@@ -356,7 +357,6 @@ class strings_name {
   static const String str_job_approved = "Job opportunity approved successfully.";
 
   static const String str_job_status_pending = "pending for approval";
-  static const String str_job_status_approved = "approved";
   static const String str_job_status_published = "published for students";
   static const String str_job_status_timeout = "timeout for new application";
   static const String str_job_status_interview_scheduled = "interview scheduled";
@@ -380,5 +380,4 @@ class strings_name {
   static const String str_empty_coori_number = "Please enter coordinator number";
 
   static const String str_interview_time_schedule = "Interview time scheduled successfully";
-
 }

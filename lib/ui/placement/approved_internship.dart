@@ -266,7 +266,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
               click: () {
                 if (startTimeController.text.trim().isEmpty) {
                   Utils.showSnackBar(context, strings_name.str_empty_job_apply_start_time);
-                } else if (startTimeController.text.trim().isEmpty) {
+                } else if (endTimeController.text.trim().isEmpty) {
                   Utils.showSnackBar(context, strings_name.str_empty_job_apply_end_time);
                 } else {
                   Get.back(closeOverlays: true);
@@ -280,8 +280,12 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   }
 
   void approveNow(BaseApiResponseWithSerializable<JobOpportunityResponse> jobData) async {
+    setState(() {
+      isVisible = true;
+    });
+
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
-    request.status = strings_name.str_job_status_interview_scheduled;
+    request.status = strings_name.str_job_status_published;
     request.jobApplyStartTime = startTimeController.text.trim().toString();
     request.jobApplyEndTime = endTimeController.text.trim().toString();
 

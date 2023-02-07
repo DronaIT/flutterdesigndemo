@@ -539,4 +539,16 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<CreatePasswordResponse> updateStudentDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": loginFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return CreatePasswordResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

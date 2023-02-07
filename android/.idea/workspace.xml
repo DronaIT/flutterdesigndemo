@@ -1,20 +1,331 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="e15cb0d0-42c8-47b8-b4c0-1d2f818bbe73" name="Changes" comment="" />
+    <list default="true" id="e7016e5c-4e50-419e-9db7-583371f96391" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/.filecache" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/app.dill" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/debug_android_application.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/flutter_assets.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/kernel_snapshot.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/kernel_snapshot.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/436d09204fc6588dc0e7fd079b243361/outputs.json" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/.filecache" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/app.dill" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/debug_android_application.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/flutter_assets.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/kernel_snapshot.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/kernel_snapshot.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/86da4dc199651c1f5e1889a4ec686e61/outputs.json" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/a498f03839380cd5fd6a8d45b2c7d966/.filecache" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/a498f03839380cd5fd6a8d45b2c7d966/app.dill" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/a498f03839380cd5fd6a8d45b2c7d966/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/a498f03839380cd5fd6a8d45b2c7d966/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/a498f03839380cd5fd6a8d45b2c7d966/kernel_snapshot.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/a498f03839380cd5fd6a8d45b2c7d966/outputs.json" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/.filecache" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/app.dill" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/debug_android_application.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/flutter_assets.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/kernel_snapshot.d" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/kernel_snapshot.stamp" beforeDir="false" />
+      <change beforePath=".dart_tool/flutter_build/eff7e3236fa11ed2c9dbd2181a1695df/outputs.json" beforeDir="false" />
+      <change beforePath=".dart_tool/package_config.json" beforeDir="false" afterPath=".dart_tool/package_config.json" afterDir="false" />
+      <change beforePath=".dart_tool/package_config_subset" beforeDir="false" afterPath=".dart_tool/package_config_subset" afterDir="false" />
+      <change beforePath=".flutter-plugins" beforeDir="false" afterPath=".flutter-plugins" afterDir="false" />
+      <change beforePath=".flutter-plugins-dependencies" beforeDir="false" afterPath=".flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath=".idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath=".idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="assets/images/ic_splash.png" beforeDir="false" />
+      <change beforePath="build/077f5c6a4a092e89bab670258a1dc959/_composite.stamp" beforeDir="false" />
+      <change beforePath="build/077f5c6a4a092e89bab670258a1dc959/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath="build/077f5c6a4a092e89bab670258a1dc959/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath="build/47fa12e5de3ff2fd68036f1798a4c249/_composite.stamp" beforeDir="false" />
+      <change beforePath="build/47fa12e5de3ff2fd68036f1798a4c249/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath="build/47fa12e5de3ff2fd68036f1798a4c249/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath="build/app/intermediates/apk_ide_redirect_file/debug/redirect.txt" beforeDir="false" afterPath="build/app/intermediates/apk_ide_redirect_file/debug/redirect.txt" afterDir="false" />
+      <change beforePath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/AssetManifest.bin" beforeDir="false" afterPath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/AssetManifest.bin" afterDir="false" />
+      <change beforePath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/AssetManifest.json" beforeDir="false" afterPath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/AssetManifest.json" afterDir="false" />
+      <change beforePath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/NOTICES.Z" beforeDir="false" afterPath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/NOTICES.Z" afterDir="false" />
+      <change beforePath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/assets/images/ic_splash.png" beforeDir="false" />
+      <change beforePath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/assets/res/tables_data.xlsx" beforeDir="false" afterPath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/assets/res/tables_data.xlsx" afterDir="false" />
+      <change beforePath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="build/app/intermediates/assets/debug/mergeDebugAssets/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/AssetManifest.bin.jar" beforeDir="false" afterPath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/AssetManifest.bin.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/AssetManifest.json.jar" beforeDir="false" afterPath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/AssetManifest.json.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/NOTICES.Z.jar" beforeDir="false" afterPath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/NOTICES.Z.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/assets/images/ic_splash.png.jar" beforeDir="false" />
+      <change beforePath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/assets/res/tables_data.xlsx.jar" beforeDir="false" afterPath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/assets/res/tables_data.xlsx.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" beforeDir="false" afterPath="build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/.last_build_id" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/.last_build_id" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_assets/AssetManifest.bin" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/flutter_assets/AssetManifest.bin" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_assets/AssetManifest.json" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/flutter_assets/AssetManifest.json" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_assets/NOTICES.Z" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/flutter_assets/NOTICES.Z" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_assets/assets/images/ic_splash.png" beforeDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_assets/assets/res/tables_data.xlsx" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/flutter_assets/assets/res/tables_data.xlsx" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/flutter_build.d" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/flutter_build.d" afterDir="false" />
+      <change beforePath="build/app/intermediates/flutter/debug/libs.jar" beforeDir="false" afterPath="build/app/intermediates/flutter/debug/libs.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/merge-state" beforeDir="false" afterPath="build/app/intermediates/incremental/debug-mergeJavaRes/merge-state" afterDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/1Le515AoN13EJFbGgL3gsGTJ81s=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/6iRTTm2cdmN8VbjaR0erEnzeFe4=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/7y8Ny7cViM4OJjxIVP1n2sxP1XE=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/9zC83ifUDE8EVOGCKoILuiKi+mY=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/FBhHSko953OnZgL_ixGd6k6Days=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/GTn5O78rgg1r1_hdSlIdbvwuna0=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/HqwSP+i7uqsHKaWIP0XptDfPXq4=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/Q0Hq76kr0CYTAh8yiIClYqD4MtY=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/QuW0pPqo2bnr5QiCHVGcHE+DTx0=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/R3NaJp_1GyqBNObvBAwTNsJoyNM=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/SHtbWTZaW2RKvIwYXcBsEvslu10=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/_3V5Ok8Bx_TKvRWsAbsF2zFp+us=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/kdyqFJeGKbo1WZrpd58GUxqrnL0=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/oLb56z+WnAAcldCLX1ArGKMHASw=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/uxE2yYN58O8lUmYGVODDAK4U4fk=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/xS7JBNHTmifN83ehEkXiws_e5H0=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/debug-mergeJavaRes/zip-cache/y+db0H8YdTh6vPq9u7b69BolIxc=" beforeDir="false" />
+      <change beforePath="build/app/intermediates/incremental/mergeDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/app/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="build/app/intermediates/incremental/packageDebug/tmp/debug/zip-cache/androidResources" beforeDir="false" afterPath="build/app/intermediates/incremental/packageDebug/tmp/debug/zip-cache/androidResources" afterDir="false" />
+      <change beforePath="build/app/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt" beforeDir="false" afterPath="build/app/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt" afterDir="false" />
+      <change beforePath="build/app/intermediates/merged_manifest/debug/AndroidManifest.xml" beforeDir="false" afterPath="build/app/intermediates/merged_manifest/debug/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="build/app/intermediates/merged_manifests/debug/AndroidManifest.xml" beforeDir="false" afterPath="build/app/intermediates/merged_manifests/debug/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="build/app/intermediates/packaged_manifests/debug/AndroidManifest.xml" beforeDir="false" afterPath="build/app/intermediates/packaged_manifests/debug/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="build/app/intermediates/processed_res/debug/out/resources-debug.ap_" beforeDir="false" afterPath="build/app/intermediates/processed_res/debug/out/resources-debug.ap_" afterDir="false" />
+      <change beforePath="build/app/intermediates/project_dex_archive/debug/out/4dd14cf6cba8124693b39fa22be0273786f44e294bdb4aab3392c644f2f59a68_0.jar" beforeDir="false" />
+      <change beforePath="build/app/intermediates/project_dex_archive/debug/out/4dd14cf6cba8124693b39fa22be0273786f44e294bdb4aab3392c644f2f59a68_1.jar" beforeDir="false" />
+      <change beforePath="build/app/intermediates/project_dex_archive/debug/out/4e69b77e20f3fa333556dcb44172072cab037bca0d29679ad69ce9b9d7e87568_0.jar" beforeDir="false" afterPath="build/app/intermediates/project_dex_archive/debug/out/4e69b77e20f3fa333556dcb44172072cab037bca0d29679ad69ce9b9d7e87568_0.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/project_dex_archive/debug/out/4e69b77e20f3fa333556dcb44172072cab037bca0d29679ad69ce9b9d7e87568_1.jar" beforeDir="false" afterPath="build/app/intermediates/project_dex_archive/debug/out/4e69b77e20f3fa333556dcb44172072cab037bca0d29679ad69ce9b9d7e87568_1.jar" afterDir="false" />
+      <change beforePath="build/app/intermediates/stripped_native_libs/debug/out/lib/x86/libflutter.so" beforeDir="false" afterPath="build/app/intermediates/stripped_native_libs/debug/out/lib/x86/libflutter.so" afterDir="false" />
+      <change beforePath="build/app/intermediates/stripped_native_libs/debug/out/lib/x86_64/libflutter.so" beforeDir="false" afterPath="build/app/intermediates/stripped_native_libs/debug/out/lib/x86_64/libflutter.so" afterDir="false" />
+      <change beforePath="build/app/kotlin/compileDebugKotlin/build-history.bin" beforeDir="false" afterPath="build/app/kotlin/compileDebugKotlin/build-history.bin" afterDir="false" />
+      <change beforePath="build/app/kotlin/compileDebugKotlin/last-build.bin" beforeDir="false" afterPath="build/app/kotlin/compileDebugKotlin/last-build.bin" afterDir="false" />
+      <change beforePath="build/app/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="build/app/outputs/apk/debug/app-debug.apk" afterDir="false" />
+      <change beforePath="build/app/outputs/flutter-apk/app-debug.apk" beforeDir="false" afterPath="build/app/outputs/flutter-apk/app-debug.apk" afterDir="false" />
+      <change beforePath="build/app/outputs/flutter-apk/app-debug.apk.sha1" beforeDir="false" afterPath="build/app/outputs/flutter-apk/app-debug.apk.sha1" afterDir="false" />
+      <change beforePath="build/app/outputs/flutter-apk/app.apk" beforeDir="false" />
+      <change beforePath="build/app/outputs/flutter-apk/app.apk.sha1" beforeDir="false" />
+      <change beforePath="build/app/outputs/logs/manifest-merger-debug-report.txt" beforeDir="false" afterPath="build/app/outputs/logs/manifest-merger-debug-report.txt" afterDir="false" />
+      <change beforePath="build/ed7c8c441cfbd16eeb61d1f1c6976113/_composite.stamp" beforeDir="false" />
+      <change beforePath="build/ed7c8c441cfbd16eeb61d1f1c6976113/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath="build/ed7c8c441cfbd16eeb61d1f1c6976113/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath="build/f58ed05f7a6fba8f3451773989665e4b.cache.dill.track.dill" beforeDir="false" />
+      <change beforePath="build/file_picker/.transforms/23080eae9b712eea46fd4e034971d5e7/results.bin" beforeDir="false" />
+      <change beforePath="build/file_picker/.transforms/23080eae9b712eea46fd4e034971d5e7/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/file_picker/.transforms/d51fadddf40548ce1dcc75f7a66fa2b5/results.bin" beforeDir="false" />
+      <change beforePath="build/file_picker/.transforms/d51fadddf40548ce1dcc75f7a66fa2b5/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/file_picker/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/file_picker/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/3b9cdc96b0e317d999827a9312fcd5f3/results.bin" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/3b9cdc96b0e317d999827a9312fcd5f3/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/bd8d2f2c866690046f260c6ff635ded7/results.bin" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/bd8d2f2c866690046f260c6ff635ded7/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/cfb9139b1f05abd623c1ab5c3692846a/results.bin" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/cfb9139b1f05abd623c1ab5c3692846a/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/d5a2c0846ba795694c5c68766be23d33/results.bin" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/.transforms/d5a2c0846ba795694c5c68766be23d33/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/flutter_native_splash/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/flutter_native_splash/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/flutter_plugin_android_lifecycle/.transforms/1a3ed3a0fe63e629b268fa8eca6a68e6/results.bin" beforeDir="false" />
+      <change beforePath="build/flutter_plugin_android_lifecycle/.transforms/1a3ed3a0fe63e629b268fa8eca6a68e6/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/flutter_plugin_android_lifecycle/.transforms/fefd74b3b1244627f662b8c61af361f8/results.bin" beforeDir="false" />
+      <change beforePath="build/flutter_plugin_android_lifecycle/.transforms/fefd74b3b1244627f662b8c61af361f8/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/flutter_plugin_android_lifecycle/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/flutter_plugin_android_lifecycle/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/last_build_run.json" beforeDir="false" />
+      <change beforePath="build/open_file/.transforms/db2e7b2e677e4a275fcacdbde59991c1/results.bin" beforeDir="false" />
+      <change beforePath="build/open_file/.transforms/db2e7b2e677e4a275fcacdbde59991c1/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/open_file/generated/source/buildConfig/debug/com/crazecoder/openfile/BuildConfig.java" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/aar_main_jar/debug/classes.jar" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/aar_metadata/debug/aar-metadata.properties" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/annotation_processor_list/debug/annotationProcessors.json" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/annotations_typedef_file/debug/typedefs.txt" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/compile_library_classes_jar/debug/classes.jar" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/compile_r_class_jar/debug/R.jar" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/compile_symbol_list/debug/R.txt" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/compiled_local_resources/debug/out/xml_filepaths.xml.flat" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/incremental/debug-mergeJavaRes/merge-state" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/incremental/mergeDebugJniLibFolders/merger.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/incremental/mergeDebugShaders/merger.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/incremental/packageDebugAssets/merger.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/incremental/packageDebugResources/merger.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/javac/debug/classes/com/crazecoder/openfile/BuildConfig.class" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/javac/debug/classes/com/crazecoder/openfile/OpenFilePlugin.class" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/local_only_symbol_list/debug/R-def.txt" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/merged_java_res/debug/feature-open_file.jar" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/merged_manifest/debug/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/navigation_json/debug/navigation.json" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/packaged_manifests/debug/output-metadata.json" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/packaged_res/debug/xml/filepaths.xml" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/runtime_library_classes_jar/debug/classes.jar" beforeDir="false" />
+      <change beforePath="build/open_file/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt" beforeDir="false" />
+      <change beforePath="build/open_file/outputs/aar/open_file-debug.aar" beforeDir="false" />
+      <change beforePath="build/open_file/outputs/logs/manifest-merger-debug-report.txt" beforeDir="false" />
+      <change beforePath="build/open_file/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" beforeDir="false" />
+      <change beforePath="build/open_filex/.transforms/99084013ab8e5e3ae50f26c866ebacbf/results.bin" beforeDir="false" />
+      <change beforePath="build/open_filex/.transforms/99084013ab8e5e3ae50f26c866ebacbf/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/open_filex/.transforms/c4314311056e27efcd6daa7476ecf406/results.bin" beforeDir="false" />
+      <change beforePath="build/open_filex/.transforms/c4314311056e27efcd6daa7476ecf406/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/open_filex/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/open_filex/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/029fdfedc6bc7a1e420921ecfdd29d8f/results.bin" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/029fdfedc6bc7a1e420921ecfdd29d8f/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/14af7dcfb15648f27ce69e5b76425b5c/results.bin" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/14af7dcfb15648f27ce69e5b76425b5c/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/1d110b8bb970017160e7001ba2278ad7/results.bin" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/1d110b8bb970017160e7001ba2278ad7/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/32907d4f6ad94b8040be9ac98eb06a57/results.bin" beforeDir="false" />
+      <change beforePath="build/path_provider_android/.transforms/32907d4f6ad94b8040be9ac98eb06a57/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/path_provider_android/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/path_provider_android/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/a33f7cf19f4959a716261f008c688626/results.bin" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/a33f7cf19f4959a716261f008c688626/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/c482e0869f1a2d62307bb4d433360d72/results.bin" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/c482e0869f1a2d62307bb4d433360d72/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/d1d815129db1045065f878d4775d9add/results.bin" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/d1d815129db1045065f878d4775d9add/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/f8d4a749966288245b13b3d5234b5be0/results.bin" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/.transforms/f8d4a749966288245b13b3d5234b5be0/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/shared_preferences_android/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/shared_preferences_android/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="build/sqflite/.transforms/497f22a9cac5a34eff224b61af7fa646/results.bin" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/497f22a9cac5a34eff224b61af7fa646/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/5eae308bfcec4f19c8289dad5bc8892c/results.bin" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/5eae308bfcec4f19c8289dad5bc8892c/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/619d5be83816f14f20cf5a7c31825df0/results.bin" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/619d5be83816f14f20cf5a7c31825df0/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/7a964beeb341f5eab6f391c20dc2fc09/results.bin" beforeDir="false" />
+      <change beforePath="build/sqflite/.transforms/7a964beeb341f5eab6f391c20dc2fc09/transformed/classes/classes.dex" beforeDir="false" />
+      <change beforePath="build/sqflite/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="build/sqflite/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="ios/Flutter/Generated.xcconfig" beforeDir="false" afterPath="ios/Flutter/Generated.xcconfig" afterDir="false" />
+      <change beforePath="ios/Flutter/flutter_export_environment.sh" beforeDir="false" afterPath="ios/Flutter/flutter_export_environment.sh" afterDir="false" />
+      <change beforePath="lib/main.dart" beforeDir="false" />
+      <change beforePath="lib/values/app_images.dart" beforeDir="false" afterPath="lib/values/app_images.dart" afterDir="false" />
+      <change beforePath="pubspec.lock" beforeDir="false" afterPath="pubspec.lock" afterDir="false" />
+      <change beforePath="pubspec.yaml" beforeDir="false" afterPath="pubspec.yaml" afterDir="false" />
+      <change beforePath="test/widget_test.dart" beforeDir="false" afterPath="test/widget_test.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[61a19430]" />
   <component name="ExternalProjectsData">
-    <projectState path="$USER_HOME$/AndroidStudioProjects/flutterdesigndemo/android">
+    <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
-  <component name="ProjectId" id="2IVZRw4Gzb4SmtyLhCcgMgRjjEb" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2Jv3tIKMbG6dHHZFDaLblYmerXp" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="android.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+        <option name="PROFILING_MODE" value="NOT_SET" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e7016e5c-4e50-419e-9db7-583371f96391" name="Changes" comment="" />
+      <created>1672944942254</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1672944942254</updated>
+    </task>
+    <servers />
   </component>
 </project>

@@ -2,6 +2,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
+import 'package:flutterdesigndemo/ui/placement/apply_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/company_list.dart';
@@ -221,7 +222,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         ),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => const ApplyForInternship());
+                    },
                   ),
                 ),
 
@@ -259,7 +262,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const PublishIntership());
+                      Get.to(() => const PublishInternship());
                     },
                   ),
                 ),

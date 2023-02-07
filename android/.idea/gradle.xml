@@ -6,11 +6,12 @@
       <GradleProjectSettings>
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$USER_HOME$/AndroidStudioProjects/flutterdesigndemo/android" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$USER_HOME$/.gradle/wrapper/dists/gradle-5.4.1-all/3221gyojl5jsh0helicew7rwx/gradle-5.4.1" />
-        <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/file_picker-5.2.4/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_native_splash-2.2.16/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.7/android" />
@@ -18,8 +19,6 @@
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path_provider_android-2.0.22/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences_android-2.0.14/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/sqflite-2.2.2/android" />
-            <option value="$USER_HOME$/AndroidStudioProjects/flutterdesigndemo/android" />
-            <option value="$USER_HOME$/AndroidStudioProjects/flutterdesigndemo/android/app" />
           </set>
         </option>
       </GradleProjectSettings>

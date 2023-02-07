@@ -43,6 +43,11 @@ class LoginFieldsResponse {
   String? father_number;
   String? pin_code;
 
+  List<String>? appliedJob;
+  List<String>? shortlistedJob;
+  List<String>? selectedJob;
+  List<String>? placedJob;
+
   LoginFieldsResponse({
     this.city,
     this.joiningYear,
@@ -83,6 +88,10 @@ class LoginFieldsResponse {
     this.mother_number,
     this.father_number,
     this.pin_code,
+    this.appliedJob,
+    this.shortlistedJob,
+    this.selectedJob,
+    this.placedJob,
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
@@ -127,6 +136,11 @@ class LoginFieldsResponse {
     mother_number = json['mother_number'];
     father_number = json['father_number'];
     pin_code = json['pin_code'];
+
+    appliedJob = json['applied_job']?.cast<String>();
+    shortlistedJob = json['shortlisted_job']?.cast<String>();
+    selectedJob = json['selected_job']?.cast<String>();
+    placedJob = json['placed_job']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -160,8 +174,6 @@ class LoginFieldsResponse {
     data['present_lecture_ids'] = this.presentLectureIds;
     data['lecture_date'] = this.lecture_date;
 
-
-
     data['sr_number'] = this.sr_number;
     data['birthdate'] = this.birthdate;
     data['aadhar_card_number'] = this.aadhar_card_number;
@@ -173,6 +185,11 @@ class LoginFieldsResponse {
     data['mother_number'] = this.mother_number;
     data['father_number'] = this.father_number;
     data['pin_code'] = this.pin_code;
+
+    data['applied_job'] = this.appliedJob;
+    data['shortlisted_job'] = this.shortlistedJob;
+    data['selected_job'] = this.selectedJob;
+    data['placed_job'] = this.placedJob;
     return data;
   }
 }

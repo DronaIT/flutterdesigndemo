@@ -7,13 +7,7 @@ class CompanyApprochResponse {
   List<String>? typeOfIndustory;
   List<int>? idFromTypeOfIndustory;
 
-  CompanyApprochResponse({this.id,
-    this.companyName,
-    this.contactPersonName,
-    this.contactPersonNo,
-    this.contactPersonWhatsappNo,
-    this.typeOfIndustory,
-    this.idFromTypeOfIndustory});
+  CompanyApprochResponse({this.id, this.companyName, this.contactPersonName, this.contactPersonNo, this.contactPersonWhatsappNo, this.typeOfIndustory, this.idFromTypeOfIndustory});
 
   CompanyApprochResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -21,8 +15,8 @@ class CompanyApprochResponse {
     contactPersonName = json['contact_person_name'];
     contactPersonNo = json['contact_person_no'];
     contactPersonWhatsappNo = json['contact_person_whatsapp_no'];
-    typeOfIndustory = json['type_of_industory'].cast<String>();
-    idFromTypeOfIndustory = json['id (from type_of_industory)'].cast<int>();
+    typeOfIndustory = json['type_of_industory']?.cast<String>();
+    idFromTypeOfIndustory = json['id (from type_of_industory)']?.cast<int>();
   }
 
   Map<String, dynamic> toJson() {
