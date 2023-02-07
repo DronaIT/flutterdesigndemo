@@ -22,7 +22,7 @@ class CreateJobOpportunityRequest {
   String? jobApplyStartTime;
   String? jobApplyEndTime;
   List<String>? sortlisted;
-
+  List<String>? selected;
   String? interview_datetime;
   String? interview_instruction;
   String? interview_place_address;
@@ -94,6 +94,7 @@ class CreateJobOpportunityRequest {
     interview_place_url = json['interview_place_url'];
     coordinator_mobile_number = json['coordinator_mobile_number'];
     coordinator_name = json['coordinator_name'];
+    selected = json['selected_students']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -123,7 +124,7 @@ class CreateJobOpportunityRequest {
     data['shortlisted_students'] = this.sortlisted;
 
 
-
+    data['selected_students'] = this.selected;
     data['interview_datetime'] = this.interview_datetime;
     data['interview_instruction'] = this.interview_instruction;
     data['interview_place_address'] = this.interview_place_address;

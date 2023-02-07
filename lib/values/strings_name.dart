@@ -380,4 +380,8 @@ class strings_name {
   static const String str_empty_coori_number = "Please enter coordinator number";
 
   static const String str_interview_time_schedule = "Interview time scheduled successfully";
+
+  static const String str_selected_student = "Select student";
+  static const String str_selected_students = "Student selected successfully";
+
 }

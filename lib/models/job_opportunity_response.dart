@@ -45,6 +45,11 @@ class JobOpportunityResponse {
   List<String>? applied_students_enrollment_number;
   List<String>? applied_students_name;
 
+  List<String>? shortlisted_students_email;
+  List<String>? shortlisted_students_enrollment_number;
+  List<String>? shortlisted_students_name;
+
+
   JobOpportunityResponse(
       {this.jobDescription,
       this.internshipDuration,
@@ -89,7 +94,14 @@ class JobOpportunityResponse {
       this.coordinatorMobileNumber,
       this.applied_students_email,
       this.applied_students_enrollment_number,
-      this.applied_students_name});
+      this.applied_students_name,
+
+        this.shortlisted_students_email,
+        this.shortlisted_students_enrollment_number,
+        this.shortlisted_students_name
+
+
+      });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -136,6 +148,11 @@ class JobOpportunityResponse {
     applied_students_email = json['applied_students_email']?.cast<String>();
     applied_students_enrollment_number = json['applied_students_enrollment_number']?.cast<String>();
     applied_students_name = json['applied_students_name']?.cast<String>();
+
+    shortlisted_students_email = json['shortlisted_students_email']?.cast<String>();
+    shortlisted_students_enrollment_number = json['shortlisted_students_enrollment_number']?.cast<String>();
+    shortlisted_students_name = json['shortlisted_students_name']?.cast<String>();
+
   }
 
   Map<String, dynamic> toJson() {
@@ -181,10 +198,12 @@ class JobOpportunityResponse {
     data['applied_students'] = this.appliedStudents;
     data['coordinator_name'] = this.coordinatorName;
     data['coordinator_mobile_number'] = this.coordinatorMobileNumber;
-
     data['applied_students_email'] = this.applied_students_email;
     data['applied_students_enrollment_number'] = this.applied_students_enrollment_number;
     data['applied_students_name'] = this.applied_students_name;
+    data['shortlisted_students_email'] = this.shortlisted_students_email;
+    data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
+    data['shortlisted_students_name'] = this.shortlisted_students_name;
 
     return data;
   }

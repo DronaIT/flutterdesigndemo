@@ -21,6 +21,7 @@ import '../../models/base_api_response.dart';
 import '../../models/typeofsectoreresponse.dart';
 import 'approved_internship.dart';
 import 'published_internship.dart';
+import 'selected_student.dart';
 import 'shortlist_students.dart';
 
 class PlacementDashboard extends StatefulWidget {
@@ -34,7 +35,8 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool applyInternship = false, publishedList = false, approvedList = false, shortListed = false;
+  bool applyInternship = false, publishedList = false, approvedList = false, shortListed = false ,
+      selectedStudent = false;
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
@@ -103,6 +105,11 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPROVED_INTERSHIP) {
           setState(() {
             approvedList = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_STUDENT) {
+          setState(() {
+            selectedStudent = true;
           });
         }
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlISTED_INTERSHIP) {
@@ -285,6 +292,27 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
+
+                Visibility(
+                  visible: selectedStudent,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_selected_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const SelectedStudentList());
+                    },
+                  ),
+                ),
+
               ],
             ),
           ),
