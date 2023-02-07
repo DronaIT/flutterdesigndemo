@@ -23,6 +23,7 @@ class JobOpportunityList extends StatefulWidget {
 class _JobOpportunityListState extends State<JobOpportunityList> {
   bool updateJobOppList = false;
   int companyId = 0;
+  String companyName = "";
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -34,6 +35,7 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
     if (Get.arguments != null) {
       updateJobOppList = Get.arguments[0]["updateJobOppList"];
       companyId = Get.arguments[1]["companyId"];
+      companyName = Get.arguments[2]["companyName"];
     }
     getRecords();
   }
@@ -53,10 +55,10 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_list_job_opp_detail),
+      appBar: AppWidgets.appBarWithoutBack(companyName.isNotEmpty ? companyName : strings_name.str_list_job_opp_detail),
       body: Stack(
         children: [
-          jobpportunityData.records != null && jobpportunityData.records!.length > 0
+          jobpportunityData.records != null && jobpportunityData.records!.isNotEmpty
               ? Container(
                   margin: const EdgeInsets.all(10),
                   child: ListView.builder(
@@ -128,35 +130,13 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                   leftValue: 5,
                                   maxLines: 1000,
                                 ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: Visibility(
-                                    child: ElevatedButton(
-                                      onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                        primary: colors_name.presentColor,
-                                        padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        elevation: 5.0,
-                                      ),
-                                      child: const Text(
-                                        strings_name.str_apply,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
-                                      ),
-                                    ),
-                                  ),
-                                )
                               ],
                             ),
                           ),
                         );
                       }),
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_created, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

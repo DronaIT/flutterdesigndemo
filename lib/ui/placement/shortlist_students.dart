@@ -47,7 +47,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_create_company),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_sortlist_student),
       body: Stack(
         children: [
           jobpportunityData.records != null && jobpportunityData.records!.length > 0
@@ -86,7 +86,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
                         );
                       }),
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

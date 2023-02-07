@@ -350,7 +350,7 @@ class strings_name {
   static const String str_approve = "Approve";
   static const String str_job_title_ = "Job title:";
   static const String str_job_sortlisted = "Student shortlisted successfully";
-  static const String str_list_pending_job_opp = "Pending list";
+  static const String str_list_pending_job_opp = "Pending for approval";
   static const String str_job_apply_timing = "Job apply timing for students:";
   static const String str_empty_job_apply_start_time = "Please select start time";
   static const String str_empty_job_apply_end_time = "Please select end time";
@@ -384,4 +384,9 @@ class strings_name {
   static const String str_selected_student = "Select student";
   static const String str_selected_students = "Student selected successfully";
 
+  static const String str_no_company = "No company added yet";
+  static const String str_no_jobs_created = "No jobs created yet";
+  static const String str_no_jobs_approval_pending = "No jobs available to approve";
+  static const String str_no_jobs_publish = "No jobs available for students to apply";
+  static const String str_no_jobs = "No jobs available";
 }

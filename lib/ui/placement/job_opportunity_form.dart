@@ -77,7 +77,9 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     }
     if (Get.arguments[1]["job_code"] != null) {
       jobCode = Get.arguments[1]["job_code"];
-      getJobData();
+      if (jobCode.isNotEmpty) {
+        getJobData();
+      }
     }
   }
 
