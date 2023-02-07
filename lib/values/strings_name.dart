@@ -389,4 +389,9 @@ class strings_name {
   static const String str_no_jobs_approval_pending = "No jobs available to approve";
   static const String str_no_jobs_publish = "No jobs available for students to apply";
   static const String str_no_jobs = "No jobs available";
+  static const String str_interview_schedule = "Interview schedule";
+  static const String str_company_name = "Company name";
+
+  static const String str_interview_date_time = "Interview date & time";
+
 }

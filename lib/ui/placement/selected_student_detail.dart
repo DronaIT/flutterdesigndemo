@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
-import 'package:intl/intl.dart';
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';

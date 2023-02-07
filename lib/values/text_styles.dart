@@ -8,6 +8,12 @@ const centerTextStyle = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const centerTextStyle21 = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: colors_name.colorPrimary,
+);
+
 const centerTextStyle20 = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.bold,
@@ -103,6 +109,13 @@ const blackTextSemiBold12 = TextStyle(
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );
+
+const blackTextSemiBold15 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);
+
 
 const blackTextSemiBold14 = TextStyle(
   fontSize: 14,
