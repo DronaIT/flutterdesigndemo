@@ -40,7 +40,7 @@ class _InterViewScheudleDetailState extends State<InterViewScheudleDetail> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND('2', ${TableNames.CLM_JOB_CODE}, 0)";
+    var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
     jobpportunityData = await apiRepository.getJoboppoApi(query);
     setState(() {
       isVisible = false;
