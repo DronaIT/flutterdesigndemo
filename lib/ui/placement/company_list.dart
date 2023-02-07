@@ -100,101 +100,102 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_create_company),
       body: Stack(
         children: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: ListView.builder(
-                itemCount: companyDetailResponse.records != null ? companyDetailResponse.records?.length : 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                      elevation: 5,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Column(
+          companyDetailResponse.records != null && companyDetailResponse.records!.isNotEmpty
+              ? Container(
+                  margin: const EdgeInsets.all(10),
+                  child: ListView.builder(
+                      itemCount: companyDetailResponse.records?.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                            elevation: 5,
+                            child: Column(
+                              children: [
+                                Row(
                                   children: [
-                                    custom_text(text: "${companyDetailResponse.records?[index].fields?.companyName}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
-                                    custom_text(text: "Name: ${companyDetailResponse.records?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
-                                    custom_text(text: "Contact no.: ${companyDetailResponse.records?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                    Flexible(
+                                      child: Column(
+                                        children: [
+                                          custom_text(text: "${companyDetailResponse.records?[index].fields?.companyName}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
+                                          custom_text(text: "Name: ${companyDetailResponse.records?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                          custom_text(text: "Contact no.: ${companyDetailResponse.records?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                        ],
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: update,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            Get.to(const CompanyDetail(), arguments: companyDetailResponse.records?[index].fields?.company_code)?.then((result) {
+                                              if (result != null && result) {
+                                                getRecords();
+                                              }
+                                            });
+                                          },
+                                          child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.edit))),
+                                    )
                                   ],
                                 ),
-                              ),
-                              Visibility(
-                                visible: update,
-                                child: GestureDetector(
-                                    onTap: () {
-                                      Get.to(const CompanyDetail(), arguments: companyDetailResponse.records?[index].fields?.company_code)?.then((result) {
-                                        if (result != null && result) {
-                                          getRecords();
-                                        }
-                                      });
-                                    },
-                                    child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.edit))),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Visibility(
-                                visible: createJobsAlerts,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Get.to(() => const JobOpportunityForm(), arguments: [
-                                      {"company_id": companyDetailResponse.records?[index].id},
-                                      {"job_code": "DF69941"},
-                                    ]);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: colors_name.presentColor,
-                                    padding: const EdgeInsets.all(10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Visibility(
+                                      visible: createJobsAlerts,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Get.to(() => const JobOpportunityForm(), arguments: [
+                                            {"company_id": companyDetailResponse.records?[index].id},
+                                            {"job_code": ""},
+                                          ]);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: colors_name.presentColor,
+                                          padding: const EdgeInsets.all(10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          elevation: 7.0,
+                                        ),
+                                        child: Text(
+                                          strings_name.str_create_job_opp_detail,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
                                     ),
-                                    elevation: 7.0,
-                                  ),
-                                  child: Text(
-                                    strings_name.str_create_job_opp_detail,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Visibility(
-                                visible: viewJobAlerts,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    //  Get.to(() => const JobOpportunityList(), arguments: updateJobAlerts ,);
-
-                                    Get.to(() => const JobOpportunityList(), arguments: [
-                                      {"updateJobOppList": updateJobAlerts},
-                                      {"companyId": companyDetailResponse.records?[index].fields?.id}
-                                    ]);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: colors_name.presentColor,
-                                    padding: const EdgeInsets.all(10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    elevation: 7.0,
-                                  ),
-                                  child: Text(
-                                    strings_name.str_list_job_opp_detail,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ));
-                }),
-          ),
+                                    SizedBox(width: 10),
+                                    Visibility(
+                                      visible: viewJobAlerts,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Get.to(() => const JobOpportunityList(), arguments: [
+                                            {"updateJobOppList": updateJobAlerts},
+                                            {"companyId": companyDetailResponse.records?[index].fields?.id},
+                                            {"companyName": companyDetailResponse.records?[index].fields?.companyName}
+                                          ]);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: colors_name.presentColor,
+                                          padding: const EdgeInsets.all(10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          elevation: 7.0,
+                                        ),
+                                        child: const Text(
+                                          strings_name.str_list_job_opp_detail,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ));
+                      }),
+                )
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_company, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
