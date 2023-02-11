@@ -55,63 +55,62 @@ class JobOpportunityResponse {
   List<String>? selected_students_enrollment_number;
   List<String>? selected_students_name;
 
-  List<DocumentResponse>? company_loi;
   List<String>? rejected_students;
+  List<DocumentResponse>? company_loi;
 
   JobOpportunityResponse({
-    this.jobDescription,
-    this.internshipDuration,
-    this.companyId,
-    this.specificRequirements,
-    this.vacancies,
-    this.internshipModes,
-    this.timingEnd,
-    this.gender,
-    this.semester,
-    this.jobTitle,
-    this.minimumAge,
-    this.timingStart,
-    this.hubIds,
-    this.status,
-    this.jobId,
-    this.stipendType,
-    this.specializationIds,
-    this.companyCode,
-    this.companyName,
-    this.reportingAddress,
-    this.reportingBranch,
-    this.city,
-    this.jobCode,
-    this.contactNameFromCompanyId,
-    this.joiningDate,
-    this.selectedStudents,
-    this.attendance_data,
-    this.stipendRangeMin,
-    this.interviewPlaceAddress,
-    this.interviewCoordinator,
-    this.shortlistedStudents,
-    this.interviewPlaceUrl,
-    this.stipendRangeMax,
-    this.placedStudents,
-    this.interviewDatetime,
-    this.jobApplyEndTime,
-    this.jobApplyStartTime,
-    this.interviewInstruction,
-    this.appliedStudents,
-    this.coordinatorName,
-    this.coordinatorMobileNumber,
-    this.applied_students_email,
-    this.applied_students_enrollment_number,
-    this.applied_students_name,
-    this.shortlisted_students_email,
-    this.shortlisted_students_enrollment_number,
-    this.shortlisted_students_name,
-    this.selected_students_email,
-    this.selected_students_enrollment_number,
-    this.selected_students_name,
-    this.company_loi,
-    this.rejected_students,
-  });
+      this.jobDescription,
+      this.internshipDuration,
+      this.companyId,
+      this.specificRequirements,
+      this.vacancies,
+      this.internshipModes,
+      this.timingEnd,
+      this.gender,
+      this.semester,
+      this.jobTitle,
+      this.minimumAge,
+      this.timingStart,
+      this.hubIds,
+      this.status,
+      this.jobId,
+      this.stipendType,
+      this.specializationIds,
+      this.companyCode,
+      this.companyName,
+      this.reportingAddress,
+      this.reportingBranch,
+      this.city,
+      this.jobCode,
+      this.contactNameFromCompanyId,
+      this.joiningDate,
+      this.selectedStudents,
+      this.attendance_data,
+      this.stipendRangeMin,
+      this.interviewPlaceAddress,
+      this.interviewCoordinator,
+      this.shortlistedStudents,
+      this.interviewPlaceUrl,
+      this.stipendRangeMax,
+      this.placedStudents,
+      this.interviewDatetime,
+      this.jobApplyEndTime,
+      this.jobApplyStartTime,
+      this.interviewInstruction,
+      this.appliedStudents,
+      this.coordinatorName,
+      this.coordinatorMobileNumber,
+      this.applied_students_email,
+      this.applied_students_enrollment_number,
+      this.applied_students_name,
+      this.shortlisted_students_email,
+      this.shortlisted_students_enrollment_number,
+      this.shortlisted_students_name,
+      this.selected_students_email,
+      this.selected_students_enrollment_number,
+      this.selected_students_name,
+      this.rejected_students,
+      this.company_loi});
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -168,6 +167,7 @@ class JobOpportunityResponse {
     selected_students_name = json['selected_students_name']?.cast<String>();
 
     rejected_students = json['rejected_students']?.cast<String>();
+
     if (json['company_loi'] != null) {
       company_loi = <DocumentResponse>[];
       json['company_loi'].forEach((v) {
@@ -230,6 +230,7 @@ class JobOpportunityResponse {
     data['selected_students_enrollment_number'] = this.selected_students_enrollment_number;
     data['selected_students_name'] = this.selected_students_name;
     data['rejected_students'] = this.rejected_students;
+
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
     }

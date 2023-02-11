@@ -55,7 +55,6 @@ class CreateJobOpportunityRequest {
     this.jobApplyEndTime,
     this.sortlisted,
     this.incentiveStructure,
-
     this.interview_datetime,
     this.interview_instruction,
     this.interview_place_address,
@@ -125,7 +124,6 @@ class CreateJobOpportunityRequest {
     data['job_apply_start_time'] = this.jobApplyStartTime;
     data['job_apply_end_time'] = this.jobApplyEndTime;
     data['shortlisted_students'] = this.sortlisted;
-
 
     data['selected_students'] = this.selected;
     data['interview_datetime'] = this.interview_datetime;

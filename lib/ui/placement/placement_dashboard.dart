@@ -44,9 +44,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
 
   // For student
-  bool applyInternship = false, appliedInternship = false,
-        completedInternShip= false,
-      shortListedInternship = false, selectedInternship = false ;
+  bool applyInternship = false, appliedInternship = false, completedInternShip = false, shortListedInternship = false, selectedInternship = false;
 
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
@@ -447,8 +445,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
               ),
             ),
           ),
-
-
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

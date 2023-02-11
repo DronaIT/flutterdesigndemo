@@ -1,5 +1,4 @@
 class JobModuleResponse {
-
   String? applied_students_name;
   String? applied_students_email;
   String? applied_students_enrollment_number;
@@ -12,8 +11,6 @@ class JobModuleResponse {
     this.applied_students_email,
     this.applied_students_number,
     this.applied_students_enrollment_number
-
-
   });
 
   JobModuleResponse.fromJson(Map<String, dynamic> json) {
@@ -21,7 +18,6 @@ class JobModuleResponse {
     applied_students_name = json['applied_students_name'];
     applied_students_email = json['applied_students_email'];
     applied_students_enrollment_number = json['applied_students_enrollment_number'];
-
   }
 
   Map<String, dynamic> toJson() {

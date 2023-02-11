@@ -70,7 +70,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
                   margin: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      custom_text(text: "${strings_name.str_joining_date} : 22-10-2022", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
+                      custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.fields?.joiningDate}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
                       SizedBox(height: 5.h),
                       Row(children: [
                         custom_text(text: "${strings_name.str_letter_of_intent} : ", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
