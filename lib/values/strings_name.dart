@@ -413,4 +413,10 @@ class strings_name {
   static const String str_empty_internship_tnc = "Please accept Placement SOP & Terms";
 
   static const String str_placement_info = "Placement info";
+  static const String str_completed_placement = "Completed internship process";
+  static const String str_pending = "Pending";
+  static const String str_reject = "Rejected";
+  static const String str_placed = "Placed";
+  static const String str_empty_joing_Date = "Please select joining date";
+  static const String str_joing_date = "Joining date";
 }

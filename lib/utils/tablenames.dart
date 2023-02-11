@@ -118,7 +118,7 @@ class TableNames {
   static const PERMISSION_ID_APPLIED_INTERNSHIP = "DP0416";
   static const PERMISSION_ID_SHORT_LISTED_INTERNSHIP = "DP0417";
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
-
+  static const PERMISSION_ID_COMPLETED_INTERNSHIP = "DP0419";
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
   static const EXCEL_COL_GENDER = "gender";

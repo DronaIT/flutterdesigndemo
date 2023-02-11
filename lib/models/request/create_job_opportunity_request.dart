@@ -29,6 +29,7 @@ class CreateJobOpportunityRequest {
   String? interview_place_url;
   String? coordinator_mobile_number;
   String? coordinator_name;
+  String? joining_date;
 
   CreateJobOpportunityRequest({
     this.jobTitle,
@@ -61,6 +62,7 @@ class CreateJobOpportunityRequest {
     this.interview_place_url,
     this.coordinator_mobile_number,
     this.coordinator_name,
+    this.joining_date,
   });
 
   CreateJobOpportunityRequest.fromJson(Map<String, dynamic> json) {
@@ -95,6 +97,7 @@ class CreateJobOpportunityRequest {
     coordinator_mobile_number = json['coordinator_mobile_number'];
     coordinator_name = json['coordinator_name'];
     selected = json['selected_students']?.cast<String>();
+    joining_date = json['joining_date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -131,7 +134,7 @@ class CreateJobOpportunityRequest {
     data['interview_place_url'] = this.interview_place_url;
     data['coordinator_mobile_number'] = this.coordinator_mobile_number;
     data['coordinator_name'] = this.coordinator_name;
-
+    data['joining_date'] = this.joining_date;
     return data;
   }
 }

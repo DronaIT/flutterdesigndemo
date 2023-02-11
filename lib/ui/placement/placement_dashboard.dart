@@ -7,6 +7,7 @@ import 'package:flutterdesigndemo/ui/placement/apply_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/company_list.dart';
+import 'package:flutterdesigndemo/ui/placement/completed_internship_list.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';
@@ -43,7 +44,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
 
   // For student
-  bool applyInternship = false, appliedInternship = false, shortListedInternship = false, selectedInternship = false;
+  bool applyInternship = false, appliedInternship = false,
+        completedInternShip= false,
+      shortListedInternship = false, selectedInternship = false ;
 
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
@@ -151,6 +154,11 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP) {
           setState(() {
             selectedInternship = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPLETED_INTERNSHIP) {
+          setState(() {
+            completedInternShip = true;
           });
         }
       }
@@ -405,6 +413,25 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
+                Visibility(
+                  visible: completedInternShip,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_completed_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const CompletedInternList());
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -420,6 +447,8 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
               ),
             ),
           ),
+
+
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

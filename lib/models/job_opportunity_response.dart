@@ -49,59 +49,65 @@ class JobOpportunityResponse {
   List<String>? shortlisted_students_enrollment_number;
   List<String>? shortlisted_students_name;
 
+  List<String>? selected_students_email;
+  List<String>? selected_students_enrollment_number;
+  List<String>? selected_students_name;
 
-  JobOpportunityResponse(
-      {this.jobDescription,
-      this.internshipDuration,
-      this.companyId,
-      this.specificRequirements,
-      this.vacancies,
-      this.internshipModes,
-      this.timingEnd,
-      this.gender,
-      this.semester,
-      this.jobTitle,
-      this.minimumAge,
-      this.timingStart,
-      this.hubIds,
-      this.status,
-      this.jobId,
-      this.stipendType,
-      this.specializationIds,
-      this.companyCode,
-      this.companyName,
-      this.reportingAddress,
-      this.reportingBranch,
-      this.city,
-      this.jobCode,
-      this.contactNameFromCompanyId,
-      this.joiningDate,
-      this.selectedStudents,
-      this.attendance_data,
-      this.stipendRangeMin,
-      this.interviewPlaceAddress,
-      this.interviewCoordinator,
-      this.shortlistedStudents,
-      this.interviewPlaceUrl,
-      this.stipendRangeMax,
-      this.placedStudents,
-      this.interviewDatetime,
-      this.jobApplyEndTime,
-      this.jobApplyStartTime,
-      this.interviewInstruction,
-      this.appliedStudents,
-      this.coordinatorName,
-      this.coordinatorMobileNumber,
-      this.applied_students_email,
-      this.applied_students_enrollment_number,
-      this.applied_students_name,
+  List<String>? rejected_students;
 
-        this.shortlisted_students_email,
-        this.shortlisted_students_enrollment_number,
-        this.shortlisted_students_name
-
-
-      });
+  JobOpportunityResponse({
+    this.jobDescription,
+    this.internshipDuration,
+    this.companyId,
+    this.specificRequirements,
+    this.vacancies,
+    this.internshipModes,
+    this.timingEnd,
+    this.gender,
+    this.semester,
+    this.jobTitle,
+    this.minimumAge,
+    this.timingStart,
+    this.hubIds,
+    this.status,
+    this.jobId,
+    this.stipendType,
+    this.specializationIds,
+    this.companyCode,
+    this.companyName,
+    this.reportingAddress,
+    this.reportingBranch,
+    this.city,
+    this.jobCode,
+    this.contactNameFromCompanyId,
+    this.joiningDate,
+    this.selectedStudents,
+    this.attendance_data,
+    this.stipendRangeMin,
+    this.interviewPlaceAddress,
+    this.interviewCoordinator,
+    this.shortlistedStudents,
+    this.interviewPlaceUrl,
+    this.stipendRangeMax,
+    this.placedStudents,
+    this.interviewDatetime,
+    this.jobApplyEndTime,
+    this.jobApplyStartTime,
+    this.interviewInstruction,
+    this.appliedStudents,
+    this.coordinatorName,
+    this.coordinatorMobileNumber,
+    this.applied_students_email,
+    this.applied_students_enrollment_number,
+    this.applied_students_name,
+    this.shortlisted_students_email,
+    this.shortlisted_students_enrollment_number,
+    this.shortlisted_students_name,
+    this.selected_students_email,
+    this.selected_students_enrollment_number,
+    this.selected_students_name,
+    this.rejected_students,
+  });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -152,6 +158,12 @@ class JobOpportunityResponse {
     shortlisted_students_email = json['shortlisted_students_email']?.cast<String>();
     shortlisted_students_enrollment_number = json['shortlisted_students_enrollment_number']?.cast<String>();
     shortlisted_students_name = json['shortlisted_students_name']?.cast<String>();
+
+    selected_students_email = json['selected_students_email']?.cast<String>();
+    selected_students_enrollment_number = json['selected_students_enrollment_number']?.cast<String>();
+    selected_students_name = json['selected_students_name']?.cast<String>();
+
+    rejected_students = json['rejected_students']?.cast<String>();
 
   }
 
@@ -205,6 +217,10 @@ class JobOpportunityResponse {
     data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
     data['shortlisted_students_name'] = this.shortlisted_students_name;
 
+    data['selected_students_email'] = this.selected_students_email;
+    data['selected_students_enrollment_number'] = this.selected_students_enrollment_number;
+    data['selected_students_name'] = this.selected_students_name;
+    data['rejected_students'] = this.rejected_students;
     return data;
   }
 }
