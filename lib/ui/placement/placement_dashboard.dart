@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
@@ -18,6 +19,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
+import '../../api/dio_exception.dart';
 import '../../models/base_api_response.dart';
 import '../../models/typeofsectoreresponse.dart';
 import 'approved_internship.dart';
@@ -61,7 +63,15 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     setState(() {
       isVisible = true;
     });
-    typeOfResponse = await apiRepository.getSectorApi();
+    try{
+      typeOfResponse = await apiRepository.getSectorApi();
+    }on DioError catch (e){
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
     if (typeOfResponse.records!.isNotEmpty) {
       PreferenceUtils.setTypeofList(typeOfResponse);
     }

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
+import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/authentucation/forgotpassword.dart';
-
-import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/ui/authentucation/register.dart';
+import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -58,7 +56,6 @@ class _LoginState extends State<Login> {
                       textStyles: blackTextSemiBold16,
                     ),
                     Row(
-
                       children: [
                         Expanded(
                           flex: 3,
@@ -132,7 +129,7 @@ class _LoginState extends State<Login> {
                                 await PreferenceUtils.setIsLogin(1);
                                 await PreferenceUtils.setLoginData(data.records!.first.fields!);
                                 await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
-                                Get.offAll(() => Home());
+                                Get.offAll(() => const Home());
                               }
                             } else if (data.records!.length == 0) {
                               var dataEmployee = await loginRepository.loginEmployeeApi(query);
@@ -149,7 +146,7 @@ class _LoginState extends State<Login> {
                                   await PreferenceUtils.setIsLogin(2);
                                   await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
                                   await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
-                                  Get.offAll(() => Home());
+                                  Get.offAll(() => const Home());
                                 }
                               } else if (dataEmployee.records!.length == 0) {
                                 setState(() {
@@ -174,7 +171,7 @@ class _LoginState extends State<Login> {
                     GestureDetector(
                       child: AppWidgets.spannableText(strings_name.str_donot_signup, strings_name.str_signup, primaryTextSemiBold16),
                       onTap: () {
-                        Get.to(Register());
+                        Get.to(const Register());
                       },
                     ),
                   ],
@@ -183,7 +180,7 @@ class _LoginState extends State<Login> {
             ),
           ),
           Center(
-            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
+            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
         ],
       ),

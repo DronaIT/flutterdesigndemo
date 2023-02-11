@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
+import 'package:get/get.dart';
 
 extension E on String {
   String lastChars(int n) => substring(length - n);
@@ -109,6 +110,17 @@ class Utils {
         return 'Just now';
       }
     }
+  }
+
+  static void showSnackBarUsingGet(String message) {
+    Get.showSnackbar(
+      GetSnackBar(
+        message: message,
+        isDismissible: true,
+        backgroundColor: colors_name.errorColor,
+        duration: const Duration(seconds: 5),
+      ),
+    );
   }
 
   static void showSnackBar(BuildContext context, String message) {
