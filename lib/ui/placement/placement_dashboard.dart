@@ -1,19 +1,20 @@
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
+import 'package:flutterdesigndemo/ui/placement/applied_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/apply_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/company_list.dart';
-import 'package:flutterdesigndemo/ui/placement/job_opportunity_form.dart';
+import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
+import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
+import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
@@ -34,15 +35,26 @@ class PlacementDashboard extends StatefulWidget {
 class _PlacementDashboardState extends State<PlacementDashboard> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
-  bool companyApproch = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool applyInternship = false, publishedList = false, approvedList = false, shortListed = false ,
-      selectedStudent = false;
+
+  // For employee
+  bool companyApproach = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
+  bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
+
+  // For student
+  bool applyInternship = false, appliedInternship = false, shortListedInternship = false, selectedInternship = false;
+
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
   void initState() {
     super.initState();
-    getPermission();
+    if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned_from_placement.toString() == "1") {
+      isBanned = true;
+    } else if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
+      Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
+    } else {
+      getPermission();
+    }
   }
 
   Future<void> getPermission() async {
@@ -52,7 +64,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     typeOfResponse = await apiRepository.getSectorApi();
     if (typeOfResponse.records!.isNotEmpty) {
       PreferenceUtils.setTypeofList(typeOfResponse);
-      print("sectore ${PreferenceUtils.getTypeOFSectoreList().records!.length}");
     }
     var query = "";
     var isLogin = PreferenceUtils.getIsLogin();
@@ -67,7 +78,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
       for (var i = 0; i < data.records!.length; i++) {
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPANY_APPROCH) {
           setState(() {
-            companyApproch = true;
+            companyApproach = true;
           });
         }
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CREATE_COMPANY) {
@@ -97,6 +108,16 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             applyInternship = true;
           });
         }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLIED_INTERNSHIP) {
+          setState(() {
+            appliedInternship = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORT_LISTED_INTERNSHIP) {
+          setState(() {
+            shortListedInternship = true;
+          });
+        }
         if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PUBLISHED_INTERSHIP) {
           setState(() {
             publishedList = true;
@@ -112,9 +133,14 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             selectedStudent = true;
           });
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlISTED_INTERSHIP) {
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlIST_STUDENTS) {
           setState(() {
             shortListed = true;
+          });
+        }
+        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP) {
+          setState(() {
+            selectedInternship = true;
           });
         }
       }
@@ -138,7 +164,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             child: Column(
               children: [
                 Visibility(
-                  visible: companyApproch,
+                  visible: companyApproach,
                   child: GestureDetector(
                     child: Card(
                       elevation: 5,
@@ -234,7 +260,44 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     },
                   ),
                 ),
-
+                Visibility(
+                  visible: appliedInternship,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_applied_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const AppliedInternship());
+                    },
+                  ),
+                ),
+                Visibility(
+                  visible: shortListedInternship,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_short_listed_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const ShortListedForInternship());
+                    },
+                  ),
+                ),
                 Visibility(
                   visible: approvedList,
                   child: GestureDetector(
@@ -313,7 +376,38 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                   ),
                 ),
 
+                Visibility(
+                  visible: selectedInternship,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_selected_for_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const SelectedForInternship());
+                    },
+                  ),
+                ),
               ],
+            ),
+          ),
+          Visibility(
+            visible: isBanned,
+            child: Card(
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              elevation: 5,
+              child: Container(
+                color: colors_name.colorWhite,
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                child: const Text(strings_name.str_banned_from_placement, textAlign: TextAlign.start, style: blackTextSemiBold16),
+              ),
             ),
           ),
           Center(

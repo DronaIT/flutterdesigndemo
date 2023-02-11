@@ -39,13 +39,14 @@ class _CompanyDetailState extends State<CompanyDetail> {
   TextEditingController emailContactperController = TextEditingController();
   TextEditingController companyWebsiteController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  TextEditingController repotBranchController = TextEditingController();
+  TextEditingController reportBranchController = TextEditingController();
   TextEditingController reportAddressController = TextEditingController();
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
   String typeofValue = "1";
   String path = "", title = "";
+  String loiPath = "", loiTitle = "";
   List<Map<String, CreateCompanyDetailRequest>> list = [];
   final companyDetailRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
@@ -84,7 +85,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
             companyLandlineController.text = compnayDetailData![0].fields!.company_landline.toString();
             emailContactperController.text = compnayDetailData![0].fields!.contactEmail.toString();
             companyWebsiteController.text = compnayDetailData![0].fields!.companyWebsite.toString();
-            repotBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
+            reportBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
             reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
             cityController.text = compnayDetailData![0].fields!.city.toString();
             for (var i = 0; i < typeofResponseArray!.length; i++) {
@@ -273,7 +274,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   custom_edittext(
                     type: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    controller: repotBranchController,
+                    controller: reportBranchController,
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
@@ -318,8 +319,42 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 3.h),
-                  custom_text(text: title, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                  Visibility(
+                    visible: title.isNotEmpty,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 3.h),
+                        custom_text(text: title, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      custom_text(
+                        text: strings_name.str_letter_of_intent,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                        leftValue: 10,
+                      ),
+                      GestureDetector(
+                        child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                        onTap: () {
+                          picLOIFile();
+                        },
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                    visible: loiPath.isNotEmpty,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 3.h),
+                        custom_text(text: loiTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 20.h),
                   CustomButton(
                       text: strings_name.str_submit,
@@ -339,22 +374,30 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           Utils.showSnackBar(context, phone);
                         } else if (emailContactperController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_company_email);
-                        } else if (repotBranchController.text.trim().isEmpty) {
+                        } else if (reportBranchController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_reporting_branch);
                         } else if (reportAddressController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_reporting_address);
                         } else if (cityController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_city);
+                        } else if (loiPath.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_letter_of_intent);
                         } else {
                           setState(() {
                             isVisible = true;
                           });
-                          var updatedPath = "";
+                          var updatedPath = "", loiFilePath = "";
                           if (path.isNotEmpty) {
                             CloudinaryResponse response = await cloudinary.uploadFile(
                               CloudinaryFile.fromFile(path, resourceType: CloudinaryResourceType.Image, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOGO),
                             );
                             updatedPath = response.secureUrl;
+                          }
+                          if (loiPath.isNotEmpty) {
+                            CloudinaryResponse response = await cloudinary.uploadFile(
+                              CloudinaryFile.fromFile(loiPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI),
+                            );
+                            loiFilePath = response.secureUrl;
                           }
                           CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
                           response.company_name = nameofCompanyController.text.trim().toString();
@@ -367,7 +410,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           response.company_landline = companyLandlineController.text.trim().toString();
                           response.contact_email = emailContactperController.text.trim().toString();
                           response.company_website = companyWebsiteController.text.trim().toString();
-                          response.reporting_branch = repotBranchController.text.trim().toString();
+                          response.reporting_branch = reportBranchController.text.trim().toString();
                           response.reporting_address = reportAddressController.text.trim().toString();
                           response.city = cityController.text.trim().toString();
 
@@ -378,6 +421,15 @@ class _CompanyDetailState extends State<CompanyDetail> {
                             listData.add(map);
 
                             response.company_logo = listData;
+                          }
+
+                          if (loiFilePath.isNotEmpty) {
+                            Map<String, dynamic> map = Map();
+                            map["url"] = loiFilePath;
+                            List<Map<String, dynamic>> listData = [];
+                            listData.add(map);
+
+                            response.company_loi = listData;
                           }
 
                           Map<String, CreateCompanyDetailRequest> map = Map();
@@ -431,8 +483,20 @@ class _CompanyDetailState extends State<CompanyDetail> {
   picImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      title = result.files.single.name;
-      path = result.files.single.path!;
+      setState(() {
+        title = result.files.single.name;
+        path = result.files.single.path!;
+      });
+    }
+  }
+
+  picLOIFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
+    if (result != null) {
+      setState(() {
+        loiTitle = result.files.single.name;
+        loiPath = result.files.single.path!;
+      });
     }
   }
 }

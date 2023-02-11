@@ -14,6 +14,7 @@ class CreateCompanyDetailRequest {
   String? reporting_address;
   String? city;
   List<Map<String, dynamic>>? company_logo;
+  List<Map<String, dynamic>>? company_loi;
 
   CreateCompanyDetailRequest(
       {this.company_identity_number,
@@ -29,7 +30,8 @@ class CreateCompanyDetailRequest {
       this.reporting_branch,
       this.reporting_address,
       this.city,
-      this.company_logo});
+      this.company_logo,
+      this.company_loi});
 
   CreateCompanyDetailRequest.fromJson(Map<String, dynamic> json) {
     company_identity_number = json['company_identity_number'];
@@ -47,6 +49,7 @@ class CreateCompanyDetailRequest {
     reporting_address = json['reporting_address'];
     city = json['city'];
     company_logo = json['company_logo']?.cast<Map<String, dynamic>>();
+    company_loi = json['company_loi']?.cast<Map<String, dynamic>>();
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +68,7 @@ class CreateCompanyDetailRequest {
     data['city'] = this.city;
     data['company_landline'] = this.company_landline;
     data['company_logo'] = this.company_logo;
+    data['company_loi'] = this.company_loi;
     return data;
   }
 }

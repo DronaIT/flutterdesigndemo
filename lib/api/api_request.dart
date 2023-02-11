@@ -551,4 +551,15 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<UpdateJobOpportunity> getJobOpportunityWithRecordIdApi(String recordId) async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_JOBS + "/" + recordId, options: Options(headers: header));
+      return UpdateJobOpportunity.fromJson(response.extra);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

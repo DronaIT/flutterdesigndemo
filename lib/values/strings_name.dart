@@ -282,6 +282,8 @@ class strings_name {
   static const String str_reporting_branch = "Reporting branch";
   static const String str_reporting_address = "Reporting address";
   static const String str_logo_of_company = "Logo of company";
+  static const String str_letter_of_intent = "Letter of intent (LOI)";
+  static const String str_empty_letter_of_intent = "Please upload letter of intent (LOI)";
   static const String str_company_detail = "Company details";
   static const String str_empty_company_name = "Please enter company name";
   static const String str_empty_type_of = "Please enter type of industry";
@@ -367,7 +369,7 @@ class strings_name {
 
   static const String str_job_interview_job_timing = "Interview job timing";
   static const String str_enter_time = "Enter date time";
-  static const String str_special_instrcutor = "Special instruction(if any)";
+  static const String str_special_instrcutor = "Special instruction (if any)";
   static const String str_interview_address = "Interview address";
   static const String str_google_map_link = "Google map link";
   static const String str_empty_job_date_time = "Please select interview date & time";
@@ -389,9 +391,26 @@ class strings_name {
   static const String str_no_jobs_approval_pending = "No jobs available to approve";
   static const String str_no_jobs_publish = "No jobs available for students to apply";
   static const String str_no_jobs = "No jobs available";
+
+  static const String str_applied_jobs = "Applied internship";
+  static const String str_no_jobs_applied = "Not applied for any internship yet";
+
+  static const String str_short_listed_jobs = "Short listed internship";
+  static const String str_no_jobs_short_listed = "Not short listed for any internship yet";
   static const String str_interview_schedule = "Interview schedule";
   static const String str_company_name = "Company name";
 
   static const String str_interview_date_time = "Interview date & time";
 
+  static const String str_selected_for_jobs = "Selected for internship";
+  static const String str_not_selected_for_jobs = "Not selected for any internship yet";
+  static const String str_accept_offer = "Accept offer";
+  static const String str_reject_offer = "Reject offer";
+  static const String str_reject_offer_disclaimer = "Please note that by not accepting this opportunity, you will not get placement support from Drona Foundation for next one semester.";
+  static const String str_banned_from_placement = "You are not allowed to access placement module and you will not get placement support from Drona Foundation for next one semester. Because you have rejected one of the offer.";
+  static const String str_congratulation_for_internship = "Congratulations for\ngetting selected at";
+  static const String str_internship_tnc = "I hereby accept the Placement SOP & Terms.";
+  static const String str_empty_internship_tnc = "Please accept Placement SOP & Terms";
+
+  static const String str_placement_info = "Placement info";
 }

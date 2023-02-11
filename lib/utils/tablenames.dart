@@ -6,6 +6,7 @@ class TableNames {
   static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";
   static const CLOUDARY_PRESET = "kgicun2o";
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
+  static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
 
@@ -66,7 +67,14 @@ class TableNames {
       2 => Job apply time is over (end time < Now)
   */
   static const CLM_DISPLAY_INTERNSHIP = "display_internship";
+  static const CLM_APPLIED_STUDENTS = "applied_students";
+  static const CLM_SHORT_LISTED_STUDENTS = "shortlisted_students";
+  static const CLM_SELECTED_STUDENTS = "selected_students";
+
   static const CLM_APPLIED_JOB = "applied_job";
+  static const CLM_PLACED_JOB = "placed_job";
+  static const CLM_REJECTED_JOB = "rejected_job";
+  static const CLM_BANNED_FROM_PLACEMENT = "is_banned_from_placement";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -105,8 +113,12 @@ class TableNames {
   static const PERMISSION_ID_EDITJOBS = "DP0409";
   static const PERMISSION_ID_PUBLISHED_INTERSHIP = "DP0412";
   static const PERMISSION_ID_APPROVED_INTERSHIP = "DP0411";
-  static const PERMISSION_ID_SHORTlISTED_INTERSHIP = "DP0413";
+  static const PERMISSION_ID_SHORTlIST_STUDENTS = "DP0413";
   static const PERMISSION_ID_SELECTED_STUDENT = "DP0415";
+  static const PERMISSION_ID_APPLIED_INTERNSHIP = "DP0416";
+  static const PERMISSION_ID_SHORT_LISTED_INTERNSHIP = "DP0417";
+  static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
+
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
   static const EXCEL_COL_GENDER = "gender";

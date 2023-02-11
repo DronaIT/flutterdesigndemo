@@ -495,4 +495,14 @@ class ApiRepository {
       throw errorMessage;
     }
   }
+
+  Future<UpdateJobOpportunity> getJobOpportunityWithRecordIdApi(String recordId) async {
+    try {
+      final response = await userApi.getJobOpportunityWithRecordIdApi(recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

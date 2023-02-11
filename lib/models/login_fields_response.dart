@@ -42,11 +42,13 @@ class LoginFieldsResponse {
   String? mother_number;
   String? father_number;
   String? pin_code;
+  int? is_banned_from_placement;
 
   List<String>? appliedJob;
   List<String>? shortlistedJob;
   List<String>? selectedJob;
   List<String>? placedJob;
+  List<String>? rejectedJob;
 
   LoginFieldsResponse({
     this.city,
@@ -88,10 +90,12 @@ class LoginFieldsResponse {
     this.mother_number,
     this.father_number,
     this.pin_code,
+    this.is_banned_from_placement,
     this.appliedJob,
     this.shortlistedJob,
     this.selectedJob,
     this.placedJob,
+    this.rejectedJob,
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
@@ -136,11 +140,13 @@ class LoginFieldsResponse {
     mother_number = json['mother_number'];
     father_number = json['father_number'];
     pin_code = json['pin_code'];
+    is_banned_from_placement = json['is_banned_from_placement'];
 
     appliedJob = json['applied_job']?.cast<String>();
     shortlistedJob = json['shortlisted_job']?.cast<String>();
     selectedJob = json['selected_job']?.cast<String>();
     placedJob = json['placed_job']?.cast<String>();
+    rejectedJob = json['rejected_job']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -185,11 +191,13 @@ class LoginFieldsResponse {
     data['mother_number'] = this.mother_number;
     data['father_number'] = this.father_number;
     data['pin_code'] = this.pin_code;
+    data['is_banned_from_placement'] = this.is_banned_from_placement;
 
     data['applied_job'] = this.appliedJob;
     data['shortlisted_job'] = this.shortlistedJob;
     data['selected_job'] = this.selectedJob;
     data['placed_job'] = this.placedJob;
+    data['rejected_job'] = this.rejectedJob;
     return data;
   }
 }

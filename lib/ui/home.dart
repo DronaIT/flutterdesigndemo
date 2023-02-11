@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentucation/login.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
+import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -165,7 +166,11 @@ class _HomeState extends State<Home> {
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
                                           Get.to(const Attendance());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
-                                          Get.to(const PlacementDashboard());
+                                          if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
+                                            Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
+                                          } else {
+                                            Get.to(const PlacementDashboard());
+                                          }
                                         }
                                       },
                                     ),

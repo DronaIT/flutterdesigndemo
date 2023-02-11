@@ -60,6 +60,8 @@ dependencies:
   logger:
   json_annotation: ^3.1.1
   cloudinary_public: ^0.20.0
+  flutter_linkify: ^5.0.2
+  url_launcher: ^6.1.9
 
 dev_dependencies:
 
