@@ -1,3 +1,5 @@
+import 'package:flutterdesigndemo/models/document_response.dart';
+
 class JobOpportunityResponse {
   String? jobDescription;
   String? internshipDuration;
@@ -53,6 +55,7 @@ class JobOpportunityResponse {
   List<String>? selected_students_enrollment_number;
   List<String>? selected_students_name;
 
+  List<DocumentResponse>? company_loi;
   List<String>? rejected_students;
 
   JobOpportunityResponse({
@@ -106,6 +109,7 @@ class JobOpportunityResponse {
     this.selected_students_email,
     this.selected_students_enrollment_number,
     this.selected_students_name,
+    this.company_loi,
     this.rejected_students,
   });
 
@@ -164,7 +168,12 @@ class JobOpportunityResponse {
     selected_students_name = json['selected_students_name']?.cast<String>();
 
     rejected_students = json['rejected_students']?.cast<String>();
-
+    if (json['company_loi'] != null) {
+      company_loi = <DocumentResponse>[];
+      json['company_loi'].forEach((v) {
+        company_loi!.add(new DocumentResponse.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -221,6 +230,9 @@ class JobOpportunityResponse {
     data['selected_students_enrollment_number'] = this.selected_students_enrollment_number;
     data['selected_students_name'] = this.selected_students_name;
     data['rejected_students'] = this.rejected_students;
+    if (this.company_loi != null) {
+      data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
+import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/request/add_hub_request.dart';
@@ -202,7 +203,7 @@ class ApiRepository {
       //     duration: const Duration(seconds: 2),
       //   ),
       // );
-      rethrow ;
+      rethrow;
     }
   }
 
@@ -509,6 +510,16 @@ class ApiRepository {
   Future<UpdateJobOpportunity> getJobOpportunityWithRecordIdApi(String recordId) async {
     try {
       final response = await userApi.getJobOpportunityWithRecordIdApi(recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AddPlacementAttendanceData>> updatePlacementInfoApi(Map<String, dynamic> request) async {
+    try {
+      final response = await userApi.updatePlacementInfoApi(request);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

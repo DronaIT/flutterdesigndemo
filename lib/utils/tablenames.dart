@@ -7,7 +7,9 @@ class TableNames {
   static const CLOUDARY_PRESET = "kgicun2o";
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
+  static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
+  static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
 
   static const STUDENT_ROLE_ID = "DR09";
@@ -38,6 +40,7 @@ class TableNames {
   static const TBL_COMPANY_APPROACH = "TBL_COMPANY_APPROACH";
   static const TBL_COMPANY_DETAIL = "TBL_COMPANY";
   static const TBL_JOBS = "TBL_JOBS";
+  static const TBL_PLACEMENT_ATTENDANCE = "TBL_PLACEMENT_ATTENDANCE";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";

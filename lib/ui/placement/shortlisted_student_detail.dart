@@ -70,11 +70,13 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
         }
       }
     }
-    for (var j = 0; j < studentResponse.length; j++) {
-      for (var k = 0; k < jobpportunityData.records!.first.fields!.shortlistedStudents!.length; k++) {
-        if (studentResponse[j].applied_students_number == jobpportunityData.records!.first.fields!.shortlistedStudents![k]) {
-          studentResponse[j].selected = true;
-          break;
+    if (jobpportunityData.records!.first.fields!.shortlistedStudents != null) {
+      for (var j = 0; j < studentResponse.length; j++) {
+        for (var k = 0; k < jobpportunityData.records!.first.fields!.shortlistedStudents!.length; k++) {
+          if (studentResponse[j].applied_students_number == jobpportunityData.records!.first.fields!.shortlistedStudents![k]) {
+            studentResponse[j].selected = true;
+            break;
+          }
         }
       }
     }
@@ -210,6 +212,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
 
   Future<void> interviewScheduleDialog() async {
     Dialog errorDialog = Dialog(
+      insetPadding: EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
       child: SingleChildScrollView(
         child: Column(
@@ -326,6 +329,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                   } else if (cordinatorNumberController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_coori_number);
                   } else {
+                    Get.back(closeOverlays: true);
                     approveNow();
                   }
                 })
@@ -338,6 +342,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
 
   void approveNow() async {
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
+    request.status = strings_name.str_job_status_interview_scheduled;
     request.interview_datetime = startTimeController.text.trim().toString();
     request.interview_instruction = specialinstrcutController.text.trim().toString();
     request.interview_place_address = postalAddressController.text.trim().toString();
@@ -357,6 +362,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
       Utils.showSnackBar(context, strings_name.str_interview_time_schedule);
       await Future.delayed(const Duration(milliseconds: 2000));
       Get.back();
+      Get.back(closeOverlays: true);
     } else {
       setState(() {
         isVisible = false;

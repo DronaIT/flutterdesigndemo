@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
+import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
@@ -557,7 +558,18 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.get(TableNames.TBL_JOBS + "/" + recordId, options: Options(headers: header));
-      return UpdateJobOpportunity.fromJson(response.extra);
+      return UpdateJobOpportunity.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AddPlacementAttendanceData>> updatePlacementInfoApi(Map<String, dynamic> request) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": request};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_PLACEMENT_ATTENDANCE, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<AddPlacementAttendanceData>.fromJson(response.data, (response) => AddPlacementAttendanceData.fromJson(response));
     } catch (e) {
       rethrow;
     }

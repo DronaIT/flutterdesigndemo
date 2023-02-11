@@ -242,8 +242,8 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
 
       var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);
       if (dataUpdate.fields != null) {
-        await PreferenceUtils.setLoginData(data.records!.first.fields!);
-        await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+        await PreferenceUtils.setLoginData(dataUpdate.fields!);
+        await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
 
         setState(() {
           isVisible = false;

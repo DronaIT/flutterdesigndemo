@@ -53,7 +53,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   @override
   void initState() {
     super.initState();
-    if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned_from_placement.toString() == "1") {
+    if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned.toString() == "1") {
       isBanned = true;
     } else if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
       Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
@@ -66,9 +66,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       typeOfResponse = await apiRepository.getSectorApi();
-    }on DioError catch (e){
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
