@@ -419,4 +419,9 @@ class strings_name {
   static const String str_placed = "Placed";
   static const String str_empty_joing_Date = "Please select joining date";
   static const String str_joing_date = "Joining date";
+  static const String str_apply_for_leave = "Apply for leave";
+  static const String str_notice_period_date = "Notice period end date";
+  static const String str_reason_for_leaving = "Reason for leaving company";
+  static const String str_leave_internship = "Leave internship";
+  static const String str_resignation_letter = "Resignation letter";
 }
