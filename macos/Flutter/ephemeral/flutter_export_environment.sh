@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/home/hb/snap/flutter/common/flutter"
-export "FLUTTER_APPLICATION_PATH=/home/hb/AndroidStudioProjects/flutterdesigndemo"
+export "FLUTTER_ROOT=C:\Users\abc\flutter"
+export "FLUTTER_APPLICATION_PATH=G:\DronaApp"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
