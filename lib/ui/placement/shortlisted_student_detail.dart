@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:intl/intl.dart';
+
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
@@ -142,7 +143,21 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: () {
-                          interviewScheduleDialog();
+                          CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
+                          List<String> selectedStudentsData = [];
+                          for (var i = 0; i < studentResponse.length; i++) {
+                            if (studentResponse[i].selected) {
+                              selectedStudentsData.add(studentResponse[i].applied_students_number!);
+                            }
+                          }
+                          request.sortlisted = selectedStudentsData;
+                          var json = request.toJson();
+                          json.removeWhere((key, value) => value == null);
+                          if (request.sortlisted!.isNotEmpty) {
+                            interviewScheduleDialog();
+                          } else {
+                            Utils.showSnackBar(context, strings_name.str_please_select_one_student);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           primary: colors_name.presentColor,
@@ -162,8 +177,6 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                     CustomButton(
                       text: strings_name.str_submit,
                       click: () async {
-                        // BaseLoginResponse<JobOpportunityResponse> jobpportunityData = BaseLoginResponse();
-
                         CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
                         List<String> selectedStudentsData = [];
                         for (var i = 0; i < studentResponse.length; i++) {
@@ -172,10 +185,9 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                           }
                         }
                         request.sortlisted = selectedStudentsData;
-
                         var json = request.toJson();
                         json.removeWhere((key, value) => value == null);
-                        if (selectedStudentsData.isNotEmpty) {
+                        if (request.sortlisted!.isNotEmpty) {
                           setState(() {
                             isVisible = true;
                           });
