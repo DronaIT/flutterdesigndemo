@@ -424,10 +424,5 @@ class strings_name {
   static const String str_empty_placement_attendance_data = "Please select company consent letter and monthly attendance file.";
 
   static const String str_placement_info_updated = "Placement info updated successfully";
-  static const String str_completed_placement = "Completed internship process";
-  static const String str_pending = "Pending";
-  static const String str_reject = "Rejected";
-  static const String str_placed = "Placed";
-  static const String str_empty_joing_Date = "Please select joining date";
   static const String str_joing_date = "Joining date";
 }
