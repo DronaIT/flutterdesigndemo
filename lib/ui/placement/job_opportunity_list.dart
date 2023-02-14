@@ -124,9 +124,9 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                 ),
                                 custom_text(
                                   text: "Description: ${jobpportunityData.records![index].fields!.jobDescription!}",
-                                  textStyles: blackTextSemiBold14,
+                                  textStyles: blackTextSemiBold12,
                                   bottomValue: 5,
-                                  topValue: 0,
+                                  topValue: 5,
                                   leftValue: 5,
                                   maxLines: 1000,
                                 ),

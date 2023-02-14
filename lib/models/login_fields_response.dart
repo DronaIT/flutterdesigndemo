@@ -42,7 +42,7 @@ class LoginFieldsResponse {
   String? mother_number;
   String? father_number;
   String? pin_code;
-  int? is_banned_from_placement;
+  int? is_banned;
 
   List<String>? appliedJob;
   List<String>? shortlistedJob;
@@ -90,7 +90,7 @@ class LoginFieldsResponse {
     this.mother_number,
     this.father_number,
     this.pin_code,
-    this.is_banned_from_placement,
+    this.is_banned,
     this.appliedJob,
     this.shortlistedJob,
     this.selectedJob,
@@ -140,7 +140,7 @@ class LoginFieldsResponse {
     mother_number = json['mother_number'];
     father_number = json['father_number'];
     pin_code = json['pin_code'];
-    is_banned_from_placement = json['is_banned_from_placement'];
+    is_banned = json['is_banned_from_placement'];
 
     appliedJob = json['applied_job']?.cast<String>();
     shortlistedJob = json['shortlisted_job']?.cast<String>();
@@ -191,7 +191,7 @@ class LoginFieldsResponse {
     data['mother_number'] = this.mother_number;
     data['father_number'] = this.father_number;
     data['pin_code'] = this.pin_code;
-    data['is_banned_from_placement'] = this.is_banned_from_placement;
+    data['is_banned_from_placement'] = this.is_banned;
 
     data['applied_job'] = this.appliedJob;
     data['shortlisted_job'] = this.shortlistedJob;

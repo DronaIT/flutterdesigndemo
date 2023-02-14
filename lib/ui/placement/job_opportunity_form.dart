@@ -65,7 +65,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   var cloudinary;
   final apiRepository = getIt.get<ApiRepository>();
 
-  String companyId = "", companyRecordId = "", jobCode = "", jobRecordId = "";
+  String companyId = "", jobCode = "", jobRecordId = "";
   bool fromEdit = false;
 
   @override
@@ -113,7 +113,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
         internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
         internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
 
-        companyRecordId = jobData?.companyId?.first ?? "";
+        companyId = jobData?.companyId?.first ?? "";
 
         if (jobData?.specializationIds?.isNotEmpty == true) {
           var specializationArr = PreferenceUtils.getSpecializationList().records;
@@ -173,7 +173,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     }
 
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
-    request.companyId = companyRecordId.trim().split("  ");
+    request.companyId = companyId.trim().split("  ");
     request.jobTitle = jobTitleController.text.trim().toString();
     request.jobDescription = jobDescController.text.trim().toString();
     request.specificRequirements = jobSpecificReqController.text.trim().toString();

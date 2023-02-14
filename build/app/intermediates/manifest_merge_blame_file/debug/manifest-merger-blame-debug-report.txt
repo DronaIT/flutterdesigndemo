@@ -13,131 +13,148 @@
 13         to allow setting breakpoints, to provide hot reload, etc.
 14    -->
 15    <uses-permission android:name="android.permission.INTERNET" />
-15-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/debug/AndroidManifest.xml:7:5-66
-15-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/debug/AndroidManifest.xml:7:22-64
-16    <uses-permission
-16-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-12:38
-17        android:name="android.permission.READ_EXTERNAL_STORAGE"
-17-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:11:9-64
-18        android:maxSdkVersion="32" />
-18-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:12:9-35
-19    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-19-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-76
-19-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:13:22-73
-20    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-20-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-75
-20-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:14:22-72
-21    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-21-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-75
-21-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:15:22-72
-22
-23    <queries>
-23-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-17:15
-24        <intent>
-24-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:12:9-16:18
-25            <action android:name="android.intent.action.GET_CONTENT" />
-25-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-72
-25-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:13:21-69
-26
-27            <data android:mimeType="*/*" />
-27-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-44
-27-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:15:19-41
-28        </intent>
-29    </queries>
-30
-31    <application
-31-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:4:5-34:19
-32        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-32-->[androidx.core:core:1.6.0] /home/hb/.gradle/caches/transforms-3/acbce933e4b464a5224ed377a62db1f5/transformed/core-1.6.0/AndroidManifest.xml:24:18-86
-33        android:debuggable="true"
-34        android:icon="@mipmap/ic_launcher"
-34-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:6:9-43
-35        android:label="@string/app_name" >
-35-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:7:9-41
-36        <activity
-36-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:8:9-28:20
-37            android:name="com.example.flutterdesigndemo.MainActivity"
-37-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:9:13-41
-38            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-38-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:10:13-163
-39            android:exported="true"
-39-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:11:13-36
-40            android:hardwareAccelerated="true"
-40-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:12:13-47
-41            android:launchMode="singleTop"
-41-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:13:13-43
-42            android:screenOrientation="portrait"
-42-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:14:13-49
-43            android:theme="@style/LaunchTheme"
-43-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:15:13-47
-44            android:windowSoftInputMode="adjustResize" >
-44-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:16:13-55
-45
-46            <!--
-47                 Specifies an Android theme to apply to this Activity as soon as
-48                 the Android process has started. This theme is visible to the user
-49                 while the Flutter UI initializes. After that, this theme continues
-50                 to determine the Window background behind the Flutter UI.
-51            -->
-52            <meta-data
-52-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:21:13-23:57
-53                android:name="io.flutter.embedding.android.NormalTheme"
-53-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:22:17-72
-54                android:resource="@style/NormalTheme" />
-54-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:23:17-54
-55
-56            <intent-filter>
-56-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:24:13-27:29
-57                <action android:name="android.intent.action.MAIN" />
-57-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:25:17-69
-57-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:25:25-66
+15-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:5:5-67
+15-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:5:22-64
+16    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+16-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:4:5-79
+16-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:4:22-76
+17    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+17-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:6:5-77
+17-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:6:22-74
+18    <uses-permission
+18-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-12:38
+19        android:name="android.permission.READ_EXTERNAL_STORAGE"
+19-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:11:9-64
+20        android:maxSdkVersion="32" />
+20-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:12:9-35
+21    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+21-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-76
+21-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:13:22-73
+22    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+22-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-75
+22-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:14:22-72
+23    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+23-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-75
+23-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:15:22-72
+24
+25    <queries>
+25-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-17:15
+26        <intent>
+26-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:12:9-16:18
+27            <action android:name="android.intent.action.GET_CONTENT" />
+27-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-72
+27-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:13:21-69
+28
+29            <data android:mimeType="*/*" />
+29-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-44
+29-->[:file_picker] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:15:19-41
+30        </intent>
+31    </queries>
+32
+33    <application
+33-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:8:5-39:19
+34        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+34-->[androidx.core:core:1.6.0] /home/hb/.gradle/caches/transforms-3/acbce933e4b464a5224ed377a62db1f5/transformed/core-1.6.0/AndroidManifest.xml:24:18-86
+35        android:debuggable="true"
+36        android:icon="@mipmap/ic_launcher"
+36-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:9:9-43
+37        android:label="@string/app_name" >
+37-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:10:9-41
+38        <activity
+38-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:11:9-33:20
+39            android:name="com.example.flutterdesigndemo.MainActivity"
+39-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:12:13-41
+40            android:allowBackup="false"
+40-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:15:13-40
+41            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+41-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:13:13-163
+42            android:exported="true"
+42-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:14:13-36
+43            android:hardwareAccelerated="true"
+43-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:16:13-47
+44            android:launchMode="singleTop"
+44-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:18:13-43
+45            android:screenOrientation="portrait"
+45-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:19:13-49
+46            android:theme="@style/LaunchTheme"
+46-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:20:13-47
+47            android:windowSoftInputMode="adjustResize" >
+47-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:21:13-55
+48
+49            <!--
+50                 Specifies an Android theme to apply to this Activity as soon as
+51                 the Android process has started. This theme is visible to the user
+52                 while the Flutter UI initializes. After that, this theme continues
+53                 to determine the Window background behind the Flutter UI.
+54            -->
+55            <meta-data
+55-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:26:13-28:57
+56                android:name="io.flutter.embedding.android.NormalTheme"
+56-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:27:17-72
+57                android:resource="@style/NormalTheme" />
+57-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:28:17-54
 58
-59                <category android:name="android.intent.category.LAUNCHER" />
-59-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:26:17-77
-59-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:26:27-74
-60            </intent-filter>
-61        </activity>
-62        <!--
-63             Don't delete the meta-data below.
-64             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
-65        -->
-66        <meta-data
-66-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:31:9-33:33
-67            android:name="flutterEmbedding"
-67-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:32:13-44
-68            android:value="2" />
-68-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:33:13-30
-69
-70        <provider
-70-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-27:20
-71            android:name="com.crazecoder.openfile.FileProvider"
-71-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-64
-72            android:authorities="com.example.flutterdesigndemo.fileProvider.com.crazecoder.openfile"
-72-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-88
-73            android:exported="false"
-73-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-37
-74            android:grantUriPermissions="true" >
-74-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-47
-75            <meta-data
-75-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-26:53
-76                android:name="android.support.FILE_PROVIDER_PATHS"
-76-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:25:17-67
-77                android:resource="@xml/filepaths" />
-77-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:26:17-50
-78        </provider>
-79
-80        <uses-library
-80-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
-81            android:name="androidx.window.extensions"
-81-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
-82            android:required="false" />
-82-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
-83        <uses-library
-83-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
-84            android:name="androidx.window.sidecar"
-84-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
-85            android:required="false" />
-85-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
-86    </application>
+59            <intent-filter>
+59-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:29:13-32:29
+60                <action android:name="android.intent.action.MAIN" />
+60-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:30:17-69
+60-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:30:25-66
+61
+62                <category android:name="android.intent.category.LAUNCHER" />
+62-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:31:17-77
+62-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:31:27-74
+63            </intent-filter>
+64        </activity>
+65        <!--
+66             Don't delete the meta-data below.
+67             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+68        -->
+69        <meta-data
+69-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:36:9-38:33
+70            android:name="flutterEmbedding"
+70-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:37:13-44
+71            android:value="2" />
+71-->/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/AndroidManifest.xml:38:13-30
+72
+73        <provider
+73-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-27:20
+74            android:name="com.crazecoder.openfile.FileProvider"
+74-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-64
+75            android:authorities="com.example.flutterdesigndemo.fileProvider.com.crazecoder.openfile"
+75-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-88
+76            android:exported="false"
+76-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-37
+77            android:grantUriPermissions="true" >
+77-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-47
+78            <meta-data
+78-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-26:53
+79                android:name="android.support.FILE_PROVIDER_PATHS"
+79-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:25:17-67
+80                android:resource="@xml/filepaths" />
+80-->[:open_filex] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/open_filex/intermediates/merged_manifest/debug/AndroidManifest.xml:26:17-50
+81        </provider>
+82
+83        <activity
+83-->[:url_launcher_android] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-13:74
+84            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+84-->[:url_launcher_android] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-74
+85            android:exported="false"
+85-->[:url_launcher_android] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-37
+86            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+86-->[:url_launcher_android] /home/hb/AndroidStudioProjects/flutterdesigndemo/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-71
 87
-88</manifest>
+88        <uses-library
+88-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+89            android:name="androidx.window.extensions"
+89-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+90            android:required="false" />
+90-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+91        <uses-library
+91-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+92            android:name="androidx.window.sidecar"
+92-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+93            android:required="false" />
+93-->[androidx.window:window:1.0.0-beta04] /home/hb/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+94    </application>
+95
+96</manifest>

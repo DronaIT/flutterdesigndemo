@@ -418,6 +418,12 @@ class strings_name {
   static const String str_reject = "Rejected";
   static const String str_placed = "Placed";
   static const String str_empty_joing_Date = "Please select joining date";
+
+  static const String str_joining_date = "Joining date";
+  static const String str_letter_of_consent = "Letter of consent";
+  static const String str_empty_placement_attendance_data = "Please select company consent letter and monthly attendance file.";
+
+  static const String str_placement_info_updated = "Placement info updated successfully";
   static const String str_joing_date = "Joining date";
   static const String str_apply_for_leave = "Apply for leave";
   static const String str_notice_period_date = "Notice period end date";

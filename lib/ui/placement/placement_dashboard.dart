@@ -44,16 +44,14 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
 
   // For student
-  bool applyInternship = false, appliedInternship = false,
-        completedInternShip= false,
-      shortListedInternship = false, selectedInternship = false ;
+  bool applyInternship = false, appliedInternship = false, completedInternShip = false, shortListedInternship = false, selectedInternship = false;
 
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
   @override
   void initState() {
     super.initState();
-    if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned_from_placement.toString() == "1") {
+    if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned.toString() == "1") {
       isBanned = true;
     } else if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
       Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
@@ -66,9 +64,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       typeOfResponse = await apiRepository.getSectorApi();
-    }on DioError catch (e){
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -447,8 +445,6 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
               ),
             ),
           ),
-
-
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
