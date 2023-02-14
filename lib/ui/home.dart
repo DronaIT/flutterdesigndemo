@@ -8,11 +8,12 @@ import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_list.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentucation/login.dart';
+import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
-import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
+import 'package:flutterdesigndemo/ui/settings_screen.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
@@ -37,6 +38,7 @@ class _HomeState extends State<Home> {
   String name = "";
   String phone = "";
   String roleName = "";
+
   Future<void> getRecords(String roleId) async {
     var query = "SEARCH('${roleId}',${TableNames.CLM_ROLE_ID},0)";
     setState(() {
@@ -109,14 +111,19 @@ class _HomeState extends State<Home> {
               ),
             ),
             buildMenuItem(
-              text: strings_name.str_settings,
+              text: strings_name.str_profile,
               icon: Icons.person,
               onClicked: () => selectedItem(context, 0),
             ),
             buildMenuItem(
+              text: strings_name.str_settings,
+              icon: Icons.settings,
+              onClicked: () => selectedItem(context, 1),
+            ),
+            buildMenuItem(
               text: strings_name.str_logout,
               icon: Icons.logout,
-              onClicked: () => selectedItem(context, 1),
+              onClicked: () => selectedItem(context, 2),
             ),
           ],
         ),
@@ -209,6 +216,10 @@ class _HomeState extends State<Home> {
         Get.to(const Profile());
         break;
       case 1:
+        Get.back();
+        Get.to(const Settings());
+        break;
+      case 2:
         Get.back();
         showAlertDialog(context, strings_name.str_sure_want_logout, () {
           PreferenceUtils.clearPreference();

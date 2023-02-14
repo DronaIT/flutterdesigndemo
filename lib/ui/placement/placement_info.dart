@@ -70,6 +70,9 @@ class _PlacementInfoState extends State<PlacementInfo> {
                   margin: const EdgeInsets.all(10),
                   child: Column(
                     children: [
+                      SizedBox(height: 5.h),
+                      custom_text(text: "${strings_name.str_company_name} : ${jobOpportunityData.fields?.companyName?.first}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
+                      SizedBox(height: 5.h),
                       custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.fields?.joiningDate}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
                       SizedBox(height: 5.h),
                       Row(children: [

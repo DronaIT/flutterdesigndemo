@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
   final loginRepository = getIt.get<ApiRepository>();
-
+  bool value = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -100,7 +100,21 @@ class _LoginState extends State<Login> {
                         Get.to(const ForgotPassword());
                       },
                     ),
-                    SizedBox(height: 40.h),
+                    Row(
+                      children: <Widget>[
+                        Checkbox(
+                          value: value,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              this.value = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 5), //SizedBox
+                        Expanded(child: custom_text(text: strings_name.str_terms_privacy_policy, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)), //Text
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
                     CustomButton(
                         text: strings_name.str_signin,
                         click: () async {

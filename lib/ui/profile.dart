@@ -54,7 +54,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_settings),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_profile),
       body: Column(
         children: [
           const SizedBox(height: 30),

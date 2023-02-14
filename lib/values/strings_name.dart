@@ -66,7 +66,8 @@ class strings_name {
   static const String str_yes = "Yes";
   static const String str_cancle = "Cancel";
 
-  static const String str_settings = "Profile";
+  static const String str_profile = "Profile";
+  static const String str_settings = "Settings";
   static const String str_logout = "Logout";
   static const String str_home = "Home";
 
@@ -430,4 +431,6 @@ class strings_name {
   static const String str_reason_for_leaving = "Reason for leaving company";
   static const String str_leave_internship = "Leave internship";
   static const String str_resignation_letter = "Resignation letter";
+
+  static const String str_terms_privacy_policy = "I hereby accept the Terms & condition and Privacy policy.";
 }
