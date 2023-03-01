@@ -62,6 +62,8 @@ dependencies:
   cloudinary_public: ^0.20.0
   flutter_linkify: ^5.0.2
   url_launcher: ^6.1.9
+  http: ^0.13.5
+  webview_flutter: ^4.0.5
 
 dev_dependencies:
 

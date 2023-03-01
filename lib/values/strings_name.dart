@@ -61,7 +61,7 @@ class strings_name {
   static const String str_select_hub = "Select hub";
   static const String str_select_accessible_hub = "Select accessible hubs";
 
-  static const String str_sure_want_logout = "Are you sure want to logout ?";
+  static const String str_sure_want_logout = "Are you sure want to logout?";
 
   static const String str_yes = "Yes";
   static const String str_cancle = "Cancel";
@@ -433,4 +433,8 @@ class strings_name {
   static const String str_resignation_letter = "Resignation letter";
 
   static const String str_terms_privacy_policy = "I hereby accept the Terms & condition and Privacy policy.";
+  static const String str_accept_terms = "Please accept Terms & Condition and Privacy Policy";
+
+  static const String str_sure_want_delete = "Are you sure want to DELETE ACCOUNT?";
+  static const String str_otp_expired = "OTP expired, please try again.";
 }

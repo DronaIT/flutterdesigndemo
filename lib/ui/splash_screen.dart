@@ -12,7 +12,7 @@ import '../models/role_response.dart';
 import '../models/specialization_response.dart';
 import '../utils/preference.dart';
 import '../utils/tablenames.dart';
-import 'authentucation/login.dart';
+import 'authentication/login.dart';
 import 'home.dart';
 import 'welcome.dart';
 

@@ -117,6 +117,14 @@ const blackTextSemiBold15 = TextStyle(
 );
 
 
+const linkTextSemiBold14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.blue,
+  decoration: TextDecoration.underline,
+  decorationThickness: 2.0,
+);
+
 const blackTextSemiBold14 = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w400,

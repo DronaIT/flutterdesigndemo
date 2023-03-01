@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/ui/authentucation/createpassword.dart';
-import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/ui/authentication/createpassword.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -22,6 +23,22 @@ class OtpVerification extends StatefulWidget {
 
 class _OtpVerificationState extends State<OtpVerification> {
   String _otp = "";
+  var counter = 300;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      counter--;
+      if (counter == 0) {
+        timer.cancel();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +110,16 @@ class _OtpVerificationState extends State<OtpVerification> {
                       //print("otp=>${_otp}");
                       if (_otp.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_enter_otp);
-                      } else {
+                      } else if(counter <= 0) {
+                        Utils.showSnackBar(context, strings_name.str_otp_expired);
+                      } else if(_otp.toString() == Get.arguments[2]["otp"].toString()) {
                         Get.to(const CreatePassword(), arguments: [
                           {"phone": Get.arguments[0]["phone"]},
                           {"isFromEmployee": Get.arguments[1]["isFromEmployee"]}
                         ]);
+
+                      } else {
+                        Utils.showSnackBar(context, strings_name.str_enter_otp);
                       }
                     }),
               ],

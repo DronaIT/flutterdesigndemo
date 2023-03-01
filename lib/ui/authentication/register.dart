@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -5,7 +7,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/ui/authentucation/otpverfication.dart';
+import 'package:flutterdesigndemo/ui/authentication/otpverfication.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
@@ -13,6 +15,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -96,8 +100,7 @@ class _RegisterState extends State<Register> {
                                 isVisible = false;
                               });
                               if (data.records!.first.fields?.password == null) {
-                                Get.to(const OtpVerification(), arguments:[{"phone": phoneController.text},
-                                  {"isFromEmployee": false}]);
+                                sendOTP(phoneController.text, false);
                               } else {
                                 Utils.showSnackBar(context, strings_name.str_user_already_verified);
                               }
@@ -108,8 +111,7 @@ class _RegisterState extends State<Register> {
                                   isVisible = false;
                                 });
                                 if (dataEmployee.records!.first.fields?.password == null) {
-                                  Get.to(const OtpVerification(), arguments: [{"phone": phoneController.text},
-                                    {"isFromEmployee": true}]);
+                                  sendOTP(phoneController.text, true);
                                 } else {
                                   Utils.showSnackBar(context, strings_name.str_user_already_verified);
                                 }
@@ -143,5 +145,34 @@ class _RegisterState extends State<Register> {
         ],
       ),
     );
+  }
+
+  Future<void> sendOTP(String phone, bool fromEmployee) async {
+    var otp = Random().nextInt(900000) + 100000;
+    var headers = {
+      'Content-Type': 'application/json',
+      'api-key': TableNames.KALEYRA_APIKEY
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.kaleyra.io/v1/HXIN1756562868IN/messages'));
+    request.fields.addAll({
+      'to': '+91${phoneController.text.trim()}',
+      'type': 'OTP',
+      'sender': TableNames.KALEYRA_SENDER,
+      'template': TableNames.TEMPLATE_ID_SIGNUP,
+      'body': 'Your OTP for Drona Foundation Mobile App login is $otp. The OTP is valid for 5 minutes.'
+    });
+
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200 || response.statusCode == 202) {
+      Get.to(const OtpVerification(), arguments:[
+        {"phone": phoneController.text},
+        {"isFromEmployee": fromEmployee},
+        {"otp": otp},
+      ]);
+    } else {
+      Utils.showSnackBar(context, response.reasonPhrase.toString());
+    }
   }
 }

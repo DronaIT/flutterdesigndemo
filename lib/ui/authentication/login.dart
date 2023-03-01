@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -6,8 +7,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/ui/authentucation/forgotpassword.dart';
-import 'package:flutterdesigndemo/ui/authentucation/register.dart';
+import 'package:flutterdesigndemo/ui/authentication/forgotpassword.dart';
+import 'package:flutterdesigndemo/ui/authentication/register.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -17,6 +18,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -104,15 +106,47 @@ class _LoginState extends State<Login> {
                       children: <Widget>[
                         Checkbox(
                           value: value,
+                          activeColor: colors_name.colorPrimary,
                           onChanged: (bool? value) {
                             setState(() {
                               this.value = value!;
                             });
                           },
                         ),
-                        const SizedBox(width: 5), //SizedBox
-                        Expanded(child: custom_text(text: strings_name.str_terms_privacy_policy, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)), //Text
-                      ],
+                        const SizedBox(width: 5),
+                        Expanded(child:
+                        // custom_text(text: strings_name.str_terms_privacy_policy, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'I hereby accept the ',
+                                style: blackTextSemiBold14,
+                              ),
+                              TextSpan(
+                                text: 'Terms & Conditions',
+                                style: linkTextSemiBold14,
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    await launchUrl(Uri.parse("https://pastebin.com/raw/HAHds12N"), mode: LaunchMode.inAppWebView);
+                                  },
+                              ),
+                              const TextSpan(
+                                text: ' and ',
+                                style: blackTextSemiBold14,
+                              ),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: linkTextSemiBold14,
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    await launchUrl(Uri.parse("https://pastebin.com/raw/QwwednCb"), mode: LaunchMode.inAppWebView);
+                                  },
+                              ),
+                            ],
+                          ),
+                        ), //Text
+                      )],
                     ),
                     SizedBox(height: 20.h),
                     CustomButton(
@@ -124,7 +158,9 @@ class _LoginState extends State<Login> {
                             Utils.showSnackBar(context, phone);
                           } else if (password.isNotEmpty) {
                             Utils.showSnackBar(context, password);
-                          } else {
+                          } else if(!value){
+                            Utils.showSnackBar(context, strings_name.str_accept_terms);
+                          } else{
                             setState(() {
                               isVisible = true;
                             });

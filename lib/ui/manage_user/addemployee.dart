@@ -188,7 +188,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       textStyles: blackTextSemiBold16,
                     ),
                     custom_edittext(
-                      type: TextInputType.text,
+                      type: TextInputType.phone,
                       textInputAction: TextInputAction.next,
                       controller: pinCodeController,
                       maxLength: 6,

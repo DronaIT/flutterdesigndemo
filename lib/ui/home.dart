@@ -7,7 +7,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_list.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
-import 'package:flutterdesigndemo/ui/authentucation/login.dart';
+import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
@@ -239,21 +239,21 @@ class _HomeState extends State<Home> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           actions: <Widget>[
             TextButton(
+              child: const Text(strings_name.str_cancle, style: blackTextSemiBold14),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
               child: const Text(
                 strings_name.str_yes,
-                style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.normal, fontFamily: strings_name.str_font_name),
+                style: blackTextSemiBold14,
               ),
               onPressed: () {
                 Navigator.pop(context);
                 yesOnPressed();
               },
-            ),
-            TextButton(
-              child: const Text(strings_name.str_cancle, style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: strings_name.str_font_name)),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+            )
           ],
         );
       },
