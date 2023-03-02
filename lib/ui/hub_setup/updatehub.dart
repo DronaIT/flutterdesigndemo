@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -18,6 +19,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class UpdateHub extends StatefulWidget {
   const UpdateHub({Key? key}) : super(key: key);
@@ -56,12 +59,21 @@ class _UpdateHubState extends State<UpdateHub> {
     });
     // var query = "SEARCH('${data.fields!.hubId}',${TableNames.CLM_HUB_IDS},0)";
     var query = "FIND('${Utils.getHubIds(data.id)}',${TableNames.CLM_HUB_IDS}, 0)";
-    var speData = await apiRepository.getSpecializationDetailApi(query);
-    if (speData.records?.isNotEmpty == true) {
+    try{
+      var speData = await apiRepository.getSpecializationDetailApi(query);
+      if (speData.records?.isNotEmpty == true) {
+        setState(() {
+          specializationData = speData.records;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
-        specializationData = speData.records;
+        isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });
@@ -195,20 +207,29 @@ class _UpdateHubState extends State<UpdateHub> {
                         setState(() {
                           isVisible = true;
                         });
-                        var updatehub = await apiRepository.updateHubApi(updateEmployee, id);
-                        if (updatehub != null) {
+                        try{
+                          var updatehub = await apiRepository.updateHubApi(updateEmployee, id);
+                          if (updatehub != null) {
+                            setState(() {
+                              isVisible = false;
+                            });
+                            Utils.showSnackBar(context, strings_name.str_hub_update);
+                            await Future.delayed(const Duration(milliseconds: 2000));
+                            Get.back(closeOverlays: true, result: true);
+                          } else {
+                            setState(() {
+                              isVisible = false;
+                            });
+                            Utils.showSnackBar(context, strings_name.str_something_wrong);
+                          }
+                        }on DioError catch (e) {
                           setState(() {
                             isVisible = false;
                           });
-                          Utils.showSnackBar(context, strings_name.str_hub_update);
-                          await Future.delayed(const Duration(milliseconds: 2000));
-                          Get.back(closeOverlays: true, result: true);
-                        } else {
-                          setState(() {
-                            isVisible = false;
-                          });
-                          Utils.showSnackBar(context, strings_name.str_something_wrong);
+                          final errorMessage = DioExceptions.fromDioError(e).toString();
+                          Utils.showSnackBarUsingGet(errorMessage);
                         }
+
                       }
                     })
               ],
@@ -230,18 +251,27 @@ class _UpdateHubState extends State<UpdateHub> {
     request.hub_name = hubController.text.toString();
     request.city = cityController.text.toString();
     request.address = addressController.text.toString();
-    var resp = await apiRepository.addHubApi(request);
-    if (resp.id!.isNotEmpty) {
+    try{
+      var resp = await apiRepository.addHubApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_hub_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_hub_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
-    } else {
-      setState(() {
-        isVisible = false;
-      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 }

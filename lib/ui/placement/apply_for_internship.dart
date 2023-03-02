@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -8,9 +9,11 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
 import '../../models/job_opportunity_response.dart';
+import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 
 class ApplyForInternship extends StatefulWidget {
@@ -42,37 +45,47 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
       query += "FIND('${strings_name.str_job_status_published}',${TableNames.CLM_STATUS}, 0)";
       query += ",FIND('1',${TableNames.CLM_DISPLAY_INTERNSHIP})";
       query += ")";
-      jobOpportunityData = await apiRepository.getJoboppoApi(query);
-      if (jobOpportunityData.records?.isNotEmpty == true) {
-        for (int i = 0; i < jobOpportunityData.records!.length; i++) {
-          bool canAddBasedOnHub = true, canAddBasedOnSpecialization = true, canAddBasedOnSemester = true, canAddBasedOnGender = true, isAlreadyApplied = false;
-          if (jobOpportunityData.records![i].fields?.hubIds?.isNotEmpty == true) {
-            canAddBasedOnHub = (jobOpportunityData.records![i].fields?.hubIds!.contains(loginData.hubIds?.first) == true);
-          }
-          if (jobOpportunityData.records![i].fields?.specializationIds?.isNotEmpty == true) {
-            canAddBasedOnSpecialization = (jobOpportunityData.records![i].fields?.specializationIds!.contains(loginData.specializationIds?.first) == true);
-          }
-          if (jobOpportunityData.records![i].fields?.semester?.isNotEmpty == true) {
-            canAddBasedOnSemester = (jobOpportunityData.records![i].fields?.semester!.contains(loginData.semester) == true);
-          }
-          if (jobOpportunityData.records![i].fields?.gender?.isNotEmpty == true) {
-            if (jobOpportunityData.records![i].fields?.gender == strings_name.str_both) {
-              canAddBasedOnGender = true;
-            } else if (jobOpportunityData.records![i].fields?.gender?.toLowerCase() == loginData.gender?.toLowerCase()) {
-              canAddBasedOnGender = true;
-            } else {
-              canAddBasedOnGender = false;
+      try{
+        jobOpportunityData = await apiRepository.getJoboppoApi(query);
+        if (jobOpportunityData.records?.isNotEmpty == true) {
+          for (int i = 0; i < jobOpportunityData.records!.length; i++) {
+            bool canAddBasedOnHub = true, canAddBasedOnSpecialization = true, canAddBasedOnSemester = true, canAddBasedOnGender = true, isAlreadyApplied = false;
+            if (jobOpportunityData.records![i].fields?.hubIds?.isNotEmpty == true) {
+              canAddBasedOnHub = (jobOpportunityData.records![i].fields?.hubIds!.contains(loginData.hubIds?.first) == true);
+            }
+            if (jobOpportunityData.records![i].fields?.specializationIds?.isNotEmpty == true) {
+              canAddBasedOnSpecialization = (jobOpportunityData.records![i].fields?.specializationIds!.contains(loginData.specializationIds?.first) == true);
+            }
+            if (jobOpportunityData.records![i].fields?.semester?.isNotEmpty == true) {
+              canAddBasedOnSemester = (jobOpportunityData.records![i].fields?.semester!.contains(loginData.semester) == true);
+            }
+            if (jobOpportunityData.records![i].fields?.gender?.isNotEmpty == true) {
+              if (jobOpportunityData.records![i].fields?.gender == strings_name.str_both) {
+                canAddBasedOnGender = true;
+              } else if (jobOpportunityData.records![i].fields?.gender?.toLowerCase() == loginData.gender?.toLowerCase()) {
+                canAddBasedOnGender = true;
+              } else {
+                canAddBasedOnGender = false;
+              }
+            }
+            if (jobOpportunityData.records![i].fields?.appliedStudents?.isNotEmpty == true) {
+              isAlreadyApplied = jobOpportunityData.records![i].fields?.appliedStudents!.contains(PreferenceUtils.getLoginRecordId()) == true;
+            }
+            if (!canAddBasedOnHub || !canAddBasedOnSpecialization || !canAddBasedOnSemester || !canAddBasedOnGender || isAlreadyApplied) {
+              jobOpportunityData.records?.removeAt(i);
+              i--;
             }
           }
-          if (jobOpportunityData.records![i].fields?.appliedStudents?.isNotEmpty == true) {
-            isAlreadyApplied = jobOpportunityData.records![i].fields?.appliedStudents!.contains(PreferenceUtils.getLoginRecordId()) == true;
-          }
-          if (!canAddBasedOnHub || !canAddBasedOnSpecialization || !canAddBasedOnSemester || !canAddBasedOnGender || isAlreadyApplied) {
-            jobOpportunityData.records?.removeAt(i);
-            i--;
-          }
         }
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
+
       setState(() {
         isVisible = false;
       });
@@ -85,33 +98,42 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
     });
     var loginData = PreferenceUtils.getLoginData();
     var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-    var data = await apiRepository.loginApi(query);
-    if (data.records!.isNotEmpty) {
-      await PreferenceUtils.setLoginData(data.records!.first.fields!);
-      await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
-
-      var appliedJobData = data.records!.first.fields?.appliedJob ?? [];
-      appliedJobData.add(jobId!);
-
-      Map<String, dynamic> appliedJobs = {
-        TableNames.CLM_APPLIED_JOB: appliedJobData,
-      };
-
-      var dataUpdate = await apiRepository.updateStudentDataApi(appliedJobs, data.records!.first.id!);
-      if (dataUpdate.fields != null) {
+    try{
+      var data = await apiRepository.loginApi(query);
+      if (data.records!.isNotEmpty) {
         await PreferenceUtils.setLoginData(data.records!.first.fields!);
         await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
 
-        setState(() {
-          isVisible = false;
-        });
-        Get.back(closeOverlays: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
+        var appliedJobData = data.records!.first.fields?.appliedJob ?? [];
+        appliedJobData.add(jobId!);
+
+        Map<String, dynamic> appliedJobs = {
+          TableNames.CLM_APPLIED_JOB: appliedJobData,
+        };
+
+        var dataUpdate = await apiRepository.updateStudentDataApi(appliedJobs, data.records!.first.id!);
+        if (dataUpdate.fields != null) {
+          await PreferenceUtils.setLoginData(data.records!.first.fields!);
+          await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+
+          setState(() {
+            isVisible = false;
+          });
+          Get.back(closeOverlays: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override

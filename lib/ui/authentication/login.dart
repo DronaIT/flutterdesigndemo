@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +20,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../api/dio_exception.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -167,54 +170,70 @@ class _LoginState extends State<Login> {
                             // var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
                             var query = "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
                             var data = await loginRepository.loginApi(query);
-                            if (data.records!.isNotEmpty) {
-                              setState(() {
-                                isVisible = false;
-                              });
-                              if (data.records!.first.fields?.password == null) {
-                                Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
-                              } else if (data.records!.first.fields?.password != passController.text.toString()) {
-                                Utils.showSnackBar(context, strings_name.str_invalide_password);
-                              } else {
-                                await PreferenceUtils.setIsLogin(1);
-                                await PreferenceUtils.setLoginData(data.records!.first.fields!);
-                                await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
-                                Get.offAll(() => const Home());
-                              }
-                            } else if (data.records!.length == 0) {
-                              var dataEmployee = await loginRepository.loginEmployeeApi(query);
-
-                              if (dataEmployee.records!.isNotEmpty) {
+                            try{
+                              if (data.records!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                if (dataEmployee.records!.first.fields?.password == null) {
+                                if (data.records!.first.fields?.password == null) {
                                   Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
-                                } else if (dataEmployee.records!.first.fields?.password != passController.text.toString()) {
+                                } else if (data.records!.first.fields?.password != passController.text.toString()) {
                                   Utils.showSnackBar(context, strings_name.str_invalide_password);
                                 } else {
-                                  await PreferenceUtils.setIsLogin(2);
-                                  await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
-                                  await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
+                                  await PreferenceUtils.setIsLogin(1);
+                                  await PreferenceUtils.setLoginData(data.records!.first.fields!);
+                                  await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
                                   Get.offAll(() => const Home());
                                 }
-                              } else if (dataEmployee.records!.length == 0) {
-                                setState(() {
-                                  isVisible = false;
-                                });
-                                Utils.showSnackBar(context, strings_name.str_user_not_found);
+                              } else if (data.records!.length == 0) {
+                                try{
+                                  var dataEmployee = await loginRepository.loginEmployeeApi(query);
+
+                                  if (dataEmployee.records!.isNotEmpty) {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    if (dataEmployee.records!.first.fields?.password == null) {
+                                      Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
+                                    } else if (dataEmployee.records!.first.fields?.password != passController.text.toString()) {
+                                      Utils.showSnackBar(context, strings_name.str_invalide_password);
+                                    } else {
+                                      await PreferenceUtils.setIsLogin(2);
+                                      await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+                                      await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
+                                      Get.offAll(() => const Home());
+                                    }
+                                  } else if (dataEmployee.records!.length == 0) {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    Utils.showSnackBar(context, strings_name.str_user_not_found);
+                                  } else {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                  }
+                                }on DioError catch (e) {
+                                  final errorMessage = DioExceptions.fromDioError(e).toString();
+                                  Utils.showSnackBarUsingGet(errorMessage);
+                                }
+
                               } else {
                                 setState(() {
                                   isVisible = false;
                                 });
                                 Utils.showSnackBar(context, strings_name.str_something_wrong);
                               }
-                            } else {
+                            } on DioError catch (e) {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(context, strings_name.str_something_wrong);
+                              final errorMessage = DioExceptions.fromDioError(e).toString();
+                              Utils.showSnackBarUsingGet(errorMessage);
                             }
+
+
                           }
                         }),
                     SizedBox(height: 20.h),

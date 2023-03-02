@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -12,6 +13,9 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
+import '../../utils/utils.dart';
 
 class ShortListedForInternship extends StatefulWidget {
   const ShortListedForInternship({Key? key}) : super(key: key);
@@ -37,10 +41,18 @@ class _ShortListedForInternshipState extends State<ShortListedForInternship> {
       isVisible = true;
     });
     var query = "FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_SHORT_LISTED_STUDENTS}, 0)";
-    jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
-    setState(() {
-      isVisible = false;
-    });
+    try {
+      jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
+      setState(() {
+        isVisible = false;
+      });
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   @override

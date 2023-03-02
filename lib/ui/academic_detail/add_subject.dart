@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
@@ -18,6 +19,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddSubject extends StatefulWidget {
   const AddSubject({Key? key}) : super(key: key);
@@ -47,30 +50,47 @@ class _AddSubjectState extends State<AddSubject> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_SUBJECT_ID}, 0)";
-      var data = await apiRepository.getSubjectsApi(query);
-      if (data.records?.isNotEmpty == true) {
-        setState(() {
-          fromEdit = true;
-        });
-
-        subjectData = data.records;
-        if (subjectData?.isNotEmpty == true) {
+      try{
+        var data = await apiRepository.getSubjectsApi(query);
+        if (data.records?.isNotEmpty == true) {
           setState(() {
-            titleController.text = subjectData![0].fields!.subjectTitle.toString();
-            codeController.text = subjectData![0].fields!.subjectCode.toString();
-            creditController.text = subjectData![0].fields!.subjectCredit.toString();
-            semesterValue = subjectData![0].fields!.semester!;
+            fromEdit = true;
           });
 
-          var query = "FIND('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
-          var data = await apiRepository.getUnitsApi(query);
-          if (data.records?.isNotEmpty == true) {
-            unitsData = data.records;
+          subjectData = data.records;
+          if (subjectData?.isNotEmpty == true) {
+            setState(() {
+              titleController.text = subjectData![0].fields!.subjectTitle.toString();
+              codeController.text = subjectData![0].fields!.subjectCode.toString();
+              creditController.text = subjectData![0].fields!.subjectCredit.toString();
+              semesterValue = subjectData![0].fields!.semester!;
+            });
+            var query = "FIND('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
+            try{
+              var data = await apiRepository.getUnitsApi(query);
+              if (data.records?.isNotEmpty == true) {
+                unitsData = data.records;
+              }
+            }on DioError catch (e) {
+              setState(() {
+                isVisible = false;
+              });
+              final errorMessage = DioExceptions.fromDioError(e).toString();
+              Utils.showSnackBarUsingGet(errorMessage);
+            }
+
           }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
       setState(() {
         isVisible = false;
       });
@@ -261,35 +281,44 @@ class _AddSubjectState extends State<AddSubject> {
     }
     request.tBLUNITS = selectedSubjectData;
 
-    if (!fromEdit) {
-      var resp = await apiRepository.addSubjectApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_subject_added);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
+    try{
+      if (!fromEdit) {
+        var resp = await apiRepository.addSubjectApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_subject_added);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
-        setState(() {
-          isVisible = false;
-        });
+        var resp = await apiRepository.updateSubjectApi(request.toJson(), subjectData![0].id.toString());
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_subject_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
-    } else {
-      var resp = await apiRepository.updateSubjectApi(request.toJson(), subjectData![0].id.toString());
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_subject_updated);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override

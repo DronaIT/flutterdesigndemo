@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -9,10 +10,12 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../models/base_api_response.dart';
 import '../../models/job_opportunity_response.dart';
+import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 
 class InterViewScheduleDetail extends StatefulWidget {
@@ -43,10 +46,19 @@ class _InterViewScheduleDetailState extends State<InterViewScheduleDetail> {
       isVisible = true;
     });
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    jobOpportunityData = await apiRepository.getJoboppoApi(query);
-    setState(() {
-      isVisible = false;
-    });
+    try{
+      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+      setState(() {
+        isVisible = false;
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
   }
 
   @override

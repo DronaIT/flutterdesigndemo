@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -17,6 +18,8 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import '../../api/dio_exception.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -94,44 +97,53 @@ class _RegisterState extends State<Register> {
                               isVisible = true;
                             });
                             var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
-                            var data = await registerRepository.registerApi(query);
-                            if (data.records!.isNotEmpty) {
-                              setState(() {
-                                isVisible = false;
-                              });
-                              if (data.records!.first.fields?.password == null) {
-                                sendOTP(phoneController.text, false);
-                              } else {
-                                Utils.showSnackBar(context, strings_name.str_user_already_verified);
-                              }
-                            } else if (data.records!.length == 0) {
-                              var dataEmployee = await registerRepository.registerEmployeeApi(query);
-                              if (dataEmployee.records!.isNotEmpty) {
+                            try{
+                              var data = await registerRepository.registerApi(query);
+                              if (data.records!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                if (dataEmployee.records!.first.fields?.password == null) {
-                                  sendOTP(phoneController.text, true);
+                                if (data.records!.first.fields?.password == null) {
+                                  sendOTP(phoneController.text, false);
                                 } else {
                                   Utils.showSnackBar(context, strings_name.str_user_already_verified);
                                 }
-                              } else if (dataEmployee.records!.length == 0) {
-                                setState(() {
-                                  isVisible = false;
-                                });
-                                Utils.showSnackBar(context, strings_name.str_user_not_found);
+                              } else if (data.records!.length == 0) {
+                                var dataEmployee = await registerRepository.registerEmployeeApi(query);
+                                if (dataEmployee.records!.isNotEmpty) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  if (dataEmployee.records!.first.fields?.password == null) {
+                                    sendOTP(phoneController.text, true);
+                                  } else {
+                                    Utils.showSnackBar(context, strings_name.str_user_already_verified);
+                                  }
+                                } else if (dataEmployee.records!.length == 0) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_user_not_found);
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                }
                               } else {
                                 setState(() {
                                   isVisible = false;
                                 });
                                 Utils.showSnackBar(context, strings_name.str_something_wrong);
                               }
-                            } else {
+                            } on DioError catch (e) {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(context, strings_name.str_something_wrong);
+                              final errorMessage = DioExceptions.fromDioError(e).toString();
+                              Utils.showSnackBarUsingGet(errorMessage);
                             }
+
                           }
                         }),
                   ],

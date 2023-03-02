@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +20,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class UpdateEmployee extends StatefulWidget {
   const UpdateEmployee({Key? key}) : super(key: key);
@@ -489,19 +492,27 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                           setState(() {
                             isVisible = true;
                           });
-                          var updateEmployees = await apiRepository.updateEmployeeApi(updateEmployee, Get.arguments.id);
-                          if (updateEmployees != null) {
+                          try{
+                            var updateEmployees = await apiRepository.updateEmployeeApi(updateEmployee, Get.arguments.id);
+                            if (updateEmployees != null) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_employee_update);
+                              await Future.delayed(const Duration(milliseconds: 2000));
+                              Get.back(closeOverlays: true, result: true);
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_something_wrong);
+                            }
+                          }on DioError catch (e) {
                             setState(() {
                               isVisible = false;
                             });
-                            Utils.showSnackBar(context, strings_name.str_employee_update);
-                            await Future.delayed(const Duration(milliseconds: 2000));
-                            Get.back(closeOverlays: true, result: true);
-                          } else {
-                            setState(() {
-                              isVisible = false;
-                            });
-                            Utils.showSnackBar(context, strings_name.str_something_wrong);
+                            final errorMessage = DioExceptions.fromDioError(e).toString();
+                            Utils.showSnackBarUsingGet(errorMessage);
                           }
                         }
                       },

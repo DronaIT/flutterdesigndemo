@@ -1,4 +1,5 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +21,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../api/dio_exception.dart';
 import '../../values/text_styles.dart';
 
 class PlacementInfo extends StatefulWidget {
@@ -52,10 +54,19 @@ class _PlacementInfoState extends State<PlacementInfo> {
     setState(() {
       isVisible = true;
     });
-    jobOpportunityData = await apiRepository.getJobOpportunityWithRecordIdApi(jobRecordId);
-    setState(() {
-      isVisible = false;
-    });
+    try{
+      jobOpportunityData = await apiRepository.getJobOpportunityWithRecordIdApi(jobRecordId);
+      setState(() {
+        isVisible = false;
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
   }
 
   @override
@@ -188,20 +199,28 @@ class _PlacementInfoState extends State<PlacementInfo> {
 
                               var json = request.toJson();
                               json.removeWhere((key, value) => value == null);
+                               try{
+                                 var resp = await apiRepository.updatePlacementInfoApi(json);
+                                 if (resp.id!.isNotEmpty) {
+                                   setState(() {
+                                     isVisible = false;
+                                   });
+                                   Utils.showSnackBar(context, strings_name.str_placement_info_updated);
+                                   await Future.delayed(const Duration(milliseconds: 2000));
+                                   Get.back(closeOverlays: true, result: true);
+                                 } else {
+                                   setState(() {
+                                     isVisible = false;
+                                   });
+                                 }
+                               }on DioError catch (e) {
+                                 setState(() {
+                                   isVisible = false;
+                                 });
+                                 final errorMessage = DioExceptions.fromDioError(e).toString();
+                                 Utils.showSnackBarUsingGet(errorMessage);
+                               }
 
-                              var resp = await apiRepository.updatePlacementInfoApi(json);
-                              if (resp.id!.isNotEmpty) {
-                                setState(() {
-                                  isVisible = false;
-                                });
-                                Utils.showSnackBar(context, strings_name.str_placement_info_updated);
-                                await Future.delayed(const Duration(milliseconds: 2000));
-                                Get.back(closeOverlays: true, result: true);
-                              } else {
-                                setState(() {
-                                  isVisible = false;
-                                });
-                              }
                             }
                           }),
                     ],

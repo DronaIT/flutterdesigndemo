@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -18,6 +19,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddEmployee extends StatefulWidget {
   const AddEmployee({Key? key}) : super(key: key);
@@ -447,45 +450,55 @@ class _AddEmployeeState extends State<AddEmployee> {
       isVisible = true;
     });
     var query = "FIND('${phoneController.text.toString()}',${TableNames.TB_USERS_PHONE}, 0)";
-    var checkMobile = await apiRepository.loginEmployeeApi(query);
-    if (checkMobile.records?.isEmpty == true) {
-      AddEmployeeRequest request = AddEmployeeRequest();
-      request.employee_name = nameController.text.toString();
-      request.mobileNumber = phoneController.text.toString().replaceAll(" ", "").replaceAll("-", "");
-      request.city = cityController.text.toString();
-      request.address = addressController.text.toString();
-      request.gender = gender;
-      request.email = emailController.text.toString();
-      request.hubIds = Utils.getHubId(hubValue)!.split(",");
-      request.roleIds = Utils.getRoleId(roleValue)!.split(",");
-      request.spouse_mobile_number = spouseController.text.toString();
-      request.pin_code = pinCodeController.text.toString();
-      request.parents_mobile_number = parentController.text.toString();
+    try{
+      var checkMobile = await apiRepository.loginEmployeeApi(query);
+      if (checkMobile.records?.isEmpty == true) {
+        AddEmployeeRequest request = AddEmployeeRequest();
+        request.employee_name = nameController.text.toString();
+        request.mobileNumber = phoneController.text.toString().replaceAll(" ", "").replaceAll("-", "");
+        request.city = cityController.text.toString();
+        request.address = addressController.text.toString();
+        request.gender = gender;
+        request.email = emailController.text.toString();
+        request.hubIds = Utils.getHubId(hubValue)!.split(",");
+        request.roleIds = Utils.getRoleId(roleValue)!.split(",");
+        request.spouse_mobile_number = spouseController.text.toString();
+        request.pin_code = pinCodeController.text.toString();
+        request.parents_mobile_number = parentController.text.toString();
 
-      List<String> accessibleHubList = [];
-      for (var i = 0; i < accessibleHubsData!.length; i++) {
-        accessibleHubList.add(accessibleHubsData![i].id.toString());
-      }
-      request.accessible_hub_ids = accessibleHubList;
+        List<String> accessibleHubList = [];
+        for (var i = 0; i < accessibleHubsData!.length; i++) {
+          accessibleHubList.add(accessibleHubsData![i].id.toString());
+        }
+        request.accessible_hub_ids = accessibleHubList;
 
-      var resp = await apiRepository.addEmployeeApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_employee_added);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true);
+        var resp = await apiRepository.addEmployeeApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_employee_added);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
         setState(() {
           isVisible = false;
         });
+        Utils.showSnackBarDuration(context, strings_name.str_employee_exists, 5);
       }
-    } else {
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBarDuration(context, strings_name.str_employee_exists, 5);
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
   }
 }

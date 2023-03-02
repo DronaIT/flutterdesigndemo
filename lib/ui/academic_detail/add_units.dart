@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -17,6 +18,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddUnits extends StatefulWidget {
   const AddUnits({Key? key}) : super(key: key);
@@ -47,25 +50,34 @@ class _AddUnitsState extends State<AddUnits> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_UNIT_ID}, 0)";
-      var data = await apiRepository.getUnitsApi(query);
-      if (data.records?.isNotEmpty == true) {
-        setState(() {
-          fromEdit = true;
-        });
+      try {
+        var data = await apiRepository.getUnitsApi(query);
+        if (data.records?.isNotEmpty == true) {
+          setState(() {
+            fromEdit = true;
+          });
 
-        unitsData = data.records;
-        if (unitsData?.isNotEmpty == true) {
-          titleController.text = unitsData![0].fields!.unitTitle.toString();
+          unitsData = data.records;
+          if (unitsData?.isNotEmpty == true) {
+            titleController.text = unitsData![0].fields!.unitTitle.toString();
 
-          var query = "FIND('${unitsData![0].fields!.ids}', ${TableNames.CLM_UNIT_IDS}, 0)";
-          var data = await apiRepository.getTopicsApi(query);
-          if (data.records?.isNotEmpty == true) {
-            topicsData = data.records;
+            var query = "FIND('${unitsData![0].fields!.ids}', ${TableNames.CLM_UNIT_IDS}, 0)";
+            var data = await apiRepository.getTopicsApi(query);
+            if (data.records?.isNotEmpty == true) {
+              topicsData = data.records;
+            }
           }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      } on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
       setState(() {
         isVisible = false;
       });
@@ -185,35 +197,42 @@ class _AddUnitsState extends State<AddUnits> {
       selectedSubjectData.add(topicsData![i].id.toString());
     }
     request.tBLTOPICS = selectedSubjectData;
-
-    if (!fromEdit) {
-      var resp = await apiRepository.addUnitsApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_unit_added);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
+    try {
+      if (!fromEdit) {
+        var resp = await apiRepository.addUnitsApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_unit_added);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
-        setState(() {
-          isVisible = false;
-        });
+        var resp = await apiRepository.updateUnitsApi(request.toJson(), unitsData![0].id.toString());
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_unit_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
-    } else {
-      var resp = await apiRepository.updateUnitsApi(request.toJson(), unitsData![0].id.toString());
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_unit_updated);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

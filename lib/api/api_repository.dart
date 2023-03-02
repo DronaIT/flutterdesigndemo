@@ -55,7 +55,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -65,7 +65,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -75,7 +75,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -85,7 +85,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -95,7 +95,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -105,7 +105,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -115,7 +115,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -125,7 +125,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -135,7 +135,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -145,7 +145,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -155,7 +155,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -165,7 +165,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -175,7 +175,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -185,7 +185,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -213,7 +213,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -223,7 +223,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -233,7 +233,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -243,7 +243,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -253,7 +253,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -263,7 +263,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -273,7 +273,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -283,7 +283,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -293,7 +293,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -303,7 +303,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -313,7 +313,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -323,7 +323,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -333,7 +333,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -343,7 +343,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -353,7 +353,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -363,7 +363,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -373,7 +373,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -383,7 +383,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -393,7 +393,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -403,7 +403,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -413,7 +413,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -423,7 +423,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -433,7 +433,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -443,7 +443,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -453,7 +453,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -463,7 +463,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -473,7 +473,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -483,7 +483,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -493,7 +493,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -503,7 +503,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -513,7 +513,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 
@@ -523,7 +523,7 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+      rethrow;
     }
   }
 }

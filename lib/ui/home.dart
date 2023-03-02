@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -22,6 +23,9 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
+import '../api/dio_exception.dart';
+import '../utils/utils.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -44,16 +48,26 @@ class _HomeState extends State<Home> {
     setState(() {
       isVisible = true;
     });
-    homeModule = await homeRepository.getHomeModulesApi(query);
-    if (homeModule.records!.isNotEmpty) {
+    try{
+      homeModule = await homeRepository.getHomeModulesApi(query);
+      if (homeModule.records!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-    } else {
-      setState(() {
-        isVisible = false;
-      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
   }
 
   @override

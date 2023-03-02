@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/models/completion_job_module_response.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -5,12 +6,14 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
 import '../../models/job_opportunity_response.dart';
 import '../../utils/tablenames.dart';
+import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 
 class CompletedStudentDetail extends StatefulWidget {
@@ -42,33 +45,42 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
       isVisible = true;
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
-    jobpportunityData = await apiRepository.getJoboppoApi(query);
-    int completion = 0;
-    String completionName = strings_name.str_pending;
-    for (var i = 0; i < jobpportunityData.records!.length; i++) {
-      if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.selectedStudents != null) {
-        for (var j = 0; j < jobpportunityData.records![i].fields!.selectedStudents!.length; j++) {
-          if (jobpportunityData.records![i].fields!.placedStudents != null && jobpportunityData.records![i].fields!.placedStudents!.contains(jobpportunityData.records![i].fields!.selectedStudents![j])) {
-            completion = 1;
-            completionName = strings_name.str_placed;
-          } else if (jobpportunityData.records![i].fields!.rejected_students != null && jobpportunityData.records![i].fields!.rejected_students!.contains(jobpportunityData.records![i].fields!.selectedStudents![j])) {
-            completion = 2;
-            completionName = strings_name.str_reject;
+    try{
+      jobpportunityData = await apiRepository.getJoboppoApi(query);
+      int completion = 0;
+      String completionName = strings_name.str_pending;
+      for (var i = 0; i < jobpportunityData.records!.length; i++) {
+        if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.selectedStudents != null) {
+          for (var j = 0; j < jobpportunityData.records![i].fields!.selectedStudents!.length; j++) {
+            if (jobpportunityData.records![i].fields!.placedStudents != null && jobpportunityData.records![i].fields!.placedStudents!.contains(jobpportunityData.records![i].fields!.selectedStudents![j])) {
+              completion = 1;
+              completionName = strings_name.str_placed;
+            } else if (jobpportunityData.records![i].fields!.rejected_students != null && jobpportunityData.records![i].fields!.rejected_students!.contains(jobpportunityData.records![i].fields!.selectedStudents![j])) {
+              completion = 2;
+              completionName = strings_name.str_reject;
+            }
+            var jobModuleResponse = CompleteModuleResponse(
+                applied_students_email: jobpportunityData.records![i].fields!.selected_students_email![j],
+                applied_students_enrollment_number: jobpportunityData.records![i].fields!.selected_students_enrollment_number![j],
+                applied_students_name: jobpportunityData.records![i].fields!.selected_students_name![j],
+                applied_students_number: jobpportunityData.records![i].fields!.selectedStudents![j],
+                completionStatus: completion,
+                compName: completionName);
+            studentResponse.add(jobModuleResponse);
           }
-          var jobModuleResponse = CompleteModuleResponse(
-              applied_students_email: jobpportunityData.records![i].fields!.selected_students_email![j],
-              applied_students_enrollment_number: jobpportunityData.records![i].fields!.selected_students_enrollment_number![j],
-              applied_students_name: jobpportunityData.records![i].fields!.selected_students_name![j],
-              applied_students_number: jobpportunityData.records![i].fields!.selectedStudents![j],
-              completionStatus: completion,
-              compName: completionName);
-          studentResponse.add(jobModuleResponse);
         }
+        setState(() {
+          isVisible = false;
+        });
       }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override

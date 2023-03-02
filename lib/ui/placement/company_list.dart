@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
@@ -11,6 +12,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
@@ -43,11 +45,19 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
     setState(() {
       isVisible = true;
     });
-    companyDetailResponse = await apiRepository.getCompanyDetailApi("");
-    if (companyDetailResponse.records!.isNotEmpty) {
+    try{
+      companyDetailResponse = await apiRepository.getCompanyDetailApi("");
+      if (companyDetailResponse.records!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 
@@ -64,33 +74,42 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
     }
-    var data = await apiRepository.getPermissionsApi(query);
-    if (data.records!.isNotEmpty) {
-      for (var i = 0; i < data.records!.length; i++) {
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
-          setState(() {
-            createJobsAlerts = true;
-          });
+    try{
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
+            setState(() {
+              createJobsAlerts = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEWJOBS) {
+            setState(() {
+              viewJobAlerts = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDITJOBS) {
+            setState(() {
+              updateJobAlerts = true;
+            });
+          }
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEWJOBS) {
-          setState(() {
-            viewJobAlerts = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDITJOBS) {
-          setState(() {
-            updateJobAlerts = true;
-          });
-        }
-      }
 
-      getRecords();
-    } else {
+        getRecords();
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override

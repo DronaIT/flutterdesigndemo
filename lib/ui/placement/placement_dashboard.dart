@@ -84,85 +84,94 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
     }
-    var data = await apiRepository.getPermissionsApi(query);
-    if (data.records!.isNotEmpty) {
-      for (var i = 0; i < data.records!.length; i++) {
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPANY_APPROCH) {
-          setState(() {
-            companyApproach = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CREATE_COMPANY) {
-          setState(() {
-            createCompany = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_GET_COMPANY_DETAIL) {
-          setState(() {
-            getCompanyDetail = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDIT_COMPANY_DETAIL) {
-          setState(() {
-            editCompanyDetail = true;
-          });
-        }
+    try{
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPANY_APPROCH) {
+            setState(() {
+              companyApproach = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CREATE_COMPANY) {
+            setState(() {
+              createCompany = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_GET_COMPANY_DETAIL) {
+            setState(() {
+              getCompanyDetail = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDIT_COMPANY_DETAIL) {
+            setState(() {
+              editCompanyDetail = true;
+            });
+          }
 
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
-          setState(() {
-            createJobsAlerts = true;
-          });
-        }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
+            setState(() {
+              createJobsAlerts = true;
+            });
+          }
 
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLY_INTERNSHIP) {
-          setState(() {
-            applyInternship = true;
-          });
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLY_INTERNSHIP) {
+            setState(() {
+              applyInternship = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLIED_INTERNSHIP) {
+            setState(() {
+              appliedInternship = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORT_LISTED_INTERNSHIP) {
+            setState(() {
+              shortListedInternship = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PUBLISHED_INTERSHIP) {
+            setState(() {
+              publishedList = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPROVED_INTERSHIP) {
+            setState(() {
+              approvedList = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_STUDENT) {
+            setState(() {
+              selectedStudent = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlIST_STUDENTS) {
+            setState(() {
+              shortListed = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP) {
+            setState(() {
+              selectedInternship = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPLETED_INTERNSHIP) {
+            setState(() {
+              completedInternShip = true;
+            });
+          }
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLIED_INTERNSHIP) {
-          setState(() {
-            appliedInternship = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORT_LISTED_INTERNSHIP) {
-          setState(() {
-            shortListedInternship = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PUBLISHED_INTERSHIP) {
-          setState(() {
-            publishedList = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPROVED_INTERSHIP) {
-          setState(() {
-            approvedList = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_STUDENT) {
-          setState(() {
-            selectedStudent = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlIST_STUDENTS) {
-          setState(() {
-            shortListed = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP) {
-          setState(() {
-            selectedInternship = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPLETED_INTERNSHIP) {
-          setState(() {
-            completedInternShip = true;
-          });
-        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    } else {
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });

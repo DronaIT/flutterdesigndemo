@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -21,6 +22,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class TakeAttendance extends StatefulWidget {
   const TakeAttendance({Key? key}) : super(key: key);
@@ -449,15 +452,24 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         isVisible = true;
       });
       var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
-      var speData = await apiRepository.getSpecializationDetailApi(query);
-      setState(() {
-        specializationResponse = null;
-        specializationResponseArray = speData.records;
-        isVisible = false;
-      });
-      if (speData.records?.isEmpty == true) {
-        Utils.showSnackBar(context, strings_name.str_no_specialization_assigned);
+      try{
+        var speData = await apiRepository.getSpecializationDetailApi(query);
+        setState(() {
+          specializationResponse = null;
+          specializationResponseArray = speData.records;
+          isVisible = false;
+        });
+        if (speData.records?.isEmpty == true) {
+          Utils.showSnackBar(context, strings_name.str_no_specialization_assigned);
+        }
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
     }
   }
 
@@ -468,19 +480,28 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       });
       // var query = "FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
       var query = "AND(FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
-      var data = await apiRepository.getSubjectsApi(query);
-      setState(() {
-        subjectResponse = null;
-        subjectResponseArray = data.records;
+      try{
+        var data = await apiRepository.getSubjectsApi(query);
+        setState(() {
+          subjectResponse = null;
+          subjectResponseArray = data.records;
 
-        unitResponse = null;
-        topicResponse = null;
+          unitResponse = null;
+          topicResponse = null;
 
-        isVisible = false;
-      });
-      if (data.records?.isEmpty == true) {
-        Utils.showSnackBar(context, strings_name.str_no_subject_assigned);
+          isVisible = false;
+        });
+        if (data.records?.isEmpty == true) {
+          Utils.showSnackBar(context, strings_name.str_no_subject_assigned);
+        }
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
     }
   }
 
@@ -490,17 +511,26 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         isVisible = true;
       });
       var query = "FIND('${subjectValue}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
-      var data = await apiRepository.getUnitsApi(query);
-      setState(() {
-        unitResponse = null;
-        unitResponseArray = data.records;
+      try{
+        var data = await apiRepository.getUnitsApi(query);
+        setState(() {
+          unitResponse = null;
+          unitResponseArray = data.records;
 
-        topicResponse = null;
-        isVisible = false;
-      });
-      if (data.records?.isEmpty == true) {
-        Utils.showSnackBar(context, strings_name.str_no_unit_assigned);
+          topicResponse = null;
+          isVisible = false;
+        });
+        if (data.records?.isEmpty == true) {
+          Utils.showSnackBar(context, strings_name.str_no_unit_assigned);
+        }
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
     }
   }
 
@@ -510,15 +540,24 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         isVisible = true;
       });
       var query = "FIND('${unitValue}', ${TableNames.CLM_UNIT_IDS}, 0)";
-      var data = await apiRepository.getTopicsApi(query);
-      setState(() {
-        topicResponse = null;
-        topicResponseArray = data.records;
-        isVisible = false;
-      });
-      if (data.records?.isEmpty == true) {
-        Utils.showSnackBar(context, strings_name.str_no_topic_assigned);
+      try{
+        var data = await apiRepository.getTopicsApi(query);
+        setState(() {
+          topicResponse = null;
+          topicResponseArray = data.records;
+          isVisible = false;
+        });
+        if (data.records?.isEmpty == true) {
+          Utils.showSnackBar(context, strings_name.str_no_topic_assigned);
+        }
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
     }
   }
 
@@ -533,30 +572,38 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     query += ",FIND('${divisionValue}', ${TableNames.CLM_DIVISION}, 0)";
     query += ")";
     print(query);
-    var data = await apiRepository.loginApi(query);
-    if (data.records!.isNotEmpty) {
+    try{
+      var data = await apiRepository.loginApi(query);
+      if (data.records!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+
+        AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
+        request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
+        request.hubId = hubRecordId.split(",");
+        request.specializationId = specializationRecordId.split(",");
+        request.division = divisionValue;
+        request.subjectId = subjectRecordId.split(",");
+        request.unitId = unitRecordId.split(",");
+        request.topicId = topicRecordId.split(",");
+        Get.to(const AttendanceStudentList(), arguments: [
+          {"studentList": data.records},
+          {"request": request},
+        ])?.then((result) {
+          if (result != null && result) {
+            Get.back(closeOverlays: true);
+          }
+        });
+      } else {
+        Utils.showSnackBar(context, strings_name.str_no_students);
+      }
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-
-      AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
-      request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
-      request.hubId = hubRecordId.split(",");
-      request.specializationId = specializationRecordId.split(",");
-      request.division = divisionValue;
-      request.subjectId = subjectRecordId.split(",");
-      request.unitId = unitRecordId.split(",");
-      request.topicId = topicRecordId.split(",");
-      Get.to(const AttendanceStudentList(), arguments: [
-        {"studentList": data.records},
-        {"request": request},
-      ])?.then((result) {
-        if (result != null && result) {
-          Get.back(closeOverlays: true);
-        }
-      });
-    } else {
-      Utils.showSnackBar(context, strings_name.str_no_students);
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
     setState(() {
       isVisible = false;

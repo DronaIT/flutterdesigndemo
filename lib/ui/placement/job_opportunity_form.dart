@@ -1,4 +1,5 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,6 +24,7 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../api/dio_exception.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../utils/utils.dart';
 
@@ -89,68 +91,77 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     });
 
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    var data = await apiRepository.getJobOpportunityApi(query);
+    try{
+      var data = await apiRepository.getJobOpportunityApi(query);
 
-    setState(() {
-      isVisible = false;
-      if (data.records?.first != null) {
-        fromEdit = true;
-        jobRecordId = data.records?.first.id ?? "";
-        var jobData = data.records?.first.fields;
+      setState(() {
+        isVisible = false;
+        if (data.records?.first != null) {
+          fromEdit = true;
+          jobRecordId = data.records?.first.id ?? "";
+          var jobData = data.records?.first.fields;
 
-        jobTitleController.text = jobData?.jobTitle ?? "";
-        jobDescController.text = jobData?.jobDescription ?? "";
-        jobSpecificReqController.text = jobData?.specificRequirements ?? "";
-        vacancyController.text = "${jobData?.vacancies ?? ''}";
-        minRangeController.text = "${jobData?.stipendRangeMin ?? ''}";
-        maxRangeController.text = "${jobData?.stipendRangeMax ?? ''}";
-        minAgeLimitController.text = "${jobData?.minimumAge ?? ''}";
-        startTimeController.text = jobData?.timingStart ?? "";
-        endTimeController.text = jobData?.timingEnd ?? "";
+          jobTitleController.text = jobData?.jobTitle ?? "";
+          jobDescController.text = jobData?.jobDescription ?? "";
+          jobSpecificReqController.text = jobData?.specificRequirements ?? "";
+          vacancyController.text = "${jobData?.vacancies ?? ''}";
+          minRangeController.text = "${jobData?.stipendRangeMin ?? ''}";
+          maxRangeController.text = "${jobData?.stipendRangeMax ?? ''}";
+          minAgeLimitController.text = "${jobData?.minimumAge ?? ''}";
+          startTimeController.text = jobData?.timingStart ?? "";
+          endTimeController.text = jobData?.timingEnd ?? "";
 
-        stipendType = jobData?.stipendType ?? "";
-        preferredGenderValue = jobData?.gender ?? strings_name.str_both;
-        internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
-        internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
+          stipendType = jobData?.stipendType ?? "";
+          preferredGenderValue = jobData?.gender ?? strings_name.str_both;
+          internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
+          internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
 
-        companyId = jobData?.companyId?.first ?? "";
+          companyId = jobData?.companyId?.first ?? "";
 
-        if (jobData?.specializationIds?.isNotEmpty == true) {
-          var specializationArr = PreferenceUtils.getSpecializationList().records;
-          for (int i = 0; i < jobData!.specializationIds!.length; i++) {
-            for (int j = 0; j < specializationArr!.length; j++) {
-              if (jobData.specializationIds![i] == specializationArr[j].id) {
-                specializationData?.add(specializationArr[j]);
-                break;
+          if (jobData?.specializationIds?.isNotEmpty == true) {
+            var specializationArr = PreferenceUtils.getSpecializationList().records;
+            for (int i = 0; i < jobData!.specializationIds!.length; i++) {
+              for (int j = 0; j < specializationArr!.length; j++) {
+                if (jobData.specializationIds![i] == specializationArr[j].id) {
+                  specializationData?.add(specializationArr[j]);
+                  break;
+                }
               }
             }
           }
-        }
 
-        if (jobData?.hubIds?.isNotEmpty == true) {
-          var hubArr = PreferenceUtils.getHubList().records;
-          for (int i = 0; i < jobData!.hubIds!.length; i++) {
-            for (int j = 0; j < hubArr!.length; j++) {
-              if (jobData.hubIds![i] == hubArr[j].id) {
-                hubsData?.add(hubArr[j]);
-                break;
+          if (jobData?.hubIds?.isNotEmpty == true) {
+            var hubArr = PreferenceUtils.getHubList().records;
+            for (int i = 0; i < jobData!.hubIds!.length; i++) {
+              for (int j = 0; j < hubArr!.length; j++) {
+                if (jobData.hubIds![i] == hubArr[j].id) {
+                  hubsData?.add(hubArr[j]);
+                  break;
+                }
               }
             }
           }
-        }
 
-        if (jobData?.semester?.isNotEmpty == true) {
-          for (int i = 0; i < jobData!.semester!.length; i++) {
-            SemesterData semData = SemesterData(semester: int.parse(jobData.semester![i]));
-            semData.selected = true;
+          if (jobData?.semester?.isNotEmpty == true) {
+            for (int i = 0; i < jobData!.semester!.length; i++) {
+              SemesterData semData = SemesterData(semester: int.parse(jobData.semester![i]));
+              semData.selected = true;
 
-            semesterData?.add(semData);
+              semesterData?.add(semData);
+            }
           }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
-      }
-    });
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
   }
 
   void submitData() async {
@@ -225,36 +236,44 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
       selectedSemesterData.add(semesterData![i].semester.toString());
     }
     request.semester = selectedSemesterData;
-
-    if (fromEdit && jobRecordId.isNotEmpty) {
-      var resp = await apiRepository.updateJobOpportunityApi(request.toJson(), jobRecordId);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_job_updated);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
+     try{
+      if (fromEdit && jobRecordId.isNotEmpty) {
+        var resp = await apiRepository.updateJobOpportunityApi(request.toJson(), jobRecordId);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_job_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
-        setState(() {
-          isVisible = false;
-        });
+        var resp = await apiRepository.createJobOpportunityApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_job_added);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
-    } else {
-      var resp = await apiRepository.createJobOpportunityApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_job_added);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override

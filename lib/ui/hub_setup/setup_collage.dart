@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -15,6 +16,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class SetupCollage extends StatefulWidget {
   const SetupCollage({Key? key}) : super(key: key);
@@ -37,13 +40,19 @@ class _SetupCollageState extends State<SetupCollage> {
   }
 
   Future<void> getRecords() async {
-    hubResponse = await apiRepository.getHubApi();
-    if (hubResponse.records!.isNotEmpty) {
-      PreferenceUtils.setHubList(hubResponse);
-      setState(() {
-        canViewHub = true;
-      });
+    try{
+      hubResponse = await apiRepository.getHubApi();
+      if (hubResponse.records!.isNotEmpty) {
+        PreferenceUtils.setHubList(hubResponse);
+        setState(() {
+          canViewHub = true;
+        });
+      }
+    }on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   Future<void> initialization() async {
@@ -52,26 +61,35 @@ class _SetupCollageState extends State<SetupCollage> {
     });
     var loginData = PreferenceUtils.getLoginDataEmployee();
     var query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_SETUP_COLLAGE}')";
-    var data = await apiRepository.getPermissionsApi(query);
-    if (data.records!.isNotEmpty) {
-      for (var i = 0; i < data.records!.length; i++) {
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_HUB) {
-          setState(() {
-            canAddHub = true;
-          });
+    try{
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_HUB) {
+            setState(() {
+              canAddHub = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_HUB) {
+            setState(() {
+              canUpdateHub = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_HUB) {
+            getRecords();
+          }
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_HUB) {
-          setState(() {
-            canUpdateHub = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_HUB) {
-          getRecords();
-        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    } else {
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });

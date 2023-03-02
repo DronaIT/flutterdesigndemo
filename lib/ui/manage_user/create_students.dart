@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,8 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:intl/intl.dart';
+
+import '../../api/dio_exception.dart';
 
 class CreateStudent extends StatefulWidget {
   const CreateStudent({Key? key}) : super(key: key);
@@ -83,24 +85,31 @@ class _AddStudent extends State<CreateStudent> {
     setState(() {
       isVisible = true;
     });
-    resp = await createStudentRepository.createStudentApi(list);
-    if (resp.records!.isNotEmpty && canClose) {
+    try {
+      resp = await createStudentRepository.createStudentApi(list);
+      if (resp.records!.isNotEmpty && canClose) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_students_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_students_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true);
-    } else {
-      setState(() {
-        isVisible = false;
-      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -340,16 +349,22 @@ class _AddStudent extends State<CreateStudent> {
           }
           // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
           var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
-          var checkMobile = await createStudentRepository.loginApi(query);
-          if (checkMobile.records?.isEmpty == true) {
-            Map<String, CreateStudentRequest> map = Map();
-            map["fields"] = request;
-
-            list.add(map);
+          try {
+            var checkMobile = await createStudentRepository.loginApi(query);
+            if (checkMobile.records?.isEmpty == true) {
+              Map<String, CreateStudentRequest> map = Map();
+              map["fields"] = request;
+              list.add(map);
+            }
+          } on DioError catch (e) {
+            setState(() {
+              isVisible = false;
+            });
+            final errorMessage = DioExceptions.fromDioError(e).toString();
+            Utils.showSnackBarUsingGet(errorMessage);
           }
         }
       }
-
       if (list.isNotEmpty) {
         setState(() {
           isVisible = false;

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
@@ -18,6 +19,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddSpecialization extends StatefulWidget {
   const AddSpecialization({Key? key}) : super(key: key);
@@ -49,26 +52,33 @@ class _AddSpecializationState extends State<AddSpecialization> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
-      var data = await apiRepository.getSpecializationDetailApi(query);
-      if (data.records?.isNotEmpty == true) {
-        setState(() {
-          fromEdit = true;
-        });
-
-        specializationData = data.records;
-        if (specializationData?.isNotEmpty == true) {
-          titleController.text = specializationData![0].fields!.specializationName.toString();
-          descController.text = specializationData![0].fields!.specializationDesc.toString();
-
-          var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
-          var data = await apiRepository.getSubjectsApi(query);
-          if (data.records?.isNotEmpty == true) {
-            subjectData = data.records;
+      try{
+        var data = await apiRepository.getSpecializationDetailApi(query);
+        if (data.records?.isNotEmpty == true) {
+          setState(() {
+            fromEdit = true;
+          });
+          specializationData = data.records;
+          if (specializationData?.isNotEmpty == true) {
+            titleController.text = specializationData![0].fields!.specializationName.toString();
+            descController.text = specializationData![0].fields!.specializationDesc.toString();
+            var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
+            var data = await apiRepository.getSubjectsApi(query);
+            if (data.records?.isNotEmpty == true) {
+              subjectData = data.records;
+            }
           }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
       setState(() {
         isVisible = false;
       });
@@ -211,35 +221,43 @@ class _AddSpecializationState extends State<AddSpecialization> {
       selectedSubjectData.add(subjectData![i].id.toString());
     }
     request.tBLSUBJECT = selectedSubjectData;
-
-    if (!fromEdit) {
-      var resp = await apiRepository.addSpecializationApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_specialization_added);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
+    try{
+      if (!fromEdit) {
+        var resp = await apiRepository.addSpecializationApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_specialization_added);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
-        setState(() {
-          isVisible = false;
-        });
+        var resp = await apiRepository.updateSpecializationApi(request.toJson(), specializationData![0].id.toString());
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_specialization_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
-    } else {
-      var resp = await apiRepository.updateSpecializationApi(request.toJson(), specializationData![0].id.toString());
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_specialization_updated);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 }

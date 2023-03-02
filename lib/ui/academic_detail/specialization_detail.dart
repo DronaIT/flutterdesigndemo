@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -13,6 +14,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class SpecializationDetail extends StatefulWidget {
   const SpecializationDetail({Key? key}) : super(key: key);
@@ -39,19 +42,28 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       isVisible = true;
     });
     var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
-    var data = await apiRepository.getSpecializationDetailApi(query);
-    if (data.records?.isNotEmpty == true) {
-      specializationData = data.records;
-      if (specializationData?.isNotEmpty == true) {
-        var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
-        var data = await apiRepository.getSubjectsApi(query);
-        if (data.records?.isNotEmpty == true) {
-          subjectData = data.records;
+    try{
+      var data = await apiRepository.getSpecializationDetailApi(query);
+      if (data.records?.isNotEmpty == true) {
+        specializationData = data.records;
+        if (specializationData?.isNotEmpty == true) {
+          var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
+          var data = await apiRepository.getSubjectsApi(query);
+          if (data.records?.isNotEmpty == true) {
+            subjectData = data.records;
+          }
         }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    } else {
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });

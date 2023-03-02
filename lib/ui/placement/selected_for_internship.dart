@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -14,6 +15,9 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
+import '../../utils/utils.dart';
 
 class SelectedForInternship extends StatefulWidget {
   const SelectedForInternship({Key? key}) : super(key: key);
@@ -39,10 +43,20 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
       isVisible = true;
     });
     var query = "FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_SELECTED_STUDENTS}, 0)";
-    jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
-    setState(() {
-      isVisible = false;
-    });
+    try{
+      jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
+      setState(() {
+        isVisible = false;
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
+
   }
 
   @override
@@ -221,40 +235,48 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
     });
     var loginData = PreferenceUtils.getLoginData();
     var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-    var data = await apiRepository.loginApi(query);
-    if (data.records!.isNotEmpty) {
-      await PreferenceUtils.setLoginData(data.records!.first.fields!);
-      await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+    try{
+      var data = await apiRepository.loginApi(query);
+      if (data.records!.isNotEmpty) {
+        await PreferenceUtils.setLoginData(data.records!.first.fields!);
+        await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
 
-      Map<String, dynamic> requestParams = Map();
-      if (isAcceptedOffer) {
-        var acceptedJobData = data.records!.first.fields?.placedJob ?? [];
-        acceptedJobData.add(jobId);
+        Map<String, dynamic> requestParams = Map();
+        if (isAcceptedOffer) {
+          var acceptedJobData = data.records!.first.fields?.placedJob ?? [];
+          acceptedJobData.add(jobId);
 
-        requestParams[TableNames.CLM_PLACED_JOB] = acceptedJobData;
-      } else {
-        var rejectedJobData = data.records!.first.fields?.rejectedJob ?? [];
-        rejectedJobData.add(jobId);
+          requestParams[TableNames.CLM_PLACED_JOB] = acceptedJobData;
+        } else {
+          var rejectedJobData = data.records!.first.fields?.rejectedJob ?? [];
+          rejectedJobData.add(jobId);
 
-        requestParams[TableNames.CLM_REJECTED_JOB] = rejectedJobData;
-        requestParams[TableNames.CLM_BANNED_FROM_PLACEMENT] = 1;
+          requestParams[TableNames.CLM_REJECTED_JOB] = rejectedJobData;
+          requestParams[TableNames.CLM_BANNED_FROM_PLACEMENT] = 1;
+        }
+
+        var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);
+        if (dataUpdate.fields != null) {
+          await PreferenceUtils.setLoginData(dataUpdate.fields!);
+          await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
+
+          setState(() {
+            isVisible = false;
+          });
+          Get.back(closeOverlays: true);
+          Get.back(closeOverlays: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
-
-      var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);
-      if (dataUpdate.fields != null) {
-        await PreferenceUtils.setLoginData(dataUpdate.fields!);
-        await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
-
-        setState(() {
-          isVisible = false;
-        });
-        Get.back(closeOverlays: true);
-        Get.back(closeOverlays: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

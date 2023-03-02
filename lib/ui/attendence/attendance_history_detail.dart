@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -10,6 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
+import '../../utils/utils.dart';
 
 class AttendanceHistoryDetail extends StatefulWidget {
   const AttendanceHistoryDetail({Key? key}) : super(key: key);
@@ -29,27 +33,36 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
     setState(() {
       isVisible = true;
     });
-    data = await apiRepository.studentAttendanceDetailApi(Get.arguments);
-    if (data.fields != null) {
-      setState(() {
-        isVisible = false;
-      });
+    try{
+      data = await apiRepository.studentAttendanceDetailApi(Get.arguments);
+      if (data.fields != null) {
+        setState(() {
+          isVisible = false;
+        });
 
-      if (data.fields?.studentIds != null) {
-        total_count = data.fields?.studentIds?.length ?? 0;
-        for (var i = 0; i < data.fields!.studentIds!.length; i++) {
-          if (data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![i])) {
-            present_count++;
-          } else {
-            absent_count++;
+        if (data.fields?.studentIds != null) {
+          total_count = data.fields?.studentIds?.length ?? 0;
+          for (var i = 0; i < data.fields!.studentIds!.length; i++) {
+            if (data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![i])) {
+              present_count++;
+            } else {
+              absent_count++;
+            }
           }
         }
+      } else {
+        setState(() {
+          isVisible = false;
+        });
       }
-    } else {
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override

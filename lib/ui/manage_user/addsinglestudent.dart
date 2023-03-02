@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -18,6 +19,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddSingleStudent extends StatefulWidget {
   const AddSingleStudent({Key? key}) : super(key: key);
@@ -121,74 +124,82 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
       });
       var query = "FIND('${Get.arguments}', ${TableNames.TB_USERS_PHONE}, 0)";
       var data = await apiRepository.loginApi(query);
-      if (data.records?.isNotEmpty == true) {
-        setState(() {
-          fromEdit = true;
-          if (data.records?.first.fields != null) {
-            addStudentId = data.records?.first.id;
-            nameController.text = data.records!.first.fields!.name ?? "";
-            emailController.text = data.records!.first.fields!.email ?? "";
-            phoneController.text = data.records!.first.fields!.mobileNumber ?? "";
-            cityController.text = data.records!.first.fields!.city ?? "";
-            addressController.text = data.records!.first.fields!.address ?? "";
-            pincodeController.text = data.records!.first.fields!.pin_code ?? "";
-            joingYearController.text = data.records!.first.fields!.joiningYear ?? "";
-            srnumberController.text = data.records!.first.fields!.sr_number ?? "";
-            birthdateController.text = data.records!.first.fields!.birthdate ?? "";
-            if (data.records!.first.fields!.birthdate?.isNotEmpty == true) {
-              formattedDate = data.records!.first.fields!.birthdate ?? "";
-            }
-            aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number ?? "";
-            casteController.text = data.records!.first.fields!.caste ?? "";
-            hscpercentageController.text = data.records!.first.fields!.hsc_percentage ?? "";
-            hscschoolcityController.text = data.records!.first.fields!.hsc_school_city ?? "";
-            hscschoolController.text = data.records!.first.fields!.hsc_school ?? "";
-            mothernumberController.text = data.records!.first.fields!.mother_number ?? "";
-            fathernumberController.text = data.records!.first.fields!.father_number ?? "";
-            mothernameController.text = data.records!.first.fields!.mother_name ?? "";
-            for (var i = 0; i < speResponseArray!.length; i++) {
-              if (data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId) {
-                setState(() {
-                  speResponse = speResponseArray![i];
-                  speValue = speResponseArray![i].fields!.specializationId!.toString();
-                });
-                break;
+      try {
+        if (data.records?.isNotEmpty == true) {
+          setState(() {
+            fromEdit = true;
+            if (data.records?.first.fields != null) {
+              addStudentId = data.records?.first.id;
+              nameController.text = data.records!.first.fields!.name ?? "";
+              emailController.text = data.records!.first.fields!.email ?? "";
+              phoneController.text = data.records!.first.fields!.mobileNumber ?? "";
+              cityController.text = data.records!.first.fields!.city ?? "";
+              addressController.text = data.records!.first.fields!.address ?? "";
+              pincodeController.text = data.records!.first.fields!.pin_code ?? "";
+              joingYearController.text = data.records!.first.fields!.joiningYear ?? "";
+              srnumberController.text = data.records!.first.fields!.sr_number ?? "";
+              birthdateController.text = data.records!.first.fields!.birthdate ?? "";
+              if (data.records!.first.fields!.birthdate?.isNotEmpty == true) {
+                formattedDate = data.records!.first.fields!.birthdate ?? "";
               }
-            }
-            for (var i = 0; i < hubResponseArray!.length; i++) {
-              if (data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId) {
-                setState(() {
-                  hubResponse = hubResponseArray![i];
-                  hubValue = hubResponseArray![i].fields!.hubId!.toString();
-                });
-                break;
+              aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number ?? "";
+              casteController.text = data.records!.first.fields!.caste ?? "";
+              hscpercentageController.text = data.records!.first.fields!.hsc_percentage ?? "";
+              hscschoolcityController.text = data.records!.first.fields!.hsc_school_city ?? "";
+              hscschoolController.text = data.records!.first.fields!.hsc_school ?? "";
+              mothernumberController.text = data.records!.first.fields!.mother_number ?? "";
+              fathernumberController.text = data.records!.first.fields!.father_number ?? "";
+              mothernameController.text = data.records!.first.fields!.mother_name ?? "";
+              for (var i = 0; i < speResponseArray!.length; i++) {
+                if (data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId) {
+                  setState(() {
+                    speResponse = speResponseArray![i];
+                    speValue = speResponseArray![i].fields!.specializationId!.toString();
+                  });
+                  break;
+                }
               }
-            }
+              for (var i = 0; i < hubResponseArray!.length; i++) {
+                if (data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId) {
+                  setState(() {
+                    hubResponse = hubResponseArray![i];
+                    hubValue = hubResponseArray![i].fields!.hubId!.toString();
+                  });
+                  break;
+                }
+              }
 
-            for (var i = 0; i < semesterResponseArray.length; i++) {
-              if (data.records!.first.fields!.semester == semesterResponseArray[i].toString()) {
-                setState(() {
-                  semesterValue = semesterResponseArray[i];
-                });
-                break;
+              for (var i = 0; i < semesterResponseArray.length; i++) {
+                if (data.records!.first.fields!.semester == semesterResponseArray[i].toString()) {
+                  setState(() {
+                    semesterValue = semesterResponseArray[i];
+                  });
+                  break;
+                }
+              }
+              for (var i = 0; i < divisionResponseArray.length; i++) {
+                if (data.records!.first.fields!.division == divisionResponseArray[i].toString()) {
+                  setState(() {
+                    divisionValue = divisionResponseArray[i];
+                  });
+                  break;
+                }
               }
             }
-            for (var i = 0; i < divisionResponseArray.length; i++) {
-              if (data.records!.first.fields!.division == divisionResponseArray[i].toString()) {
-                setState(() {
-                  divisionValue = divisionResponseArray[i];
-                });
-                break;
-              }
-            }
-          }
+          });
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
+        }
+        setState(() {
+          isVisible = false;
         });
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      } on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
-      setState(() {
-        isVisible = false;
-      });
     }
   }
 
@@ -751,55 +762,71 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.hscSchoolCity = hscschoolcityController.text.trim().toString();
                         response.hscPercentage = hscpercentageController.text.trim().toString();
                         response.srNumber = srnumberController.text.trim().toString();
-                        if (!fromEdit) {
-                          var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-                          var checkMobile = await addStudentRepository.loginApi(query);
-                          if (checkMobile.records?.isEmpty == true) {
-                            Map<String, CreateStudentRequest> map = Map();
-                            map["fields"] = response;
-                            list.add(map);
-                          } else {
-                            setState(() {
-                              isVisible = false;
-                            });
-                            Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
-                          }
-                          if (list.isNotEmpty) {
-                            var resp = await addStudentRepository.createStudentApi(list);
-                            if (resp.records!.isNotEmpty) {
+                        try {
+                          if (!fromEdit) {
+                            var query = "FIND('${response.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+                            var checkMobile = await addStudentRepository.loginApi(query);
+                            if (checkMobile.records?.isEmpty == true) {
+                              Map<String, CreateStudentRequest> map = Map();
+                              map["fields"] = response;
+                              list.add(map);
+                            } else {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(context, strings_name.str_student_added);
-                              await Future.delayed(const Duration(milliseconds: 2000));
-                              Get.back(closeOverlays: true);
+                              Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
+                            }
+                            if (list.isNotEmpty) {
+                              try{
+                                var resp = await addStudentRepository.createStudentApi(list);
+                                if (resp.records!.isNotEmpty) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_student_added);
+                                  await Future.delayed(const Duration(milliseconds: 2000));
+                                  Get.back(closeOverlays: true);
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                }
+                              }on DioError catch (e) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                final errorMessage = DioExceptions.fromDioError(e).toString();
+                                Utils.showSnackBarUsingGet(errorMessage);
+                              }
                             } else {
                               setState(() {
                                 isVisible = false;
                               });
                             }
                           } else {
-                            setState(() {
-                              isVisible = false;
-                            });
+                            Map<String, CreateStudentRequest> map = Map();
+                            map["fields"] = response;
+                            var updateStudent = await apiRepository.updateStudentApi(map, addStudentId);
+                            if (updateStudent != null) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_student_update);
+                              await Future.delayed(const Duration(milliseconds: 2000));
+                              Get.back(closeOverlays: true, result: true);
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              Utils.showSnackBar(context, strings_name.str_something_wrong);
+                            }
                           }
-                        } else {
-                          Map<String, CreateStudentRequest> map = Map();
-                          map["fields"] = response;
-                          var updateStudent = await apiRepository.updateStudentApi(map, addStudentId);
-                          if (updateStudent != null) {
-                            setState(() {
-                              isVisible = false;
-                            });
-                            Utils.showSnackBar(context, strings_name.str_student_update);
-                            await Future.delayed(const Duration(milliseconds: 2000));
-                            Get.back(closeOverlays: true, result: true);
-                          } else {
-                            setState(() {
-                              isVisible = false;
-                            });
-                            Utils.showSnackBar(context, strings_name.str_something_wrong);
-                          }
+                        } on DioError catch (e) {
+                          setState(() {
+                            isVisible = false;
+                          });
+                          final errorMessage = DioExceptions.fromDioError(e).toString();
+                          Utils.showSnackBarUsingGet(errorMessage);
                         }
                       }
                     },

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -15,6 +16,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
+import '../../api/dio_exception.dart';
+
 class ViewSubjects extends StatefulWidget {
   const ViewSubjects({Key? key}) : super(key: key);
 
@@ -30,12 +33,21 @@ class _ViewSubjectsState extends State<ViewSubjects> {
   BaseLoginResponse<SubjectResponse> subjectData = BaseLoginResponse();
 
   Future<void> viewSubjects() async {
-    subjectData = await apiRepository.getSubjectsApi("");
-    if (subjectData.records!.isNotEmpty) {
+    try{
+      subjectData = await apiRepository.getSubjectsApi("");
+      if (subjectData.records!.isNotEmpty) {
+        setState(() {
+          canViewSubject = true;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
-        canViewSubject = true;
+        isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   @override
@@ -58,29 +70,38 @@ class _ViewSubjectsState extends State<ViewSubjects> {
     }
 
     var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
-    var data = await apiRepository.getPermissionsApi(query);
-    if (data.records!.isNotEmpty) {
-      for (var i = 0; i < data.records!.length; i++) {
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_SUBJECT) {
-          setState(() {
-            canUpdateSubject = true;
-          });
+    try{
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_SUBJECT) {
+            setState(() {
+              canUpdateSubject = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_SUBJECT) {
+            setState(() {
+              canViewSubject = true;
+            });
+            viewSubjects();
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SUBJECT) {
+            setState(() {
+              canAddSubject = true;
+            });
+          }
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_SUBJECT) {
-          setState(() {
-            canViewSubject = true;
-          });
-          viewSubjects();
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SUBJECT) {
-          setState(() {
-            canAddSubject = true;
-          });
-        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    } else {
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance_history.dart';
@@ -13,6 +14,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../api/dio_exception.dart';
 
 class Attendance extends StatefulWidget {
   const Attendance({Key? key}) : super(key: key);
@@ -47,39 +50,48 @@ class _AttendanceState extends State<Attendance> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_ATTENDANCE}')";
     }
-
-    var data = await apiRepository.getPermissionsApi(query);
-    if (data.records!.isNotEmpty) {
-      for (var i = 0; i < data.records!.length; i++) {
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_TAKE_ATTENDANCE) {
-          setState(() {
-            canTakeAttendance = true;
-          });
+    try{
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_TAKE_ATTENDANCE) {
+            setState(() {
+              canTakeAttendance = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEWSELF_ATTENDANCE && PreferenceUtils.getIsLogin() == 1) {
+            setState(() {
+              canViewSelfAttendance = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_OTHERS_ATTENDANCE) {
+            setState(() {
+              canViewOthersAttendance = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_ACCESSIBLE_ATTENDANCE) {
+            setState(() {
+              canViewAccessibleAttendance = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_ACCESSIBLE_ATTENDANCE) {
+            setState(() {
+              canUpdateAccessibleAttendance = true;
+            });
+          }
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEWSELF_ATTENDANCE && PreferenceUtils.getIsLogin() == 1) {
-          setState(() {
-            canViewSelfAttendance = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_OTHERS_ATTENDANCE) {
-          setState(() {
-            canViewOthersAttendance = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_ACCESSIBLE_ATTENDANCE) {
-          setState(() {
-            canViewAccessibleAttendance = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_ACCESSIBLE_ATTENDANCE) {
-          setState(() {
-            canUpdateAccessibleAttendance = true;
-          });
-        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    } else {
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
     setState(() {
       isVisible = false;
     });

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
@@ -17,6 +18,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddTopic extends StatefulWidget {
   const AddTopic({Key? key}) : super(key: key);
@@ -46,19 +49,28 @@ class _AddTopicState extends State<AddTopic> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_TOPIC_ID}, 0)";
-      var data = await apiRepository.getTopicsApi(query);
-      if (data.records?.isNotEmpty == true) {
-        setState(() {
-          fromEdit = true;
-        });
+      try{
+        var data = await apiRepository.getTopicsApi(query);
+        if (data.records?.isNotEmpty == true) {
+          setState(() {
+            fromEdit = true;
+          });
 
-        topicsData = data.records;
-        if (topicsData?.isNotEmpty == true) {
-          titleController.text = topicsData![0].fields!.topicTitle.toString();
+          topicsData = data.records;
+          if (topicsData?.isNotEmpty == true) {
+            titleController.text = topicsData![0].fields!.topicTitle.toString();
+          }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
       setState(() {
         isVisible = false;
       });
@@ -113,34 +125,43 @@ class _AddTopicState extends State<AddTopic> {
     AddTopicsRequest request = AddTopicsRequest();
     request.topicTitle = titleController.text.toString();
 
-    if (!fromEdit) {
-      var resp = await apiRepository.addTopicApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_topic_added);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
+    try{
+      if (!fromEdit) {
+        var resp = await apiRepository.addTopicApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_topic_added);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
-        setState(() {
-          isVisible = false;
-        });
+        var resp = await apiRepository.updateTopicsApi(request.toJson(), topicsData![0].id.toString());
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_topic_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
-    } else {
-      var resp = await apiRepository.updateTopicsApi(request.toJson(), topicsData![0].id.toString());
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_topic_updated);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 }

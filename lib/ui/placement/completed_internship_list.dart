@@ -1,4 +1,5 @@
 
+import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -6,10 +7,12 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../models/base_api_response.dart';
 import '../../models/job_opportunity_response.dart';
+import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -39,10 +42,20 @@ class _CompletedInternListState extends State<CompletedInternList> {
       isVisible = true;
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_process_complete}',${TableNames.CLM_DISPLAY_INTERNSHIP}='2')";
-    jobpportunityData = await apiRepository.getJoboppoApi(query);
-    setState(() {
-      isVisible = false;
-    });
+   try{
+     jobpportunityData = await apiRepository.getJoboppoApi(query);
+     setState(() {
+       isVisible = false;
+     });
+   }on DioError catch (e) {
+     setState(() {
+       isVisible = false;
+     });
+     final errorMessage = DioExceptions.fromDioError(e).toString();
+     Utils.showSnackBarUsingGet(errorMessage);
+   }
+
+
   }
 
   @override

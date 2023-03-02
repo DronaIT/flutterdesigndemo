@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -14,6 +15,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
+import '../../api/dio_exception.dart';
 import '../../utils/preference.dart';
 
 class CreatePassword extends StatefulWidget {
@@ -87,49 +89,68 @@ class _CreatePasswordState extends State<CreatePassword> {
                             });
                             var query = "(${TableNames.TB_USERS_PHONE}='${Get.arguments[0]["phone"].toString()}')";
                             if (!Get.arguments[1]["isFromEmployee"]) {
-                              var data = await userRepository.registerApi(query);
-                              Map<String, String> password = {
-                                "password": passController.text.toString(),
-                              };
-                              if (data.records!.isNotEmpty) {
-                                var dataUpdate = await userRepository.createPasswordApi(password, data.records!.first.id!);
-                                if (dataUpdate != null) {
-                                  setState(() {
-                                    isVisible = false;
-                                  });
-                                  await PreferenceUtils.setIsLogin(1);
-                                  await PreferenceUtils.setLoginData(dataUpdate.fields!);
-                                  await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
-                                  Get.offAll(Home());
-                                } else {
-                                  setState(() {
-                                    isVisible = false;
-                                  });
-                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
-                                }
-                              }
-                            } else {
-                              var dataPass = await userRepository.registerEmployeeApi(query);
-                              if (dataPass.records!.isNotEmpty) {
+                              try{
+                                var data = await userRepository.registerApi(query);
                                 Map<String, String> password = {
                                   "password": passController.text.toString(),
                                 };
-                                var dataPassword = await userRepository.createPasswordEmpApi(password, dataPass.records!.first.id!);
-                                if (dataPassword != null) {
-                                  setState(() {
-                                    isVisible = false;
-                                  });
-                                  await PreferenceUtils.setIsLogin(2);
-                                  await PreferenceUtils.setLoginDataEmployee(dataPassword.fields!);
-                                  await PreferenceUtils.setLoginRecordId(dataPassword.id!);
-                                  Get.offAll(Home());
-                                } else {
-                                  setState(() {
-                                    isVisible = false;
-                                  });
-                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                if (data.records!.isNotEmpty) {
+                                  var dataUpdate = await userRepository.createPasswordApi(password, data.records!.first.id!);
+                                  if (dataUpdate != null) {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    await PreferenceUtils.setIsLogin(1);
+                                    await PreferenceUtils.setLoginData(dataUpdate.fields!);
+                                    await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
+                                    Get.offAll(Home());
+                                  } else {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                  }
                                 }
+                              }on DioError catch (e) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                final errorMessage = DioExceptions.fromDioError(e).toString();
+                                Utils.showSnackBarUsingGet(errorMessage);
                               }
+
+
+                            } else {
+                              try{
+                                var dataPass = await userRepository.registerEmployeeApi(query);
+                                if (dataPass.records!.isNotEmpty) {
+                                  Map<String, String> password = {
+                                    "password": passController.text.toString(),
+                                  };
+                                  var dataPassword = await userRepository.createPasswordEmpApi(password, dataPass.records!.first.id!);
+                                  if (dataPassword != null) {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    await PreferenceUtils.setIsLogin(2);
+                                    await PreferenceUtils.setLoginDataEmployee(dataPassword.fields!);
+                                    await PreferenceUtils.setLoginRecordId(dataPassword.id!);
+                                    Get.offAll(Home());
+                                  } else {
+                                    setState(() {
+                                      isVisible = false;
+                                    });
+                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                  }
+                                }
+                              }on DioError catch (e) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                final errorMessage = DioExceptions.fromDioError(e).toString();
+                                Utils.showSnackBarUsingGet(errorMessage);
+                              }
+
                             }
                           }
                         }),

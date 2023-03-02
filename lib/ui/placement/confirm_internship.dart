@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
@@ -10,6 +11,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../models/base_api_response.dart';
@@ -43,10 +45,19 @@ class _ConfirmInternShipState extends State<ConfirmInternShip> {
       isVisible = true;
     });
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    jobOpportunityData = await apiRepository.getJoboppoApi(query);
-    setState(() {
-      isVisible = false;
-    });
+    try{
+      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+      setState(() {
+        isVisible = false;
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
   }
 
   bool value = false;
@@ -186,34 +197,43 @@ class _ConfirmInternShipState extends State<ConfirmInternShip> {
     });
     var loginData = PreferenceUtils.getLoginData();
     var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-    var data = await apiRepository.loginApi(query);
-    if (data.records!.isNotEmpty) {
-      await PreferenceUtils.setLoginData(data.records!.first.fields!);
-      await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+    try{
+      var data = await apiRepository.loginApi(query);
+      if (data.records!.isNotEmpty) {
+        await PreferenceUtils.setLoginData(data.records!.first.fields!);
+        await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
 
-      Map<String, dynamic> requestParams = Map();
+        Map<String, dynamic> requestParams = Map();
 
-      var acceptedJobData = data.records!.first.fields?.placedJob ?? [];
-      acceptedJobData.add(jobId!);
+        var acceptedJobData = data.records!.first.fields?.placedJob ?? [];
+        acceptedJobData.add(jobId!);
 
-      requestParams[TableNames.CLM_PLACED_JOB] = acceptedJobData;
+        requestParams[TableNames.CLM_PLACED_JOB] = acceptedJobData;
 
-      var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);
-      if (dataUpdate.fields != null) {
-        await PreferenceUtils.setLoginData(dataUpdate.fields!);
-        await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
+        var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);
+        if (dataUpdate.fields != null) {
+          await PreferenceUtils.setLoginData(dataUpdate.fields!);
+          await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
 
-        setState(() {
-          isVisible = false;
-        });
-        Get.back(closeOverlays: true);
-        Get.back(closeOverlays: true);
-        Get.back(closeOverlays: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
+          setState(() {
+            isVisible = false;
+          });
+          Get.back(closeOverlays: true);
+          Get.back(closeOverlays: true);
+          Get.back(closeOverlays: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 }

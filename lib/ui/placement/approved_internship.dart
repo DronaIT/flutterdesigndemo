@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -16,6 +17,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../api/dio_exception.dart';
 
 class ApprovedInternship extends StatefulWidget {
   const ApprovedInternship({Key? key}) : super(key: key);
@@ -46,10 +49,19 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       isVisible = true;
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}')";
-    jobOpportunityData = await apiRepository.getJoboppoApi(query);
-    setState(() {
-      isVisible = false;
-    });
+    try{
+      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+      setState(() {
+        isVisible = false;
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
   }
 
   @override
@@ -291,19 +303,28 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
 
     var json = request.toJson();
     json.removeWhere((key, value) => value == null);
-
-    var resp = await apiRepository.updateJobOpportunityApi(json, jobData.id.toString());
-    if (resp.id!.isNotEmpty) {
+    try{
+      var resp = await apiRepository.updateJobOpportunityApi(json, jobData.id.toString());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_job_approved);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_job_approved);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
-    } else {
-      setState(() {
-        isVisible = false;
-      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
   }
 }

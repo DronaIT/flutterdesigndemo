@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -13,6 +14,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class SpecializationSelection extends StatefulWidget {
   const SpecializationSelection({Key? key}) : super(key: key);
@@ -40,20 +43,28 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
     setState(() {
       isVisible = true;
     });
-    var data = await apiRepository.getSpecializationApi();
-    if (data.records?.isNotEmpty == true) {
-      PreferenceUtils.setSpecializationList(data);
-      setState(() {
-        specializationData = data.records;
-        for (var i = 0; i < selectedData!.length; i++) {
-          for (var j = 0; j < specializationData!.length; j++) {
-            if (specializationData![j].fields!.specializationId == selectedData[i].fields!.specializationId) {
-              specializationData![j].fields!.selected = true;
-              break;
+    try{
+      var data = await apiRepository.getSpecializationApi();
+      if (data.records?.isNotEmpty == true) {
+        PreferenceUtils.setSpecializationList(data);
+        setState(() {
+          specializationData = data.records;
+          for (var i = 0; i < selectedData!.length; i++) {
+            for (var j = 0; j < specializationData!.length; j++) {
+              if (specializationData![j].fields!.specializationId == selectedData[i].fields!.specializationId) {
+                specializationData![j].fields!.selected = true;
+                break;
+              }
             }
           }
-        }
+        });
+      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
     setState(() {
       isVisible = false;

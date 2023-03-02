@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -15,6 +16,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class SubjectDetail extends StatefulWidget {
   const SubjectDetail({Key? key}) : super(key: key);
@@ -43,39 +46,48 @@ class _SubjectDetailState extends State<SubjectDetail> {
       isVisible = true;
     });
     var query = "FIND(${Get.arguments}, ${TableNames.CLM_SUBJECT_IDS}, 0)";
-    var data = await apiRepository.getUnitsApi(query);
-    if (data.records?.isNotEmpty == true) {
-      unitsData = data.records;
-      if (unitsData?.isNotEmpty == true) {
-        var queryData = "";
-        for (var i = 0; i < unitsData!.length; i++) {
-          if (i != 0) {
-            queryData += ",";
-          }
-          queryData += "${TableNames.CLM_UNIT_IDS}=${unitsData![i].fields!.ids}";
-        }
-        var query = "OR($queryData)";
-        var data = await apiRepository.getTopicsApi(query);
-        if (data.records?.isNotEmpty == true) {
-          topicsData = data.records;
+    try{
+      var data = await apiRepository.getUnitsApi(query);
+      if (data.records?.isNotEmpty == true) {
+        unitsData = data.records;
+        if (unitsData?.isNotEmpty == true) {
+          var queryData = "";
           for (var i = 0; i < unitsData!.length; i++) {
-            List<TopicsResponse> topics = [];
-            for (var j = 0; j < topicsData!.length; j++) {
-              if (topicsData![j].fields!.unitIdFromUnitIds != null && topicsData![j].fields!.unitIdFromUnitIds![0] == unitsData![i].fields!.unitId) {
-                topics.add(topicsData![j].fields!);
-              }
+            if (i != 0) {
+              queryData += ",";
             }
-            listData[unitsData![i].fields] = topics;
+            queryData += "${TableNames.CLM_UNIT_IDS}=${unitsData![i].fields!.ids}";
           }
-        } else {
-          for (var i = 0; i < unitsData!.length; i++) {
-            listData[unitsData![i].fields] = [];
+          var query = "OR($queryData)";
+          var data = await apiRepository.getTopicsApi(query);
+          if (data.records?.isNotEmpty == true) {
+            topicsData = data.records;
+            for (var i = 0; i < unitsData!.length; i++) {
+              List<TopicsResponse> topics = [];
+              for (var j = 0; j < topicsData!.length; j++) {
+                if (topicsData![j].fields!.unitIdFromUnitIds != null && topicsData![j].fields!.unitIdFromUnitIds![0] == unitsData![i].fields!.unitId) {
+                  topics.add(topicsData![j].fields!);
+                }
+              }
+              listData[unitsData![i].fields] = topics;
+            }
+          } else {
+            for (var i = 0; i < unitsData!.length; i++) {
+              listData[unitsData![i].fields] = [];
+            }
           }
         }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_no_units_added);
       }
-    } else {
-      Utils.showSnackBar(context, strings_name.str_no_units_added);
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });

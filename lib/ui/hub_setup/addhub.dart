@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -16,6 +17,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AddHub extends StatefulWidget {
   const AddHub({Key? key}) : super(key: key);
@@ -182,18 +185,27 @@ class _AddHubState extends State<AddHub> {
     }
     request.tBLSPECIALIZATION = selectedSpecializationData;
 
-    var resp = await apiRepository.addHubApi(request);
-    if (resp.id!.isNotEmpty) {
+    try{
+      var resp = await apiRepository.addHubApi(request);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_hub_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      Utils.showSnackBar(context, strings_name.str_hub_added);
-      await Future.delayed(const Duration(milliseconds: 2000));
-      Get.back(closeOverlays: true, result: true);
-    } else {
-      setState(() {
-        isVisible = false;
-      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 }

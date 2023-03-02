@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -17,6 +18,9 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../api/dio_exception.dart';
+import '../../utils/utils.dart';
 
 class AttendanceHistory extends StatefulWidget {
   const AttendanceHistory({Key? key}) : super(key: key);
@@ -112,18 +116,26 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
       query = "(${TableNames.TB_USERS_PHONE}='$phone')";
     }
     print(query);
-    data = await apiRepository.loginEmployeeApi(query);
-    if (data.records != null) {
+    try{
+      data = await apiRepository.loginEmployeeApi(query);
+      if (data.records != null) {
+        setState(() {
+          isVisible = false;
+        });
+        viewLectureArray?.clear();
+        lectureByDate();
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+        viewLectureArray?.clear();
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      viewLectureArray?.clear();
-      lectureByDate();
-    } else {
-      setState(() {
-        isVisible = false;
-      });
-      viewLectureArray?.clear();
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 

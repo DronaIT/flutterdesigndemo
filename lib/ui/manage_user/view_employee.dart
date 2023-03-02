@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -16,6 +17,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class ViewEmployee extends StatefulWidget {
   const ViewEmployee({Key? key}) : super(key: key);
@@ -116,17 +119,25 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                       setState(() {
                         isVisible = true;
                       });
-                      var data = await apiRepository.viewEmployeeApi(query);
-                      if (data.records!.isNotEmpty) {
+                      try{
+                        var data = await apiRepository.viewEmployeeApi(query);
+                        if (data.records!.isNotEmpty) {
+                          setState(() {
+                            isVisible = false;
+                            viewEmployee = data.records;
+                          });
+                        } else {
+                          setState(() {
+                            isVisible = false;
+                            viewEmployee = [];
+                          });
+                        }
+                      }on DioError catch (e) {
                         setState(() {
                           isVisible = false;
-                          viewEmployee = data.records;
                         });
-                      } else {
-                        setState(() {
-                          isVisible = false;
-                          viewEmployee = [];
-                        });
+                        final errorMessage = DioExceptions.fromDioError(e).toString();
+                        Utils.showSnackBarUsingGet(errorMessage);
                       }
                     }
                   },
@@ -159,19 +170,26 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                                 setState(() {
                                                   isVisible = true;
                                                 });
-
-                                                var data = await apiRepository.viewEmployeeApi(query);
-                                                if (data.records!.isNotEmpty) {
+                                                try{
+                                                  var data = await apiRepository.viewEmployeeApi(query);
+                                                  if (data.records!.isNotEmpty) {
+                                                    setState(() {
+                                                      isVisible = false;
+                                                      viewEmployee = data.records;
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      isVisible = false;
+                                                      viewEmployee = [];
+                                                    });
+                                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                                  }
+                                                } on DioError catch (e) {
                                                   setState(() {
                                                     isVisible = false;
-                                                    viewEmployee = data.records;
                                                   });
-                                                } else {
-                                                  setState(() {
-                                                    isVisible = false;
-                                                    viewEmployee = [];
-                                                  });
-                                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                                  final errorMessage = DioExceptions.fromDioError(e).toString();
+                                                  Utils.showSnackBarUsingGet(errorMessage);
                                                 }
                                               }
                                             },

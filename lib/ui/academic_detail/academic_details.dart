@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -15,6 +16,8 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class AcademicDetails extends StatefulWidget {
   const AcademicDetails({Key? key}) : super(key: key);
@@ -41,7 +44,6 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     setState(() {
       isVisible = true;
     });
-
     var roleId = "";
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
@@ -50,59 +52,78 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       roleId = loginData.roleIdFromRoleIds!.join(',');
     }
-
     var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
-    var data = await apiRepository.getPermissionsApi(query);
-    if (data.records!.isNotEmpty) {
-      for (var i = 0; i < data.records!.length; i++) {
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SPECILIZATION) {
-          setState(() {
-            canAddSpe = true;
-          });
+    try{
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SPECILIZATION) {
+            setState(() {
+              canAddSpe = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_SPECILIZATION) {
+            setState(() {
+              canEditSpe = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_SPECILIZATION) {
+            setState(() {
+              canViewSpe = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SUBJECT) {
+            setState(() {
+              canAddSubject = true;
+            });
+          }
         }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_SPECILIZATION) {
-          setState(() {
-            canEditSpe = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_SPECILIZATION) {
-          setState(() {
-            canViewSpe = true;
-          });
-        }
-        if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SUBJECT) {
-          setState(() {
-            canAddSubject = true;
-          });
-        }
+        setState(() {
+          isVisible = false;
+        });
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-    } else {
-      setState(() {
-        isVisible = false;
-      });
-      Utils.showSnackBar(context, strings_name.str_something_wrong);
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
   }
 
   Future<void> initialization() async {
     setState(() {
       isVisible = true;
     });
-    var data = await apiRepository.getSpecializationApi();
-    if (data.records!.isNotEmpty) {
+    try{
+      var data = await apiRepository.getSpecializationApi();
+      if (data.records!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        PreferenceUtils.setSpecializationList(data);
+        specializationData = data.records;
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      PreferenceUtils.setSpecializationList(data);
-      specializationData = data.records;
-    } else {
-      setState(() {
-        isVisible = false;
-      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
   }
 
   @override

@@ -1,7 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
@@ -12,11 +16,10 @@ import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class ViewStudent extends StatefulWidget {
   const ViewStudent({Key? key}) : super(key: key);
@@ -194,18 +197,26 @@ class _ViewStudentState extends State<ViewStudent> {
                         setState(() {
                           isVisible = true;
                         });
-                        var data = await apiRepository.loginApi(query);
-                        if (data.records!.isNotEmpty) {
+                        try {
+                          var data = await apiRepository.loginApi(query);
+                          if (data.records!.isNotEmpty) {
+                            setState(() {
+                              isVisible = false;
+                              viewStudent?.clear();
+                              viewStudent = data.records;
+                            });
+                          } else {
+                            setState(() {
+                              isVisible = false;
+                              viewStudent = [];
+                            });
+                          }
+                        } on DioError catch (e) {
                           setState(() {
                             isVisible = false;
-                            viewStudent?.clear();
-                            viewStudent = data.records;
                           });
-                        } else {
-                          setState(() {
-                            isVisible = false;
-                            viewStudent = [];
-                          });
+                          final errorMessage = DioExceptions.fromDioError(e).toString();
+                          Utils.showSnackBarUsingGet(errorMessage);
                         }
                       }
                     },
@@ -248,17 +259,25 @@ class _ViewStudentState extends State<ViewStudent> {
                                               setState(() {
                                                 isVisible = true;
                                               });
-                                              var data = await apiRepository.loginApi(query);
-                                              if (data.records!.isNotEmpty) {
+                                              try {
+                                                var data = await apiRepository.loginApi(query);
+                                                if (data.records!.isNotEmpty) {
+                                                  setState(() {
+                                                    isVisible = false;
+                                                    viewStudent = data.records;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    isVisible = false;
+                                                    viewStudent = [];
+                                                  });
+                                                }
+                                              } on DioError catch (e) {
                                                 setState(() {
                                                   isVisible = false;
-                                                  viewStudent = data.records;
                                                 });
-                                              } else {
-                                                setState(() {
-                                                  isVisible = false;
-                                                  viewStudent = [];
-                                                });
+                                                final errorMessage = DioExceptions.fromDioError(e).toString();
+                                                Utils.showSnackBarUsingGet(errorMessage);
                                               }
                                             }
                                           },

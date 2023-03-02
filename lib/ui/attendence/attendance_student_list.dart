@@ -1,4 +1,5 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -15,6 +16,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../api/dio_exception.dart';
 
 class AttendanceStudentList extends StatefulWidget {
   const AttendanceStudentList({Key? key}) : super(key: key);
@@ -52,37 +55,46 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     setState(() {
       isVisible = true;
     });
-    var data = await apiRepository.studentAttendanceDetailApi(lectureId);
-    if (data.fields != null) {
-      setState(() {
-        isVisible = false;
+    try{
+      var data = await apiRepository.studentAttendanceDetailApi(lectureId);
+      if (data.fields != null) {
+        setState(() {
+          isVisible = false;
 
-        formattedDate = data.fields!.lectureDate!;
-        formattedTime = data.fields!.lectureTime!;
+          formattedDate = data.fields!.lectureDate!;
+          formattedTime = data.fields!.lectureTime!;
 
-        if (data.fields?.studentIds != null) {
-          for (var i = 0; i < data.fields!.studentIds!.length; i++) {
-            var loginFieldResponse = LoginFieldsResponse();
-            loginFieldResponse.name = data.fields!.nameFromStudentIds![i];
-            loginFieldResponse.enrollmentNumber = data.fields!.enrollmentNumberFromStudentIds![i];
-            if (data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![i])) {
-              loginFieldResponse.attendanceStatus = 1;
-            } else {
-              loginFieldResponse.attendanceStatus = 0;
+          if (data.fields?.studentIds != null) {
+            for (var i = 0; i < data.fields!.studentIds!.length; i++) {
+              var loginFieldResponse = LoginFieldsResponse();
+              loginFieldResponse.name = data.fields!.nameFromStudentIds![i];
+              loginFieldResponse.enrollmentNumber = data.fields!.enrollmentNumberFromStudentIds![i];
+              if (data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![i])) {
+                loginFieldResponse.attendanceStatus = 1;
+              } else {
+                loginFieldResponse.attendanceStatus = 0;
+              }
+              var studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
+              studentData.id = data.fields?.studentIds![i];
+              studentData.fields = loginFieldResponse;
+
+              studentList.add(studentData);
             }
-            var studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
-            studentData.id = data.fields?.studentIds![i];
-            studentData.fields = loginFieldResponse;
-
-            studentList.add(studentData);
           }
-        }
-      });
-    } else {
+        });
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   void checkCurrentData() {
@@ -276,52 +288,61 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         absentIds.add(studentList[i].id!);
       }
     }
+    try{
+      if (fromEdit) {
+        AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
+        request.studentIds = studentIds;
+        request.presentIds = presentIds;
+        request.absentIds = absentIds;
+        request.lectureDate = formattedDate;
+        request.lectureTime = formattedTime;
 
-    if (fromEdit) {
-      AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
-      request.studentIds = studentIds;
-      request.presentIds = presentIds;
-      request.absentIds = absentIds;
-      request.lectureDate = formattedDate;
-      request.lectureTime = formattedTime;
+        var json = request.toJson();
+        json.removeWhere((key, value) => value == null);
 
-      var json = request.toJson();
-      json.removeWhere((key, value) => value == null);
-
-      var resp = await apiRepository.updateStudentAttendanceApi(json, lectureId);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_attendance_updated);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
+        var resp = await apiRepository.updateStudentAttendanceApi(json, lectureId);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_attendance_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
-    } else {
-      AddStudentAttendanceRequest request = Get.arguments[1]["request"];
-      request.studentIds = studentIds;
-      request.presentIds = presentIds;
-      request.absentIds = absentIds;
-      request.lectureDate = formattedDate;
-      request.lectureTime = formattedTime;
+        AddStudentAttendanceRequest request = Get.arguments[1]["request"];
+        request.studentIds = studentIds;
+        request.presentIds = presentIds;
+        request.absentIds = absentIds;
+        request.lectureDate = formattedDate;
+        request.lectureTime = formattedTime;
 
-      var resp = await apiRepository.addStudentAttendanceApi(request);
-      if (resp.id!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        Utils.showSnackBar(context, strings_name.str_attendance_recorded);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
+        var resp = await apiRepository.addStudentAttendanceApi(request);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_attendance_recorded);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
       }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
   }
 }

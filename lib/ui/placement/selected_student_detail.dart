@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
@@ -51,30 +53,38 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
       isVisible = true;
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
-    jobpportunityData = await apiRepository.getJoboppoApi(query);
-
-    for (var i = 0; i < jobpportunityData.records!.length; i++) {
-      if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.shortlistedStudents != null) {
-        for (var j = 0; j < jobpportunityData.records![i].fields!.shortlistedStudents!.length; j++) {
-          var jobModuleResponse = JobModuleResponse(
-              applied_students_email: jobpportunityData.records![i].fields!.shortlisted_students_email![j],
-              applied_students_enrollment_number: jobpportunityData.records![i].fields!.shortlisted_students_enrollment_number![j],
-              applied_students_name: jobpportunityData.records![i].fields!.shortlisted_students_name![j],
-              applied_students_number: jobpportunityData.records![i].fields!.shortlistedStudents![j]);
-          studentResponse.add(jobModuleResponse);
-        }
-      }
-    }
-    for (var j = 0; j < studentResponse.length; j++) {
-      if (jobpportunityData.records!.first.fields?.selectedStudents != null) {
-        for (var k = 0; k < jobpportunityData.records!.first.fields!.selectedStudents!.length; k++) {
-          if (studentResponse[j].applied_students_number == jobpportunityData.records!.first.fields!.selectedStudents![k]) {
-            studentResponse[j].selected = true;
-            break;
+    try{
+      jobpportunityData = await apiRepository.getJoboppoApi(query);
+      for (var i = 0; i < jobpportunityData.records!.length; i++) {
+        if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.shortlistedStudents != null) {
+          for (var j = 0; j < jobpportunityData.records![i].fields!.shortlistedStudents!.length; j++) {
+            var jobModuleResponse = JobModuleResponse(
+                applied_students_email: jobpportunityData.records![i].fields!.shortlisted_students_email![j],
+                applied_students_enrollment_number: jobpportunityData.records![i].fields!.shortlisted_students_enrollment_number![j],
+                applied_students_name: jobpportunityData.records![i].fields!.shortlisted_students_name![j],
+                applied_students_number: jobpportunityData.records![i].fields!.shortlistedStudents![j]);
+            studentResponse.add(jobModuleResponse);
           }
         }
       }
+      for (var j = 0; j < studentResponse.length; j++) {
+        if (jobpportunityData.records!.first.fields?.selectedStudents != null) {
+          for (var k = 0; k < jobpportunityData.records!.first.fields!.selectedStudents!.length; k++) {
+            if (studentResponse[j].applied_students_number == jobpportunityData.records!.first.fields!.selectedStudents![k]) {
+              studentResponse[j].selected = true;
+              break;
+            }
+          }
+        }
+      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
     setState(() {
       isVisible = false;
     });
@@ -235,19 +245,28 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
       setState(() {
         isVisible = true;
       });
-      var resp = await apiRepository.updateJobSortListedApi(json, jobpportunityData.records!.first.id!);
-      if (resp.id!.isNotEmpty) {
+      try{
+        var resp = await apiRepository.updateJobSortListedApi(json, jobpportunityData.records!.first.id!);
+        if (resp.id!.isNotEmpty) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_selected_students);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      }on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
-        Utils.showSnackBar(context, strings_name.str_selected_students);
-        await Future.delayed(const Duration(milliseconds: 2000));
-        Get.back(closeOverlays: true, result: true);
-      } else {
-        setState(() {
-          isVisible = false;
-        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
+
     } else {
       Utils.showSnackBar(context, strings_name.str_please_select_one_student);
     }

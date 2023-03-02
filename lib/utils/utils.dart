@@ -118,7 +118,7 @@ class Utils {
         message: message,
         isDismissible: true,
         backgroundColor: colors_name.errorColor,
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 3),
       ),
     );
   }

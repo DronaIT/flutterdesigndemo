@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -14,6 +15,9 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
+import '../../utils/utils.dart';
 
 class MyAttendance extends StatefulWidget {
   const MyAttendance({Key? key}) : super(key: key);
@@ -77,7 +81,16 @@ class _MyAttendanceState extends State<MyAttendance> {
     } else {
       query = "(${TableNames.TB_USERS_ENROLLMENT}='$myEnrollmentNo')";
     }
-    dataByDate = await apiRepository.loginApi(query);
+    try{
+      dataByDate = await apiRepository.loginApi(query);
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
     if (dataByDate.records?.isNotEmpty == true) {
       setState(() {
         isVisible = false;
@@ -105,21 +118,30 @@ class _MyAttendanceState extends State<MyAttendance> {
     } else {
       query = "SEARCH('${myEnrollmentNo.toUpperCase()}', ARRAYJOIN(${TableNames.CLM_ENROLLMENT_NUMBERS}), 0)";
     }
-    dataBySubject = await apiRepository.getStudentAttendanceApi(query);
-    if (dataBySubject.records?.isNotEmpty == true) {
+    try{
+      dataBySubject = await apiRepository.getStudentAttendanceApi(query);
+      if (dataBySubject.records?.isNotEmpty == true) {
+        setState(() {
+          isVisible = false;
+        });
+        studentAttendanceArray?.clear();
+        studentAttendanceBySubjectArray?.clear();
+        checkPresentAbsentDetailBySubject();
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+        studentAttendanceArray?.clear();
+        studentAttendanceBySubjectArray?.clear();
+      }
+    }on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
-      studentAttendanceArray?.clear();
-      studentAttendanceBySubjectArray?.clear();
-      checkPresentAbsentDetailBySubject();
-    } else {
-      setState(() {
-        isVisible = false;
-      });
-      studentAttendanceArray?.clear();
-      studentAttendanceBySubjectArray?.clear();
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
   }
 
   String _isDate = "";

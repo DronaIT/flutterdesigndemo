@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
@@ -12,6 +13,8 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
+import '../../api/dio_exception.dart';
 
 class HubSelection extends StatefulWidget {
   const HubSelection({Key? key}) : super(key: key);
@@ -39,20 +42,31 @@ class _HubSelectionState extends State<HubSelection> {
     setState(() {
       isVisible = true;
     });
-    var data = await apiRepository.getHubApi();
-    if (data.records?.isNotEmpty == true) {
-      setState(() {
-        hubData = data.records;
-        for (var i = 0; i < selectedData!.length; i++) {
-          for (var j = 0; j < hubData!.length; j++) {
-            if (hubData![j].fields!.hubId == selectedData[i].fields!.hubId) {
-              hubData![j].fields!.selected = true;
-              break;
+
+    try{
+      var data = await apiRepository.getHubApi();
+      if (data.records?.isNotEmpty == true) {
+        setState(() {
+          hubData = data.records;
+          for (var i = 0; i < selectedData!.length; i++) {
+            for (var j = 0; j < hubData!.length; j++) {
+              if (hubData![j].fields!.hubId == selectedData[i].fields!.hubId) {
+                hubData![j].fields!.selected = true;
+                break;
+              }
             }
           }
-        }
+        });
+      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
       });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
+
+
     setState(() {
       isVisible = false;
     });

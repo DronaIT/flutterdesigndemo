@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
@@ -45,10 +47,19 @@ class _LeaveInternShipState extends State<LeaveInternShip> {
       isVisible = true;
     });
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    jobOpportunityData = await apiRepository.getJoboppoApi(query);
-    setState(() {
-      isVisible = false;
-    });
+    try{
+      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+      setState(() {
+        isVisible = false;
+      });
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
   }
 
   @override

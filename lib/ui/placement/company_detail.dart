@@ -1,4 +1,5 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,7 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
 import '../../models/company_detail_response.dart';
@@ -68,39 +70,47 @@ class _CompanyDetailState extends State<CompanyDetail> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_COMPANY_CODE}, 0)";
-      var data = await companyDetailRepository.getCompanyDetailApi(query);
-      if (data.records?.isNotEmpty == true) {
-        setState(() {
-          fromEdit = true;
-        });
-        compnayDetailData = data.records;
-        if (compnayDetailData?.isNotEmpty == true) {
+      try{
+        var data = await companyDetailRepository.getCompanyDetailApi(query);
+        if (data.records?.isNotEmpty == true) {
           setState(() {
-            nameofCompanyController.text = compnayDetailData![0].fields!.companyName.toString();
-            companyIdnoController.text = compnayDetailData![0].fields!.companyIdentityNumber.toString();
-            nameOfContactPController.text = compnayDetailData![0].fields!.contactName.toString();
-            contactPdesiController.text = compnayDetailData![0].fields!.contactDesignation.toString();
-            contactPnumberController.text = compnayDetailData![0].fields!.contactNumber.toString();
-            contactPWanumberController.text = compnayDetailData![0].fields!.contactWhatsappNumber.toString();
-            companyLandlineController.text = compnayDetailData![0].fields!.company_landline.toString();
-            emailContactperController.text = compnayDetailData![0].fields!.contactEmail.toString();
-            companyWebsiteController.text = compnayDetailData![0].fields!.companyWebsite.toString();
-            reportBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
-            reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
-            cityController.text = compnayDetailData![0].fields!.city.toString();
-            for (var i = 0; i < typeofResponseArray!.length; i++) {
-              if (compnayDetailData![0].fields!.id == typeofResponseArray![i].fields!.id) {
-                setState(() {
-                  typeOfResponse = typeofResponseArray![i];
-                  typeofValue = typeofResponseArray![i].id!.toString();
-                });
-                break;
-              }
-            }
+            fromEdit = true;
           });
+          compnayDetailData = data.records;
+          if (compnayDetailData?.isNotEmpty == true) {
+            setState(() {
+              nameofCompanyController.text = compnayDetailData![0].fields!.companyName.toString();
+              companyIdnoController.text = compnayDetailData![0].fields!.companyIdentityNumber.toString();
+              nameOfContactPController.text = compnayDetailData![0].fields!.contactName.toString();
+              contactPdesiController.text = compnayDetailData![0].fields!.contactDesignation.toString();
+              contactPnumberController.text = compnayDetailData![0].fields!.contactNumber.toString();
+              contactPWanumberController.text = compnayDetailData![0].fields!.contactWhatsappNumber.toString();
+              companyLandlineController.text = compnayDetailData![0].fields!.company_landline.toString();
+              emailContactperController.text = compnayDetailData![0].fields!.contactEmail.toString();
+              companyWebsiteController.text = compnayDetailData![0].fields!.companyWebsite.toString();
+              reportBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
+              reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
+              cityController.text = compnayDetailData![0].fields!.city.toString();
+              for (var i = 0; i < typeofResponseArray!.length; i++) {
+                if (compnayDetailData![0].fields!.id == typeofResponseArray![i].fields!.id) {
+                  setState(() {
+                    typeOfResponse = typeofResponseArray![i];
+                    typeofValue = typeofResponseArray![i].id!.toString();
+                  });
+                  break;
+                }
+              }
+            });
+          }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      } else {
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
       }
       setState(() {
         isVisible = false;
@@ -437,32 +447,48 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           list.add(map);
 
                           if (!fromEdit) {
-                            var resp = await companyDetailRepository.createCopmanyDetailApi(list);
-                            if (resp.records!.isNotEmpty) {
+                            try {
+                              var resp = await companyDetailRepository.createCopmanyDetailApi(list);
+                              if (resp.records!.isNotEmpty) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                Utils.showSnackBar(context, strings_name.str_company_det_added);
+                                await Future.delayed(const Duration(milliseconds: 2000));
+                                Get.back(closeOverlays: true);
+                              } else {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                              }
+                            } on DioError catch (e) {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(context, strings_name.str_company_det_added);
-                              await Future.delayed(const Duration(milliseconds: 2000));
-                              Get.back(closeOverlays: true);
-                            } else {
-                              setState(() {
-                                isVisible = false;
-                              });
+                              final errorMessage = DioExceptions.fromDioError(e).toString();
+                              Utils.showSnackBarUsingGet(errorMessage);
                             }
                           } else {
-                            var resp = await companyDetailRepository.updateCompanyDetailApi(response.toJson(), compnayDetailData![0].id.toString());
-                            if (resp.id!.isNotEmpty) {
+                            try {
+                              var resp = await companyDetailRepository.updateCompanyDetailApi(response.toJson(), compnayDetailData![0].id.toString());
+                              if (resp.id!.isNotEmpty) {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                                Utils.showSnackBar(context, strings_name.str_company_updated);
+                                await Future.delayed(const Duration(milliseconds: 2000));
+                                Get.back(closeOverlays: true, result: true);
+                              } else {
+                                setState(() {
+                                  isVisible = false;
+                                });
+                              }
+                            } on DioError catch (e) {
                               setState(() {
                                 isVisible = false;
                               });
-                              Utils.showSnackBar(context, strings_name.str_company_updated);
-                              await Future.delayed(const Duration(milliseconds: 2000));
-                              Get.back(closeOverlays: true, result: true);
-                            } else {
-                              setState(() {
-                                isVisible = false;
-                              });
+                              final errorMessage = DioExceptions.fromDioError(e).toString();
+                              Utils.showSnackBarUsingGet(errorMessage);
                             }
                           }
                         }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
@@ -11,6 +12,7 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
+import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
 import '../../models/request/create_company_appr_req.dart';
@@ -178,18 +180,26 @@ class _CompanyApproachState extends State<CompanyApproach> {
                         Map<String, CreateCompanyaRequest> map = Map();
                         map["fields"] = response;
                         list.add(map);
-                        var resp = await companyaRepository.creCompanyApprochApi(list);
-                        if (resp.records!.isNotEmpty) {
+                        try {
+                          var resp = await companyaRepository.creCompanyApprochApi(list);
+                          if (resp.records!.isNotEmpty) {
+                            setState(() {
+                              isVisible = false;
+                            });
+                            Utils.showSnackBar(context, strings_name.str_company_a_added);
+                            await Future.delayed(const Duration(milliseconds: 2000));
+                            Get.back(closeOverlays: true);
+                          } else {
+                            setState(() {
+                              isVisible = false;
+                            });
+                          }
+                        } on DioError catch (e) {
                           setState(() {
                             isVisible = false;
                           });
-                          Utils.showSnackBar(context, strings_name.str_company_a_added);
-                          await Future.delayed(const Duration(milliseconds: 2000));
-                          Get.back(closeOverlays: true);
-                        } else {
-                          setState(() {
-                            isVisible = false;
-                          });
+                          final errorMessage = DioExceptions.fromDioError(e).toString();
+                          Utils.showSnackBarUsingGet(errorMessage);
                         }
                       }
                     })
