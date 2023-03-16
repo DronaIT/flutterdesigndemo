@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -150,22 +151,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   Future<void> sendOTP(String phone, bool fromEmployee) async {
-    var otp = Random().nextInt(900000) + 100000;
-    var headers = {'Content-Type': 'application/json', 'api-key': TableNames.KALEYRA_APIKEY};
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.kaleyra.io/v1/HXIN1756562868IN/messages'));
-    request.fields.addAll({'to': '+91$phone', 'type': 'OTP', 'sender': TableNames.KALEYRA_SENDER, 'template': TableNames.TEMPLATE_ID_FORGOT_PASSWORD, 'body': 'Your OTP for Drona Foundation Mobile App login is $otp. The OTP is valid for 5 minutes.'});
+    try {
+      var otp = Random().nextInt(900000) + 100000;
+      var headers = {'Content-Type': 'application/json', 'api-key': TableNames.KALEYRA_APIKEY};
+      var request = http.MultipartRequest('POST', Uri.parse('https://api.kaleyra.io/v1/HXIN1756562868IN/messages'));
+      request.fields.addAll({'to': '+91$phone', 'type': 'OTP', 'sender': TableNames.KALEYRA_SENDER, 'template': TableNames.TEMPLATE_ID_FORGOT_PASSWORD, 'body': 'Your OTP for Drona Foundation Mobile App login is $otp. The OTP is valid for 5 minutes.'});
 
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send();
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200 || response.statusCode == 202) {
-      Get.to(const OtpVerification(), arguments: [
-        {"phone": phoneController.text},
-        {"isFromEmployee": fromEmployee},
-        {"otp": otp},
-      ]);
-    } else {
-      Utils.showSnackBar(context, response.reasonPhrase.toString());
+      if (response.statusCode == 200 || response.statusCode == 202) {
+        Get.to(const OtpVerification(), arguments: [
+          {"phone": phoneController.text},
+          {"isFromEmployee": fromEmployee},
+          {"otp": otp},
+        ]);
+      } else {
+        Utils.showSnackBar(context, response.reasonPhrase.toString());
+      }
+    } on SocketException catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      Utils.showSnackBarUsingGet("No Internet");
     }
   }
 }

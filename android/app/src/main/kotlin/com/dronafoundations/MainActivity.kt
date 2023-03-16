@@ -1,4 +1,4 @@
-package com.example.flutterdesigndemo
+package com.dronafoundations
 
 import io.flutter.embedding.android.FlutterActivity
 

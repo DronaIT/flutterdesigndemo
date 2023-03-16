@@ -1,0 +1,3 @@
+pass = drona123
+alias = drona
+alias pass = drona123

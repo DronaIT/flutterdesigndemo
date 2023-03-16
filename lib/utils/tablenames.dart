@@ -47,6 +47,7 @@ class TableNames {
   static const TBL_COMPANY_DETAIL = "TBL_COMPANY";
   static const TBL_JOBS = "TBL_JOBS";
   static const TBL_PLACEMENT_ATTENDANCE = "TBL_PLACEMENT_ATTENDANCE";
+  static const TBL_APP_TRACKING = "TBL_APP_TRACKING";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";

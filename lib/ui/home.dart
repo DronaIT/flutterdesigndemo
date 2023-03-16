@@ -22,6 +22,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../api/dio_exception.dart';
 import '../utils/utils.dart';
@@ -48,7 +49,7 @@ class _HomeState extends State<Home> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       homeModule = await homeRepository.getHomeModulesApi(query);
       if (homeModule.records!.isNotEmpty) {
         setState(() {
@@ -59,15 +60,13 @@ class _HomeState extends State<Home> {
           isVisible = false;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
-
   }
 
   @override

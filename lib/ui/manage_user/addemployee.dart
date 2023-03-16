@@ -491,14 +491,12 @@ class _AddEmployeeState extends State<AddEmployee> {
         });
         Utils.showSnackBarDuration(context, strings_name.str_employee_exists, 5);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
-
   }
 }

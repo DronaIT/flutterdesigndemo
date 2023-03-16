@@ -12,6 +12,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../api/dio_exception.dart';
@@ -26,6 +27,20 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final apiRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
+  String version = "";
+
+  @override
+  void initState() {
+    initialization();
+    super.initState();
+  }
+
+  Future<void> initialization() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +161,7 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              Expanded(child: Align(alignment: Alignment.bottomCenter, child: custom_text(text: "v$version", textStyles: labelStyleAppPrimaryColor, bottomValue: 10, alignment: Alignment.bottomCenter)))
             ],
           ),
         ),

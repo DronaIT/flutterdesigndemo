@@ -79,5 +79,7 @@
     <orderEntry type="library" name="Gradle: io.flutter:arm64_v8a_debug:1.0.0-e6e6a02106c6ee1ff5d3f71e0e0c378f80759728" level="project" />
     <orderEntry type="library" name="Gradle: io.flutter:x86_64_debug:1.0.0-e6e6a02106c6ee1ff5d3f71e0e0c378f80759728" level="project" />
     <orderEntry type="library" name="Gradle: io.flutter:x86_debug:1.0.0-e6e6a02106c6ee1ff5d3f71e0e0c378f80759728" level="project" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
   </component>
 </module>

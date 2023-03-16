@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
+import 'package:flutterdesigndemo/models/app_version_response.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
@@ -520,6 +521,16 @@ class ApiRepository {
   Future<BaseApiResponseWithSerializable<AddPlacementAttendanceData>> updatePlacementInfoApi(Map<String, dynamic> request) async {
     try {
       final response = await userApi.updatePlacementInfoApi(request);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<AppVersionResponse>> getAppVersions() async {
+    try {
+      final response = await userApi.getAppVersions();
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
