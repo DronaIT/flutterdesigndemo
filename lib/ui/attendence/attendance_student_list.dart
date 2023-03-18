@@ -251,19 +251,34 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               textStyles: blackTextSemiBold14,
             ),
             custom_text(
-              text: 'Total Present Students : ${presentIds.length}',
+              text: 'Present Students : ${presentIds.length}',
               textStyles: blackTextSemiBold14,
+              bottomValue: 0,
             ),
             custom_text(
-              text: 'Total Absent Students : ${absentIds.length}',
+              text: 'Absent Students : ${absentIds.length}',
               textStyles: blackTextSemiBold14,
             ),
-            CustomButton(
-                text: strings_name.str_submit,
-                click: () {
-                  Get.back(closeOverlays: true);
-                  submitAttendance();
-                })
+            Row(
+              children: [
+                SizedBox(width: 5),
+                Expanded(child: CustomButton(
+                    text: strings_name.str_submit,
+                    click: () {
+                      Get.back(closeOverlays: true);
+                      submitAttendance();
+                    })),
+                SizedBox(width: 10,),
+                Expanded(child: CustomButton(
+                    text: strings_name.str_cancle,
+                    click: () {
+                      Get.back(closeOverlays: true);
+
+                    })),
+                SizedBox(width: 5),
+              ],
+            )
+
           ],
         ),
       ),
