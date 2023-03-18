@@ -130,6 +130,16 @@ const blackTextSemiBold14 = TextStyle(
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
+const blackTextGreen14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: colors_name.presentColor,
+);
+const blackTextRed14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: colors_name.errorColor,
+);
 const primryTextSemiBold14 = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w400,

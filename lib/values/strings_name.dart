@@ -229,9 +229,9 @@ class strings_name {
   static const String str_attendance_recorded = "Attendance recorded successfully.";
   static const String str_attendance_updated = "Attendance updated successfully.";
 
-  static const String str_select_date = "Select Date";
+  static const String str_select_date = "Lecture Date";
   static const String str_empty_select_date = "Please select Date";
-  static const String str_select_time = "Select Time";
+  static const String str_select_time = "Lecture Time";
   static const String str_empty_select_time = "Please select time";
 
   static const String str_no_specialization_assigned = "No specialization assigned.";

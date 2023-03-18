@@ -452,8 +452,10 @@ class ApiRequest {
 
   Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> studentAttendanceApi(String recordId) async {
     try {
+      //Map<String, dynamic> someMap = {"fields": "name", "direction": "desc"};
+   //"?field=name&direction=asc"
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
-      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE + "/" + recordId, options: Options(headers: header));
+      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE + "/" + recordId  , options: Options(headers: header));
       return BaseApiResponseWithSerializable<StudentAttendanceResponse>.fromJson(response.data, (response) => StudentAttendanceResponse.fromJson(response));
     } catch (e) {
       rethrow;

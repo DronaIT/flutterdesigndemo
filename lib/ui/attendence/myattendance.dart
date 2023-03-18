@@ -318,7 +318,7 @@ class _MyAttendanceState extends State<MyAttendance> {
             custom_text(text: name, alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             custom_text(text: "Total Lectures : $totalLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             custom_text(text: "Total Present Lectures : $totalPresentLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
-            custom_text(text: "Total Present : $totalPresentPercentage%", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            //custom_text(text: "Total Present : ${totalPresentPercentage.toStringAsFixed(2)}%", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             Stack(
               children: [
                 Container(

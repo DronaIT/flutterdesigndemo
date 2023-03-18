@@ -86,18 +86,26 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                 textStyles: primaryTextSemiBold16,
                 bottomValue: 1,
               ),
-              custom_text(
-                text: "Present Students : $present_count",
-                alignment: Alignment.topLeft,
-                textStyles: primryTextSemiBold14,
-                bottomValue: 1,
+              Row(
+                children: [
+                  Expanded(
+                    child: custom_text(
+                      text: 'Present Students : $present_count',
+                      textStyles: blackTextGreen14,
+                      bottomValue: 0,
+                    ),
+                  ),
+                  Expanded(
+                    child: custom_text(
+                      text: 'Absent Students : $absent_count',
+                      textStyles: blackTextRed14,
+                      bottomValue: 0,
+
+                    ),
+                  )
+                ],
               ),
-              custom_text(
-                text: "Absent Students : $absent_count",
-                alignment: Alignment.topLeft,
-                textStyles: primryTextSemiBold14,
-                bottomValue: 1,
-              ),
+
               Container(
                 margin: const EdgeInsets.all(10),
                 child: data.fields != null
@@ -140,7 +148,7 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
-                                          elevation: 7.0,
+                                          //elevation: 7.0,
                                         ),
                                         child: Text(
                                           data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![index]) ? strings_name.str_present : strings_name.str_absent,
