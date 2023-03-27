@@ -46,6 +46,7 @@ class _ViewStudentState extends State<ViewStudent> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
 
   bool canUpdateStudent = false;
+  String offset = "";
 
   @override
   void initState() {
@@ -83,6 +84,45 @@ class _ViewStudentState extends State<ViewStudent> {
           }
         }
       }
+    }
+  }
+
+  Future<void> fetchRecords() async {
+    var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue',${TableNames.CLM_SEMESTER}='${semesterValue.toString()}')";
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      var data = await apiRepository.loginApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          viewStudent?.clear();
+        }
+        viewStudent?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          fetchRecords();
+        } else {
+          setState(() {
+            viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+            isVisible = false;
+          });
+        }
+      } else {
+        setState(() {
+          isVisible = false;
+          if (offset.isEmpty) {
+            viewStudent = [];
+          }
+        });
+        offset = "";
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 
@@ -193,31 +233,7 @@ class _ViewStudentState extends State<ViewStudent> {
                       } else if (semesterValue == -1) {
                         Utils.showSnackBar(context, strings_name.str_empty_semester);
                       } else {
-                        var query = "AND(${TableNames.CLM_HUB_IDS}='${hubValue}',${TableNames.CLM_SPE_IDS}='${speValue}',${TableNames.CLM_SEMESTER}='${semesterValue.toString()}')";
-                        setState(() {
-                          isVisible = true;
-                        });
-                        try {
-                          var data = await apiRepository.loginApi(query);
-                          if (data.records!.isNotEmpty) {
-                            setState(() {
-                              isVisible = false;
-                              viewStudent?.clear();
-                              viewStudent = data.records;
-                            });
-                          } else {
-                            setState(() {
-                              isVisible = false;
-                              viewStudent = [];
-                            });
-                          }
-                        } on DioError catch (e) {
-                          setState(() {
-                            isVisible = false;
-                          });
-                          final errorMessage = DioExceptions.fromDioError(e).toString();
-                          Utils.showSnackBarUsingGet(errorMessage);
-                        }
+                        fetchRecords();
                       }
                     },
                     text: strings_name.str_submit,
@@ -231,7 +247,7 @@ class _ViewStudentState extends State<ViewStudent> {
                         textStyles: blackTextSemiBold16,
                         topValue: 0,
                       )),
-                  viewStudent!.length > 0
+                  viewStudent!.isNotEmpty
                       ? ListView.builder(
                           primary: false,
                           shrinkWrap: true,
@@ -255,7 +271,7 @@ class _ViewStudentState extends State<ViewStudent> {
                                           onTap: () async {
                                             var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index].fields?.mobileNumber);
                                             if (response) {
-                                              var query = "AND(${TableNames.CLM_HUB_IDS}='${hubValue}',${TableNames.CLM_SPE_IDS}='${speValue}')";
+                                              var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue')";
                                               setState(() {
                                                 isVisible = true;
                                               });

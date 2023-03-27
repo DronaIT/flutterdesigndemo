@@ -231,7 +231,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
-                    text: strings_name.str_email,
+                    text: strings_name.str_email_add,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                     topValue: 5,
@@ -244,7 +244,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
-                    text: strings_name.str_phone,
+                    text: strings_name.str_phone_number,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                     topValue: 5,
@@ -345,7 +345,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
-                    text: strings_name.str_address,
+                    text: strings_name.str_address_r,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                     topValue: 5,
@@ -364,7 +364,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           child: Column(
                             children: [
                               custom_text(
-                                text: strings_name.str_city,
+                                text: strings_name.str_city_r,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
                                 topValue: 5,
@@ -482,7 +482,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
-                    text: strings_name.str_select_hub,
+                    text: strings_name.str_select_hub_r,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),

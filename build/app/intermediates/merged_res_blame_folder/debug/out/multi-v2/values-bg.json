@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/pratik/StudioProjects/flutterdesigndemo/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-bg/values-bg.xml",
+            "outputFile": "/home/hb/AndroidStudioProjects/flutterdesigndemo/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-bg/values-bg.xml",
             "map": [
                 {
-                    "source": "/Users/pratik/.gradle/caches/transforms-3/e0c635df2d9a05704b5b1bd98112cf6f/transformed/core-1.6.0/res/values-bg/values-bg.xml",
+                    "source": "/home/hb/.gradle/caches/transforms-3/e0c635df2d9a05704b5b1bd98112cf6f/transformed/core-1.6.0/res/values-bg/values-bg.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

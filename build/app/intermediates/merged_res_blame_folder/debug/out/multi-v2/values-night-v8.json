@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/pratik/StudioProjects/flutterdesigndemo/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-night-v8/values-night-v8.xml",
+            "outputFile": "/home/hb/AndroidStudioProjects/flutterdesigndemo/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/Users/pratik/StudioProjects/flutterdesigndemo/android/app/src/main/res/values-night/strings.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "56",
-                        "endColumns": "53",
-                        "endOffsets": "105"
-                    },
-                    "to": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "53",
-                        "endOffsets": "104"
-                    }
-                },
-                {
-                    "source": "/Users/pratik/StudioProjects/flutterdesigndemo/android/app/src/main/res/values-night/styles.xml",
+                    "source": "/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
@@ -37,6 +20,23 @@
                         "endLines": "7,10",
                         "endColumns": "12,12",
                         "endOffsets": "412,581"
+                    }
+                },
+                {
+                    "source": "/home/hb/AndroidStudioProjects/flutterdesigndemo/android/app/src/main/res/values-night/strings.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "59",
+                        "endColumns": "53",
+                        "endOffsets": "108"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "53",
+                        "endOffsets": "104"
                     }
                 }
             ]

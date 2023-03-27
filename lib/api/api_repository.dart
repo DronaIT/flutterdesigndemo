@@ -50,9 +50,9 @@ class ApiRepository {
 
   ApiRepository(this.userApi);
 
-  Future<BaseLoginResponse<LoginFieldsResponse>> loginApi(String query) async {
+  Future<BaseLoginResponse<LoginFieldsResponse>> loginApi(String query, [String offset=""]) async {
     try {
-      final response = await userApi.loginRegisterApi(query);
+      final response = await userApi.loginRegisterApi(query, offset);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -170,9 +170,9 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi(String formula) async {
+  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi(String formula, [String offset = ""]) async {
     try {
-      final response = await userApi.getCompanyDetailApi(formula);
+      final response = await userApi.getCompanyDetailApi(formula, offset);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -458,9 +458,9 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String jobFormula) async {
+  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String jobFormula, [String offset = ""]) async {
     try {
-      final response = await userApi.getJoboppoApi(jobFormula);
+      final response = await userApi.getJoboppoApi(jobFormula, offset);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

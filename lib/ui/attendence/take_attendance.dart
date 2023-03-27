@@ -8,6 +8,7 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
@@ -259,7 +260,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             divisionValue = newValue!;
-                                            getSubjects();
+                                            // getSubjects();
                                           });
                                         },
                                         items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
@@ -451,6 +452,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       setState(() {
         isVisible = true;
       });
+      specializationValue = "";
+
       var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
       try{
         var speData = await apiRepository.getSpecializationDetailApi(query);
@@ -478,8 +481,11 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       setState(() {
         isVisible = true;
       });
-      // var query = "FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
-      var query = "AND(FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      subjectValue = "";
+      unitValue = "";
+      topicValue = "";
+
+      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       try{
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {
@@ -510,7 +516,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${subjectValue}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
+      var query = "FIND('$subjectValue', ${TableNames.CLM_SUBJECT_IDS}, 0)";
       try{
         var data = await apiRepository.getUnitsApi(query);
         setState(() {
@@ -539,7 +545,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${unitValue}', ${TableNames.CLM_UNIT_IDS}, 0)";
+      var query = "FIND('$unitValue', ${TableNames.CLM_UNIT_IDS}, 0)";
       try{
         var data = await apiRepository.getTopicsApi(query);
         setState(() {
@@ -561,6 +567,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     }
   }
 
+  String offset = "";
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
+
   Future<void> getStudents() async {
     setState(() {
       isVisible = true;
@@ -568,35 +577,52 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     var query = "AND(";
     query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
     query += ",FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0)";
-    query += ",FIND('${semesterValue}', ${TableNames.CLM_SEMESTER}, 0)";
-    query += ",FIND('${divisionValue}', ${TableNames.CLM_DIVISION}, 0)";
+    query += ",FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0)";
+    query += ",FIND('$divisionValue', ${TableNames.CLM_DIVISION}, 0)";
     query += ")";
     print(query);
     try{
-      var data = await apiRepository.loginApi(query);
+      var data = await apiRepository.loginApi(query, offset);
       if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          studentList.clear();
+        }
+        studentList.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          getStudents();
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+          studentList.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+
+          AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
+          request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
+          request.hubId = hubRecordId.split(",");
+          request.specializationId = specializationRecordId.split(",");
+          request.division = divisionValue;
+          request.subjectId = subjectRecordId.split(",");
+          request.unitId = unitRecordId.split(",");
+          request.topicId = topicRecordId.split(",");
+          Get.to(const AttendanceStudentList(), arguments: [
+            {"studentList": studentList},
+            {"request": request},
+          ])?.then((result) {
+            if (result != null && result) {
+              Get.back(closeOverlays: true);
+            }
+          });
+        }
+      } else {
         setState(() {
           isVisible = false;
-        });
-
-        AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
-        request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
-        request.hubId = hubRecordId.split(",");
-        request.specializationId = specializationRecordId.split(",");
-        request.division = divisionValue;
-        request.subjectId = subjectRecordId.split(",");
-        request.unitId = unitRecordId.split(",");
-        request.topicId = topicRecordId.split(",");
-        Get.to(const AttendanceStudentList(), arguments: [
-          {"studentList": data.records},
-          {"request": request},
-        ])?.then((result) {
-          if (result != null && result) {
-            Get.back(closeOverlays: true);
+          if (offset.isEmpty) {
+            studentList = [];
+            Utils.showSnackBar(context, strings_name.str_no_students);
           }
         });
-      } else {
-        Utils.showSnackBar(context, strings_name.str_no_students);
+        offset = "";
       }
     } on DioError catch (e) {
       setState(() {
@@ -605,8 +631,5 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-    setState(() {
-      isVisible = false;
-    });
   }
 }

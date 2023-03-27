@@ -36,7 +36,8 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
 
-  BaseLoginResponse<JobOpportunityResponse> jobOpportunityData = BaseLoginResponse();
+  List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityList = [];
+  String offset = "";
 
   @override
   void initState() {
@@ -50,10 +51,30 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}')";
     try{
-      jobOpportunityData = await apiRepository.getJoboppoApi(query);
-      setState(() {
-        isVisible = false;
-      });
+      var data = await apiRepository.getJoboppoApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          jobOpportunityList?.clear();
+        }
+        jobOpportunityList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<JobOpportunityResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          getRecords();
+        } else {
+          setState(() {
+            jobOpportunityList?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
+            isVisible = false;
+          });
+        }
+      } else {
+        setState(() {
+          isVisible = false;
+          if (offset.isEmpty) {
+            jobOpportunityList = [];
+          }
+        });
+        offset = "";
+      }
     }on DioError catch (e) {
       setState(() {
         isVisible = false;
@@ -71,11 +92,11 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_list_pending_job_opp),
       body: Stack(
         children: [
-          jobOpportunityData.records != null && jobOpportunityData.records!.isNotEmpty
+          jobOpportunityList != null && jobOpportunityList!.isNotEmpty
               ? Container(
                   margin: const EdgeInsets.all(10),
                   child: ListView.builder(
-                      itemCount: jobOpportunityData.records?.length,
+                      itemCount: jobOpportunityList?.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 5,
@@ -84,16 +105,16 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                             child: Column(
                               children: [
                                 custom_text(
-                                  text: "${jobOpportunityData.records?[index].fields!.jobTitle}",
+                                  text: "${jobOpportunityList?[index].fields!.jobTitle}",
                                   textStyles: centerTextStyle20,
                                   topValue: 0,
                                   maxLines: 2,
                                   bottomValue: 5,
                                   leftValue: 5,
                                 ),
-                                jobOpportunityData.records?[index].fields!.stipendRangeMin != null && jobOpportunityData.records?[index].fields!.stipendRangeMax != null
+                                jobOpportunityList?[index].fields!.stipendRangeMin != null && jobOpportunityList?[index].fields!.stipendRangeMax != null
                                     ? custom_text(
-                                        text: "Stipend: ${jobOpportunityData.records?[index].fields!.stipendRangeMin} - ${jobOpportunityData.records?[index].fields!.stipendRangeMax}",
+                                        text: "Stipend: ${jobOpportunityList?[index].fields!.stipendRangeMin} - ${jobOpportunityList?[index].fields!.stipendRangeMax}",
                                         textStyles: blackTextSemiBold12,
                                         topValue: 5,
                                         maxLines: 2,
@@ -101,10 +122,10 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                         leftValue: 5,
                                       )
                                     : Container(),
-                                custom_text(text: "Timings: ${jobOpportunityData.records?[index].fields!.timingStart} - ${jobOpportunityData.records?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                custom_text(text: "Vacancies: ${jobOpportunityData.records?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                custom_text(text: "Timings: ${jobOpportunityList?[index].fields!.timingStart} - ${jobOpportunityList?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                custom_text(text: "Vacancies: ${jobOpportunityList?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(
-                                  text: "Location: ${jobOpportunityData.records?[index].fields!.reportingAddress?.first} ${jobOpportunityData.records?[index].fields!.city?.first}",
+                                  text: "Location: ${jobOpportunityList?[index].fields!.reportingAddress?.first} ${jobOpportunityList?[index].fields!.city?.first}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
                                   maxLines: 2,
@@ -112,7 +133,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                   leftValue: 5,
                                 ),
                                 custom_text(
-                                  text: "Internship : ${jobOpportunityData.records?[index].fields!.internshipModes} - ${jobOpportunityData.records?[index].fields!.internshipDuration}",
+                                  text: "Internship : ${jobOpportunityList?[index].fields!.internshipModes} - ${jobOpportunityList?[index].fields!.internshipDuration}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
                                   maxLines: 2,
@@ -120,7 +141,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                   leftValue: 5,
                                 ),
                                 custom_text(
-                                  text: "Description: ${jobOpportunityData.records![index].fields!.jobDescription!}",
+                                  text: "Description: ${jobOpportunityList![index].fields!.jobDescription!}",
                                   textStyles: blackTextSemiBold12,
                                   bottomValue: 5,
                                   topValue: 5,
@@ -133,7 +154,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                   child: Visibility(
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        confirmationDialog(jobOpportunityData.records![index]);
+                                        confirmationDialog(jobOpportunityList![index]);
                                       },
                                       style: ElevatedButton.styleFrom(
                                         primary: colors_name.presentColor,
