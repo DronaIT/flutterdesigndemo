@@ -29,7 +29,8 @@ class CompletedInternList extends StatefulWidget {
 class _CompletedInternListState extends State<CompletedInternList> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
-  BaseLoginResponse<JobOpportunityResponse> jobpportunityData = BaseLoginResponse();
+  List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityList = [];
+  String offset = "";
 
   @override
   void initState() {
@@ -43,10 +44,30 @@ class _CompletedInternListState extends State<CompletedInternList> {
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_process_complete}',${TableNames.CLM_DISPLAY_INTERNSHIP}='2')";
    try{
-     jobpportunityData = await apiRepository.getJoboppoApi(query);
-     setState(() {
-       isVisible = false;
-     });
+     var data = await apiRepository.getJoboppoApi(query, offset);
+     if (data.records!.isNotEmpty) {
+       if (offset.isEmpty) {
+         jobOpportunityList?.clear();
+       }
+       jobOpportunityList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<JobOpportunityResponse>>);
+       offset = data.offset;
+       if (offset.isNotEmpty) {
+         getRecords();
+       } else {
+         setState(() {
+           jobOpportunityList?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
+           isVisible = false;
+         });
+       }
+     } else {
+       setState(() {
+         isVisible = false;
+         if (offset.isEmpty) {
+           jobOpportunityList = [];
+         }
+       });
+       offset = "";
+     }
    }on DioError catch (e) {
      setState(() {
        isVisible = false;
@@ -54,8 +75,6 @@ class _CompletedInternListState extends State<CompletedInternList> {
      final errorMessage = DioExceptions.fromDioError(e).toString();
      Utils.showSnackBarUsingGet(errorMessage);
    }
-
-
   }
 
   @override
@@ -65,15 +84,15 @@ class _CompletedInternListState extends State<CompletedInternList> {
           appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_create_company),
           body: Stack(
             children: [
-              jobpportunityData.records != null && jobpportunityData.records!.length > 0
+              jobOpportunityList != null && jobOpportunityList!.length > 0
                   ? Container(
                 margin: const EdgeInsets.all(10),
                 child: ListView.builder(
-                    itemCount: jobpportunityData.records?.length,
+                    itemCount: jobOpportunityList?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
-                          Get.to(() => const CompletedStudentDetail(), arguments: jobpportunityData.records?[index].fields!.jobCode);
+                          Get.to(() => const CompletedStudentDetail(), arguments: jobOpportunityList?[index].fields!.jobCode);
                         },
                         child: Card(
                           elevation: 5,
@@ -82,15 +101,15 @@ class _CompletedInternListState extends State<CompletedInternList> {
                             child: Column(
                               children: [
                                 custom_text(
-                                  text: "${jobpportunityData.records?[index].fields!.companyName?.first}",
+                                  text: "${jobOpportunityList?[index].fields!.companyName?.first}",
                                   textStyles: centerTextStyle16,
                                   topValue: 0,
                                   maxLines: 2,
                                   bottomValue: 5,
                                   leftValue: 5,
                                 ),
-                                custom_text(text: "${strings_name.str_job_title_} ${jobpportunityData.records?[index].fields!.jobTitle}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                custom_text(text: "${strings_name.str_city}: ${jobpportunityData.records?[index].fields!.city?.first}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                custom_text(text: "${strings_name.str_job_title_} ${jobOpportunityList?[index].fields!.jobTitle}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                custom_text(text: "${strings_name.str_city}: ${jobOpportunityList?[index].fields!.city?.first}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
                               ],
                             ),
                           ),

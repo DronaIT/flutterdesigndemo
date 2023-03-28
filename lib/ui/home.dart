@@ -165,7 +165,10 @@ class _HomeState extends State<Home> {
                                       child: Column(
                                         children: [
                                           Expanded(
-                                            child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
+                                            ),
                                           ),
                                           custom_text(
                                             text: homeModule.records![index].fields!.moduleTitle.toString(),

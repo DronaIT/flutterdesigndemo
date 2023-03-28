@@ -80,6 +80,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
 
               studentList.add(studentData);
             }
+            studentList.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
           }
         });
       } else {

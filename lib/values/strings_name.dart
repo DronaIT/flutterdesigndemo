@@ -53,11 +53,16 @@ class strings_name {
   static const String str_view_employee = "View employee";
   static const String str_update_employee = "Update employee";
 
-  static const String str_employee_name = "Employee name";
+  static const String str_employee_name = "Employee name*";
+  static const String str_phone_number = "Phone number*";
+  static const String str_email_add = "Email*";
+  static const String str_address_r = "Address*";
+  static const String str_city_r = "City*";
   static const String str_city = "City";
-  static const String str_select_gender = "Select gender";
+  static const String str_select_gender = "Select gender*";
 
-  static const String str_select_role = "Select role";
+  static const String str_select_role = "Select role*";
+  static const String str_select_hub_r = "Select hub*";
   static const String str_select_hub = "Select hub";
   static const String str_select_accessible_hub = "Select accessible hubs";
 
@@ -106,7 +111,7 @@ class strings_name {
 
   static const String str_add_multiple_student = "Add multiple student";
   static const String str_add_single_student = "Add single student";
-  static const String str_student_name = "Student name";
+  static const String str_student_name = "Student name*";
   static const String str_address = "Address";
 
   static const String str_joining_year = "Joining year";
@@ -250,7 +255,7 @@ class strings_name {
 
   static const String str_mother_number = "Mother number";
   static const String str_father_number = "Father number";
-  static const String str_pincode = "Pincode";
+  static const String str_pincode = "Pincode*";
 
   static const String str_empty_pincode = "Please enter pin code";
   static const String str_empty_brithdate = "Please enter birthdate";

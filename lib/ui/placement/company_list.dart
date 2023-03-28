@@ -29,9 +29,11 @@ class GetCompanyDetail extends StatefulWidget {
 class _GetCompanyDetailState extends State<GetCompanyDetail> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
-  BaseLoginResponse<CompanyDetailResponse> companyDetailResponse = BaseLoginResponse();
+  List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? companyList = [];
   var update = false;
   bool createJobsAlerts = false, viewJobAlerts = false, updateJobAlerts = false;
+
+  String offset = "";
 
   @override
   void initState() {
@@ -46,11 +48,29 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       isVisible = true;
     });
     try{
-      companyDetailResponse = await apiRepository.getCompanyDetailApi("");
-      if (companyDetailResponse.records!.isNotEmpty) {
+      var data = await apiRepository.getCompanyDetailApi("", offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          companyList?.clear();
+        }
+        companyList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyDetailResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          getRecords();
+        } else {
+          setState(() {
+            companyList?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
+            isVisible = false;
+          });
+        }
+      } else {
         setState(() {
           isVisible = false;
+          if (offset.isEmpty) {
+            companyList = [];
+          }
         });
+        offset = "";
       }
     }on DioError catch (e) {
       setState(() {
@@ -119,11 +139,11 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_create_company),
       body: Stack(
         children: [
-          companyDetailResponse.records != null && companyDetailResponse.records!.isNotEmpty
+          companyList != null && companyList!.isNotEmpty
               ? Container(
                   margin: const EdgeInsets.all(10),
                   child: ListView.builder(
-                      itemCount: companyDetailResponse.records?.length,
+                      itemCount: companyList?.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                             elevation: 5,
@@ -134,9 +154,9 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                     Flexible(
                                       child: Column(
                                         children: [
-                                          custom_text(text: "${companyDetailResponse.records?[index].fields?.companyName}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
-                                          custom_text(text: "Name: ${companyDetailResponse.records?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
-                                          custom_text(text: "Contact no.: ${companyDetailResponse.records?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                          custom_text(text: "${companyList?[index].fields?.companyName?.trim()}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
+                                          custom_text(text: "Name: ${companyList?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                          custom_text(text: "Contact no.: ${companyList?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
                                         ],
                                       ),
                                     ),
@@ -144,7 +164,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                       visible: update,
                                       child: GestureDetector(
                                           onTap: () {
-                                            Get.to(const CompanyDetail(), arguments: companyDetailResponse.records?[index].fields?.company_code)?.then((result) {
+                                            Get.to(const CompanyDetail(), arguments: companyList?[index].fields?.company_code)?.then((result) {
                                               if (result != null && result) {
                                                 getRecords();
                                               }
@@ -163,7 +183,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           Get.to(() => const JobOpportunityForm(), arguments: [
-                                            {"company_id": companyDetailResponse.records?[index].id},
+                                            {"company_id": companyList?[index].id},
                                             {"job_code": ""},
                                           ]);
                                         },
@@ -189,8 +209,8 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                                         onPressed: () {
                                           Get.to(() => const JobOpportunityList(), arguments: [
                                             {"updateJobOppList": updateJobAlerts},
-                                            {"companyId": companyDetailResponse.records?[index].fields?.id},
-                                            {"companyName": companyDetailResponse.records?[index].fields?.companyName}
+                                            {"companyId": companyList?[index].fields?.id},
+                                            {"companyName": companyList?[index].fields?.companyName}
                                           ]);
                                         },
                                         style: ElevatedButton.styleFrom(

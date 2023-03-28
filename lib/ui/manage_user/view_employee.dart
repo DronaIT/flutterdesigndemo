@@ -84,7 +84,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
               children: [
                 SizedBox(height: 10.h),
                 custom_text(
-                  text: strings_name.str_select_hub,
+                  text: strings_name.str_select_hub_r,
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -122,9 +122,10 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                       try{
                         var data = await apiRepository.viewEmployeeApi(query);
                         if (data.records!.isNotEmpty) {
+                          viewEmployee = data.records;
                           setState(() {
                             isVisible = false;
-                            viewEmployee = data.records;
+                            viewEmployee?.sort((a, b) => a.fields!.employeeName!.trim().compareTo(b.fields!.employeeName!.trim()));
                           });
                         } else {
                           setState(() {

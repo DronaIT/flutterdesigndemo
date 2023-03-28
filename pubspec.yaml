@@ -65,7 +65,7 @@ dependencies:
   http: ^0.13.5
   webview_flutter: ^4.0.5
   package_info_plus: ^3.0.3
-  store_redirect: ^2.0.1
+  store_redirect:
 
 dev_dependencies:
   change_app_package_name: ^1.1.0

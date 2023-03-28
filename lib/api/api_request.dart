@@ -50,9 +50,9 @@ class ApiRequest {
 
   ApiRequest({required this.dioClient});
 
-  Future<BaseLoginResponse<LoginFieldsResponse>> loginRegisterApi(String loginFormula) async {
+  Future<BaseLoginResponse<LoginFieldsResponse>> loginRegisterApi(String loginFormula, [String offset = ""]) async {
     try {
-      Map<String, String> someMap = {"filterByFormula": loginFormula};
+      Map<String, String> someMap = {"filterByFormula": loginFormula, if (offset.isNotEmpty) "offset": offset};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.get(TableNames.TB_STUDENT, queryParameters: someMap, options: Options(headers: header));
@@ -183,10 +183,11 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi(String updateFormula) async {
+  Future<BaseLoginResponse<CompanyDetailResponse>> getCompanyDetailApi(String updateFormula, [String offset = ""]) async {
     try {
-      Map<String, dynamic> someMap = {"filterByFormula": updateFormula};
+      Map<String, String> someMap = {"filterByFormula": updateFormula, if (offset.isNotEmpty) "offset": offset};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
       final Response response = await dioClient.get(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header), queryParameters: someMap);
       return BaseLoginResponse<CompanyDetailResponse>.fromJson(response.data, (response) => CompanyDetailResponse.fromJson(response));
     } catch (e) {
@@ -453,9 +454,9 @@ class ApiRequest {
   Future<BaseApiResponseWithSerializable<StudentAttendanceResponse>> studentAttendanceApi(String recordId) async {
     try {
       //Map<String, dynamic> someMap = {"fields": "name", "direction": "desc"};
-   //"?field=name&direction=asc"
+      //"?field=name&direction=asc"
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
-      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE + "/" + recordId  , options: Options(headers: header));
+      final Response response = await dioClient.get(TableNames.TBL_STUDENT_ATTENDANCE + "/" + recordId, options: Options(headers: header));
       return BaseApiResponseWithSerializable<StudentAttendanceResponse>.fromJson(response.data, (response) => StudentAttendanceResponse.fromJson(response));
     } catch (e) {
       rethrow;
@@ -497,10 +498,11 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String JoboppoFormula) async {
+  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String JoboppoFormula, [String offset = ""]) async {
     try {
-      Map<String, String> someMap = {"filterByFormula": JoboppoFormula};
+      Map<String, String> someMap = {"filterByFormula": JoboppoFormula, if (offset.isNotEmpty) "offset": offset};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
       final Response response = await dioClient.get(TableNames.TBL_JOBS, queryParameters: someMap, options: Options(headers: header));
       return BaseLoginResponse<JobOpportunityResponse>.fromJson(response.data, (response) => JobOpportunityResponse.fromJson(response));
     } catch (e) {
