@@ -230,9 +230,7 @@ class StartState extends State<SplashScreen> {
               ),
               onPressed: () {
                 // Navigator.pop(context);
-                StoreRedirect.redirect(androidAppId: "com.dronafoundations", iOSAppId: "com.dronafoundations");
-              },
-            )
+                StoreRedirect.redirect(androidAppId: "com.dronafoundations", iOSAppId: "com.dronafoundation");},)
           ],
         );
       },
