@@ -318,7 +318,9 @@ class _MyAttendanceState extends State<MyAttendance> {
             custom_text(text: name, alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             custom_text(text: "Total Lectures : $totalLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             custom_text(text: "Total Present Lectures : $totalPresentLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
-            //custom_text(text: "Total Present : ${totalPresentPercentage.toStringAsFixed(2)}%", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            Visibility(
+            visible: PreferenceUtils.getIsLogin() == 2,
+              child:  custom_text(text: "Total Present : ${totalPresentPercentage.toStringAsFixed(2)}%", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),),
             Stack(
               children: [
                 Container(
@@ -406,12 +408,15 @@ class _MyAttendanceState extends State<MyAttendance> {
                                       textStyles: blackTextSemiBold12,
                                       bottomValue: 0,
                                     ),
-                                    custom_text(
-                                      text: "Present : ${(studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures}%",
-                                      alignment: Alignment.topLeft,
+                                    Visibility(
+                                      visible: PreferenceUtils.getIsLogin() == 2,
+                                      child:  custom_text(
+                                      text: "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%", alignment: Alignment.topLeft,
                                       textStyles: blackTextSemiBold12,
                                       bottomValue: 10,
-                                    ),
+                                    ),),
+                                    SizedBox(height: 5,)
+
                                   ],
                                 ));
                           })

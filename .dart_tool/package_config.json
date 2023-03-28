@@ -3,661 +3,661 @@
   "packages": [
     {
       "name": "another_flushbar",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/another_flushbar-1.12.29",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/another_flushbar-1.12.29",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "archive",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/archive-3.3.6",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/archive-3.3.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "args",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/args-2.4.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/args-2.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "async",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/async-2.10.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/async-2.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "boolean_selector",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "cached_network_image",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/cached_network_image-3.2.3",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/cached_network_image-3.2.3",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "cached_network_image_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/cached_network_image_platform_interface-2.0.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/cached_network_image_platform_interface-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "cached_network_image_web",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/cached_network_image_web-1.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/cached_network_image_web-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "change_app_package_name",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/change_app_package_name-1.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/change_app_package_name-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "characters",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/characters-1.2.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/characters-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "clock",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/clock-1.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/clock-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "cloudinary_public",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/cloudinary_public-0.20.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/cloudinary_public-0.20.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "collection",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/collection-1.17.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "convert",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/convert-3.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/convert-3.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "crypto",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/crypto-3.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/crypto-3.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "cupertino_icons",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "custom_radio_grouped_button",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/custom_radio_grouped_button-2.1.2+2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/custom_radio_grouped_button-2.1.2+2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "dart_airtable",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/dart_airtable-1.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/dart_airtable-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "dio",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/dio-4.0.6",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/dio-4.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "equatable",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/equatable-2.0.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/equatable-2.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "excel",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/excel-2.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/excel-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "fake_async",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "ffi",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/ffi-2.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/ffi-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "file",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/file-6.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/file-6.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "file_picker",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/file_picker-5.2.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/file_picker-5.2.5",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter",
-      "rootUri": "file:///home/hb/snap/flutter/common/flutter/packages/flutter",
+      "rootUri": "file:///Users/pratik/Downloads/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_blurhash",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_blurhash-0.7.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_blurhash-0.7.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "flutter_cache_manager",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.3.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter_linkify",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_linkify-5.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_linkify-5.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_lints-2.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_lints-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_plugin_android_lifecycle",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.8",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.8",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter_screenutil",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_screenutil-5.6.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_screenutil-5.6.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter_svg",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/flutter_svg-2.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/flutter_svg-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///home/hb/snap/flutter/common/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/pratik/Downloads/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///home/hb/snap/flutter/common/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/pratik/Downloads/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "get",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/get-4.6.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/get-4.6.5",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "get_it",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/get_it-7.2.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/get_it-7.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "http",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/http-0.13.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/http-0.13.5",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "http_parser",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "intl",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/intl-0.18.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/intl-0.18.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "js",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/js-0.6.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/js-0.6.5",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "json_annotation",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/json_annotation-3.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/json_annotation-3.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     },
     {
       "name": "linkify",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/linkify-4.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/linkify-4.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "lints",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/lints-2.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/lints-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "logger",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/logger-1.2.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/logger-1.2.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "lottie",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/lottie-2.2.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/lottie-2.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "matcher",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/matcher-0.12.13",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/matcher-0.12.13",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.13"
     },
     {
       "name": "meta",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/meta-1.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "octo_image",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/octo_image-1.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/octo_image-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "open_filex",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/open_filex-4.3.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/open_filex-4.3.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "package_info_plus",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/package_info_plus-3.0.3",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/package_info_plus-3.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "package_info_plus_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-2.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path-1.8.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path-1.8.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_parsing",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_parsing-1.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_parsing-1.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_provider",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_provider-2.0.13",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_provider-2.0.13",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_provider_android-2.0.23",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_provider_android-2.0.23",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "path_provider_foundation",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_provider_foundation-2.1.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_provider_foundation-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_provider_linux",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_provider_linux-2.1.9",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_provider_linux-2.1.9",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_provider_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.0.6",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_provider_windows",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "pedantic",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/pedantic-1.11.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/pedantic-1.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/petitparser-5.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/petitparser-5.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "photo_view",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/photo_view-0.14.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/photo_view-0.14.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "pin_code_fields",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/pin_code_fields-7.4.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/pin_code_fields-7.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "platform",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/platform-3.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/platform-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "pointycastle",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/pointycastle-3.6.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/pointycastle-3.6.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "pretty_dio_logger",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/pretty_dio_logger-1.2.0-beta-1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/pretty_dio_logger-1.2.0-beta-1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "process",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/process-4.2.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/process-4.2.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "rxdart",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "shared_preferences",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences-2.0.18",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences-2.0.18",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "shared_preferences_android",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences_android-2.0.16",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences_android-2.0.16",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "shared_preferences_foundation",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "shared_preferences_linux",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "shared_preferences_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "shared_preferences_web",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences_web-2.0.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences_web-2.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "shared_preferences_windows",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///home/hb/snap/flutter/common/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/pratik/Downloads/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/source_span-1.9.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/source_span-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "sqflite",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/sqflite-2.2.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/sqflite-2.2.5",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/sqflite_common-2.4.2+2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/sqflite_common-2.4.2+2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "store_redirect",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/store_redirect-2.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/store_redirect-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/string_scanner-1.2.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/string_scanner-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/synchronized-3.0.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/synchronized-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/test_api-0.4.16",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/test_api-0.4.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/typed_data-1.3.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/typed_data-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "url_launcher",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher-6.1.10",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher-6.1.10",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "url_launcher_android",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_android-6.0.24",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_android-6.0.24",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "url_launcher_ios",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_ios-6.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_ios-6.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "url_launcher_linux",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_linux-3.0.3",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_linux-3.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "url_launcher_macos",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_macos-3.0.3",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_macos-3.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "url_launcher_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.1.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "url_launcher_web",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_web-2.0.15",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_web-2.0.15",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "url_launcher_windows",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/url_launcher_windows-3.0.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/url_launcher_windows-3.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "uuid",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/uuid-3.0.7",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/uuid-3.0.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "vector_graphics",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/vector_graphics-1.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/vector_graphics-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "vector_graphics_codec",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "vector_graphics_compiler",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "webview_flutter",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/webview_flutter-4.0.5",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/webview_flutter-4.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "webview_flutter_android",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/webview_flutter_android-3.3.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/webview_flutter_android-3.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "webview_flutter_platform_interface",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/webview_flutter_platform_interface-2.0.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/webview_flutter_platform_interface-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "webview_flutter_wkwebview",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.1.1",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "win32",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/win32-3.1.3",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/win32-3.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "xdg_directories",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/xdg_directories-1.0.0",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/xdg_directories-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "xml",
-      "rootUri": "file:///home/hb/.pub-cache/hosted/pub.dev/xml-6.2.2",
+      "rootUri": "file:///Users/pratik/.pub-cache/hosted/pub.dev/xml-6.2.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -668,7 +668,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-03-27T20:44:50.281149Z",
+  "generated": "2023-03-28T17:14:02.464048Z",
   "generator": "pub",
-  "generatorVersion": "2.19.0-467.0.dev"
+  "generatorVersion": "2.19.4"
 }
