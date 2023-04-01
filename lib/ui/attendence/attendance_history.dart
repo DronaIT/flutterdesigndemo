@@ -311,7 +311,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                                             Get.to(const AttendanceStudentList(), arguments: [
                                               {"lectureId": viewLectureArray![index].lecture_id},
                                             ])?.then((result) {
-                                              if (result) {
+                                              if (result != null && result) {
                                                 viewEmpLectures();
                                               }
                                             });

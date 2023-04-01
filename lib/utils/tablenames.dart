@@ -31,6 +31,9 @@ class TableNames {
   static const DIVISION_C = "Class C";
   static const DIVISION_D = "Class D";
 
+  static const ONE_HOUR = "1 Hour";
+  static const TWO_HOUR = "2 Hour";
+
   static const TB_STUDENT = "TBL_STUDENT";
   static const TBL_MODULE = "TBL_MODULE";
   static const TBL_ROLE = "TBL_ROLE";

@@ -52,6 +52,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   List<String> divisionResponseArray = <String>[TableNames.DIVISION_A, TableNames.DIVISION_B, TableNames.DIVISION_C, TableNames.DIVISION_D];
   String divisionValue = "";
 
+  List<String> lectureHourResponseArray = <String>[TableNames.ONE_HOUR, TableNames.TWO_HOUR];
+  String lectureValue = "";
+
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectResponseArray = [];
   BaseApiResponseWithSerializable<SubjectResponse>? subjectResponse;
   String subjectValue = "";
@@ -411,6 +414,48 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             ],
                           )
                         : Container(),
+                    SizedBox(height: 10.h),
+                    Visibility(
+                      visible: topicValue.isNotEmpty,
+                      child: Column(
+                        children: [
+                          custom_text(
+                            text: strings_name.str_duration,
+                            alignment: Alignment.topLeft,
+                            textStyles: blackTextSemiBold16,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                  width: viewWidth,
+                                  child: DropdownButtonFormField<String>(
+                                    elevation: 16,
+                                    style: blackText16,
+                                    focusColor: Colors.white,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        lectureValue = newValue!;
+
+                                      });
+                                    },
+                                    items: lectureHourResponseArray.map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 20.h),
                     CustomButton(
                       text: strings_name.str_get_students,
@@ -429,11 +474,14 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                           Utils.showSnackBar(context, strings_name.str_empty_unit);
                         } else if (topicValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_topic);
+                        }else if (lectureValue.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_lduration);
                         } else {
                           getStudents();
                         }
                       },
-                    )
+                    ),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ],
@@ -455,7 +503,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       specializationValue = "";
 
       var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
-      try{
+      try {
         var speData = await apiRepository.getSpecializationDetailApi(query);
         setState(() {
           specializationResponse = null;
@@ -465,14 +513,13 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         if (speData.records?.isEmpty == true) {
           Utils.showSnackBar(context, strings_name.str_no_specialization_assigned);
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
-
     }
   }
 
@@ -486,7 +533,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       topicValue = "";
 
       var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
-      try{
+      try {
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {
           subjectResponse = null;
@@ -500,14 +547,13 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         if (data.records?.isEmpty == true) {
           Utils.showSnackBar(context, strings_name.str_no_subject_assigned);
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
-
     }
   }
 
@@ -517,7 +563,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         isVisible = true;
       });
       var query = "FIND('$subjectValue', ${TableNames.CLM_SUBJECT_IDS}, 0)";
-      try{
+      try {
         var data = await apiRepository.getUnitsApi(query);
         setState(() {
           unitResponse = null;
@@ -529,14 +575,13 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         if (data.records?.isEmpty == true) {
           Utils.showSnackBar(context, strings_name.str_no_unit_assigned);
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
-
     }
   }
 
@@ -546,7 +591,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         isVisible = true;
       });
       var query = "FIND('$unitValue', ${TableNames.CLM_UNIT_IDS}, 0)";
-      try{
+      try {
         var data = await apiRepository.getTopicsApi(query);
         setState(() {
           topicResponse = null;
@@ -556,20 +601,18 @@ class _TakeAttendanceState extends State<TakeAttendance> {
         if (data.records?.isEmpty == true) {
           Utils.showSnackBar(context, strings_name.str_no_topic_assigned);
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
-
     }
   }
 
   String offset = "";
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
-
   Future<void> getStudents() async {
     setState(() {
       isVisible = true;
@@ -581,7 +624,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     query += ",FIND('$divisionValue', ${TableNames.CLM_DIVISION}, 0)";
     query += ")";
     print(query);
-    try{
+    try {
       var data = await apiRepository.loginApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
@@ -605,9 +648,11 @@ class _TakeAttendanceState extends State<TakeAttendance> {
           request.subjectId = subjectRecordId.split(",");
           request.unitId = unitRecordId.split(",");
           request.topicId = topicRecordId.split(",");
+          request.lecture_duration= lectureValue;
           Get.to(const AttendanceStudentList(), arguments: [
             {"studentList": studentList},
             {"request": request},
+
           ])?.then((result) {
             if (result != null && result) {
               Get.back(closeOverlays: true);

@@ -49,6 +49,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     if (Get.arguments[0]["studentList"] != null) {
       test = Get.arguments[0]["studentList"];
       studentList = Get.arguments[0]["studentList"];
+
     } else if (Get.arguments[0]["lectureId"] != null) {
       lectureId = Get.arguments[0]["lectureId"];
       fromEdit = true;
