@@ -48,6 +48,7 @@ class TableNames {
   static const TBL_JOBS = "TBL_JOBS";
   static const TBL_PLACEMENT_ATTENDANCE = "TBL_PLACEMENT_ATTENDANCE";
   static const TBL_APP_TRACKING = "TBL_APP_TRACKING";
+  static const TBL_APP_DATA = "TBL_APP_DATA";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -153,4 +154,5 @@ class TableNames {
   static const EXCEL_COL_MOTHER_NAME = "mother_name";
   static const EXCEL_COL_MOTHER_NUMBER = "mother_number";
   static const EXCEL_COL_FATHER_NUMBER = "father_number";
+  static const APPDATA_TITLE= "Student_upload_formate";
 }

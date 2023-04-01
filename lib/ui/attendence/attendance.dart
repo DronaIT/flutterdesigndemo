@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance_history.dart';
 import 'package:flutterdesigndemo/ui/attendence/myattendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/take_attendance.dart';
+import 'package:flutterdesigndemo/ui/filter_screen.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -186,7 +187,7 @@ class _AttendanceState extends State<Attendance> {
                       ),
                     ),
                     onTap: () {
-                      // Get.to(() => const MyAttendance());
+                      Get.to(() => const Filter());
                     },
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
+import 'package:flutterdesigndemo/models/App_data_response.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
@@ -586,6 +587,18 @@ class ApiRequest {
 
       final Response response = await dioClient.get(TableNames.TBL_APP_TRACKING, options: Options(headers: header));
       return BaseLoginResponse<AppVersionResponse>.fromJson(response.data, (response) => AppVersionResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  Future<BaseLoginResponse<App_data_response>> getAppData() async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_APP_DATA, options: Options(headers: header));
+      return BaseLoginResponse<App_data_response>.fromJson(response.data, (response) => App_data_response.fromJson(response));
     } catch (e) {
       rethrow;
     }

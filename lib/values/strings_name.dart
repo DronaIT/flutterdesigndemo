@@ -445,4 +445,6 @@ class strings_name {
   static const String str_sure_want_delete = "Are you sure want to DELETE ACCOUNT?";
   static const String str_otp_expired = "OTP expired, please try again.";
   static const String str_filter = "Filters";
+  static const String str_select_date_range = "Select date range:";
+  static const String str_empty_date_range = "Please select date range";
 }

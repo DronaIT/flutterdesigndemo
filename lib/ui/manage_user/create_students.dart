@@ -24,6 +24,7 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/dio_exception.dart';
 
@@ -48,6 +49,7 @@ class _AddStudent extends State<CreateStudent> {
   @override
   void initState() {
     super.initState();
+
     hubResponseArray = PreferenceUtils.getHubList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -60,8 +62,7 @@ class _AddStudent extends State<CreateStudent> {
               isAccessible = true;
               break;
             }
-            if (loginData.hubIdFromHubIds?.first ==
-                hubResponseArray![i].fields?.hubId) {
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
               isAccessible = true;
               break;
             }
@@ -73,8 +74,7 @@ class _AddStudent extends State<CreateStudent> {
         }
       } else {
         for (var i = 0; i < hubResponseArray!.length; i++) {
-          if (loginData.hubIdFromHubIds?.first !=
-              hubResponseArray![i].fields?.hubId) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
             hubResponseArray?.removeAt(i);
             i--;
           }
@@ -83,8 +83,33 @@ class _AddStudent extends State<CreateStudent> {
     }
   }
 
-  Future<void> createStudents(
-      List<Map<String, CreateStudentRequest>> list, bool canClose) async {
+  Future<void> getSampleFile() async {
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      var url;
+      var data = await createStudentRepository.getAppData();
+      for (var i = 0; i < data.records!.length; i++) {
+        if (data.records?[i].fields?.title == TableNames.APPDATA_TITLE) {
+          url = data.records?[i].fields?.url;
+          break;
+        }
+      }
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      setState(() {
+        isVisible = false;
+      });
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  Future<void> createStudents(List<Map<String, CreateStudentRequest>> list, bool canClose) async {
     setState(() {
       isVisible = true;
     });
@@ -139,9 +164,11 @@ class _AddStudent extends State<CreateStudent> {
             maxLines: 5,
           ),
           ElevatedButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.download),
-            label: Text("Download Sample file"),
+            onPressed: () {
+              getSampleFile();
+            },
+            icon: Icon(Icons.remove_red_eye),
+            label: Text("View sample file"),
           ),
 /*
           SizedBox(height: 8.h),
@@ -208,8 +235,7 @@ class _AddStudent extends State<CreateStudent> {
               // } else
               if (list.isEmpty) {
                 if (fileName.isNotEmpty) {
-                  Utils.showSnackBarDuration(
-                      context, strings_name.str_student_exists, 5);
+                  Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
                 } else {
                   Utils.showSnackBar(context, strings_name.str_empty_file);
                 }
@@ -237,10 +263,7 @@ class _AddStudent extends State<CreateStudent> {
           )
         ]),
         Center(
-          child: Visibility(
-              visible: isVisible,
-              child: const CircularProgressIndicator(
-                  strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary)),
+          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, backgroundColor: colors_name.colorPrimary)),
         )
       ]),
     ));
@@ -252,8 +275,7 @@ class _AddStudent extends State<CreateStudent> {
     print(path);
 
     ByteData data = await rootBundle.load("assets/res/tables_data.xlsx");
-    List<int> bytes =
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     var file = await File(path).writeAsBytes(bytes);
 
     OpenFilex.open(file.path);
@@ -264,8 +286,7 @@ class _AddStudent extends State<CreateStudent> {
     // var data = await rootBundle.load(file);
     // var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: ['xlsx']);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['xlsx']);
 
     if (result != null) {
       var bytes = File(result.files.single.path!).readAsBytesSync();
@@ -281,103 +302,75 @@ class _AddStudent extends State<CreateStudent> {
           for (var col = 0; col < excel.tables[table]!.maxCols; col++) {
             switch (excel.tables[table]?.rows[0][col]?.value.toString()) {
               case TableNames.EXCEL_COL_NAME:
-                request.name =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.name = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_MOBILE_NUMBER:
-                request.mobileNumber = excel
-                    .tables[table]?.rows[row][col]?.value
-                    .toString()
-                    .replaceAll(" ", "")
-                    .replaceAll("-", "");
+                request.mobileNumber = excel.tables[table]?.rows[row][col]?.value.toString().replaceAll(" ", "").replaceAll("-", "");
                 break;
               case TableNames.EXCEL_COL_GENDER:
-                request.gender = capitalize(
-                    excel.tables[table]?.rows[row][col]?.value.toString());
+                request.gender = capitalize(excel.tables[table]?.rows[row][col]?.value.toString());
                 break;
               case TableNames.EXCEL_COL_CITY:
-                request.city =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.city = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_ADDRESS:
-                request.address =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.address = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_PIN_CODE:
-                request.pinCode =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.pinCode = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_HUB_IDS:
-                request.hubIds = Utils.getHubId(
-                        excel.tables[table]?.rows[row][col]?.value.toString())!
-                    .split(",");
+                request.hubIds = Utils.getHubId(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
                 break;
               case TableNames.EXCEL_COL_SPECIALIZATION_IDS:
-                request.specializationIds = Utils.getSpecializationId(
-                        excel.tables[table]?.rows[row][col]?.value.toString())!
-                    .split(",");
+                request.specializationIds = Utils.getSpecializationId(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
                 break;
               case TableNames.EXCEL_COL_JOINING_YEAR:
-                request.joiningYear =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.joiningYear = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_EMAIL:
-                request.email =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.email = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_SEMESTER:
-                request.semester =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.semester = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_DIVISION:
-                request.division = capitalizeFL(
-                    excel.tables[table]?.rows[row][col]?.value.toString());
+                request.division = capitalizeFL(excel.tables[table]?.rows[row][col]?.value.toString());
                 break;
               case TableNames.EXCEL_COL_SR_NUMBER:
-                request.srNumber =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.srNumber = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_BIRTHDATE:
-                request.birthdate =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.birthdate = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_AADHAR_CARD_NUMBER:
-                request.aadharCardNumber =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.aadharCardNumber = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_CASTE:
-                request.caste =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.caste = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_HSC_SCHOOL:
-                request.hscSchool =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.hscSchool = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_HSC_SCHOOL_CITY:
-                request.hscSchoolCity =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.hscSchoolCity = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_HSC_PERCENTAGE:
-                request.hscPercentage =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.hscPercentage = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_MOTHER_NAME:
-                request.motherName =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.motherName = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_MOTHER_NUMBER:
-                request.motherNumber =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.motherNumber = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_FATHER_NUMBER:
-                request.fatherNumber =
-                    excel.tables[table]?.rows[row][col]?.value.toString();
+                request.fatherNumber = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
             }
           }
           // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
-          var query =
-              "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
+          var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
           try {
             var checkMobile = await createStudentRepository.loginApi(query);
             if (checkMobile.records?.isEmpty == true) {
@@ -410,8 +403,7 @@ class _AddStudent extends State<CreateStudent> {
     }
   }
 
-  String capitalize(String? s) =>
-      s![0].toUpperCase() + s.substring(1).toLowerCase();
+  String capitalize(String? s) => s![0].toUpperCase() + s.substring(1).toLowerCase();
 
   String capitalizeFL(String? s) {
     if (equalsIgnoreCase(s, TableNames.DIVISION_A)) {
@@ -426,7 +418,5 @@ class _AddStudent extends State<CreateStudent> {
     return s.toString();
   }
 
-  bool equalsIgnoreCase(String? a, String? b) =>
-      (a == null && b == null) ||
-      (a != null && b != null && a.toLowerCase() == b.toLowerCase());
+  bool equalsIgnoreCase(String? a, String? b) => (a == null && b == null) || (a != null && b != null && a.toLowerCase() == b.toLowerCase());
 }
