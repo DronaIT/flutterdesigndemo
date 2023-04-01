@@ -204,6 +204,7 @@ class strings_name {
   static const String str_take_attendence = "Take Attendance";
   static const String str_viewothers_attendence = "Attendance History";
   static const String str_viewself_attendence = "My Attendance";
+  static const String str_attendence_reports = "Attendance Reports";
 
   static const String str_semester = "Semester";
   static const String str_division = "Division";
@@ -221,7 +222,7 @@ class strings_name {
   static const String str_absent = "Absent";
 
   static const String str_enrollment = "Enrollment number:";
-  static const String str_filter = "Filter by";
+  static const String str_filter_by = "Filter by";
   static const String str_reset = "Reset";
   static const String str_by_date = "Date";
   static const String str_taken_by = "Taken by : ";
@@ -442,4 +443,5 @@ class strings_name {
 
   static const String str_sure_want_delete = "Are you sure want to DELETE ACCOUNT?";
   static const String str_otp_expired = "OTP expired, please try again.";
+  static const String str_filter = "Filters";
 }

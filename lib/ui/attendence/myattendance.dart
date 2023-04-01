@@ -597,7 +597,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                           Expanded(
                             flex: 1,
                             child: custom_text(
-                              text: strings_name.str_filter,
+                              text: strings_name.str_filter_by,
                               alignment: Alignment.topLeft,
                               textStyles: centerTextStylblack20,
                             ),
