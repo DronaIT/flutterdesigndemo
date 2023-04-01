@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -49,8 +50,22 @@ class _CreatePasswordState extends State<CreatePassword> {
                   children: [
                     SizedBox(height: 60.h),
                     Container(
+                        margin: EdgeInsets.all(10),
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          iconSize: 30,
+                          icon: Icon(
+                            Icons.arrow_circle_left_rounded,
+                            color: colors_name.colorPrimary,
+                          ),
+                          onPressed: () {
+                            Get.offAll(Login());
+                          },
+                        )),
+                    Container(
                       alignment: Alignment.topLeft,
-                      child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
+                      child: AppImage.load(AppImage.ic_launcher,
+                          width: 80.w, height: 80.h),
                     ),
                     custom_text(
                       text: strings_name.str_setup_password,
@@ -63,94 +78,121 @@ class _CreatePasswordState extends State<CreatePassword> {
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    custom_edittext(type: TextInputType.visiblePassword, textInputAction: TextInputAction.next, controller: passController, obscure: true, isPassword: true),
+                    custom_edittext(
+                        type: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.next,
+                        controller: passController,
+                        obscure: true,
+                        isPassword: true),
                     SizedBox(height: 8.h),
                     custom_text(
                       text: strings_name.str_confirm_password,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    custom_edittext(type: TextInputType.visiblePassword, textInputAction: TextInputAction.next, controller: confirmPassController, obscure: true, isPassword: true),
+                    custom_edittext(
+                        type: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.next,
+                        controller: confirmPassController,
+                        obscure: true,
+                        isPassword: true),
                     SizedBox(height: 40.h),
                     CustomButton(
                         text: strings_name.str_proceed,
                         click: () async {
-                          var passWord = FormValidator.validatePassword(passController.text.toString().trim());
-                          var confirmPassword = FormValidator.validateCPassword(confirmPassController.text.toString().trim());
+                          var passWord = FormValidator.validatePassword(
+                              passController.text.toString().trim());
+                          var confirmPassword = FormValidator.validateCPassword(
+                              confirmPassController.text.toString().trim());
                           if (passWord.isNotEmpty) {
                             Utils.showSnackBar(context, passWord);
                           } else if (confirmPassword.isNotEmpty) {
                             Utils.showSnackBar(context, confirmPassword);
-                          } else if (passController.text.toString() != confirmPassController.text.toString()) {
-                            Utils.showSnackBar(context, strings_name.str_enter_pass_same);
+                          } else if (passController.text.toString() !=
+                              confirmPassController.text.toString()) {
+                            Utils.showSnackBar(
+                                context, strings_name.str_enter_pass_same);
                           } else {
                             setState(() {
                               isVisible = true;
                             });
-                            var query = "(${TableNames.TB_USERS_PHONE}='${Get.arguments[0]["phone"].toString()}')";
+                            var query =
+                                "(${TableNames.TB_USERS_PHONE}='${Get.arguments[0]["phone"].toString()}')";
                             if (!Get.arguments[1]["isFromEmployee"]) {
-                              try{
-                                var data = await userRepository.registerApi(query);
+                              try {
+                                var data =
+                                    await userRepository.registerApi(query);
                                 Map<String, String> password = {
                                   "password": passController.text.toString(),
                                 };
                                 if (data.records!.isNotEmpty) {
-                                  var dataUpdate = await userRepository.createPasswordApi(password, data.records!.first.id!);
+                                  var dataUpdate =
+                                      await userRepository.createPasswordApi(
+                                          password, data.records!.first.id!);
                                   if (dataUpdate != null) {
                                     setState(() {
                                       isVisible = false;
                                     });
                                     await PreferenceUtils.setIsLogin(1);
-                                    await PreferenceUtils.setLoginData(dataUpdate.fields!);
-                                    await PreferenceUtils.setLoginRecordId(dataUpdate.id!);
+                                    await PreferenceUtils.setLoginData(
+                                        dataUpdate.fields!);
+                                    await PreferenceUtils.setLoginRecordId(
+                                        dataUpdate.id!);
                                     Get.offAll(Home());
                                   } else {
                                     setState(() {
                                       isVisible = false;
                                     });
-                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                    Utils.showSnackBar(context,
+                                        strings_name.str_something_wrong);
                                   }
                                 }
-                              }on DioError catch (e) {
+                              } on DioError catch (e) {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                final errorMessage = DioExceptions.fromDioError(e).toString();
+                                final errorMessage =
+                                    DioExceptions.fromDioError(e).toString();
                                 Utils.showSnackBarUsingGet(errorMessage);
                               }
-
-
                             } else {
-                              try{
-                                var dataPass = await userRepository.registerEmployeeApi(query);
+                              try {
+                                var dataPass = await userRepository
+                                    .registerEmployeeApi(query);
                                 if (dataPass.records!.isNotEmpty) {
                                   Map<String, String> password = {
                                     "password": passController.text.toString(),
                                   };
-                                  var dataPassword = await userRepository.createPasswordEmpApi(password, dataPass.records!.first.id!);
+                                  var dataPassword =
+                                      await userRepository.createPasswordEmpApi(
+                                          password,
+                                          dataPass.records!.first.id!);
                                   if (dataPassword != null) {
                                     setState(() {
                                       isVisible = false;
                                     });
                                     await PreferenceUtils.setIsLogin(2);
-                                    await PreferenceUtils.setLoginDataEmployee(dataPassword.fields!);
-                                    await PreferenceUtils.setLoginRecordId(dataPassword.id!);
+                                    await PreferenceUtils.setLoginDataEmployee(
+                                        dataPassword.fields!);
+                                    await PreferenceUtils.setLoginRecordId(
+                                        dataPassword.id!);
                                     Get.offAll(Home());
                                   } else {
                                     setState(() {
                                       isVisible = false;
                                     });
-                                    Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                    Utils.showSnackBar(context,
+                                        strings_name.str_something_wrong);
                                   }
                                 }
-                              }on DioError catch (e) {
+                              } on DioError catch (e) {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                final errorMessage = DioExceptions.fromDioError(e).toString();
+                                final errorMessage =
+                                    DioExceptions.fromDioError(e).toString();
                                 Utils.showSnackBarUsingGet(errorMessage);
                               }
-
                             }
                           }
                         }),
@@ -160,7 +202,10 @@ class _CreatePasswordState extends State<CreatePassword> {
             ),
           ),
           Center(
-            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
+            child: Visibility(
+                child: const CircularProgressIndicator(
+                    strokeWidth: 5.0, color: colors_name.colorPrimary),
+                visible: isVisible),
           )
         ],
       ),

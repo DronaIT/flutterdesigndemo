@@ -369,16 +369,22 @@ class _MyAttendanceState extends State<MyAttendance> {
                 alignment: Alignment.topLeft,
                 textStyles: blackTextbold14,
                 bottomValue: 5),
-            custom_text(
-                text: "Total Lectures : $totalLectures",
-                alignment: Alignment.topLeft,
-                textStyles: blackTextbold14,
-                bottomValue: 5),
-            custom_text(
-                text: "Total Present Lectures : $totalPresentLectures",
-                alignment: Alignment.topLeft,
-                textStyles: blackTextbold14,
-                bottomValue: 5),
+            Visibility(
+              visible: PreferenceUtils.getIsLogin() == 2,
+              child: custom_text(
+                  text: "Total Lectures : $totalLectures",
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextbold14,
+                  bottomValue: 5),
+            ),
+            Visibility(
+              visible: PreferenceUtils.getIsLogin() == 2,
+              child: custom_text(
+                  text: "Total Present Lectures : $totalPresentLectures",
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextbold14,
+                  bottomValue: 5),
+            ),
             Row(
               children: [
                 Visibility(
@@ -390,37 +396,41 @@ class _MyAttendanceState extends State<MyAttendance> {
                       textStyles: blackTextbold14,
                       bottomValue: 5),
                 ),
-                Expanded(
-                  child: Container(
-                    width: 300,
-                    margin: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        primary: totalPresentPercentage >= 75
-                            ? colors_name.presentColor
-                            : colors_name.errorColor,
-                        padding: const EdgeInsets.all(6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                Visibility(
+                  visible: PreferenceUtils.getIsLogin() == 2,
+                  child: Expanded(
+                    child: Container(
+                      width: 300,
+                      margin: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          primary: totalPresentPercentage >= 75
+                              ? colors_name.presentColor
+                              : colors_name.errorColor,
+                          padding: const EdgeInsets.all(6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
 
-                      ),
-                      child: Text(
-                        totalPresentPercentage >= 75
-                            ? "Eligible for exam"
-                            : "Not eligible for exam",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
+                        ),
+                        child: Text(
+                          totalPresentPercentage >= 75
+                              ? "Eligible for exam"
+                              : "Not eligible for exam",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ),
                   ),
                 )
               ],
             ),
+
             Stack(
               children: [
                 Container(
@@ -507,45 +517,81 @@ class _MyAttendanceState extends State<MyAttendance> {
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                                 elevation: 5,
-                                child: Column(
+                                child: Row(
                                   children: [
-                                    custom_text(
-                                      text: studentAttendanceBySubjectArray![
-                                              index]
-                                          .subject_title!,
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold16,
-                                      bottomValue: 5,
-                                    ),
-                                    custom_text(
-                                      text:
+                                    Expanded(child: Column(
+                                      children: [
+                                        custom_text(
+                                          text: studentAttendanceBySubjectArray![
+                                          index]
+                                              .subject_title!,
+                                          alignment: Alignment.topLeft,
+                                          textStyles: blackTextSemiBold16,
+                                          bottomValue: 5,
+                                          maxLines: 3,
+                                        ),
+                                        custom_text(
+                                          text:
                                           "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold12,
-                                      bottomValue: 0,
-                                    ),
-                                    custom_text(
-                                      text:
+                                          alignment: Alignment.topLeft,
+                                          textStyles: blackTextSemiBold12,
+                                          bottomValue: 0,
+                                        ),
+                                        custom_text(
+                                          text:
                                           "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
-                                      alignment: Alignment.topLeft,
-                                      textStyles: blackTextSemiBold12,
-                                      bottomValue: 0,
-                                    ),
-                                    Visibility(
-                                      visible:
+                                          alignment: Alignment.topLeft,
+                                          textStyles: blackTextSemiBold12,
+                                          bottomValue: 0,
+                                        ),
+                                        Visibility(
+                                          visible:
                                           PreferenceUtils.getIsLogin() == 2,
-                                      child: custom_text(
-                                        text:
+                                          child: custom_text(
+                                            text:
                                             "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%",
-                                        alignment: Alignment.topLeft,
-                                        textStyles: blackTextSemiBold12,
-                                        bottomValue: 10,
+                                            alignment: Alignment.topLeft,
+                                            textStyles: blackTextSemiBold12,
+                                            bottomValue: 10,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        )
+                                      ],
+                                    )),
+                                    Expanded(
+                                      child: Container(
+                                        width: 100,
+                                        margin: EdgeInsets.all(5),
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            primary: totalPresentPercentage >= 75
+                                                ? colors_name.presentColor
+                                                : colors_name.errorColor,
+                                            padding: const EdgeInsets.all(6),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+
+                                          ),
+                                          child: Text(
+                                            totalPresentPercentage >= 75
+                                                ? "Eligible for exam"
+                                                : "Not eligible for exam",
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
                                     )
+
                                   ],
+
                                 ));
                           })
                       : Container(),

@@ -404,6 +404,7 @@ class strings_name {
 
   static const String str_short_listed_jobs = "Short listed internship";
   static const String str_no_jobs_short_listed = "Not short listed for any internship yet";
+
   static const String str_interview_schedule = "Interview schedule";
   static const String str_company_name = "Company name";
 

@@ -51,8 +51,22 @@ class _OtpVerificationState extends State<OtpVerification> {
               children: [
                 SizedBox(height: 60.h),
                 Container(
+                    margin: EdgeInsets.all(10),
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      iconSize: 30,
+                      icon: Icon(
+                        Icons.arrow_circle_left_rounded,
+                        color: colors_name.colorPrimary,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                      },
+                    )),
+                Container(
                   alignment: Alignment.topLeft,
-                  child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
+                  child: AppImage.load(AppImage.ic_launcher,
+                      width: 80.w, height: 80.h),
                 ),
                 custom_text(
                   text: strings_name.str_verify_phone,
@@ -63,7 +77,10 @@ class _OtpVerificationState extends State<OtpVerification> {
                 Container(
                   alignment: Alignment.topLeft,
                   margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: AppWidgets.spannableText(strings_name.str_otp, "+91-${Get.arguments[0]["phone"].toString()}", primaryTextSemiBold16),
+                  child: AppWidgets.spannableText(
+                      strings_name.str_otp,
+                      "+91-${Get.arguments[0]["phone"].toString()}",
+                      primaryTextSemiBold16),
                 ),
                 SizedBox(height: 15.h),
                 Container(
@@ -110,14 +127,15 @@ class _OtpVerificationState extends State<OtpVerification> {
                       //print("otp=>${_otp}");
                       if (_otp.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_enter_otp);
-                      } else if(counter <= 0) {
-                        Utils.showSnackBar(context, strings_name.str_otp_expired);
-                      } else if(_otp.toString() == Get.arguments[2]["otp"].toString()) {
+                      } else if (counter <= 0) {
+                        Utils.showSnackBar(
+                            context, strings_name.str_otp_expired);
+                      } else if (_otp.toString() ==
+                          Get.arguments[2]["otp"].toString()) {
                         Get.to(const CreatePassword(), arguments: [
                           {"phone": Get.arguments[0]["phone"]},
                           {"isFromEmployee": Get.arguments[1]["isFromEmployee"]}
                         ]);
-
                       } else {
                         Utils.showSnackBar(context, strings_name.str_enter_otp);
                       }
