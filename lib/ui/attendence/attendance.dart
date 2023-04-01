@@ -26,7 +26,7 @@ class Attendance extends StatefulWidget {
 
 class _AttendanceState extends State<Attendance> {
   bool isVisible = false;
-  bool canViewSelfAttendance = false, canViewOthersAttendance = false, canTakeAttendance = false;
+  bool canViewSelfAttendance = false, canViewOthersAttendance = false, canTakeAttendance = false, showReports = false;
   bool canViewAccessibleAttendance = false, canUpdateAccessibleAttendance = false;
 
   final apiRepository = getIt.get<ApiRepository>();
@@ -57,6 +57,11 @@ class _AttendanceState extends State<Attendance> {
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_TAKE_ATTENDANCE) {
             setState(() {
               canTakeAttendance = true;
+            });
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ATTENDANCE_REPORTS) {
+            setState(() {
+              showReports = true;
             });
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEWSELF_ATTENDANCE && PreferenceUtils.getIsLogin() == 1) {
@@ -90,8 +95,6 @@ class _AttendanceState extends State<Attendance> {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
-
     setState(() {
       isVisible = false;
     });
@@ -165,6 +168,25 @@ class _AttendanceState extends State<Attendance> {
                         {"canViewAccessibleAttendance": canViewAccessibleAttendance},
                         {"canUpdateAccessibleAttendance": canUpdateAccessibleAttendance}
                       ]);
+                    },
+                  ),
+                ),
+                Visibility(
+                  visible: showReports,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_attendence_reports, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      // Get.to(() => const MyAttendance());
                     },
                   ),
                 ),

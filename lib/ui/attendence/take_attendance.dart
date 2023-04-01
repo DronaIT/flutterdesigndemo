@@ -260,7 +260,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             divisionValue = newValue!;
-                                            // getSubjects();
+                                            getSubjects();
                                           });
                                         },
                                         items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
