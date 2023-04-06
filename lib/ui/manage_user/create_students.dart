@@ -37,6 +37,7 @@ class CreateStudent extends StatefulWidget {
 
 class _AddStudent extends State<CreateStudent> {
   bool isVisible = false;
+  bool showError = false;
 
   final createStudentRepository = getIt.get<ApiRepository>();
   late BaseLoginResponse<CreatePasswordResponse> resp;
@@ -234,8 +235,10 @@ class _AddStudent extends State<CreateStudent> {
               //   Utils.showSnackBar(context, strings_name.str_empty_hub);
               // } else
               if (list.isEmpty) {
-                if (fileName.isNotEmpty) {
+                if (fileName.isNotEmpty && !showError) {
                   Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
+                } else if(showError){
+                  Utils.showSnackBarDuration(context, strings_name.str_empty_mobile_sheet, 5);
                 } else {
                   Utils.showSnackBar(context, strings_name.str_empty_file);
                 }
@@ -286,6 +289,7 @@ class _AddStudent extends State<CreateStudent> {
     // var data = await rootBundle.load(file);
     // var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
+    showError = false;
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['xlsx']);
 
     if (result != null) {
@@ -370,20 +374,27 @@ class _AddStudent extends State<CreateStudent> {
             }
           }
           // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
-          var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
-          try {
-            var checkMobile = await createStudentRepository.loginApi(query);
-            if (checkMobile.records?.isEmpty == true) {
-              Map<String, CreateStudentRequest> map = Map();
-              map["fields"] = request;
-              list.add(map);
+          if (request.mobileNumber != null) {
+            var query = "FIND('${request.mobileNumber.toString()}',${TableNames
+                .TB_USERS_PHONE},0)";
+            try {
+              var checkMobile = await createStudentRepository.loginApi(query);
+              if (checkMobile.records?.isEmpty == true) {
+                Map<String, CreateStudentRequest> map = Map();
+                map["fields"] = request;
+                list.add(map);
+              }
+            } on DioError catch (e) {
+              setState(() {
+                isVisible = false;
+              });
+              final errorMessage = DioExceptions.fromDioError(e).toString();
+              Utils.showSnackBarUsingGet(errorMessage);
             }
-          } on DioError catch (e) {
-            setState(() {
-              isVisible = false;
-            });
-            final errorMessage = DioExceptions.fromDioError(e).toString();
-            Utils.showSnackBarUsingGet(errorMessage);
+          } else {
+            list = [];
+            showError = true;
+            Utils.showSnackBarDuration(context, strings_name.str_empty_mobile_sheet, 5);
           }
         }
       }
@@ -397,7 +408,9 @@ class _AddStudent extends State<CreateStudent> {
         setState(() {
           isVisible = false;
         });
-        Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
+        if(!showError){
+          Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
+        }
       }
       FilePicker.platform.clearTemporaryFiles();
     }

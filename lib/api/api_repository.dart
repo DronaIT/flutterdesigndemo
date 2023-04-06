@@ -549,4 +549,14 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<App_data_response>> addAppDataApi( Map<String, dynamic> data) async {
+    try {
+      final response = await userApi.addAppDataApi(data);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
 }

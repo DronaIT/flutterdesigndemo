@@ -33,6 +33,8 @@ class _AcademicDetailsState extends State<AcademicDetails> {
   final apiRepository = getIt.get<ApiRepository>();
   bool canAddSpe = false, canAddSubject = false, canViewSpe = false, canEditSpe = false;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +50,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       roleId = TableNames.STUDENT_ROLE_ID;
+
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       roleId = loginData.roleIdFromRoleIds!.join(',');
@@ -105,11 +108,18 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     try{
       var data = await apiRepository.getSpecializationApi();
       if (data.records!.isNotEmpty) {
-        setState(() {
-          isVisible = false;
-        });
-        PreferenceUtils.setSpecializationList(data);
-        specializationData = data.records;
+
+        if(PreferenceUtils.getIsLogin() ==1){
+          for(var i =0; i< data.records!.length ; i++){
+            if (data.records![i].fields!.specializationId == PreferenceUtils.getLoginData().specializationIdFromSpecializationIds?[0]) {
+              PreferenceUtils.setSpecializationList(data);
+              specializationData?.add(data.records![i]);
+            }
+          }
+        }else{
+          PreferenceUtils.setSpecializationList(data);
+          specializationData = data.records;
+        }
       } else {
         setState(() {
           isVisible = false;
@@ -123,7 +133,9 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       Utils.showSnackBarUsingGet(errorMessage);
     }
 
-
+    setState(() {
+      isVisible = false;
+    });
   }
 
   @override

@@ -209,6 +209,7 @@ class ApiRequest {
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {
+
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, options: Options(headers: header));
@@ -598,6 +599,17 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.get(TableNames.TBL_APP_DATA, options: Options(headers: header));
+      return BaseLoginResponse<App_data_response>.fromJson(response.data, (response) => App_data_response.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<App_data_response>> addAppDataApi( Map<String, dynamic> data) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": data};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_APP_DATA, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseLoginResponse<App_data_response>.fromJson(response.data, (response) => App_data_response.fromJson(response));
     } catch (e) {
       rethrow;

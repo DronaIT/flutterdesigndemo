@@ -75,6 +75,8 @@ class strings_name {
   static const String str_settings = "Settings";
   static const String str_logout = "Logout";
   static const String str_home = "Home";
+  static const String str_uplaod_doc = "Upload documents";
+
 
   static const String str_empty_name = "Please enter employee name";
   static const String str_empty_city = "Please enter city";
@@ -86,6 +88,7 @@ class strings_name {
   static const String str_employee_added = "New employee added successfully.";
   static const String str_employee_exists = "An employee with this mobile number already exists.";
   static const String str_student_exists = "There are already students with provided mobile numbers.";
+  static const String str_empty_mobile_sheet = "There are records in sheet that doesn't have valid mobile numbers.";
 
   // static const String str_add_student_desc = "You can use XLSX files to upload multiple students. and make sure to download and use provided format to create XLSX sheet.";
   static const String str_add_student_desc = "You can use XLSX files to upload multiple students.";
@@ -448,4 +451,17 @@ class strings_name {
   static const String str_filter = "Filters";
   static const String str_select_date_range = "Select date range:";
   static const String str_empty_date_range = "Please select date range";
+
+  static const String str_title = "Title";
+  static const String str_description = "Description";
+  static const String str_title_err = "Please enter title";
+  static const String str_uplaod_err = "Please upload document";
+
+  static const String str_document = "Document";
+  static const String str_doc_added = "Document uploaded successfully.";
+
+
+
+
+
 }

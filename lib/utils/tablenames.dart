@@ -14,6 +14,8 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
   static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
+  static const CLOUDARY_FOLDER_APP_ASSETS = "AppAssets";
+
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
   static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
@@ -157,5 +159,5 @@ class TableNames {
   static const EXCEL_COL_MOTHER_NAME = "mother_name";
   static const EXCEL_COL_MOTHER_NUMBER = "mother_number";
   static const EXCEL_COL_FATHER_NUMBER = "father_number";
-  static const APPDATA_TITLE= "Student_upload_formate";
+  static const APPDATA_TITLE= "Student upload formate";
 }

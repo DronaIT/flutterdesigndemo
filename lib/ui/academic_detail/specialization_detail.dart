@@ -16,6 +16,7 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
+import '../../utils/preference.dart';
 
 class SpecializationDetail extends StatefulWidget {
   const SpecializationDetail({Key? key}) : super(key: key);
@@ -26,10 +27,14 @@ class SpecializationDetail extends StatefulWidget {
 
 class _SpecializationDetailState extends State<SpecializationDetail> {
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>?
+      specializationData = [];
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
-
+  List<String> semesterResponseArray = <String>["1", "2", "3", "4", "5", "6"];
+  String semesterValue = "1";
   final apiRepository = getIt.get<ApiRepository>();
+
+  String query="";
 
   @override
   void initState() {
@@ -42,28 +47,57 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       isVisible = true;
     });
     var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
-    try{
+    //query = "AND(FIND('${Get.arguments}',${TableNames.CLM_SPE_ID}) 0 ,1='${TableNames.MODULE_ATTENDANCE}')";
+    //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+
+    print("test=>${query}");
+    try {
       var data = await apiRepository.getSpecializationDetailApi(query);
       if (data.records?.isNotEmpty == true) {
         specializationData = data.records;
-        if (specializationData?.isNotEmpty == true) {
-          var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
-          var data = await apiRepository.getSubjectsApi(query);
-          if (data.records?.isNotEmpty == true) {
-            subjectData = data.records;
-          }
-        }
+        callSubjectData();
       } else {
+        setState(() {
+          isVisible = false;
+        });
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
+  }
 
+  callSubjectData() async {
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      if (specializationData?.isNotEmpty == true) {
+        //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+        if(PreferenceUtils.getIsLogin() ==1){
+           semesterValue = PreferenceUtils.getLoginData().semester!;
+           query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+        }else{
+          query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+
+        }
+        var data = await apiRepository.getSubjectsApi(query);
+        if (data.records?.isNotEmpty == true) {
+          subjectData = data.records;
+        }
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+
+    }
     setState(() {
       isVisible = false;
     });
@@ -79,10 +113,75 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
             ? SingleChildScrollView(
                 child: Column(
                   children: [
-                    custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
-                    custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
-                    custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
-                    Visibility(visible: subjectData?.isNotEmpty == true, child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16)),
+                    custom_text(
+                        text: specializationData![0]
+                            .fields!
+                            .specializationName
+                            .toString(),
+                        maxLines: 5,
+                        textStyles: centerTextStyle24),
+                    custom_text(
+                        text:
+                            "Code : ${specializationData![0].fields!.specializationId}",
+                        textStyles: blackTextSemiBold16),
+                    custom_text(
+                        text: specializationData![0]
+                            .fields!
+                            .specializationDesc
+                            .toString(),
+                        maxLines: 5000,
+                        textStyles: blackTextSemiBold14),
+
+                    Visibility(
+                      visible: PreferenceUtils.getIsLogin() == 2,
+
+                      child: custom_text(
+                        text: strings_name.str_semester,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                    ),
+                    Visibility(
+                      visible: PreferenceUtils.getIsLogin() == 2,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 5),
+                              width: MediaQuery.of(context).size.width,
+                              child: DropdownButtonFormField<String>(
+                                elevation: 16,
+                                style: blackText16,
+                                value: semesterValue,
+                                focusColor: Colors.white,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    semesterValue = newValue!;
+                                  });
+                                  subjectData?.clear();
+                                  callSubjectData();
+                                },
+                                items: semesterResponseArray
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text("Semester $value"),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                        visible: subjectData?.isNotEmpty == true,
+                        child: custom_text(
+                            text: "Subjects", textStyles: blackTextSemiBold16)),
                     subjectData?.isNotEmpty == true
                         ? Container(
                             margin: const EdgeInsets.all(10),
@@ -96,27 +195,56 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                     child: GestureDetector(
                                       child: Container(
                                         color: colors_name.colorWhite,
-                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 10),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                                child: Text(
+                                                    "${subjectData![index].fields!.subjectTitle}",
+                                                    textAlign: TextAlign.start,
+                                                    style:
+                                                        blackTextSemiBold14)),
+                                            const Icon(
+                                                Icons.keyboard_arrow_right,
+                                                size: 30,
+                                                color: colors_name.colorPrimary)
+                                          ],
                                         ),
                                       ),
                                       onTap: () {
-                                        Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
+                                        Get.to(const SubjectDetail(),
+                                            arguments: subjectData![index]
+                                                .fields
+                                                ?.ids);
                                       },
                                     ),
                                   );
                                 }),
                           )
-                        : Container(),
+                        : Container(
+                        margin: const EdgeInsets.only(top: 100),
+                        child: custom_text(
+                            text: strings_name.str_no_subjects,
+                            textStyles: centerTextStyleBlack18,
+                            alignment: Alignment.center)),
                     // Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
                   ],
                 ),
               )
-            : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            : Container(
+                margin: const EdgeInsets.only(top: 100),
+                child: custom_text(
+                    text: strings_name.str_no_data,
+                    textStyles: centerTextStyleBlack18,
+                    alignment: Alignment.center)),
         Center(
-          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          child: Visibility(
+              visible: isVisible,
+              child: const CircularProgressIndicator(
+                  strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
       ]),
     ));
