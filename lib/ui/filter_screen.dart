@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
@@ -64,6 +65,9 @@ class _FilterState extends State<Filter> {
   DateTime? endDate = DateTime.now();
 
   final apiRepository = getIt.get<ApiRepository>();
+  String offset = "";
+
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
 
   @override
   void initState() {
@@ -285,7 +289,7 @@ class _FilterState extends State<Filter> {
                                               subjectValue = newValue!.fields!.ids!.toString();
                                               subjectResponse = newValue;
                                               subjectRecordId = newValue.id!;
-                                              getUnits();
+                                              // getUnits();
                                             });
                                           },
                                           items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
@@ -302,6 +306,7 @@ class _FilterState extends State<Filter> {
                               ],
                             )
                           : Container(),
+/*
                       unitResponseArray!.isNotEmpty
                           ? Column(
                               children: [
@@ -330,7 +335,7 @@ class _FilterState extends State<Filter> {
                                               unitValue = newValue!.fields!.ids!.toString();
                                               unitResponse = newValue;
                                               unitRecordId = newValue.id!;
-                                              getTopics();
+                                              // getTopics();
                                             });
                                           },
                                           items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>((BaseApiResponseWithSerializable<UnitsResponse> value) {
@@ -391,6 +396,7 @@ class _FilterState extends State<Filter> {
                               ],
                             )
                           : Container(),
+*/
                       SizedBox(height: 10.h),
                       CustomButton(
                         click: () async {
@@ -399,7 +405,7 @@ class _FilterState extends State<Filter> {
                           } else if (startDate == null || endDate == null) {
                             Utils.showSnackBar(context, strings_name.str_empty_date_range);
                           } else {
-                            // fetchRecords();
+                            fetchRecords();
                           }
                         },
                         text: strings_name.str_submit,
@@ -519,6 +525,72 @@ class _FilterState extends State<Filter> {
         startDate = result.start;
         endDate = result.end;
       });
+    }
+  }
+
+  Future<void> fetchRecords() async {
+    var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue'";
+
+    if (speValue.isNotEmpty) {
+      query += ",${TableNames.CLM_SPE_IDS}='$speValue'";
+    }
+    query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+    if (divisionValue.isNotEmpty) {
+      query += ",${TableNames.CLM_DIVISION}='${divisionValue.toString()}'";
+    }
+
+    query += ")";
+    print(query);
+
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      var data = await apiRepository.loginApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          viewStudent?.clear();
+        }
+        viewStudent?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          fetchRecords();
+        } else {
+          setState(() {
+            viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+            isVisible = false;
+            print("Initial : $viewStudent?.length");
+            filterData();
+          });
+        }
+      } else {
+        setState(() {
+          isVisible = false;
+          if (offset.isEmpty) {
+            viewStudent = [];
+          }
+        });
+        offset = "";
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  void filterData() {
+    if (viewStudent != null && viewStudent?.isNotEmpty == true) {
+      for (int i = 0; i < viewStudent!.length; i++) {
+        var strDate = startDate;
+        if(viewStudent![i].fields!.presentLectureDate?.isNotEmpty == true) {
+          for (int j = 0; j < viewStudent![i].fields!.presentLectureDate!.length; j++) {
+
+          }
+        }
+      }
     }
   }
 }

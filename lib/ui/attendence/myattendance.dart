@@ -32,8 +32,7 @@ class _MyAttendanceState extends State<MyAttendance> {
   String myEnrollmentNo = "", mySemester = "";
 
   BaseLoginResponse<LoginFieldsResponse> dataByDate = BaseLoginResponse();
-  BaseLoginResponse<StudentAttendanceResponse> dataBySubject =
-      BaseLoginResponse();
+  BaseLoginResponse<StudentAttendanceResponse> dataBySubject = BaseLoginResponse();
 
   List<ViewStudentAttendance>? studentAttendanceArray = [];
   List<ViewStudentAttendance>? studentAttendanceBySubjectArray = [];
@@ -115,11 +114,9 @@ class _MyAttendanceState extends State<MyAttendance> {
     });
     var query = "";
     if (enrollmentNo.isNotEmpty) {
-      query =
-          "SEARCH('${enrollmentNo.toUpperCase()}', ARRAYJOIN(${TableNames.CLM_ENROLLMENT_NUMBERS}), 0)";
+      query = "SEARCH('${enrollmentNo.toUpperCase()}', ARRAYJOIN(${TableNames.CLM_ENROLLMENT_NUMBERS}), 0)";
     } else {
-      query =
-          "SEARCH('${myEnrollmentNo.toUpperCase()}', ARRAYJOIN(${TableNames.CLM_ENROLLMENT_NUMBERS}), 0)";
+      query = "SEARCH('${myEnrollmentNo.toUpperCase()}', ARRAYJOIN(${TableNames.CLM_ENROLLMENT_NUMBERS}), 0)";
     }
     try {
       dataBySubject = await apiRepository.getStudentAttendanceApi(query);
@@ -150,41 +147,17 @@ class _MyAttendanceState extends State<MyAttendance> {
 
   void checkPresentAbsentDetailByDate() {
     if (dataByDate.records!.isNotEmpty) {
-      if (dataByDate.records != null &&
-          dataByDate.records!.first.fields != null &&
-          dataByDate.records!.first.fields!.presentLectureDate != null) {
-        for (int i = 0;
-            i < dataByDate.records!.first.fields!.presentLectureDate!.length;
-            i++) {
-          if (formattedDate ==
-              dataByDate.records!.first.fields!.presentLectureDate![i]) {
-            studentAttendanceArray?.add(ViewStudentAttendance(
-                subject_id:
-                    dataByDate.records!.first.fields!.presentSubjectId![i],
-                subject_title:
-                    dataByDate.records!.first.fields!.presentSubjectTitle![i],
-                lecture_date:
-                    dataByDate.records!.first.fields!.presentLectureDate![i],
-                status: 1));
+      if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.presentLectureDate != null) {
+        for (int i = 0; i < dataByDate.records!.first.fields!.presentLectureDate!.length; i++) {
+          if (formattedDate == dataByDate.records!.first.fields!.presentLectureDate![i]) {
+            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.presentSubjectId![i], subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.presentLectureDate![i], status: 1));
           }
         }
       }
-      if (dataByDate.records != null &&
-          dataByDate.records!.first.fields != null &&
-          dataByDate.records!.first.fields!.absentLectureDate != null) {
-        for (int i = 0;
-            i < dataByDate.records!.first.fields!.absentLectureDate!.length;
-            i++) {
-          if (formattedDate ==
-              dataByDate.records!.first.fields!.absentLectureDate![i]) {
-            studentAttendanceArray?.add(ViewStudentAttendance(
-                subject_id:
-                    dataByDate.records!.first.fields!.absentSubjectId![i],
-                subject_title:
-                    dataByDate.records!.first.fields!.absentSubjectTitle![i],
-                lecture_date:
-                    dataByDate.records!.first.fields!.absentLectureDate![i],
-                status: 0));
+      if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.absentLectureDate != null) {
+        for (int i = 0; i < dataByDate.records!.first.fields!.absentLectureDate!.length; i++) {
+          if (formattedDate == dataByDate.records!.first.fields!.absentLectureDate![i]) {
+            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.absentSubjectId![i], subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.absentLectureDate![i], status: 0));
           }
         }
       }
@@ -199,8 +172,7 @@ class _MyAttendanceState extends State<MyAttendance> {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
           var isAdded = false;
           for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
-            if (studentAttendanceBySubjectArray![j].subject_id ==
-                records.presentSubjectId![i]) {
+            if (studentAttendanceBySubjectArray![j].subject_id == records.presentSubjectId![i]) {
               isAdded = true;
               studentAttendanceBySubjectArray![j].total_lectures += 1;
               studentAttendanceBySubjectArray![j].present_lectures += 1;
@@ -208,11 +180,7 @@ class _MyAttendanceState extends State<MyAttendance> {
             }
           }
           if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(
-                subject_id: records.presentSubjectId![i],
-                subject_title: records.presentSubjectTitle![i],
-                lecture_date: records.presentLectureDate![i],
-                status: 1);
+            var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
             attendanceData.total_lectures += 1;
             attendanceData.present_lectures += 1;
             studentAttendanceBySubjectArray!.add(attendanceData);
@@ -223,8 +191,7 @@ class _MyAttendanceState extends State<MyAttendance> {
         for (int i = 0; i < records.absentSubjectId!.length; i++) {
           var isAdded = false;
           for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
-            if (studentAttendanceBySubjectArray![j].subject_id ==
-                records.absentSubjectId![i]) {
+            if (studentAttendanceBySubjectArray![j].subject_id == records.absentSubjectId![i]) {
               isAdded = true;
               studentAttendanceBySubjectArray![j].total_lectures += 1;
               studentAttendanceBySubjectArray![j].absent_lectures += 1;
@@ -232,11 +199,7 @@ class _MyAttendanceState extends State<MyAttendance> {
             }
           }
           if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(
-                subject_id: records.absentSubjectId![i],
-                subject_title: records.absentSubjectTitle![i],
-                lecture_date: records.absentLectureDate![i],
-                status: 0);
+            var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
             attendanceData.total_lectures += 1;
             attendanceData.absent_lectures += 1;
             studentAttendanceBySubjectArray!.add(attendanceData);
@@ -267,8 +230,7 @@ class _MyAttendanceState extends State<MyAttendance> {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
           var isAdded = false;
           for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
-            if (studentAttendanceBySubjectArray[j].subject_id ==
-                records.presentSubjectId![i]) {
+            if (studentAttendanceBySubjectArray[j].subject_id == records.presentSubjectId![i]) {
               isAdded = true;
               studentAttendanceBySubjectArray[j].total_lectures += 1;
               studentAttendanceBySubjectArray[j].present_lectures += 1;
@@ -276,11 +238,7 @@ class _MyAttendanceState extends State<MyAttendance> {
             }
           }
           if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(
-                subject_id: records.presentSubjectId![i],
-                subject_title: records.presentSubjectTitle![i],
-                lecture_date: records.presentLectureDate![i],
-                status: 1);
+            var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
             attendanceData.total_lectures += 1;
             attendanceData.present_lectures += 1;
             studentAttendanceBySubjectArray.add(attendanceData);
@@ -291,8 +249,7 @@ class _MyAttendanceState extends State<MyAttendance> {
         for (int i = 0; i < records.absentSubjectId!.length; i++) {
           var isAdded = false;
           for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
-            if (studentAttendanceBySubjectArray[j].subject_id ==
-                records.absentSubjectId![i]) {
+            if (studentAttendanceBySubjectArray[j].subject_id == records.absentSubjectId![i]) {
               isAdded = true;
               studentAttendanceBySubjectArray[j].total_lectures += 1;
               studentAttendanceBySubjectArray[j].absent_lectures += 1;
@@ -300,11 +257,7 @@ class _MyAttendanceState extends State<MyAttendance> {
             }
           }
           if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(
-                subject_id: records.absentSubjectId![i],
-                subject_title: records.absentSubjectTitle![i],
-                lecture_date: records.absentLectureDate![i],
-                status: 0);
+            var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
             attendanceData.total_lectures += 1;
             attendanceData.absent_lectures += 1;
             studentAttendanceBySubjectArray.add(attendanceData);
@@ -326,8 +279,7 @@ class _MyAttendanceState extends State<MyAttendance> {
   }
 
   void checkPresentAbsentDetailBySemester() {
-    if (dataByDate.records != null &&
-        dataByDate.records!.first.fields != null) {
+    if (dataByDate.records != null && dataByDate.records!.first.fields != null) {
       for (int i = 0; i < dataByDate.records!.length; i++) {
         if (mySemester == dataByDate.records![i].fields!.semester!) {}
       }
@@ -346,9 +298,7 @@ class _MyAttendanceState extends State<MyAttendance> {
               bottom: Radius.circular(14),
             ),
           ),
-          title: Text(enrollmentNo.isNotEmpty
-              ? strings_name.str_attendence
-              : strings_name.str_viewself_attendence),
+          title: Text(enrollmentNo.isNotEmpty ? strings_name.str_attendence : strings_name.str_viewself_attendence),
           actions: <Widget>[
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -364,37 +314,20 @@ class _MyAttendanceState extends State<MyAttendance> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            custom_text(
-                text: name,
-                alignment: Alignment.topLeft,
-                textStyles: blackTextbold14,
-                bottomValue: 5),
+            custom_text(text: name, alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             Visibility(
               visible: PreferenceUtils.getIsLogin() == 2,
-              child: custom_text(
-                  text: "Total Lectures : $totalLectures",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextbold14,
-                  bottomValue: 5),
+              child: custom_text(text: "Total Lectures : $totalLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             ),
             Visibility(
               visible: PreferenceUtils.getIsLogin() == 2,
-              child: custom_text(
-                  text: "Total Present Lectures : $totalPresentLectures",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextbold14,
-                  bottomValue: 5),
+              child: custom_text(text: "Total Present Lectures : $totalPresentLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
             ),
             Row(
               children: [
                 Visibility(
                   visible: PreferenceUtils.getIsLogin() == 2,
-                  child: custom_text(
-                      text:
-                          "Total Present : ${totalPresentPercentage.toStringAsFixed(2)}%",
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextbold14,
-                      bottomValue: 5),
+                  child: custom_text(text: "Total Present : ${totalPresentPercentage.toStringAsFixed(2)}%", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
                 ),
                 Visibility(
                   visible: PreferenceUtils.getIsLogin() == 2,
@@ -405,24 +338,16 @@ class _MyAttendanceState extends State<MyAttendance> {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          primary: totalPresentPercentage >= 75
-                              ? colors_name.presentColor
-                              : colors_name.errorColor,
+                          primary: totalPresentPercentage >= 75 ? colors_name.presentColor : colors_name.errorColor,
                           padding: const EdgeInsets.all(6),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-
                         ),
                         child: Text(
-                          totalPresentPercentage >= 75
-                              ? "Eligible for exam"
-                              : "Not eligible for exam",
+                          totalPresentPercentage >= 75 ? "Eligible for exam" : "Not eligible for exam",
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400),
+                          style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
@@ -430,7 +355,6 @@ class _MyAttendanceState extends State<MyAttendance> {
                 )
               ],
             ),
-
             Stack(
               children: [
                 Container(
@@ -444,25 +368,19 @@ class _MyAttendanceState extends State<MyAttendance> {
                             return Card(
                                 elevation: 5,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Column(
                                         children: [
                                           custom_text(
-                                            text: studentAttendanceArray![index]
-                                                .subject_title!,
+                                            text: studentAttendanceArray![index].subject_title!,
                                             alignment: Alignment.topLeft,
                                             textStyles: blackTextSemiBold12,
                                             bottomValue: 5,
                                           ),
                                           custom_text(
-                                            text: formatterShow.format(
-                                                DateTime.parse(
-                                                    studentAttendanceArray![
-                                                            index]
-                                                        .lecture_date!)),
+                                            text: formatterShow.format(DateTime.parse(studentAttendanceArray![index].lecture_date!)),
                                             alignment: Alignment.topLeft,
                                             textStyles: blackTextSemiBold12,
                                             topValue: 5,
@@ -475,30 +393,17 @@ class _MyAttendanceState extends State<MyAttendance> {
                                       child: ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          primary:
-                                              studentAttendanceArray![index]
-                                                          .status ==
-                                                      1
-                                                  ? colors_name.presentColor
-                                                  : colors_name.errorColor,
+                                          primary: studentAttendanceArray![index].status == 1 ? colors_name.presentColor : colors_name.errorColor,
                                           padding: const EdgeInsets.all(10),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                           ),
                                           elevation: 7.0,
                                         ),
                                         child: Text(
-                                          studentAttendanceArray![index]
-                                                      .status ==
-                                                  1
-                                              ? strings_name.str_present
-                                              : strings_name.str_absent,
+                                          studentAttendanceArray![index].status == 1 ? strings_name.str_present : strings_name.str_absent,
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400),
+                                          style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
                                         ),
                                       ),
                                     ),
@@ -519,37 +424,32 @@ class _MyAttendanceState extends State<MyAttendance> {
                                 elevation: 5,
                                 child: Row(
                                   children: [
-                                    Expanded(child: Column(
+                                    Expanded(
+                                        child: Column(
                                       children: [
                                         custom_text(
-                                          text: studentAttendanceBySubjectArray![
-                                          index]
-                                              .subject_title!,
+                                          text: studentAttendanceBySubjectArray![index].subject_title!,
                                           alignment: Alignment.topLeft,
                                           textStyles: blackTextSemiBold16,
                                           bottomValue: 5,
                                           maxLines: 3,
                                         ),
                                         custom_text(
-                                          text:
-                                          "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
+                                          text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
                                           alignment: Alignment.topLeft,
                                           textStyles: blackTextSemiBold12,
                                           bottomValue: 0,
                                         ),
                                         custom_text(
-                                          text:
-                                          "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
+                                          text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
                                           alignment: Alignment.topLeft,
                                           textStyles: blackTextSemiBold12,
                                           bottomValue: 0,
                                         ),
                                         Visibility(
-                                          visible:
-                                          PreferenceUtils.getIsLogin() == 2,
+                                          visible: PreferenceUtils.getIsLogin() == 2,
                                           child: custom_text(
-                                            text:
-                                            "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%",
+                                            text: "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%",
                                             alignment: Alignment.topLeft,
                                             textStyles: blackTextSemiBold12,
                                             bottomValue: 10,
@@ -567,49 +467,28 @@ class _MyAttendanceState extends State<MyAttendance> {
                                         child: ElevatedButton(
                                           onPressed: () {},
                                           style: ElevatedButton.styleFrom(
-                                            primary: totalPresentPercentage >= 75
-                                                ? colors_name.presentColor
-                                                : colors_name.errorColor,
+                                            primary: totalPresentPercentage >= 75 ? colors_name.presentColor : colors_name.errorColor,
                                             padding: const EdgeInsets.all(6),
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(8),
                                             ),
-
                                           ),
                                           child: Text(
-                                            totalPresentPercentage >= 75
-                                                ? "Eligible for exam"
-                                                : "Not eligible for exam",
+                                            totalPresentPercentage >= 75 ? "Eligible for exam" : "Not eligible for exam",
                                             textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w400),
+                                            style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
                                           ),
                                         ),
                                       ),
                                     )
-
                                   ],
-
                                 ));
                           })
                       : Container(),
                 ),
-                (studentAttendanceArray.isBlank == true &&
-                        studentAttendanceBySubjectArray.isBlank == true)
-                    ? Container(
-                        margin: const EdgeInsets.only(top: 100),
-                        child: custom_text(
-                            text: strings_name.str_no_data,
-                            textStyles: centerTextStyleBlack18,
-                            alignment: Alignment.center))
-                    : Container(),
+                (studentAttendanceArray.isBlank == true && studentAttendanceBySubjectArray.isBlank == true) ? Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)) : Container(),
                 Center(
-                  child: Visibility(
-                      visible: isVisible,
-                      child: const CircularProgressIndicator(
-                          strokeWidth: 5.0, color: colors_name.colorPrimary)),
+                  child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
                 )
               ],
             ),
@@ -670,13 +549,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                             groupValue: _isDate,
                             onChanged: (value) {
                               _isDate = value.toString();
-                              showDatePicker(
-                                      context: context,
-                                      initialDate:
-                                          DateTime.parse(formattedDate),
-                                      firstDate: DateTime(2005),
-                                      lastDate: DateTime.now())
-                                  .then((pickedDate) {
+                              showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
                                 if (pickedDate == null) {
                                   return;
                                 }

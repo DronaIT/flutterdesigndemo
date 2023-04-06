@@ -173,7 +173,7 @@ class _AttendanceState extends State<Attendance> {
                   ),
                 ),
                 Visibility(
-                  visible: false,
+                  visible: showReports,
                   child: GestureDetector(
                     child: Card(
                       elevation: 5,

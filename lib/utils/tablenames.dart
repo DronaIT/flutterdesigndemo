@@ -75,8 +75,8 @@ class TableNames {
   static const CLM_SEMESTER = "semester";
   static const CLM_DIVISION = "division";
   static const CLM_ENROLLMENT_NUMBERS = "enrollment_numbers";
-  static const CLM_MOTHER_NUMBER = "enrollment_numbers";
-  static const CLM_FATHER_NUMBERS = "enrollment_numbers";
+  static const CLM_MOTHER_NUMBER = "mother_numbers";
+  static const CLM_FATHER_NUMBERS = "father_numbers";
   static const CLM_COMPANY_ID = "company_id";
   static const CLM_STATUS = "status";
   /*
@@ -93,6 +93,9 @@ class TableNames {
   static const CLM_PLACED_JOB = "placed_job";
   static const CLM_REJECTED_JOB = "rejected_job";
   static const CLM_BANNED_FROM_PLACEMENT = "is_banned_from_placement";
+
+  static const CLM_PRESENT_SUBJECT_IDS = "present_subject_id";
+  static const CLM_ABSENT_SUBJECT_IDS = "absent_subject_id";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -167,5 +170,5 @@ class TableNames {
   static const EXCEL_COL_MOTHER_NAME = "mother_name";
   static const EXCEL_COL_MOTHER_NUMBER = "mother_number";
   static const EXCEL_COL_FATHER_NUMBER = "father_number";
-  static const APPDATA_TITLE= "Student upload formate";
+  static const APPDATA_TITLE= "Student upload format";
 }
