@@ -15,6 +15,7 @@ import '../customwidget/app_widgets.dart';
 import '../customwidget/custom_text.dart';
 import '../models/App_data_response.dart';
 import '../models/base_api_response.dart';
+import '../utils/preference.dart';
 import '../utils/tablenames.dart';
 import '../utils/utils.dart';
 import '../values/text_styles.dart';
@@ -37,14 +38,59 @@ class _UploadDocumentsState extends State<UploadDocuments> {
 
   String docPath ="";
   String docName ="";
-
+  bool canupload = false, canView = false;
 
   @override
   void initState() {
     super.initState();
+    getPermission();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
-
     getSampleFile();
+  }
+
+  Future<void> getPermission() async {
+    setState(() {
+      isVisible = true;
+    });
+    var roleId = "";
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      roleId = TableNames.STUDENT_ROLE_ID;
+    } else if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      roleId = loginData.roleIdFromRoleIds!.join(',');
+    }
+    var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_UPLOAD_DOCUMENT}')";
+    try{
+      var data = await createStudentRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPLOAD_DOCUMENTS) {
+            setState(() {
+              canupload = true;
+            });
+          }
+
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_DOCUMENTS) {
+            setState(() {
+              canView = true;
+            });
+          }
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+    }on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+
+    setState(() {
+      isVisible = false;
+    });
   }
 
 
@@ -77,55 +123,58 @@ class _UploadDocumentsState extends State<UploadDocuments> {
           body:
           Stack(
             children: [
-              Container(
-                margin: const EdgeInsets.all(10),
-                  child: appData.isNotEmpty == true ?
-                  Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: appData.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: GestureDetector(
-                              child: Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                        child: Text(
-                                            "${appData[index].fields?.title}",
-                                            textAlign: TextAlign.start,
-                                            style:
-                                            blackTextSemiBold16)),
-                                    const Icon(
-                                        Icons.download,
-                                        size: 30,
-                                        color: colors_name.colorPrimary)
-                                  ],
+              Visibility(
+                visible: canView,
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                    child: appData.isNotEmpty == true ?
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: appData.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 5,
+                              child: GestureDetector(
+                                child: Container(
+                                  color: colors_name.colorWhite,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                          child: Text(
+                                              "${appData[index].fields?.title}",
+                                              textAlign: TextAlign.start,
+                                              style:
+                                              blackTextSemiBold16)),
+                                      const Icon(
+                                          Icons.download,
+                                          size: 30,
+                                          color: colors_name.colorPrimary)
+                                    ],
+                                  ),
                                 ),
+                                onTap: () async {
+                                  await launchUrl(Uri.parse(appData[index].fields!.url!), );
+                                },
                               ),
-                              onTap: () async {
-                                await launchUrl(Uri.parse(appData[index].fields!.url!), );
-                              },
-                            ),
-                          );
-                        }),
+                            );
+                          }),
 
 
 
-                  ): Container(
-                      margin: const EdgeInsets.only(top: 100),
-                      child: custom_text(
-                          text: strings_name.str_no_data,
-                          textStyles: centerTextStyleBlack18,
-                          alignment: Alignment.center)),
+                    ): Container(
+                        margin: const EdgeInsets.only(top: 100),
+                        child: custom_text(
+                            text: strings_name.str_no_data,
+                            textStyles: centerTextStyleBlack18,
+                            alignment: Alignment.center)),
+                ),
               ),
               Center(
                 child: Visibility(
@@ -135,17 +184,20 @@ class _UploadDocumentsState extends State<UploadDocuments> {
               )
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-              elevation: 0.0,
-              backgroundColor: colors_name.colorPrimary,
-              onPressed: () {
-                uplaodDocument();
+          floatingActionButton: Visibility(
+            visible: canupload,
+            child: FloatingActionButton(
+                elevation: 0.0,
+                backgroundColor: colors_name.colorPrimary,
+                onPressed: () {
+                  uplaodDocument();
 
-              },
-              child: const Icon(
-                Icons.upload,
-                color: Colors.white,
-              ))),
+                },
+                child: const Icon(
+                  Icons.upload,
+                  color: Colors.white,
+                )),
+          )),
     );
   }
 

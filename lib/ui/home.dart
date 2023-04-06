@@ -139,11 +139,11 @@ class _HomeState extends State<Home> {
               icon: Icons.logout,
               onClicked: () => selectedItem(context, 2),
             ),
-            buildMenuItem(
-              text: strings_name.str_uplaod_doc,
-              icon: Icons.contact_page,
-              onClicked: () => selectedItem(context, 3),
-            ),
+            // buildMenuItem(
+            //   text: strings_name.str_uplaod_doc,
+            //   icon: Icons.contact_page,
+            //   onClicked: () => selectedItem(context, 3),
+            // ),
           ],
         ),
       ),
@@ -200,6 +200,8 @@ class _HomeState extends State<Home> {
                                           } else {
                                             Get.to(const PlacementDashboard());
                                           }
+                                        }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
+                                          Get.to(const UploadDocuments());
                                         }
                                       },
                                     ),
@@ -248,10 +250,10 @@ class _HomeState extends State<Home> {
           Get.offAll(const Login());
         });
         break;
-      case 3:
-        Get.back();
-        Get.to(const UploadDocuments());
-        break;
+      // case 3:
+      //   Get.back();
+      //   Get.to(const UploadDocuments());
+      //   break;
     }
   }
 
