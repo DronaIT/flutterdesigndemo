@@ -208,6 +208,7 @@ class strings_name {
   static const String str_viewothers_attendence = "Attendance History";
   static const String str_viewself_attendence = "My Attendance";
   static const String str_attendence_reports = "Attendance Reports";
+  static const String str_attendence_report = "Attendance Report";
 
   static const String str_semester = "Semester";
   static const String str_division = "Division";
