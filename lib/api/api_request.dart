@@ -615,4 +615,29 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<BaseLoginResponse<LoginFieldsResponse>> addToken(Map<String, dynamic> data,String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": data};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
+      return BaseLoginResponse<LoginFieldsResponse>.fromJson(response, (response) => LoginFieldsResponse.fromJson(response));
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee(Map<String, dynamic> data,String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": data};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_EMPLOYEE + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
+      return BaseLoginResponse<LoginEmployeResponse>.fromJson(response, (response) => LoginEmployeResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

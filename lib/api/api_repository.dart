@@ -559,4 +559,25 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<LoginFieldsResponse>> addToken( Map<String, dynamic> data , String recordId) async {
+    try {
+      final response = await userApi.addToken(data,recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee( Map<String, dynamic> data , String recordId) async {
+    try {
+      final response = await userApi.addTokenEmployee(data,recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+
+
 }

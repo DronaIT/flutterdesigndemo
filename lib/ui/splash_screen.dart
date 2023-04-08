@@ -87,9 +87,23 @@ class StartState extends State<SplashScreen> {
       try {
         var data = await apiRepository.loginApi(query);
         if (data.records!.isNotEmpty) {
-          await PreferenceUtils.setLoginData(data.records!.first.fields!);
-          await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
-          Get.offAll(const Home());
+          String? deviceId = await Utils.getId();
+          if(data.records!.first.fields!.token == null){
+            Map<String, dynamic> query = {
+              "token":deviceId
+            };
+            await apiRepository.addToken(query,data.records!.first.id!);
+            await PreferenceUtils.setLoginData(data.records!.first.fields!);
+            await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+            Get.offAll(const Home());
+          } else if( data.records!.first.fields!.token == deviceId){
+            await PreferenceUtils.setLoginData(data.records!.first.fields!);
+            await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+            Get.offAll(const Home());
+          }else{
+            PreferenceUtils.clearPreference();
+            Get.offAll(const Login());
+          }
         } else {
           Get.offAll(const Login());
         }
@@ -103,9 +117,23 @@ class StartState extends State<SplashScreen> {
       try {
         var dataEmployee = await apiRepository.loginEmployeeApi(query);
         if (dataEmployee.records!.isNotEmpty) {
-          await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
-          await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
-          Get.offAll(const Home());
+          String? deviceId = await Utils.getId();
+          if(dataEmployee.records!.first.fields!.token == null){
+            Map<String, dynamic> query = {
+              "token":deviceId
+            };
+            await apiRepository.addTokenEmployee(query,dataEmployee.records!.first.id!);
+            await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+            await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
+            Get.offAll(const Home());
+          } else if( dataEmployee.records!.first.fields!.token == deviceId){
+            await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+            await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
+            Get.offAll(const Home());
+          }else{
+            PreferenceUtils.clearPreference();
+            Get.offAll(const Login());
+          }
         } else {
           Get.offAll(const Login());
         }

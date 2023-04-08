@@ -25,7 +25,7 @@ class LoginEmployeResponse {
   String? pin_code;
   List<String>? accessible_hub_ids;
   List<String>? hub_id_from_lecture;
-
+  String? token;
   LoginEmployeResponse(
       {this.gender,
       this.employeeId,
@@ -49,7 +49,9 @@ class LoginEmployeResponse {
       this.spouse_mobile_number,
       this.pin_code,
       this.accessible_hub_ids,
-      this.hub_id_from_lecture});
+      this.hub_id_from_lecture ,
+      this.token
+      });
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -76,6 +78,7 @@ class LoginEmployeResponse {
     pin_code = json['pin_code'];
     accessible_hub_ids = json['accessible_hub_ids']?.cast<String>();
     hub_id_from_lecture = json['hub_id_from_lecture']?.cast<String>();
+    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +107,7 @@ class LoginEmployeResponse {
     data['pin_code'] = this.pin_code;
     data['accessible_hub_ids'] = this.accessible_hub_ids;
     data['hub_id_from_lecture'] = this.hub_id_from_lecture;
+    data['token'] = this.token;
     return data;
   }
 }

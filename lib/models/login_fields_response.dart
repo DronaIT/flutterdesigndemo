@@ -49,6 +49,7 @@ class LoginFieldsResponse {
   List<String>? selectedJob;
   List<String>? placedJob;
   List<String>? rejectedJob;
+  String? token;
 
   LoginFieldsResponse({
     this.city,
@@ -96,6 +97,7 @@ class LoginFieldsResponse {
     this.selectedJob,
     this.placedJob,
     this.rejectedJob,
+    this.token
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
@@ -147,6 +149,7 @@ class LoginFieldsResponse {
     selectedJob = json['selected_job']?.cast<String>();
     placedJob = json['placed_job']?.cast<String>();
     rejectedJob = json['rejected_job']?.cast<String>();
+    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
@@ -198,6 +201,7 @@ class LoginFieldsResponse {
     data['selected_job'] = this.selectedJob;
     data['placed_job'] = this.placedJob;
     data['rejected_job'] = this.rejectedJob;
+    data['token'] = this.token;
     return data;
   }
 }

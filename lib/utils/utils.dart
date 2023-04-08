@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:another_flushbar/flushbar.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 extension E on String {
   String lastChars(int n) => substring(length - n);
@@ -134,6 +139,19 @@ class Utils {
       duration: const Duration(seconds: 2),
     ).show(context);
   }
+
+
+  static Future<String?> getId() async {
+    String? deviceId;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } on PlatformException {
+      deviceId = 'Failed to get deviceId.';
+    }
+    return deviceId;
+  }
+
 
   static void showSnackBarDuration(BuildContext context, String message, int second) {
     Flushbar(

@@ -13,6 +13,8 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
+import '../../customwidget/custom_edittext_search.dart';
+import '../../models/student_attendance_response_display.dart';
 import '../../utils/utils.dart';
 
 class AttendanceHistoryDetail extends StatefulWidget {
@@ -24,9 +26,14 @@ class AttendanceHistoryDetail extends StatefulWidget {
 
 class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
   bool isVisible = false;
-  BaseApiResponseWithSerializable<StudentAttendanceResponse> data = BaseApiResponseWithSerializable<StudentAttendanceResponse>();
-  final apiRepository = getIt.get<ApiRepository>();
+   BaseApiResponseWithSerializable<StudentAttendanceResponse> dataMain = BaseApiResponseWithSerializable<StudentAttendanceResponse>();
+  // BaseApiResponseWithSerializable<StudentAttendanceResponse> dataSearch = BaseApiResponseWithSerializable<StudentAttendanceResponse>();
 
+  List<StudentAttendanceResponseDisplay> data = [];
+  List<StudentAttendanceResponseDisplay> dataSearch = [];
+
+  final apiRepository = getIt.get<ApiRepository>();
+  var controllerSearch = TextEditingController();
   var present_count = 0, absent_count = 0, total_count = 0;
 
   void attendanceHistoryDetail() async {
@@ -34,20 +41,28 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
       isVisible = true;
     });
     try{
-      data = await apiRepository.studentAttendanceDetailApi(Get.arguments);
-      if (data.fields != null) {
+      dataMain = await apiRepository.studentAttendanceDetailApi(Get.arguments);
+
+      if (dataMain.fields != null) {
         setState(() {
           isVisible = false;
         });
 
-        if (data.fields?.studentIds != null) {
-          total_count = data.fields?.studentIds?.length ?? 0;
-          for (var i = 0; i < data.fields!.studentIds!.length; i++) {
-            if (data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![i])) {
+        if (dataMain.fields?.studentIds != null) {
+          total_count = dataMain.fields?.studentIds?.length ?? 0;
+          for (var i = 0; i < dataMain.fields!.studentIds!.length; i++) {
+            if (dataMain.fields!.presentIds != null && dataMain.fields!.presentIds!.contains(dataMain.fields!.studentIds![i])) {
               present_count++;
             } else {
               absent_count++;
             }
+            var studentAttendanceResponseDisplay = StudentAttendanceResponseDisplay();
+            studentAttendanceResponseDisplay.studentIds = dataMain.fields!.studentIds![i];
+            studentAttendanceResponseDisplay.enrollmentNumberFromStudentIds = dataMain.fields!.enrollmentNumberFromStudentIds![i];
+            studentAttendanceResponseDisplay.nameFromStudentIds = dataMain.fields!.nameFromStudentIds![i];
+            data.add(studentAttendanceResponseDisplay);
+            dataSearch.add(studentAttendanceResponseDisplay);
+
           }
         }
       } else {
@@ -105,14 +120,35 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                   )
                 ],
               ),
-
+              SizedBox(height: 5,),
+              CustomEditTextSearch(
+                type: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                controller: controllerSearch,
+                onChanges: (value) {
+                  if (value.isEmpty) {
+                    data = [];
+                    data = dataSearch;
+                    setState(() {});
+                  } else {
+                    data = [];
+                    for (var i = 0; i < dataSearch.length; i++) {
+                      if (dataSearch[i].nameFromStudentIds!.toLowerCase().contains(value.toLowerCase())) {
+                        data.add(dataSearch[i]);
+                        //data.add(test[i]);
+                      }
+                    }
+                    setState(() {});
+                  }
+                },
+              ),
               Container(
                 margin: const EdgeInsets.all(10),
-                child: data.fields != null
+                child: data != null
                     ? ListView.builder(
                         primary: false,
                         shrinkWrap: true,
-                        itemCount: data.fields?.nameFromStudentIds?.length,
+                        itemCount: data.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             child: Card(
@@ -124,13 +160,13 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                                       child: Column(
                                         children: [
                                           custom_text(
-                                            text: data.fields!.nameFromStudentIds![index],
+                                            text: data[index].nameFromStudentIds!,
                                             alignment: Alignment.topLeft,
                                             textStyles: primryTextSemiBold14,
                                             bottomValue: 5,
                                           ),
                                           custom_text(
-                                            text: data.fields!.enrollmentNumberFromStudentIds![index],
+                                            text: data[index].enrollmentNumberFromStudentIds!,
                                             alignment: Alignment.topLeft,
                                             textStyles: blackTextSemiBold14,
                                             topValue: 5,
@@ -143,7 +179,7 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                                       child: ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          primary: data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![index]) ? colors_name.presentColor : colors_name.errorColor,
+                                          primary: dataMain.fields!.presentIds != null && dataMain.fields!.presentIds!.contains(data[index].studentIds) ? colors_name.presentColor : colors_name.errorColor,
                                           padding: const EdgeInsets.all(10),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
@@ -151,7 +187,7 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                                           //elevation: 7.0,
                                         ),
                                         child: Text(
-                                          data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![index]) ? strings_name.str_present : strings_name.str_absent,
+                                          dataMain.fields!.presentIds != null && dataMain.fields!.presentIds!.contains(data[index].studentIds) ? strings_name.str_present : strings_name.str_absent,
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
                                         ),
@@ -161,9 +197,9 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                                 )),
                             onTap: () {
                               Get.to(() => const MyAttendance(), arguments: [
-                                {"studentEnrollmentNo": data.fields!.enrollmentNumberFromStudentIds![index]},
-                                {"date": data.fields!.lectureDate},
-                                {"name": data.fields!.nameFromStudentIds?[index]}
+                                {"studentEnrollmentNo": data[index].enrollmentNumberFromStudentIds},
+                                {"date": dataMain.fields!.lectureDate},
+                                {"name": data[index].nameFromStudentIds}
                               ]);
                             },
                           );

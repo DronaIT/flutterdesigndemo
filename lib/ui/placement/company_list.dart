@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
+import '../../customwidget/custom_edittext_search.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
 import '../../models/company_detail_response.dart';
@@ -30,9 +31,10 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? companyList = [];
+  List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? companyListMain = [];
   var update = false;
   bool createJobsAlerts = false, viewJobAlerts = false, updateJobAlerts = false;
-
+  var controllerSearch = TextEditingController();
   String offset = "";
 
   @override
@@ -47,12 +49,14 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       var data = await apiRepository.getCompanyDetailApi("", offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           companyList?.clear();
+          companyListMain?.clear();
         }
+        companyListMain?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyDetailResponse>>);
         companyList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyDetailResponse>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
@@ -60,6 +64,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
         } else {
           setState(() {
             companyList?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
+            companyListMain?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
             isVisible = false;
           });
         }
@@ -68,11 +73,12 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
           isVisible = false;
           if (offset.isEmpty) {
             companyList = [];
+            companyListMain = [];
           }
         });
         offset = "";
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -94,7 +100,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
     }
-    try{
+    try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
@@ -122,14 +128,13 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
         });
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -139,102 +144,137 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_view_create_company),
       body: Stack(
         children: [
-          companyList != null && companyList!.isNotEmpty
-              ? Container(
-                  margin: const EdgeInsets.all(10),
-                  child: ListView.builder(
-                      itemCount: companyList?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Column(
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 8,
+                ),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      companyList = [];
+                      companyList = companyListMain;
+                      setState(() {});
+                    } else {
+                      companyList = [];
+                      for (var i = 0; i < companyListMain!.length; i++) {
+                        if (companyListMain![i].fields!.companyName!.toLowerCase().contains(value.toLowerCase())) {
+                          companyList?.add(companyListMain![i]);
+                          //data.add(test[i]);
+                        }
+                      }
+                      setState(() {});
+                    }
+                  },
+                ),
+                SizedBox(height: 5),
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: companyList != null && companyList!.isNotEmpty
+                        ? ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                            itemCount: companyList?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                  elevation: 5,
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          custom_text(text: "${companyList?[index].fields?.companyName?.trim()}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
-                                          custom_text(text: "Name: ${companyList?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
-                                          custom_text(text: "Contact no.: ${companyList?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                          Flexible(
+                                            child: Column(
+                                              children: [
+                                                custom_text(text: "${companyList?[index].fields?.companyName?.trim()}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
+                                                custom_text(text: "Name: ${companyList?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                                custom_text(text: "Contact no.: ${companyList?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: update,
+                                            child: GestureDetector(
+                                                onTap: () {
+                                                  Get.to(const CompanyDetail(), arguments: companyList?[index].fields?.company_code)?.then((result) {
+                                                    if (result != null && result) {
+                                                      getRecords();
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.edit))),
+                                          )
                                         ],
                                       ),
-                                    ),
-                                    Visibility(
-                                      visible: update,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            Get.to(const CompanyDetail(), arguments: companyList?[index].fields?.company_code)?.then((result) {
-                                              if (result != null && result) {
-                                                getRecords();
-                                              }
-                                            });
-                                          },
-                                          child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.edit))),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Visibility(
-                                      visible: createJobsAlerts,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Get.to(() => const JobOpportunityForm(), arguments: [
-                                            {"company_id": companyList?[index].id},
-                                            {"job_code": ""},
-                                          ]);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          primary: colors_name.presentColor,
-                                          padding: const EdgeInsets.all(10),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Visibility(
+                                            visible: createJobsAlerts,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Get.to(() => const JobOpportunityForm(), arguments: [
+                                                  {"company_id": companyList?[index].id},
+                                                  {"job_code": ""},
+                                                ]);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: colors_name.presentColor,
+                                                padding: const EdgeInsets.all(10),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                elevation: 7.0,
+                                              ),
+                                              child: Text(
+                                                strings_name.str_create_job_opp_detail,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
+                                              ),
+                                            ),
                                           ),
-                                          elevation: 7.0,
-                                        ),
-                                        child: Text(
-                                          strings_name.str_create_job_opp_detail,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Visibility(
-                                      visible: viewJobAlerts,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Get.to(() => const JobOpportunityList(), arguments: [
-                                            {"updateJobOppList": updateJobAlerts},
-                                            {"companyId": companyList?[index].fields?.id},
-                                            {"companyName": companyList?[index].fields?.companyName}
-                                          ]);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          primary: colors_name.presentColor,
-                                          padding: const EdgeInsets.all(10),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          elevation: 7.0,
-                                        ),
-                                        child: const Text(
-                                          strings_name.str_list_job_opp_detail,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ));
-                      }),
-                )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_company, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                                          SizedBox(width: 10),
+                                          Visibility(
+                                            visible: viewJobAlerts,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Get.to(() => const JobOpportunityList(), arguments: [
+                                                  {"updateJobOppList": updateJobAlerts},
+                                                  {"companyId": companyList?[index].fields?.id},
+                                                  {"companyName": companyList?[index].fields?.companyName}
+                                                ]);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: colors_name.presentColor,
+                                                padding: const EdgeInsets.all(10),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                elevation: 7.0,
+                                              ),
+                                              child: const Text(
+                                                strings_name.str_list_job_opp_detail,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ));
+                            })
+                        : Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: custom_text(text: strings_name.str_no_company, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
+                          )),
+              ],
+            ),
+          ),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

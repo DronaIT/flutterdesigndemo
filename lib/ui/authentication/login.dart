@@ -168,7 +168,9 @@ class _LoginState extends State<Login> {
                               isVisible = true;
                             });
                             // var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
+
                             var query = "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
+
                             var data = await loginRepository.loginApi(query);
                             try{
                               if (data.records!.isNotEmpty) {
@@ -180,6 +182,11 @@ class _LoginState extends State<Login> {
                                 } else if (data.records!.first.fields?.password != passController.text.toString()) {
                                   Utils.showSnackBar(context, strings_name.str_invalide_password);
                                 } else {
+                                  String? deviceId = await Utils.getId();
+                                  Map<String, dynamic> query = {
+                                    "token":deviceId
+                                  };
+                                  await loginRepository.addToken(query,data.records!.first.id!);
                                   await PreferenceUtils.setIsLogin(1);
                                   await PreferenceUtils.setLoginData(data.records!.first.fields!);
                                   await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
@@ -188,7 +195,6 @@ class _LoginState extends State<Login> {
                               } else if (data.records!.length == 0) {
                                 try{
                                   var dataEmployee = await loginRepository.loginEmployeeApi(query);
-
                                   if (dataEmployee.records!.isNotEmpty) {
                                     setState(() {
                                       isVisible = false;
@@ -198,6 +204,11 @@ class _LoginState extends State<Login> {
                                     } else if (dataEmployee.records!.first.fields?.password != passController.text.toString()) {
                                       Utils.showSnackBar(context, strings_name.str_invalide_password);
                                     } else {
+                                      String? deviceId = await Utils.getId();
+                                      Map<String, dynamic> query = {
+                                        "token":deviceId
+                                      };
+                                      await loginRepository.addTokenEmployee(query,dataEmployee.records!.first.id!);
                                       await PreferenceUtils.setIsLogin(2);
                                       await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
                                       await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
