@@ -36,8 +36,8 @@ class _UploadDocumentsState extends State<UploadDocuments> {
   var desController = TextEditingController();
   var cloudinary;
 
-  String docPath ="";
-  String docName ="";
+  String docPath = "";
+  String docName = "";
   bool canupload = false, canView = false;
 
   @override
@@ -61,7 +61,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
       roleId = loginData.roleIdFromRoleIds!.join(',');
     }
     var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_UPLOAD_DOCUMENT}')";
-    try{
+    try {
       var data = await createStudentRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
@@ -80,7 +80,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
       } else {
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -93,7 +93,6 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     });
   }
 
-
   Future<void> getSampleFile() async {
     setState(() {
       isVisible = true;
@@ -101,7 +100,17 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     try {
       var data = await createStudentRepository.getAppData();
       if (data.records != null && data.records!.isNotEmpty) {
-        appData = data.records!;
+        for (var i = 0; i < data.records!.length; i++) {
+          if (PreferenceUtils.getIsLogin() == 2) {
+            if (data.records![i].fields!.isForStudent == 0.toString()) {
+              appData.add(data.records![i]);
+            }
+          } else {
+            if (data.records![i].fields!.isForStudent == 1.toString()) {
+              appData.add(data.records![i]);
+            }
+          }
+        }
       }
       setState(() {
         isVisible = false;
@@ -120,67 +129,48 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     return SafeArea(
       child: Scaffold(
           appBar: AppWidgets.appBarWithoutBack(strings_name.str_uplaod_doc),
-          body:
-          Stack(
+          body: Stack(
             children: [
               Visibility(
                 visible: canView,
                 child: Container(
                   margin: const EdgeInsets.all(10),
-                    child: appData.isNotEmpty == true ?
-                    Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      child: ListView.builder(
-                          primary: false,
-                          shrinkWrap: true,
-                          itemCount: appData.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 5,
-                              child: GestureDetector(
-                                child: Container(
-                                  color: colors_name.colorWhite,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                          child: Text(
-                                              "${appData[index].fields?.title}",
-                                              textAlign: TextAlign.start,
-                                              style:
-                                              blackTextSemiBold16)),
-                                      const Icon(
-                                          Icons.download,
-                                          size: 30,
-                                          color: colors_name.colorPrimary)
-                                    ],
+                  child: appData.isNotEmpty == true
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: ListView.builder(
+                              primary: false,
+                              shrinkWrap: true,
+                              itemCount: appData.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 5,
+                                  child: Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(child: Text("${appData[index].fields?.title}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
+                                        GestureDetector(
+                                            onTap: () async {
+                                              await launchUrl(
+                                                Uri.parse(appData[index].fields!.url!),
+                                                mode: LaunchMode.externalApplication
+                                              );
+                                            },
+                                            child: const Icon(Icons.download, size: 30, color: colors_name.colorPrimary))
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                onTap: () async {
-                                  await launchUrl(Uri.parse(appData[index].fields!.url!), );
-                                },
-                              ),
-                            );
-                          }),
-
-
-
-                    ): Container(
-                        margin: const EdgeInsets.only(top: 100),
-                        child: custom_text(
-                            text: strings_name.str_no_data,
-                            textStyles: centerTextStyleBlack18,
-                            alignment: Alignment.center)),
+                                );
+                              }),
+                        )
+                      : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
                 ),
               ),
               Center(
-                child: Visibility(
-                    visible: isVisible,
-                    child: const CircularProgressIndicator(
-                        strokeWidth: 5.0, color: colors_name.colorPrimary)),
+                child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
               )
             ],
           ),
@@ -191,7 +181,6 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                 backgroundColor: colors_name.colorPrimary,
                 onPressed: () {
                   uplaodDocument();
-
                 },
                 child: const Icon(
                   Icons.upload,
@@ -201,134 +190,132 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     );
   }
 
-
-
   Future<void> uplaodDocument() async {
-    Dialog errorDialog = Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          GestureDetector(
-            onTap: (){
-              Get.back();
-            },
-            child: Container(
-              margin: EdgeInsets.only(
-                top: 10,right: 10
-              ),
-              alignment: Alignment.topRight,
-              child: const Icon(
-                Icons.close,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          custom_text(text: strings_name.str_title, textStyles: boldTitlePrimaryColorStyle,topValue: 0,),
-          custom_edittext(
-            hintText: strings_name.str_title,
-            type: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            controller: titleController,
-            maxLines: 1,
-            topValue: 0,
-          ),
-          custom_text(text: strings_name.str_description, textStyles: boldTitlePrimaryColorStyle,topValue:3,),
-          custom_edittext(
-            hintText: strings_name.str_description,
-            type: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            controller: desController,
-            maxLines: 3,
-            topValue: 0,
-          ),
-          SizedBox(height: 5),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              custom_text(
-                text: strings_name.str_document,
-                leftValue: 10,
-                alignment: Alignment.topLeft,
-                textStyles: blackTextSemiBold16,
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: Row(children: [
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return  StatefulBuilder(builder: (context, StateSetter setState){
+            return Dialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
                   GestureDetector(
-                    child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black),
                     onTap: () {
-                      documentfile();
+                      Get.back();
                     },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10, right: 10),
+                      alignment: Alignment.topRight,
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   custom_text(
-                    text: strings_name.str_upload_file,
-                    textStyles: blackTextSemiBold14,
-                    leftValue: 5,
+                    text: strings_name.str_title,
+                    textStyles: boldTitlePrimaryColorStyle,
+                    topValue: 0,
                   ),
-                ]),
+                  custom_edittext(
+                    hintText: strings_name.str_title,
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    controller: titleController,
+                    maxLines: 1,
+                    topValue: 0,
+                  ),
+                  custom_text(
+                    text: strings_name.str_description,
+                    textStyles: boldTitlePrimaryColorStyle,
+                    topValue: 3,
+                  ),
+                  custom_edittext(
+                    hintText: strings_name.str_description,
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    controller: desController,
+                    maxLines: 3,
+                    topValue: 0,
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      custom_text(
+                        text: strings_name.str_document,
+                        leftValue: 10,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: Row(children: [
+                          GestureDetector(
+                            child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black),
+                            onTap: () async {
+                              FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
+                              if (result != null) {
+                                setState(() {
+                                  docPath = result.files.single.path!;
+                                  docName = result.files.single.name;
+
+                                });
+                              }
+                              // documentfile();
+                            },
+                          ),
+                          custom_text(
+                            text: strings_name.str_upload_file,
+                            textStyles: blackTextSemiBold14,
+                            leftValue: 5,
+                          ),
+                        ]),
+                      ),
+                    ],
+                  ),
+                  custom_text(
+                    text: docName,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold14,
+                    maxLines: 1,
+                    topValue: 0,
+                  ),
+                  SizedBox(height: 10),
+                  CustomButton(
+                      text: strings_name.str_submit,
+                      click: () async {
+                        if (titleController.text.trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_title_err);
+                        } else if (docPath.isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_uplaod_err);
+                        } else {
+                          var docMainPath = " ";
+                          if (docPath.isNotEmpty) {
+                            CloudinaryResponse response = await cloudinary.uploadFile(
+                              CloudinaryFile.fromFile(docPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_APP_ASSETS),
+                            );
+                            docMainPath = response.secureUrl;
+                          }
+                          addRecord(docMainPath);
+                          Get.back();
+                        }
+                      })
+                ],
               ),
-            ],
-          ),
-          custom_text(
-            text: docName,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold14,
-            maxLines: 1,
-            topValue: 0,
-          ),
-          SizedBox(height: 10),
-          CustomButton(
-              text: strings_name.str_submit,
-              click: () async {
-                if (titleController.text.trim().isEmpty) {
-                  Utils.showSnackBar(context, strings_name.str_title_err);
-                }else if(docPath.isEmpty){
-                  Utils.showSnackBar(context, strings_name.str_uplaod_err);
-                } else {
-                  var docMainPath =" ";
-                  if (docPath.isNotEmpty) {
-                    CloudinaryResponse response = await cloudinary.uploadFile(
-                      CloudinaryFile.fromFile(docPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_APP_ASSETS),
-                    );
-                    docMainPath = response.secureUrl;
-                  }
-                  addRecord(docMainPath);
-                  Get.back();
-                }
-              })
-        ],
-      ),
-    );
-    showDialog(context: context, builder: (BuildContext context) {
-      return StatefulBuilder(builder: (context, StateSetter setState) => errorDialog);
-    });
+            );
+          });
+        });
   }
-
-  documentfile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
-    if (result != null) {
-      setState(() {
-        docPath = result.files.single.path!;
-        docName = result.files.single.name;
-        print("test=>${docName}");
-      });
-    }
-  }
-
   Future<void> addRecord(String path) async {
     setState(() {
       isVisible = true;
     });
-    try{
-      Map<String, dynamic> docUplaod = {
-        "title": titleController.text,
-        "url": path,
-        "description":desController.text
-      };
-      print("etsdtdt=>${docUplaod}");
+    try {
+      //isForStudent = "0" - Employee , "1" - student
+      Map<String, dynamic> docUplaod = {"title": titleController.text, "url": path, "description": desController.text , "isForStudent" : PreferenceUtils.getIsLogin() ==2 ? "0" : "1"};
       var resp = await createStudentRepository.addAppDataApi(docUplaod);
       if (resp != null) {
         setState(() {
@@ -342,14 +329,12 @@ class _UploadDocumentsState extends State<UploadDocuments> {
           isVisible = false;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
-
 }
