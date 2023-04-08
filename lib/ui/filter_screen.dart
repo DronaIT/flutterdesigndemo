@@ -68,6 +68,7 @@ class _FilterState extends State<Filter> {
   String offset = "";
 
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? studentList = [];
 
   @override
   void initState() {
@@ -586,8 +587,11 @@ class _FilterState extends State<Filter> {
       for (int i = 0; i < viewStudent!.length; i++) {
         var strDate = startDate;
         if(viewStudent![i].fields!.presentLectureDate?.isNotEmpty == true) {
+          var str = strDate.toString().split(" ").first;
           for (int j = 0; j < viewStudent![i].fields!.presentLectureDate!.length; j++) {
+            if(viewStudent![i].fields?.presentLectureDate![j] == str){
 
+            }
           }
         }
       }
