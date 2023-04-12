@@ -49,7 +49,6 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     if (Get.arguments[0]["studentList"] != null) {
       test = Get.arguments[0]["studentList"];
       studentList = Get.arguments[0]["studentList"];
-
     } else if (Get.arguments[0]["lectureId"] != null) {
       lectureId = Get.arguments[0]["lectureId"];
       fromEdit = true;
@@ -74,22 +73,17 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
             for (var i = 0; i < data.fields!.studentIds!.length; i++) {
               var loginFieldResponse = LoginFieldsResponse();
               loginFieldResponse.name = data.fields!.nameFromStudentIds![i];
-              loginFieldResponse.enrollmentNumber =
-                  data.fields!.enrollmentNumberFromStudentIds![i];
-              if (data.fields!.presentIds != null &&
-                  data.fields!.presentIds!
-                      .contains(data.fields!.studentIds![i])) {
+              loginFieldResponse.enrollmentNumber = data.fields!.enrollmentNumberFromStudentIds![i];
+              if (data.fields!.presentIds != null && data.fields!.presentIds!.contains(data.fields!.studentIds![i])) {
                 loginFieldResponse.attendanceStatus = 1;
               } else {
                 loginFieldResponse.attendanceStatus = 0;
               }
-              var studentData =
-                  BaseApiResponseWithSerializable<LoginFieldsResponse>();
+              var studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
               studentData.id = data.fields?.studentIds![i];
               studentData.fields = loginFieldResponse;
-                test.add(studentData);
-               studentList = List.from(test);
-
+              test.add(studentData);
+              studentList = List.from(test);
             }
             studentList.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
             test.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
@@ -130,16 +124,9 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         Column(
           children: [
             GestureDetector(
-              child: custom_text(
-                  text: "${strings_name.str_select_date} : $formattedDate",
-                  textStyles: blackTextSemiBold16),
+              child: custom_text(text: "${strings_name.str_select_date} : $formattedDate", textStyles: blackTextSemiBold16),
               onTap: () {
-                showDatePicker(
-                        context: context,
-                        initialDate: DateTime.parse(formattedDate),
-                        firstDate: DateTime(2005),
-                        lastDate: DateTime.now())
-                    .then((pickedDate) {
+                showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
                   if (pickedDate == null) {
                     return;
                   }
@@ -151,23 +138,19 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               },
             ),
             GestureDetector(
-              child: custom_text(
-                  text: "${strings_name.str_select_time} : $formattedTime",
-                  textStyles: blackTextSemiBold16),
+              child: custom_text(text: "${strings_name.str_select_time} : $formattedTime", textStyles: blackTextSemiBold16),
               onTap: () {
                 DateTime dateTime = DateFormat("hh:mm aa").parse(formattedTime);
                 TimeOfDay timeOfDay = TimeOfDay.fromDateTime(dateTime);
 
-                showTimePicker(context: context, initialTime: timeOfDay)
-                    .then((pickedTime) {
+                showTimePicker(context: context, initialTime: timeOfDay).then((pickedTime) {
                   if (pickedTime == null) {
                     return;
                   }
                   setState(() {
                     var formatter = DateFormat('hh:mm aa');
                     var dateTime = DateTime.now();
-                    var time = DateTime(dateTime.year, dateTime.month,
-                        dateTime.day, pickedTime.hour, pickedTime.minute);
+                    var time = DateTime(dateTime.year, dateTime.month, dateTime.day, pickedTime.hour, pickedTime.minute);
                     formattedTime = formatter.format(time);
                   });
                 });
@@ -178,8 +161,8 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               textInputAction: TextInputAction.done,
               controller: controllerSearch,
               onChanges: (value) {
-               if (value.isEmpty) {
-                   studentList = [];
+                if (value.isEmpty) {
+                  studentList = [];
                   studentList = List.from(test);
                   setState(() {});
                 } else {
@@ -208,49 +191,23 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    custom_text(
-                                        text:
-                                            "${studentList[index].fields?.name}",
-                                        textStyles: blackTextSemiBold16),
-                                    custom_text(
-                                        topValue: 0,
-                                        bottomValue: 5,
-                                        text:
-                                            "Enrollment No: ${studentList[index].fields?.enrollmentNumber}",
-                                        textStyles: blackTextSemiBold14),
+                                    custom_text(text: "${studentList[index].fields?.name}", textStyles: blackTextSemiBold16),
+                                    custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
                                     CustomRadioButton(
-                                      unSelectedColor:
-                                          Theme.of(context).cardColor,
-                                      buttonLables: [
-                                        strings_name.str_present,
-                                        strings_name.str_absent
-                                      ],
-                                      buttonValues: [
-                                        strings_name.str_present,
-                                        strings_name.str_absent
-                                      ],
+                                      unSelectedColor: Theme.of(context).cardColor,
+                                      buttonLables: [strings_name.str_present, strings_name.str_absent],
+                                      buttonValues: [strings_name.str_present, strings_name.str_absent],
                                       radioButtonValue: (value) {
                                         setState(() {
-                                          if (value ==
-                                              strings_name.str_present) {
-                                            studentList[index]
-                                                .fields
-                                                ?.attendanceStatus = 1;
-                                          } else if (value ==
-                                              strings_name.str_absent) {
-                                            studentList[index]
-                                                .fields
-                                                ?.attendanceStatus = 0;
+                                          if (value == strings_name.str_present) {
+                                            studentList[index].fields?.attendanceStatus = 1;
+                                          } else if (value == strings_name.str_absent) {
+                                            studentList[index].fields?.attendanceStatus = 0;
                                           }
                                         });
                                       },
                                       selectedColor: colors_name.colorPrimary,
-                                      defaultSelected: studentList[index]
-                                                  .fields
-                                                  ?.attendanceStatus ==
-                                              1
-                                          ? strings_name.str_present
-                                          : strings_name.str_absent,
+                                      defaultSelected: studentList[index].fields?.attendanceStatus == 1 ? strings_name.str_present : strings_name.str_absent,
                                     ),
                                   ],
                                 ),
@@ -259,21 +216,14 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                           }),
                     ),
                   )
-                : Container(
-                    margin: const EdgeInsets.only(top: 100),
-                    child: custom_text(
-                        text: strings_name.str_no_students,
-                        textStyles: centerTextStyleBlack18,
-                        alignment: Alignment.center)),
+                : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             CustomButton(
               text: strings_name.str_submit_attendance,
               click: () {
                 if (formattedDate.trim().isEmpty) {
-                  Utils.showSnackBar(
-                      context, strings_name.str_empty_select_date);
+                  Utils.showSnackBar(context, strings_name.str_empty_select_date);
                 } else if (formattedTime.trim().isEmpty) {
-                  Utils.showSnackBar(
-                      context, strings_name.str_empty_select_time);
+                  Utils.showSnackBar(context, strings_name.str_empty_select_time);
                 } else {
                   var pending = false;
                   for (var i = 0; i < studentList.length; i++) {
@@ -286,8 +236,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                   if (!pending) {
                     confirmationDialog();
                   } else {
-                    Utils.showSnackBar(
-                        context, strings_name.str_err_submit_attendance);
+                    Utils.showSnackBar(context, strings_name.str_err_submit_attendance);
                   }
                 }
               },
@@ -295,10 +244,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
           ],
         ),
         Center(
-          child: Visibility(
-              visible: isVisible,
-              child: const CircularProgressIndicator(
-                  strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
       ]),
     ));
@@ -325,9 +271,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            custom_text(
-                text: 'Please confirm the attendance',
-                textStyles: boldTitlePrimaryColorStyle),
+            custom_text(text: 'Please confirm the attendance', textStyles: boldTitlePrimaryColorStyle),
             SizedBox(height: 5.h),
             custom_text(
               text: 'Total Students : ${studentIds.length}',
@@ -368,8 +312,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         ),
       ),
     );
-    showDialog(
-        context: context, builder: (BuildContext context) => errorDialog);
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
   }
 
   Future<void> submitAttendance() async {
@@ -401,8 +344,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         var json = request.toJson();
         json.removeWhere((key, value) => value == null);
 
-        var resp =
-            await apiRepository.updateStudentAttendanceApi(json, lectureId);
+        var resp = await apiRepository.updateStudentAttendanceApi(json, lectureId);
         if (resp.id!.isNotEmpty) {
           setState(() {
             isVisible = false;

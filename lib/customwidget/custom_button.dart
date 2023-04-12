@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatefulWidget {
   final String text;
   final double fontSize;
+  final double bWidth;
   final Color color;
   final FontWeight fontWeight;
   final TextAlign textAlign;
@@ -15,6 +16,7 @@ class CustomButton extends StatefulWidget {
       {required this.text,
       required this.click,
       this.fontSize = 20,
+        this.bWidth = 0,
       this.color = Colors.white,
       this.textAlign = TextAlign.center,
       this.fontWeight = FontWeight.w700});
@@ -28,12 +30,13 @@ class _CustomButtonState extends State<CustomButton> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 10, bottom: 10),
-      width: MediaQuery.of(context).size.width * 0.7,
+      width: widget.bWidth > 0 ? widget.bWidth : MediaQuery.of(context).size.width * 0.7,
+      height: 45,
       child: ElevatedButton(
         onPressed: widget.click,
         style: ElevatedButton.styleFrom(
           primary:colors_name.colorPrimary,
-          padding: const EdgeInsets.all(13),
+          padding: const EdgeInsets.all(10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

@@ -248,6 +248,16 @@ class Utils {
     }
     return specializationId;
   }
+
+  static String? getSpecializationName(String? specializationId) {
+    final specializationList = PreferenceUtils.getSpecializationList();
+    for (int i = 0; i < specializationList.records!.length; i++) {
+      if (specializationList.records![i].id == specializationId) {
+        return specializationList.records![i].fields?.specializationName!.toString();
+      }
+    }
+    return specializationId;
+  }
 }
 
 class DateFormate {

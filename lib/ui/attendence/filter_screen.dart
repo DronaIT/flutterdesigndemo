@@ -14,12 +14,15 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
+import 'package:flutterdesigndemo/ui/attendence/filter_data_screen.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class Filter extends StatefulWidget {
   const Filter({Key? key}) : super(key: key);
@@ -70,9 +73,19 @@ class _FilterState extends State<Filter> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? studentList = [];
 
+  int continuousCount = 3;
+  String title = strings_name.str_filter;
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments[0]["days"] != null) {
+      continuousCount = Get.arguments[0]["days"];
+    }
+    if (Get.arguments[1]["title"] != null) {
+      title = Get.arguments[1]["title"];
+    }
+
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
 
@@ -113,7 +126,7 @@ class _FilterState extends State<Filter> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-            appBar: AppWidgets.appBarWithoutBack(strings_name.str_filter),
+            appBar: AppWidgets.appBarWithoutBack(title),
             body: Stack(
               children: [
                 SingleChildScrollView(
@@ -406,6 +419,9 @@ class _FilterState extends State<Filter> {
                           } else if (startDate == null || endDate == null) {
                             Utils.showSnackBar(context, strings_name.str_empty_date_range);
                           } else {
+                            viewStudent = [];
+                            studentList = [];
+
                             fetchRecords();
                           }
                         },
@@ -583,17 +599,51 @@ class _FilterState extends State<Filter> {
   }
 
   void filterData() {
+    print(viewStudent?.length);
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
       for (int i = 0; i < viewStudent!.length; i++) {
-        var strDate = startDate;
-        if(viewStudent![i].fields!.presentLectureDate?.isNotEmpty == true) {
-          var str = strDate.toString().split(" ").first;
-          for (int j = 0; j < viewStudent![i].fields!.presentLectureDate!.length; j++) {
-            if(viewStudent![i].fields?.presentLectureDate![j] == str){
-
+        DateTime? strDate;
+        var enCheck = DateFormat("yyyy-MM-dd").format(endDate!);
+        var strCheck = "";
+        int continueCheck = 0;
+        do {
+          if (strDate == null) {
+            strDate = startDate;
+          } else {
+            strDate = strDate.add(Duration(days: 1));
+          }
+          strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
+          if (viewStudent![i].fields!.lecture_date?.contains(strCheck) == true) {
+            bool subjectCheck = true;
+            var pos = viewStudent![i].fields!.lecture_date?.indexOf(strCheck);
+            if (subjectRecordId.isNotEmpty && viewStudent![i].fields!.lectureSubjectId![pos!] != subjectRecordId) {
+              subjectCheck = false;
+            }
+            if (subjectCheck && viewStudent![i].fields!.absentLectureDate?.isNotEmpty == true) {
+              if (viewStudent![i].fields!.absentLectureDate?.contains(strCheck) == true) {
+                continueCheck++;
+                if (continueCheck == continuousCount) {
+                  studentList?.add(viewStudent![i]);
+                  break;
+                }
+              } else {
+                continueCheck = 0;
+              }
             }
           }
-        }
+        } while (strCheck != enCheck);
+      }
+      if (studentList?.isNotEmpty == true) {
+        studentList?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+        Get.to(const FilterData(), arguments: [
+          {"studentList": studentList}
+        ])?.then((result) {
+          if (result != null && result) {
+            // Get.back(closeOverlays: true);
+          }
+        });
+      } else {
+        Utils.showSnackBarUsingGet(strings_name.str_no_students);
       }
     }
   }

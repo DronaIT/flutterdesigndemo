@@ -461,8 +461,9 @@ class strings_name {
   static const String str_document = "Document";
   static const String str_doc_added = "Document uploaded successfully.";
 
-
-
-
-
+  static const String str_invalid_mobile = "Invalid mobile number";
+  static const String str_call = "Call";
+  static const String str_3_days = "Continuous 3 days absents";
+  static const String str_5_days = "Continuous 5 days absents";
+  static const String str_10_days = "Continuous 10 days absents";
 }

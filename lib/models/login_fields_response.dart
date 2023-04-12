@@ -29,6 +29,7 @@ class LoginFieldsResponse {
   List<String>? presentSubjectTitle;
   List<String>? presentSubjectId;
   List<String>? lecture_date;
+  List<String>? lectureSubjectId;
   int attendanceStatus = 1;
 
   String? sr_number;
@@ -80,6 +81,7 @@ class LoginFieldsResponse {
     this.presentSubjectTitle,
     this.presentSubjectId,
     this.lecture_date,
+    this.lectureSubjectId,
     this.sr_number,
     this.birthdate,
     this.aadhar_card_number,
@@ -130,6 +132,7 @@ class LoginFieldsResponse {
     presentSubjectTitle = json['present_subject_title']?.cast<String>();
     presentSubjectId = json['present_subject_id']?.cast<String>();
     lecture_date = json['lecture_date']?.cast<String>();
+    lectureSubjectId = json['lecture_subject_id']?.cast<String>();
 
     sr_number = json['sr_number'];
     birthdate = json['birthdate'];
@@ -182,6 +185,7 @@ class LoginFieldsResponse {
     data['present_subject_id'] = this.presentSubjectId;
     data['present_lecture_ids'] = this.presentLectureIds;
     data['lecture_date'] = this.lecture_date;
+    data['lecture_subject_id'] = this.lectureSubjectId;
 
     data['sr_number'] = this.sr_number;
     data['birthdate'] = this.birthdate;
