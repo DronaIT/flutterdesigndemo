@@ -145,18 +145,43 @@ class _MyAttendanceState extends State<MyAttendance> {
 
   String _isDate = "";
 
+  String getFormattedDate(String date) {
+    /// Convert into local date format.
+    var localDate = DateTime.parse(date).toLocal();
+
+    /// inputFormat - format getting from api or other func.
+    /// e.g If 2021-05-27 9:34:12.781341 then format must be yyyy-MM-dd HH:mm
+    /// If 27/05/2021 9:34:12.781341 then format must be dd/MM/yyyy HH:mm
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+    var inputDate = inputFormat.parse(localDate.toString());
+
+    /// outputFormat - convert into format you want to show.
+    var outputFormat = DateFormat('dd/MM/yyyy HH:mm');
+    var outputDate = outputFormat.format(inputDate);
+
+    return outputDate.toString();
+  }
   void checkPresentAbsentDetailByDate() {
     if (dataByDate.records!.isNotEmpty) {
       if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.presentLectureDate != null) {
         for (int i = 0; i < dataByDate.records!.first.fields!.presentLectureDate!.length; i++) {
-          if (formattedDate == dataByDate.records!.first.fields!.presentLectureDate![i]) {
+          // DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+          // DateTime dateTime = dateFormat.parse(dataByDate.records!.first.fields!.presentLectureDate![i]);
+          // DateTime dateTime1 = dateFormat.parse(formattedDate);
+          DateTime fudgeThis = DateTime.parse(formattedDate);
+          if ( DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]) {
+            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.presentSubjectId![i], subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.presentLectureDate![i], status: 1));
+          }else if(DateFormat("yyyy-MM-dd").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]){
             studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.presentSubjectId![i], subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.presentLectureDate![i], status: 1));
           }
         }
       }
       if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.absentLectureDate != null) {
         for (int i = 0; i < dataByDate.records!.first.fields!.absentLectureDate!.length; i++) {
-          if (formattedDate == dataByDate.records!.first.fields!.absentLectureDate![i]) {
+          DateTime fudgeThis = DateTime.parse(formattedDate);
+          if (DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
+            studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.absentSubjectId![i], subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.absentLectureDate![i], status: 0));
+          } else  if (DateFormat("yyyy-MM-dd").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.absentSubjectId![i], subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.absentLectureDate![i], status: 0));
           }
         }
@@ -307,6 +332,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                   color: Colors.white,
                   iconSize: 30,
                   onPressed: () {
+
                     createBottomFilterNew();
                   }),
             ),
@@ -434,20 +460,26 @@ class _MyAttendanceState extends State<MyAttendance> {
                                           bottomValue: 5,
                                           maxLines: 3,
                                         ),
-                                        custom_text(
-                                          text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
-                                          alignment: Alignment.topLeft,
-                                          textStyles: blackTextSemiBold12,
-                                          bottomValue: 0,
-                                        ),
-                                        custom_text(
-                                          text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
-                                          alignment: Alignment.topLeft,
-                                          textStyles: blackTextSemiBold12,
-                                          bottomValue: 0,
+                                        Visibility(
+                                          visible: PreferenceUtils.getIsLogin() == 2,
+                                          child: custom_text(
+                                            text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
+                                            alignment: Alignment.topLeft,
+                                            textStyles: blackTextSemiBold12,
+                                            bottomValue: 0,
+                                          ),
                                         ),
                                         Visibility(
                                           visible: PreferenceUtils.getIsLogin() == 2,
+                                          child: custom_text(
+                                            text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
+                                            alignment: Alignment.topLeft,
+                                            textStyles: blackTextSemiBold12,
+                                            bottomValue: 0,
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: true,
                                           child: custom_text(
                                             text: "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%",
                                             alignment: Alignment.topLeft,
@@ -467,14 +499,14 @@ class _MyAttendanceState extends State<MyAttendance> {
                                         child: ElevatedButton(
                                           onPressed: () {},
                                           style: ElevatedButton.styleFrom(
-                                            primary: totalPresentPercentage >= 75 ? colors_name.presentColor : colors_name.errorColor,
+                                            primary: ((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures) >= 75 ? colors_name.presentColor : colors_name.errorColor,
                                             padding: const EdgeInsets.all(6),
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(8),
                                             ),
                                           ),
                                           child: Text(
-                                            totalPresentPercentage >= 75 ? "Eligible for exam" : "Not eligible for exam",
+                                            ((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures) >= 75 ? "Eligible for exam" : "Not eligible for exam",
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
                                           ),
@@ -546,7 +578,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                               rightValue: 5,
                             ),
                             value: strings_name.str_by_date,
-                            groupValue: _isDate,
+                            groupValue: "",
                             onChanged: (value) {
                               _isDate = value.toString();
                               showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
@@ -592,7 +624,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                               rightValue: 5,
                             ),
                             value: strings_name.str_by_subject,
-                            groupValue: _isDate,
+                            groupValue: "",
                             onChanged: (value) {
                               _isDate = value.toString();
                               viewAttendanceBySubjects();

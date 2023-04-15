@@ -466,4 +466,8 @@ class strings_name {
   static const String str_3_days = "Continuous 3 days absents";
   static const String str_5_days = "Continuous 5 days absents";
   static const String str_10_days = "Continuous 10 days absents";
+  static const String str_today_days = "Today's absents ";
+
+
+  static const String str_export_data = "Export data";
 }

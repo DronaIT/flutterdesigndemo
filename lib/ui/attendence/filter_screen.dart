@@ -75,12 +75,16 @@ class _FilterState extends State<Filter> {
 
   int continuousCount = 3;
   String title = strings_name.str_filter;
+  var todays = false;
 
   @override
   void initState() {
     super.initState();
     if (Get.arguments[0]["days"] != null) {
       continuousCount = Get.arguments[0]["days"];
+      if (continuousCount == 1) {
+        todays = true;
+      }
     }
     if (Get.arguments[1]["title"] != null) {
       title = Get.arguments[1]["title"];
@@ -133,25 +137,30 @@ class _FilterState extends State<Filter> {
                   child: Column(
                     children: [
                       SizedBox(height: 10.h),
-                      custom_text(
-                        text: strings_name.str_select_date_range,
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
-                        topValue: 0,
+                      Visibility(
+                        visible: !todays,
+                        child: custom_text(
+                          text: strings_name.str_select_date_range,
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
+                          topValue: 0,
+                        ),
                       ),
-                      startDate != null && endDate != null
-                          ? GestureDetector(
-                              child: custom_text(
-                                text: "${startDate.toString().split(" ").first} - ${endDate.toString().split(" ").first}",
-                                alignment: Alignment.topLeft,
-                                textStyles: primaryTextSemiBold16,
-                                topValue: 0,
-                              ),
-                              onTap: () {
-                                _show();
-                              },
-                            )
-                          : Container(),
+                      Visibility(
+                        visible: !todays,
+                          child: startDate != null && endDate != null
+                              ? GestureDetector(
+                                  child: custom_text(
+                                    text: "${startDate.toString().split(" ").first} - ${endDate.toString().split(" ").first}",
+                                    alignment: Alignment.topLeft,
+                                    textStyles: primaryTextSemiBold16,
+                                    topValue: 0,
+                                  ),
+                                  onTap: () {
+                                    _show();
+                                  },
+                                )
+                              : Container()),
                       SizedBox(height: 5.h),
                       custom_text(
                         text: strings_name.str_select_hub,
@@ -576,7 +585,7 @@ class _FilterState extends State<Filter> {
           setState(() {
             viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
             isVisible = false;
-            print("Initial : $viewStudent?.length");
+
             filterData();
           });
         }
@@ -600,6 +609,10 @@ class _FilterState extends State<Filter> {
 
   void filterData() {
     print(viewStudent?.length);
+    if(continuousCount == 1){
+      startDate = DateTime.now();
+      endDate = DateTime.now();
+    }
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
       for (int i = 0; i < viewStudent!.length; i++) {
         DateTime? strDate;
@@ -636,7 +649,10 @@ class _FilterState extends State<Filter> {
       if (studentList?.isNotEmpty == true) {
         studentList?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
         Get.to(const FilterData(), arguments: [
-          {"studentList": studentList}
+          {"studentList": studentList},
+          {"subject": subjectResponse?.fields?.subjectTitle},
+          {"specialization": speResponse?.fields?.specializationName},
+          {"hub": hubResponse?.fields?.hubName}
         ])?.then((result) {
           if (result != null && result) {
             // Get.back(closeOverlays: true);

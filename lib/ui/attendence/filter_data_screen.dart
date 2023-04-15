@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
@@ -10,8 +13,11 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../models/login_fields_report_response.dart';
 import '../../values/text_styles.dart';
 
 class FilterData extends StatefulWidget {
@@ -26,7 +32,9 @@ class _FilterDataState extends State<FilterData> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> test = [];
 
   bool isVisible = false;
-
+  var subjectName ;
+  var speName;
+  var hubName;
   var controllerSearch = TextEditingController();
 
   @override
@@ -35,7 +43,100 @@ class _FilterDataState extends State<FilterData> {
     if (Get.arguments[0]["studentList"] != null) {
       test = Get.arguments[0]["studentList"];
       studentList = Get.arguments[0]["studentList"];
+      subjectName = Get.arguments[1]["subject"];
+      speName = Get.arguments[2]["specialization"];
+      hubName = Get.arguments[3]["hub"];
     }
+  }
+
+  Future<void> saveExcelFile(List<BaseApiResponseWithSerializable<LoginFieldsResponse>> data) async {
+
+    setState(() {
+      isVisible = true;
+    });
+    var excel = Excel.createExcel();
+    var sheet = excel['Sheet1'];
+    sheet.appendRow(['Name', 'Email', 'EnrollmentNumber', 'Mobile Number', 'Address', 'City', 'Division', 'Gender', 'joining year', 'Semester',
+        'Hub Name', 'Specialization', 'Subject',
+    ]);
+    List<LoginFieldsReportResponse> myData = [];
+    for (var i = 0; i < data.length; i++) {
+      var responseValue = LoginFieldsReportResponse(
+        name: data[i].fields!.name!,
+        email: data[i].fields!.email ?? "",
+        enrollmentNumber: data[i].fields!.enrollmentNumber ?? "",
+        mobileNumber: data[i].fields!.mobileNumber ?? "",
+        address: data[i].fields!.address ?? "",
+        city: data[i].fields!.city ?? "",
+        division: data[i].fields!.division ?? "",
+        gender: data[i].fields!.gender ?? "",
+        joiningYear: data[i].fields!.joiningYear ?? "",
+        semester: data[i].fields!.semester ?? "",
+        hub: hubName ?? "",
+        specialization:  speName ?? "",
+        subject: subjectName ?? "",
+      );
+      myData.add(responseValue);
+    }
+    myData.forEach((row) {
+      sheet.appendRow([
+        row.name,
+        row.email,
+        row.enrollmentNumber,
+        row.mobileNumber,
+        row.address,
+        row.city,
+        row.division,
+        row.gender,
+        row.joiningYear,
+        row.semester,
+        row.hub,
+        row.specialization,
+        row.subject
+      ]);
+    });
+
+    // var data1 = [];
+    // for(var row in data){
+    //   print("test=>${row}");
+    //
+    // }
+    // sheet.appendRow(data1);
+    // int colIndex = 0;
+    // data.forEach((colValue) {
+    //   sheet.cell(CellIndex.indexByColumnRow(
+    //     rowIndex: sheet.maxRows,
+    //     columnIndex: colIndex,
+    //   ))
+    //     ..value = colValue.fields;
+    // });
+
+    // List<List<String>> newData = [];
+    // List<String> newData1 = [];
+
+    // for( var i =0 ; i< data.length ; i++){
+    //   newData1.add(data[i].fields!.name!);
+    //   newData.add(newData1);
+    // }
+    // for (var row in newData) {
+    //   sheet.appendRow(row);
+    // }
+    var appDocumentsDirectory = await getApplicationDocumentsDirectory();
+    var file = File("${appDocumentsDirectory.path}/Student_Report.xlsx");
+    await file.writeAsBytes(excel.encode()!);
+    try{
+      await OpenFilex.open(file.path);
+      setState(() {
+        isVisible = false;
+      });
+
+    }catch(e){
+      setState(() {
+        isVisible = false;
+      });
+      Utils.showSnackBarUsingGet("No Application found to open this file");
+    }
+
   }
 
   @override
@@ -47,7 +148,22 @@ class _FilterDataState extends State<FilterData> {
         Column(
           children: [
             SizedBox(height: 5.h),
-            custom_text(text: "Total Students: ${test.length}", textStyles: primaryTextSemiBold16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                custom_text(text: "Total Students: ${test.length}", textStyles: primaryTextSemiBold16),
+                Container(
+                  margin: EdgeInsets.all(5),
+                  child: CustomButton(
+                    bWidth: MediaQuery.of(context).size.width * 0.40,
+                    text: strings_name.str_export_data,
+                    click: () {
+                      saveExcelFile(studentList);
+                    },
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: 10.h),
             CustomEditTextSearch(
               type: TextInputType.text,

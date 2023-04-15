@@ -33,8 +33,6 @@ class _AcademicDetailsState extends State<AcademicDetails> {
   final apiRepository = getIt.get<ApiRepository>();
   bool canAddSpe = false, canAddSubject = false, canViewSpe = false, canEditSpe = false;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -97,8 +95,6 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
-
   }
 
   Future<void> initialization() async {
