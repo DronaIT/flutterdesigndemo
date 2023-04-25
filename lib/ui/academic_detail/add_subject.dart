@@ -44,12 +44,14 @@ class _AddSubjectState extends State<AddSubject> {
   List<String> semesterResponseArray = <String>["1", "2", "3", "4", "5", "6"];
   String semesterValue = "1";
 
+  List<String> specializationIds = [];
+
   Future<void> initialization() async {
-    if (Get.arguments != null) {
+    if (Get.arguments != null && Get.arguments[0]["subjectId"] != null) {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${Get.arguments}', ${TableNames.CLM_SUBJECT_ID}, 0)";
+      var query = "FIND('${Get.arguments[0]["subjectId"]}', ${TableNames.CLM_SUBJECT_ID}, 0)";
       try{
         var data = await apiRepository.getSubjectsApi(query);
         if (data.records?.isNotEmpty == true) {
@@ -64,6 +66,7 @@ class _AddSubjectState extends State<AddSubject> {
               codeController.text = subjectData![0].fields!.subjectCode.toString();
               creditController.text = subjectData![0].fields!.subjectCredit.toString();
               semesterValue = subjectData![0].fields!.semester!;
+              specializationIds = subjectData![0].fields!.specializationIds!;
             });
             var query = "FIND('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
             try{
@@ -94,6 +97,10 @@ class _AddSubjectState extends State<AddSubject> {
       setState(() {
         isVisible = false;
       });
+    }
+
+    if (Get.arguments != null && Get.arguments[0]["specializationId"] != null) {
+      specializationIds.add(Get.arguments[0]["specializationId"]);
     }
   }
 
@@ -227,7 +234,7 @@ class _AddSubjectState extends State<AddSubject> {
                                 padding: const EdgeInsets.all(15),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Expanded(child: Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.center, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                  children: [Expanded(child: Text("${unitsData![index].fields!.unitTitle}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                 ),
                               ),
                               onTap: () {
@@ -274,6 +281,7 @@ class _AddSubjectState extends State<AddSubject> {
     request.code = codeController.text.toString();
     request.credit = creditController.text.toString();
     request.semester = semesterValue.toString();
+    request.specializationIds = specializationIds;
 
     List<String> selectedSubjectData = [];
     for (var i = 0; i < unitsData!.length; i++) {

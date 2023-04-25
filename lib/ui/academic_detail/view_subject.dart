@@ -33,21 +33,20 @@ class _ViewSubjectsState extends State<ViewSubjects> {
   BaseLoginResponse<SubjectResponse> subjectData = BaseLoginResponse();
 
   Future<void> viewSubjects() async {
-    try{
+    try {
       subjectData = await apiRepository.getSubjectsApi("");
       if (subjectData.records!.isNotEmpty) {
         setState(() {
           canViewSubject = true;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -70,7 +69,7 @@ class _ViewSubjectsState extends State<ViewSubjects> {
     }
 
     var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
-    try{
+    try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
@@ -94,7 +93,7 @@ class _ViewSubjectsState extends State<ViewSubjects> {
       } else {
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -131,7 +130,9 @@ class _ViewSubjectsState extends State<ViewSubjects> {
                                   canUpdateSubject
                                       ? GestureDetector(
                                           onTap: () {
-                                            Get.to(const AddSubject(), arguments: subjectData.records?[index].fields?.ids)?.then((result) {
+                                            Get.to(const AddSubject(), arguments: [
+                                              {"subjectId": subjectData.records?[index].fields?.ids}
+                                            ])?.then((result) {
                                               if (result != null && result) {
                                                 getPermission();
                                               }

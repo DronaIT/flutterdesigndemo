@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/add_specialization.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/specialization_detail.dart';
@@ -29,15 +31,76 @@ class AcademicDetails extends StatefulWidget {
 class _AcademicDetailsState extends State<AcademicDetails> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationMainData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
   bool canAddSpe = false, canAddSubject = false, canViewSpe = false, canEditSpe = false;
 
+  BaseApiResponseWithSerializable<HubResponse>? hubResponse;
+  String hubValue = "";
+  List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
+
   @override
   void initState() {
     super.initState();
+    checkHubs();
     getPermission();
     initialization();
+  }
+
+  void checkHubs() {
+    hubResponseArray = PreferenceUtils.getHubList().records;
+
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+
+      for (var i = 0; i < hubResponseArray!.length; i++) {
+        if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+          hubValue = hubResponseArray![i].fields!.hubId!.toString();
+          hubResponse = hubResponseArray![i];
+        }
+      }
+    }
+  }
+
+  void filterBasedOnHub() {
+    if (hubValue.isNotEmpty) {
+      specializationData = [];
+      for (var i = 0; i < specializationMainData!.length; i++) {
+        if(specializationMainData![i].fields?.hubIdFromHubIds?.contains(hubValue) == true){
+          specializationData?.add(specializationMainData![i]);
+        }
+      }
+    } else {
+      specializationData = specializationMainData;
+    }
   }
 
   Future<void> getPermission() async {
@@ -48,13 +111,12 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       roleId = TableNames.STUDENT_ROLE_ID;
-
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       roleId = loginData.roleIdFromRoleIds!.join(',');
     }
     var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
-    try{
+    try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
@@ -79,16 +141,13 @@ class _AcademicDetailsState extends State<AcademicDetails> {
             });
           }
         }
-        setState(() {
-          isVisible = false;
-        });
       } else {
         setState(() {
           isVisible = false;
         });
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -101,27 +160,29 @@ class _AcademicDetailsState extends State<AcademicDetails> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       var data = await apiRepository.getSpecializationApi();
       if (data.records!.isNotEmpty) {
-
-        if(PreferenceUtils.getIsLogin() ==1){
-          for(var i =0; i< data.records!.length ; i++){
+        data.records?.sort((a, b) => a.fields!.specializationName!.compareTo(b.fields!.specializationName!));
+        if (PreferenceUtils.getIsLogin() == 1) {
+          for (var i = 0; i < data.records!.length; i++) {
             if (data.records![i].fields!.specializationId == PreferenceUtils.getLoginData().specializationIdFromSpecializationIds?[0]) {
               PreferenceUtils.setSpecializationList(data);
               specializationData?.add(data.records![i]);
             }
           }
-        }else{
+        } else {
           PreferenceUtils.setSpecializationList(data);
-          specializationData = data.records;
+          specializationMainData = data.records;
+
+          filterBasedOnHub();
         }
       } else {
         setState(() {
           isVisible = false;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -142,6 +203,43 @@ class _AcademicDetailsState extends State<AcademicDetails> {
       body: Stack(children: [
         Column(
           children: [
+            Visibility(
+                visible: PreferenceUtils.getIsLogin() != 1,
+                child: Column(
+                  children: [
+                    SizedBox(height: 5.h),
+                    custom_text(
+                      text: strings_name.str_select_hub,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                      bottomValue: 0,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                      width: MediaQuery.of(context).size.width,
+                      child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                        value: hubResponse,
+                        elevation: 16,
+                        style: blackText16,
+                        focusColor: Colors.white,
+                        onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                          setState(() {
+                            hubValue = newValue!.fields!.hubId!.toString();
+                            hubResponse = newValue;
+
+                            filterBasedOnHub();
+                          });
+                        },
+                        items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                          return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                            value: value,
+                            child: Text(value.fields!.hubName!.toString()),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                )),
             Visibility(
               visible: canViewSpe,
               child: specializationData!.isNotEmpty

@@ -8,6 +8,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -33,6 +34,8 @@ class _SubjectDetailState extends State<SubjectDetail> {
 
   HashMap<dynamic, List<TopicsResponse>> listData = HashMap();
 
+  late BaseApiResponseWithSerializable<SubjectResponse> subjectData;
+
   final apiRepository = getIt.get<ApiRepository>();
 
   @override
@@ -45,8 +48,12 @@ class _SubjectDetailState extends State<SubjectDetail> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND(${Get.arguments}, ${TableNames.CLM_SUBJECT_IDS}, 0)";
-    try{
+    if (Get.arguments != null) {
+      subjectData = Get.arguments;
+    }
+
+    var query = "FIND(${subjectData.fields?.ids}, ${TableNames.CLM_SUBJECT_IDS}, 0)";
+    try {
       var data = await apiRepository.getUnitsApi(query);
       if (data.records?.isNotEmpty == true) {
         unitsData = data.records;
@@ -80,7 +87,7 @@ class _SubjectDetailState extends State<SubjectDetail> {
       } else {
         Utils.showSnackBar(context, strings_name.str_no_units_added);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -101,6 +108,9 @@ class _SubjectDetailState extends State<SubjectDetail> {
       body: Stack(children: [
         Column(
           children: [
+            custom_text(text: subjectData.fields?.subjectTitle ?? "", maxLines: 5, textStyles: centerTextStyle24),
+            custom_text(text: "Code : ${subjectData.fields?.subjectCode ?? ""}", textStyles: blackTextSemiBold14, bottomValue: 2),
+            custom_text(text: "Credit : ${subjectData.fields?.subjectCredit ?? ""}", textStyles: blackTextSemiBold14),
             listData.entries.toList().isNotEmpty
                 ? Expanded(
                     child: ListView.builder(

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/add_subject.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/subject_detail.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -27,19 +29,64 @@ class SpecializationDetail extends StatefulWidget {
 
 class _SpecializationDetailState extends State<SpecializationDetail> {
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<SpecializationResponse>>?
-      specializationData = [];
+
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
+
   List<String> semesterResponseArray = <String>["1", "2", "3", "4", "5", "6"];
   String semesterValue = "1";
+
   final apiRepository = getIt.get<ApiRepository>();
 
-  String query="";
+  String query = "";
+  bool canAddSubject = false;
 
   @override
   void initState() {
     super.initState();
+    getPermission();
     initialization();
+  }
+
+  Future<void> getPermission() async {
+    setState(() {
+      isVisible = true;
+    });
+    var roleId = "";
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      roleId = TableNames.STUDENT_ROLE_ID;
+    } else if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      roleId = loginData.roleIdFromRoleIds!.join(',');
+    }
+    var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
+    try {
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_SUBJECT) {
+            setState(() {
+              canAddSubject = true;
+            });
+          }
+        }
+        setState(() {
+          isVisible = false;
+        });
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   Future<void> initialization() async {
@@ -78,12 +125,11 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
     try {
       if (specializationData?.isNotEmpty == true) {
         //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
-        if(PreferenceUtils.getIsLogin() ==1){
-           semesterValue = PreferenceUtils.getLoginData().semester!;
-           query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
-        }else{
+        if (PreferenceUtils.getIsLogin() == 1) {
+          semesterValue = PreferenceUtils.getLoginData().semester!;
           query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
-
+        } else {
+          query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
         }
         var data = await apiRepository.getSubjectsApi(query);
         if (data.records?.isNotEmpty == true) {
@@ -96,7 +142,6 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
-
     }
     setState(() {
       isVisible = false;
@@ -113,28 +158,12 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
             ? SingleChildScrollView(
                 child: Column(
                   children: [
-                    custom_text(
-                        text: specializationData![0]
-                            .fields!
-                            .specializationName
-                            .toString(),
-                        maxLines: 5,
-                        textStyles: centerTextStyle24),
-                    custom_text(
-                        text:
-                            "Code : ${specializationData![0].fields!.specializationId}",
-                        textStyles: blackTextSemiBold16),
-                    custom_text(
-                        text: specializationData![0]
-                            .fields!
-                            .specializationDesc
-                            .toString(),
-                        maxLines: 5000,
-                        textStyles: blackTextSemiBold14),
+                    custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
+                    custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
+                    custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
 
                     Visibility(
                       visible: PreferenceUtils.getIsLogin() == 2,
-
                       child: custom_text(
                         text: strings_name.str_semester,
                         alignment: Alignment.topLeft,
@@ -149,8 +178,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                           Flexible(
                             fit: FlexFit.loose,
                             child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10, right: 10, bottom: 5),
+                              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                               width: MediaQuery.of(context).size.width,
                               child: DropdownButtonFormField<String>(
                                 elevation: 16,
@@ -164,9 +192,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                   subjectData?.clear();
                                   callSubjectData();
                                 },
-                                items: semesterResponseArray
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
+                                items: semesterResponseArray.map<DropdownMenuItem<String>>((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text("Semester $value"),
@@ -178,10 +204,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                         ],
                       ),
                     ),
-                    Visibility(
-                        visible: subjectData?.isNotEmpty == true,
-                        child: custom_text(
-                            text: "Subjects", textStyles: blackTextSemiBold16)),
+                    Visibility(visible: subjectData?.isNotEmpty == true, child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16)),
                     subjectData?.isNotEmpty == true
                         ? Container(
                             margin: const EdgeInsets.all(10),
@@ -195,56 +218,43 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                     child: GestureDetector(
                                       child: Container(
                                         color: colors_name.colorWhite,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 10),
+                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                                child: Text(
-                                                    "${subjectData![index].fields!.subjectTitle}",
-                                                    textAlign: TextAlign.start,
-                                                    style:
-                                                        blackTextSemiBold14)),
-                                            const Icon(
-                                                Icons.keyboard_arrow_right,
-                                                size: 30,
-                                                color: colors_name.colorPrimary)
-                                          ],
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                                         ),
                                       ),
                                       onTap: () {
-                                        Get.to(const SubjectDetail(),
-                                            arguments: subjectData![index]
-                                                .fields
-                                                ?.ids);
+                                        Get.to(const SubjectDetail(), arguments: subjectData![index]);
                                       },
                                     ),
                                   );
                                 }),
                           )
-                        : Container(
-                        margin: const EdgeInsets.only(top: 100),
-                        child: custom_text(
-                            text: strings_name.str_no_subjects,
-                            textStyles: centerTextStyleBlack18,
-                            alignment: Alignment.center)),
+                        : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_subjects, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
                     // Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
                   ],
                 ),
               )
-            : Container(
-                margin: const EdgeInsets.only(top: 100),
-                child: custom_text(
-                    text: strings_name.str_no_data,
-                    textStyles: centerTextStyleBlack18,
-                    alignment: Alignment.center)),
+            : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+        canAddSubject
+            ? Container(
+                alignment: Alignment.bottomCenter,
+                child: CustomButton(
+                    text: strings_name.str_add_subjects,
+                    click: () async {
+                      Get.to(const AddSubject(), arguments: [
+                        {"specializationId": specializationData![0].id}
+                      ])?.then((result) {
+                        if (result != null && result) {
+                          getPermission();
+                          initialization();
+                        }
+                      });
+                    }))
+            : Container(),
         Center(
-          child: Visibility(
-              visible: isVisible,
-              child: const CircularProgressIndicator(
-                  strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
       ]),
     ));
