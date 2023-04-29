@@ -75,6 +75,8 @@ class _FilterState extends State<Filter> {
 
   int continuousCount = 3;
   String title = strings_name.str_filter;
+  bool isFromEligible = false;
+
   var todays = false;
 
   @override
@@ -88,6 +90,9 @@ class _FilterState extends State<Filter> {
     }
     if (Get.arguments[1]["title"] != null) {
       title = Get.arguments[1]["title"];
+    }
+    if (Get.arguments[2]["isFromEligible"] != null) {
+      isFromEligible = Get.arguments[2]["isFromEligible"];
     }
 
     hubResponseArray = PreferenceUtils.getHubList().records;
@@ -163,7 +168,7 @@ class _FilterState extends State<Filter> {
                               : Container()),
                       SizedBox(height: 5.h),
                       custom_text(
-                        text: strings_name.str_select_hub,
+                        text: strings_name.str_select_hub_r,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                         bottomValue: 0,
@@ -423,10 +428,16 @@ class _FilterState extends State<Filter> {
                       SizedBox(height: 10.h),
                       CustomButton(
                         click: () async {
+
                           if (hubValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_hub);
                           } else if (startDate == null || endDate == null) {
                             Utils.showSnackBar(context, strings_name.str_empty_date_range);
+                          }else if(isFromEligible && divisionValue.isEmpty ){
+                            Utils.showSnackBar(context, strings_name.str_empty_division);
+                          }else if( isFromEligible && subjectValue.isEmpty){
+                            Utils.showSnackBar(context, strings_name.str_empty_subject);
+
                           } else {
                             viewStudent = [];
                             studentList = [];
@@ -614,45 +625,55 @@ class _FilterState extends State<Filter> {
       endDate = DateTime.now();
     }
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
-      for (int i = 0; i < viewStudent!.length; i++) {
-        DateTime? strDate;
-        var enCheck = DateFormat("yyyy-MM-dd").format(endDate!);
-        var strCheck = "";
-        int continueCheck = 0;
-        do {
-          if (strDate == null) {
-            strDate = startDate;
-          } else {
-            strDate = strDate.add(Duration(days: 1));
-          }
-          strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
-          if (viewStudent![i].fields!.lecture_date?.contains(strCheck) == true) {
-            bool subjectCheck = true;
-            var pos = viewStudent![i].fields!.lecture_date?.indexOf(strCheck);
-            if (subjectRecordId.isNotEmpty && viewStudent![i].fields!.lectureSubjectId![pos!] != subjectRecordId) {
-              subjectCheck = false;
+
+      if(isFromEligible){
+        studentList?.addAll(viewStudent!);
+      }else{
+        for (int i = 0; i < viewStudent!.length; i++) {
+          DateTime? strDate;
+          var enCheck = DateFormat("yyyy-MM-dd").format(endDate!);
+          var strCheck = "";
+          int continueCheck = 0;
+          do {
+            if (strDate == null) {
+              strDate = startDate;
+            } else {
+              strDate = strDate.add(Duration(days: 1));
             }
-            if (subjectCheck && viewStudent![i].fields!.absentLectureDate?.isNotEmpty == true) {
-              if (viewStudent![i].fields!.absentLectureDate?.contains(strCheck) == true) {
-                continueCheck++;
-                if (continueCheck == continuousCount) {
-                  studentList?.add(viewStudent![i]);
-                  break;
+            strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
+            if (viewStudent![i].fields!.lecture_date?.contains(strCheck) == true) {
+              bool subjectCheck = true;
+              var pos = viewStudent![i].fields!.lecture_date?.indexOf(strCheck);
+              if (subjectRecordId.isNotEmpty && viewStudent![i].fields!.lectureSubjectId![pos!] != subjectRecordId) {
+                subjectCheck = false;
+              }
+              if (subjectCheck && viewStudent![i].fields!.absentLectureDate?.isNotEmpty == true) {
+                if (viewStudent![i].fields!.absentLectureDate?.contains(strCheck) == true) {
+                  continueCheck++;
+                  if (continueCheck == continuousCount) {
+                    studentList?.add(viewStudent![i]);
+                    break;
+                  }
+                } else {
+                  continueCheck = 0;
                 }
-              } else {
-                continueCheck = 0;
               }
             }
-          }
-        } while (strCheck != enCheck);
+          } while (strCheck != enCheck);
+        }
       }
+
+
       if (studentList?.isNotEmpty == true) {
         studentList?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
         Get.to(const FilterData(), arguments: [
           {"studentList": studentList},
           {"subject": subjectResponse?.fields?.subjectTitle},
           {"specialization": speResponse?.fields?.specializationName},
-          {"hub": hubResponse?.fields?.hubName}
+          {"hub": hubResponse?.fields?.hubName},
+          {"subjectid": subjectResponse?.id},
+          {"eligible": isFromEligible},
+
         ])?.then((result) {
           if (result != null && result) {
             // Get.back(closeOverlays: true);

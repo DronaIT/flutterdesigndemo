@@ -1,5 +1,6 @@
 class LoginFieldsResponse {
   String? city;
+  String? percentage;
   String? joiningYear;
   String? password;
   int? studentId;
@@ -99,7 +100,8 @@ class LoginFieldsResponse {
     this.selectedJob,
     this.placedJob,
     this.rejectedJob,
-    this.token
+    this.token,
+    this.percentage
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
@@ -153,6 +155,7 @@ class LoginFieldsResponse {
     placedJob = json['placed_job']?.cast<String>();
     rejectedJob = json['rejected_job']?.cast<String>();
     token = json['token'];
+    percentage = json['percentage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -186,7 +189,7 @@ class LoginFieldsResponse {
     data['present_lecture_ids'] = this.presentLectureIds;
     data['lecture_date'] = this.lecture_date;
     data['lecture_subject_id'] = this.lectureSubjectId;
-
+    data['percentage'] = this.percentage;
     data['sr_number'] = this.sr_number;
     data['birthdate'] = this.birthdate;
     data['aadhar_card_number'] = this.aadhar_card_number;

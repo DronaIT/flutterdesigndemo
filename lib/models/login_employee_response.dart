@@ -19,6 +19,7 @@ class LoginEmployeResponse {
   List<String>? semester;
   List<String>? subjectTitle;
   List<String>? division;
+  List<String>? specialization_name;
 
   String? parents_mobile_number;
   String? spouse_mobile_number = " ";
@@ -26,6 +27,7 @@ class LoginEmployeResponse {
   List<String>? accessible_hub_ids;
   List<String>? hub_id_from_lecture;
   String? token;
+
   LoginEmployeResponse(
       {this.gender,
       this.employeeId,
@@ -49,9 +51,9 @@ class LoginEmployeResponse {
       this.spouse_mobile_number,
       this.pin_code,
       this.accessible_hub_ids,
-      this.hub_id_from_lecture ,
-      this.token
-      });
+      this.hub_id_from_lecture,
+      this.token,
+      this.specialization_name});
 
   LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -67,6 +69,8 @@ class LoginEmployeResponse {
     password = json['password'];
     email = json['email'];
     address = json['address'];
+    specialization_name = json['specialization_name']?.cast<String>();
+
     lectureIds = json['lecture_ids']?.cast<String>();
     lectureDate = json['lecture_date']?.cast<String>();
     unitTitle = json['unit_title']?.cast<String>();
@@ -108,6 +112,8 @@ class LoginEmployeResponse {
     data['accessible_hub_ids'] = this.accessible_hub_ids;
     data['hub_id_from_lecture'] = this.hub_id_from_lecture;
     data['token'] = this.token;
+    data['specialization_name'] = this.specialization_name;
+
     return data;
   }
 }

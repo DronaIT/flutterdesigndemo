@@ -165,6 +165,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 semester: data.records![j].fields!.semester![i],
                 division: data.records![j].fields!.division![i],
                 lecture_id: data.records![j].fields!.lectureIds![i],
+                specilization: data.records![j].fields!.specialization_name![i],
+
                 employee_name: data.records![j].fields!.employeeName));
           }
         }
@@ -279,6 +281,13 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                                           alignment: Alignment.topLeft,
                                           textStyles: primaryTextSemiBold14,
                                           bottomValue: 5,
+                                        ),
+                                        custom_text(
+                                          text: viewLectureArray![index].specilization!,
+                                          alignment: Alignment.topLeft,
+                                          textStyles: blackTextSemiBold12,
+                                          topValue: 0,
+                                          bottomValue: 0,
                                         ),
                                         custom_text(
                                           text: "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",

@@ -39,6 +39,7 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       Get.to(() => const Filter(), arguments: [
                         {"days": 3},
                         {"title": strings_name.str_3_days},
+                        {"isFromEligible": false},
                       ])?.then((result) {
                         if (result != null && result) {
                           // Get.back(closeOverlays: true);
@@ -62,6 +63,7 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       Get.to(() => const Filter(), arguments: [
                         {"days": 5},
                         {"title": strings_name.str_5_days},
+                        {"isFromEligible": false},
                       ])?.then((result) {
                         if (result != null && result) {
                           // Get.back(closeOverlays: true);
@@ -85,6 +87,7 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       Get.to(() => const Filter(), arguments: [
                         {"days": 10},
                         {"title": strings_name.str_10_days},
+                        {"isFromEligible": false},
                       ])?.then((result) {
                         if (result != null && result) {
                           // Get.back(closeOverlays: true);
@@ -110,6 +113,7 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       Get.to(() => const Filter(), arguments: [
                         {"days": 1},
                         {"title": strings_name.str_today_days},
+                        {"isFromEligible": false},
                       ])?.then((result) {
                         if (result != null && result) {
                           // Get.back(closeOverlays: true);
@@ -117,6 +121,32 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       });
                     },
                   ),
+
+                  GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_eligiblity_report, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const Filter(), arguments: [
+                        {"days": 1},
+                        {"title": strings_name.str_eligiblity_report},
+                        {"isFromEligible": true},
+                      ])?.then((result) {
+                        if (result != null && result) {
+                          // Get.back(closeOverlays: true);
+                        }
+                      });
+                    },
+                  ),
+
 
                 ],
               ),

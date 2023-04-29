@@ -468,6 +468,8 @@ class strings_name {
   static const String str_10_days = "Continuous 10 days absents";
   static const String str_today_days = "Today's absents ";
 
+  static const String str_eligiblity_report = "Eligibility report";
+
 
   static const String str_export_data = "Export data";
 }

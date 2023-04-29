@@ -29,10 +29,16 @@ class FilterData extends StatefulWidget {
 
 class _FilterDataState extends State<FilterData> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
+
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentEligibiltyList = [];
+
+
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> test = [];
 
   bool isVisible = false;
   var subjectName ;
+  var subjectId ;
+  var isFromEligible;
   var speName;
   var hubName;
   var controllerSearch = TextEditingController();
@@ -44,10 +50,47 @@ class _FilterDataState extends State<FilterData> {
       test = Get.arguments[0]["studentList"];
       studentList = Get.arguments[0]["studentList"];
       subjectName = Get.arguments[1]["subject"];
+      subjectId = Get.arguments[4]["subjectid"];
       speName = Get.arguments[2]["specialization"];
       hubName = Get.arguments[3]["hub"];
+      isFromEligible = Get.arguments[5]["eligible"];
+      if(isFromEligible){
+        checkPresentAbsentDetailBySubject();
+      }
     }
   }
+
+  void checkPresentAbsentDetailBySubject() {
+    for(int i = 0 ; i<studentList.length ; i++){
+      if(studentList[i].fields!.lectureSubjectId!.contains(subjectId)){
+        studentEligibiltyList.add(studentList[i]);
+      }
+    }
+    test.clear();
+    studentList.clear();
+    for (int j = 0; j < studentEligibiltyList.length; j++) {
+      var total_lecture = 0,  total_present = 0;
+      for( int k=0; k < studentEligibiltyList[j].fields!.lectureSubjectId!.length ; k++){
+        if(studentEligibiltyList[j].fields!.lectureSubjectId![k] == subjectId){
+          total_lecture += 1;
+        }
+      }
+      if(studentEligibiltyList[j].fields!.presentSubjectId != null){
+        for( int M=0; M < studentEligibiltyList[j].fields!.presentSubjectId!.length ; M++){
+          if(studentEligibiltyList[j].fields!.presentSubjectId![M] == subjectId){
+            total_present += 1;
+          }
+        }
+      }
+      var totalPresentPercentage = ((total_present * 100) / total_lecture);
+      if(totalPresentPercentage < 75){
+        test.add(studentEligibiltyList[j]);
+      }
+      studentEligibiltyList[j].fields!.percentage = totalPresentPercentage.toStringAsFixed(2);
+    }
+    studentList = List.from(test);
+  }
+
 
   Future<void> saveExcelFile(List<BaseApiResponseWithSerializable<LoginFieldsResponse>> data) async {
 
@@ -204,6 +247,10 @@ class _FilterDataState extends State<FilterData> {
                                     custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
                                     custom_text(topValue: 0, bottomValue: 5, text: "Specialization: ${Utils.getSpecializationName(studentList[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
                                     custom_text(topValue: 0, bottomValue: 5, text: "Mobile No: ${studentList[index].fields?.mobileNumber}", textStyles: blackTextSemiBold14),
+                                    Visibility(
+                                        visible: isFromEligible,
+                                        child: custom_text(topValue: 0, bottomValue: 5, text: "Attendance Percentage: ${studentList[index].fields?.percentage}%", textStyles: blackTextSemiBold14)),
+
                                     Align(
                                       alignment: Alignment.bottomRight,
                                       child: CustomButton(
