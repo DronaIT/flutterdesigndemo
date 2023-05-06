@@ -37,6 +37,9 @@ class _AddTopicState extends State<AddTopic> {
 
   List<BaseApiResponseWithSerializable<TopicsResponse>>? topicsData = [];
 
+  String topicId = "";
+  List<String> unitId = [];
+
   @override
   void initState() {
     super.initState();
@@ -44,11 +47,19 @@ class _AddTopicState extends State<AddTopic> {
   }
 
   Future<void> initialization() async {
-    if (Get.arguments != null) {
+    if(Get.arguments != null && Get.arguments[0]["topicId"] != null){
+      topicId = Get.arguments[0]["topicId"];
+    }
+
+    if(Get.arguments != null && Get.arguments[0]["unitId"] != null){
+      unitId.add(Get.arguments[0]["unitId"]);
+    }
+
+    if (topicId.isNotEmpty) {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${Get.arguments}', ${TableNames.CLM_TOPIC_ID}, 0)";
+      var query = "FIND('$topicId', ${TableNames.CLM_TOPIC_ID}, 0)";
       try{
         var data = await apiRepository.getTopicsApi(query);
         if (data.records?.isNotEmpty == true) {
@@ -59,6 +70,7 @@ class _AddTopicState extends State<AddTopic> {
           topicsData = data.records;
           if (topicsData?.isNotEmpty == true) {
             titleController.text = topicsData![0].fields!.topicTitle.toString();
+            unitId.add(topicsData![0].fields?.unitIds?.first ?? "");
           }
         } else {
           Utils.showSnackBar(context, strings_name.str_something_wrong);
@@ -124,6 +136,7 @@ class _AddTopicState extends State<AddTopic> {
     });
     AddTopicsRequest request = AddTopicsRequest();
     request.topicTitle = titleController.text.toString();
+    request.unitIds = unitId; 
 
     try{
       if (!fromEdit) {

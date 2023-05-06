@@ -190,7 +190,7 @@ class _HomeState extends State<Home> {
                                         if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
                                           Get.to(const ManageUser());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
-                                          Get.to(const AcademicList());
+                                          Get.to(const AcademicDetails());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
                                           Get.to(const SetupCollage());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {

@@ -4,7 +4,9 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/main.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -26,8 +28,10 @@ class SubjectSelection extends StatefulWidget {
 class _SubjectSelectionState extends State<SubjectSelection> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
+  List<BaseApiResponseWithSerializable<SubjectResponse>>? mainData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -46,15 +50,19 @@ class _SubjectSelectionState extends State<SubjectSelection> {
       var data = await apiRepository.getSubjectsApi("");
       if (data.records?.isNotEmpty == true) {
         setState(() {
-          subjectData = data.records;
+          data.records?.sort((a, b) => a.fields!.subjectTitle!.toLowerCase().compareTo(b.fields!.subjectTitle!.toLowerCase()));
+          mainData = data.records;
+
           for (var i = 0; i < selectedData!.length; i++) {
-            for (var j = 0; j < subjectData!.length; j++) {
-              if (subjectData![j].fields!.subjectId == selectedData[i].fields!.subjectId) {
-                subjectData![j].fields!.selected = true;
+            for (var j = 0; j < mainData!.length; j++) {
+              if (mainData![j].fields!.subjectId == selectedData[i].fields!.subjectId) {
+                mainData![j].fields!.selected = true;
                 break;
               }
             }
           }
+
+          subjectData = List.from(mainData!);
         });
       }
     }on DioError catch (e) {
@@ -76,9 +84,30 @@ class _SubjectSelectionState extends State<SubjectSelection> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_subjects),
       body: Stack(children: [
-        subjectData?.isNotEmpty == true
+        mainData?.isNotEmpty == true
             ? Column(children: [
-                Expanded(
+              SizedBox(height: 10.h),
+              CustomEditTextSearch(
+                type: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                controller: controllerSearch,
+                onChanges: (value) {
+                  if (value.isEmpty) {
+                    subjectData = [];
+                    subjectData = List.from(mainData!);
+                    setState(() {});
+                  } else {
+                    subjectData = [];
+                    for (var i = 0; i < mainData!.length; i++) {
+                      if (mainData![i].fields!.subjectTitle!.toLowerCase().contains(value.toLowerCase())) {
+                        subjectData?.add(mainData![i]);
+                      }
+                    }
+                    setState(() {});
+                  }
+                },
+              ),
+              Expanded(
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: ListView.builder(

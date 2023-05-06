@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
@@ -26,8 +27,10 @@ class TopicSelection extends StatefulWidget {
 class _TopicSelectionState extends State<TopicSelection> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<TopicsResponse>>? topicData = [];
+  List<BaseApiResponseWithSerializable<TopicsResponse>>? mainData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -46,15 +49,19 @@ class _TopicSelectionState extends State<TopicSelection> {
       var data = await apiRepository.getTopicsApi("");
       if (data.records?.isNotEmpty == true) {
         setState(() {
-          topicData = data.records;
+          data.records?.sort((a, b) => a.fields!.topicTitle!.toLowerCase().compareTo(b.fields!.topicTitle!.toLowerCase()));
+          mainData = data.records;
+
           for (var i = 0; i < selectedData!.length; i++) {
-            for (var j = 0; j < topicData!.length; j++) {
-              if (topicData![j].fields!.topicId == selectedData[i].fields!.topicId) {
-                topicData![j].fields!.selected = true;
+            for (var j = 0; j < mainData!.length; j++) {
+              if (mainData![j].fields!.topicId == selectedData[i].fields!.topicId) {
+                mainData![j].fields!.selected = true;
                 break;
               }
             }
           }
+
+          topicData = List.from(mainData!);
         });
       }
     }on DioError catch (e) {
@@ -76,8 +83,29 @@ class _TopicSelectionState extends State<TopicSelection> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_topics),
       body: Stack(children: [
-        topicData?.isNotEmpty == true
+        mainData?.isNotEmpty == true
             ? Column(children: [
+                SizedBox(height: 10.h),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      topicData = [];
+                      topicData = List.from(mainData!);
+                      setState(() {});
+                    } else {
+                      topicData = [];
+                      for (var i = 0; i < mainData!.length; i++) {
+                        if (mainData![i].fields!.topicTitle!.toLowerCase().contains(value.toLowerCase())) {
+                          topicData?.add(mainData![i]);
+                        }
+                      }
+                      setState(() {});
+                    }
+                  },
+                ),
                 Expanded(
                   child: ListView.builder(
                       itemCount: topicData?.length,

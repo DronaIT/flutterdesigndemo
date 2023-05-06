@@ -469,7 +469,8 @@ class strings_name {
   static const String str_today_days = "Today's absents ";
 
   static const String str_eligiblity_report = "Eligibility report";
-
-
   static const String str_export_data = "Export data";
+
+  static const String str_no_topic_added = "No topics added";
+  static const String str_unit_detail = "Unit detail";
 }

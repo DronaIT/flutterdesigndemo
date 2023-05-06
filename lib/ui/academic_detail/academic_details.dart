@@ -199,7 +199,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_specializations),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_academic_detail),
       body: Stack(children: [
         Column(
           children: [
@@ -262,7 +262,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                                         Visibility(
                                             visible: canEditSpe,
                                             child: GestureDetector(
-                                              child: Icon(Icons.edit, size: 22, color: Colors.black),
+                                              child: const Icon(Icons.edit, size: 22, color: Colors.black),
                                               onTap: () {
                                                 Get.to(const AddSpecialization(), arguments: specializationData![index].fields?.id)?.then((result) {
                                                   if (result != null && result) {

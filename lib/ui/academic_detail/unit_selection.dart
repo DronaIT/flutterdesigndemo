@@ -3,6 +3,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
@@ -25,8 +26,10 @@ class UnitSelection extends StatefulWidget {
 class _UnitSelectionState extends State<UnitSelection> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<UnitsResponse>>? unitsData = [];
+  List<BaseApiResponseWithSerializable<UnitsResponse>>? mainData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -44,15 +47,19 @@ class _UnitSelectionState extends State<UnitSelection> {
     var data = await apiRepository.getUnitsApi("");
     if (data.records?.isNotEmpty == true) {
       setState(() {
-        unitsData = data.records;
+        data.records?.sort((a, b) => a.fields!.unitTitle!.toLowerCase().compareTo(b.fields!.unitTitle!.toLowerCase()));
+        mainData = data.records;
+
         for (var i = 0; i < selectedData!.length; i++) {
-          for (var j = 0; j < unitsData!.length; j++) {
-            if (unitsData![j].fields!.unitId == selectedData[i].fields!.unitId) {
-              unitsData![j].fields!.selected = true;
+          for (var j = 0; j < mainData!.length; j++) {
+            if (mainData![j].fields!.unitId == selectedData[i].fields!.unitId) {
+              mainData![j].fields!.selected = true;
               break;
             }
           }
         }
+
+        unitsData = List.from(mainData!);
       });
     }
     setState(() {
@@ -66,8 +73,29 @@ class _UnitSelectionState extends State<UnitSelection> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_units),
       body: Stack(children: [
-        unitsData?.isNotEmpty == true
+        mainData?.isNotEmpty == true
             ? Column(children: [
+                SizedBox(height: 10.h),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      unitsData = [];
+                      unitsData = List.from(mainData!);
+                      setState(() {});
+                    } else {
+                      unitsData = [];
+                      for (var i = 0; i < mainData!.length; i++) {
+                        if (mainData![i].fields!.unitTitle!.toLowerCase().contains(value.toLowerCase())) {
+                          unitsData?.add(mainData![i]);
+                        }
+                      }
+                      setState(() {});
+                    }
+                  },
+                ),
                 Expanded(
                   child: ListView.builder(
                       itemCount: unitsData?.length,
