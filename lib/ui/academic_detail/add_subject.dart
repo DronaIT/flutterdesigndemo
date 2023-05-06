@@ -72,6 +72,7 @@ class _AddSubjectState extends State<AddSubject> {
             try{
               var data = await apiRepository.getUnitsApi(query);
               if (data.records?.isNotEmpty == true) {
+                data.records!.sort((a, b) => a.fields!.unitTitle!.toLowerCase().compareTo(b.fields!.unitTitle!.toLowerCase()));
                 unitsData = data.records;
               }
             }on DioError catch (e) {

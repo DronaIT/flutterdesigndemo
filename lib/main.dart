@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,6 +15,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await PreferenceUtils.init();
   setup();
   runApp(const MyApp());

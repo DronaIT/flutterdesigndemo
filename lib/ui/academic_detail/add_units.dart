@@ -38,6 +38,9 @@ class _AddUnitsState extends State<AddUnits> {
   final apiRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
 
+  String unitId = "";
+  List<String> subjectId = [];
+
   @override
   void initState() {
     super.initState();
@@ -45,11 +48,19 @@ class _AddUnitsState extends State<AddUnits> {
   }
 
   Future<void> initialization() async {
-    if (Get.arguments != null) {
+    if(Get.arguments != null && Get.arguments[0]["unitId"] != null){
+      unitId = Get.arguments[0]["unitId"];
+    }
+
+    if(Get.arguments != null && Get.arguments[0]["subjectId"] != null){
+      subjectId.add(Get.arguments[0]["subjectId"]);
+    }
+
+    if (unitId.isNotEmpty) {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${Get.arguments}', ${TableNames.CLM_UNIT_ID}, 0)";
+      var query = "FIND('$unitId', ${TableNames.CLM_UNIT_ID}, 0)";
       try {
         var data = await apiRepository.getUnitsApi(query);
         if (data.records?.isNotEmpty == true) {
@@ -60,10 +71,12 @@ class _AddUnitsState extends State<AddUnits> {
           unitsData = data.records;
           if (unitsData?.isNotEmpty == true) {
             titleController.text = unitsData![0].fields!.unitTitle.toString();
+            subjectId.add(unitsData![0].fields?.subjectIds?.first ?? "");
 
             var query = "FIND('${unitsData![0].fields!.ids}', ${TableNames.CLM_UNIT_IDS}, 0)";
             var data = await apiRepository.getTopicsApi(query);
             if (data.records?.isNotEmpty == true) {
+              data.records?.sort((a, b) => a.fields!.topicTitle!.toLowerCase().compareTo(b.fields!.topicTitle!.toLowerCase()));
               topicsData = data.records;
             }
           }
@@ -150,7 +163,7 @@ class _AddUnitsState extends State<AddUnits> {
                               padding: const EdgeInsets.all(15),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Expanded(child: Text("${topicsData![index].fields!.topicTitle}", textAlign: TextAlign.center, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [Expanded(child: Text("${topicsData![index].fields!.topicTitle}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
                             ),
                             onTap: () {
@@ -166,10 +179,6 @@ class _AddUnitsState extends State<AddUnits> {
                 click: () {
                   if (titleController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_unit_title);
-/*
-                  } else if (topicsData!.isEmpty) {
-                    Utils.showSnackBar(context, strings_name.str_select_topics);
-*/
                   } else {
                     addRecord();
                   }
@@ -191,6 +200,7 @@ class _AddUnitsState extends State<AddUnits> {
     });
     AddUnitsRequest request = AddUnitsRequest();
     request.unitTitle = titleController.text.toString();
+    request.subjectIds = subjectId;
 
     List<String> selectedSubjectData = [];
     for (var i = 0; i < topicsData!.length; i++) {

@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/add_units.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/unit_detail.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -37,6 +40,7 @@ class _SubjectDetailState extends State<SubjectDetail> {
   late BaseApiResponseWithSerializable<SubjectResponse> subjectData;
 
   final apiRepository = getIt.get<ApiRepository>();
+  bool canAddSubject = false;
 
   @override
   void initState() {
@@ -48,8 +52,11 @@ class _SubjectDetailState extends State<SubjectDetail> {
     setState(() {
       isVisible = true;
     });
-    if (Get.arguments != null) {
-      subjectData = Get.arguments;
+    if (Get.arguments != null && Get.arguments[0]["subjectId"] != null) {
+      subjectData = Get.arguments[0]["subjectId"];
+    }
+    if (Get.arguments != null && Get.arguments[1]["addSubjectPermission"] != null) {
+      canAddSubject = Get.arguments[1]["addSubjectPermission"];
     }
 
     var query = "FIND(${subjectData.fields?.ids}, ${TableNames.CLM_SUBJECT_IDS}, 0)";
@@ -57,33 +64,7 @@ class _SubjectDetailState extends State<SubjectDetail> {
       var data = await apiRepository.getUnitsApi(query);
       if (data.records?.isNotEmpty == true) {
         unitsData = data.records;
-        if (unitsData?.isNotEmpty == true) {
-          var queryData = "";
-          for (var i = 0; i < unitsData!.length; i++) {
-            if (i != 0) {
-              queryData += ",";
-            }
-            queryData += "${TableNames.CLM_UNIT_IDS}=${unitsData![i].fields!.ids}";
-          }
-          var query = "OR($queryData)";
-          var data = await apiRepository.getTopicsApi(query);
-          if (data.records?.isNotEmpty == true) {
-            topicsData = data.records;
-            for (var i = 0; i < unitsData!.length; i++) {
-              List<TopicsResponse> topics = [];
-              for (var j = 0; j < topicsData!.length; j++) {
-                if (topicsData![j].fields!.unitIdFromUnitIds != null && topicsData![j].fields!.unitIdFromUnitIds![0] == unitsData![i].fields!.unitId) {
-                  topics.add(topicsData![j].fields!);
-                }
-              }
-              listData[unitsData![i].fields] = topics;
-            }
-          } else {
-            for (var i = 0; i < unitsData!.length; i++) {
-              listData[unitsData![i].fields] = [];
-            }
-          }
-        }
+        unitsData!.sort((a, b) => a.fields!.unitTitle!.toLowerCase().compareTo(b.fields!.unitTitle!.toLowerCase()));
       } else {
         Utils.showSnackBar(context, strings_name.str_no_units_added);
       }
@@ -108,31 +89,76 @@ class _SubjectDetailState extends State<SubjectDetail> {
       body: Stack(children: [
         Column(
           children: [
-            custom_text(text: subjectData.fields?.subjectTitle ?? "", maxLines: 5, textStyles: centerTextStyle24),
-            custom_text(text: "Code : ${subjectData.fields?.subjectCode ?? ""}", textStyles: blackTextSemiBold14, bottomValue: 2),
-            custom_text(text: "Credit : ${subjectData.fields?.subjectCredit ?? ""}", textStyles: blackTextSemiBold14),
-            listData.entries.toList().isNotEmpty
-                ? Expanded(
-                    child: ListView.builder(
-                        itemCount: listData.entries.toList().length,
-                        itemBuilder: (BuildContext context, int mainIndex) {
-                          return ExpansionTile(title: custom_text(leftValue: 0, text: (listData.entries.toList()[mainIndex].key as UnitsResponse).unitTitle!, textStyles: blackTextSemiBold16), children: <Widget>[
-                            ListView.builder(
-                                shrinkWrap: true, // 1st add
-                                physics: const ClampingScrollPhysics(),
-                                itemCount: listData.entries.toList()[mainIndex].value.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return custom_text(
-                                    text: listData.entries.toList()[mainIndex].value[index].topicTitle!,
-                                    textStyles: blackTextSemiBold14,
-                                    leftValue: 20,
-                                    rightValue: 20,
-                                  );
-                                })
-                          ]);
-                        }),
-                  )
-                : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            Expanded(
+              child: Column(
+                children: [
+                  custom_text(text: subjectData.fields?.subjectTitle ?? "", maxLines: 5, textStyles: centerTextStyle24),
+                  Visibility(visible: subjectData.fields?.subjectCode?.isNotEmpty ?? false, child: custom_text(text: "Code : ${subjectData.fields?.subjectCode ?? ""}", textStyles: blackTextSemiBold14, bottomValue: 2)),
+                  Visibility(visible: subjectData.fields?.subjectCredit?.isNotEmpty ?? false, child: custom_text(text: "Credit : ${subjectData.fields?.subjectCredit ?? ""}", textStyles: blackTextSemiBold14)),
+                  Visibility(visible: unitsData?.isNotEmpty ?? false, child: custom_text(text: strings_name.str_units, textStyles: blackTextSemiBold16)),
+                  unitsData?.isNotEmpty == true
+                      ? Expanded(
+                          child: ListView.builder(
+                              primary: false,
+                              shrinkWrap: true,
+                              itemCount: unitsData?.length,
+                              itemBuilder: (BuildContext context, int mainIndex) {
+                                return Card(
+                                  elevation: 5,
+                                  child: GestureDetector(
+                                    child: Container(
+                                      color: colors_name.colorWhite,
+                                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(child: custom_text(text: unitsData![mainIndex].fields?.unitTitle ?? "", textStyles: blackText16, topValue: 10, maxLines: 2)),
+                                          Visibility(
+                                              visible: canAddSubject,
+                                              child: GestureDetector(
+                                                child: const Icon(Icons.edit, size: 22, color: Colors.black),
+                                                onTap: () {
+                                                  Get.to(const AddUnits(), arguments: [
+                                                    {"unitId": unitsData![mainIndex].fields?.unitId}
+                                                  ])?.then((result) {
+                                                    if (result != null && result) {
+                                                      initialization();
+                                                    }
+                                                  });
+                                                },
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Get.to(const UnitDetail(), arguments: [
+                                          {"unitId": unitsData![mainIndex]},
+                                          {"addSubjectPermission": canAddSubject}
+                                      ]);
+                                    },
+                                  ),
+                                );
+                              }),
+                        )
+                      : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_units, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                ],
+              ),
+            ),
+            canAddSubject
+                ? Container(
+                    alignment: Alignment.bottomCenter,
+                    child: CustomButton(
+                        text: strings_name.str_add_units,
+                        click: () async {
+                          Get.to(const AddUnits(), arguments: [
+                            {"subjectId": subjectData.id}
+                          ])?.then((result) {
+                            if (result != null && result) {
+                              initialization();
+                            }
+                          });
+                        }))
+                : Container(),
           ],
         ),
         Center(

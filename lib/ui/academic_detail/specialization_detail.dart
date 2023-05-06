@@ -133,6 +133,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
         }
         var data = await apiRepository.getSubjectsApi(query);
         if (data.records?.isNotEmpty == true) {
+          data.records?.sort((a, b) => a.fields!.subjectTitle!.toLowerCase().compareTo(b.fields!.subjectTitle!.toLowerCase()));
           subjectData = data.records;
         }
       }
@@ -218,14 +219,33 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                     child: GestureDetector(
                                       child: Container(
                                         color: colors_name.colorWhite,
-                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                        padding: const EdgeInsets.all(10),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                                        ),
+                                          children: [
+                                            Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)),
+                                            Visibility(
+                                                visible: canAddSubject,
+                                                child: GestureDetector(
+                                                  child: const Icon(Icons.edit, size: 22, color: Colors.black),
+                                                  onTap: () {
+                                                    Get.to(const AddSubject(), arguments: [
+                                                      {"subjectId": subjectData![index].fields?.ids}
+                                                    ])?.then((result) {
+                                                      if (result != null && result) {
+                                                        getPermission();
+                                                        initialization();
+                                                      }
+                                                    });
+                                                  },
+                                                ))
+                                          ]),
                                       ),
                                       onTap: () {
-                                        Get.to(const SubjectDetail(), arguments: subjectData![index]);
+                                        Get.to(const SubjectDetail(), arguments:[
+                                          {"subjectId": subjectData![index]},
+                                          {"addSubjectPermission": canAddSubject}
+                                        ]);
                                       },
                                     ),
                                   );

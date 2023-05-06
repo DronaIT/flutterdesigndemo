@@ -161,19 +161,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               textInputAction: TextInputAction.done,
               controller: controllerSearch,
               onChanges: (value) {
-                if (value.isEmpty) {
-                  studentList = [];
-                  studentList = List.from(test);
-                  setState(() {});
-                } else {
-                  studentList = [];
-                  for (var i = 0; i < test.length; i++) {
-                    if (test[i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
-                      studentList.add(test[i]);
-                    }
-                  }
-                  setState(() {});
-                }
+                filterResult(value);
               },
             ),
             studentList.isNotEmpty
@@ -225,6 +213,9 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                 } else if (formattedTime.trim().isEmpty) {
                   Utils.showSnackBar(context, strings_name.str_empty_select_time);
                 } else {
+                  controllerSearch.text = "";
+                  filterResult("");
+
                   var pending = false;
                   for (var i = 0; i < studentList.length; i++) {
                     if (studentList[i].fields?.attendanceStatus == -1) {
@@ -385,6 +376,22 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  void filterResult(String value) {
+    if (value.isEmpty) {
+      studentList = [];
+      studentList = List.from(test);
+      setState(() {});
+    } else {
+      studentList = [];
+      for (var i = 0; i < test.length; i++) {
+        if (test[i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
+          studentList.add(test[i]);
+        }
+      }
+      setState(() {});
     }
   }
 }
