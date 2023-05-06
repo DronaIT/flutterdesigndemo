@@ -80,7 +80,7 @@ class _StudentHistoryState extends State<StudentHistory> {
       body: data.records != null
           ? Column(
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 custom_text(
                   text: "${strings_name.str_name}: ${data.records!.first.fields!.name!}",
                   alignment: Alignment.topLeft,

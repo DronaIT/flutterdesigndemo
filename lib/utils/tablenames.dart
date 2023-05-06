@@ -28,6 +28,7 @@ class TableNames {
   static const MODULE_ATTENDANCE = "DM03";
   static const MODULE_PLACEMENT = "DM04";
   static const MODULE_UPLOAD_DOCUMENT = "DM06";
+  static const MODULE_STUDENT_DIRECTORY = "DM07";
 
 
   static const DIVISION_A = "Class A";
@@ -142,11 +143,10 @@ class TableNames {
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
   static const PERMISSION_ID_COMPLETED_INTERNSHIP = "DP0419";
 
-
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";
-
   static const PERMISSION_ID_UPLOAD_DOCUMENTS = "DP0601";
 
+  static const PERMISSION_ID_VIEW_STUDENT_DIRECTORY = "DP0701";
 
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";

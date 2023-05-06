@@ -142,11 +142,6 @@ class _HomeState extends State<Home> {
               icon: Icons.logout,
               onClicked: () => selectedItem(context, 2),
             ),
-            buildMenuItem(
-              text: strings_name.str_uplaod_doc,
-              icon: Icons.contact_page,
-              onClicked: () => selectedItem(context, 3),
-            ),
           ],
         ),
       ),
@@ -154,9 +149,9 @@ class _HomeState extends State<Home> {
         children: [
           homeModule.records?.isNotEmpty == true
               ? Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
+                  margin: const EdgeInsets.only(left: 10, right: 10),
                   child: GridView.count(
-                    crossAxisCount: 2,
+                    crossAxisCount: 3,
                     shrinkWrap: true,
                     children: List.generate(
                       homeModule.records != null ? homeModule.records!.length : 0,
@@ -182,9 +177,11 @@ class _HomeState extends State<Home> {
                                           custom_text(
                                             text: homeModule.records![index].fields!.moduleTitle.toString(),
                                             alignment: Alignment.center,
-                                            textStyles: blackTextbold14,
-                                            topValue: 10,
-                                            bottomValue: 10,
+                                            textAlign: TextAlign.center,
+                                            textStyles: blackTextSemiBold14,
+                                            maxLines: 3,
+                                            topValue: 0,
+                                            bottomValue: 5,
                                           ),
                                         ],
                                       ),
@@ -205,6 +202,8 @@ class _HomeState extends State<Home> {
                                           }
                                         }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
                                           Get.to(const UploadDocuments());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
+                                          Get.to(const FilterScreenStudent());
                                         }
                                       },
                                     ),
@@ -252,10 +251,6 @@ class _HomeState extends State<Home> {
           PreferenceUtils.clearPreference();
           Get.offAll(const Login());
         });
-        break;
-      case 3:
-        Get.back();
-        Get.to(const FilterScreenStudent());
         break;
     }
   }
