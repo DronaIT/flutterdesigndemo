@@ -104,6 +104,12 @@ const blackTextSemiBold16 = TextStyle(
   fontWeight: FontWeight.w600,
   color: Colors.black,
 );
+const whiteTextSemiBold16 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.white,
+);
+
 const blackTextSemiBold12 = TextStyle(
   fontSize: 13,
   fontWeight: FontWeight.w500,
@@ -145,6 +151,13 @@ const primryTextSemiBold14 = TextStyle(
   fontWeight: FontWeight.w400,
   color: colors_name.colorPrimary,
 );
+const primryTextSemiBold13 = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+
+
 
 const grayTextstyle = TextStyle(
   fontSize: 14,
@@ -157,6 +170,8 @@ const primaryTextSemiBold16 = TextStyle(
   fontWeight: FontWeight.w600,
   color: colors_name.colorPrimary,
 );
+
+
 
 const primaryTextSemiBold14 = TextStyle(
   fontSize: 16,

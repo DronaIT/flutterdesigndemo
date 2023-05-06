@@ -51,7 +51,25 @@ class LoginFieldsResponse {
   List<String>? selectedJob;
   List<String>? placedJob;
   List<String>? rejectedJob;
+
+  List<String>? job_title_selected_job;
+  List<String>? company_name_from_selected_job;
+  List<String>? contact_name_from_selected_job;
+  List<String>?  city_from_selected_job;
+  List<String>? job_description_from_selected_job;
+
+  List<String>? company_name_from_placed_job;
+  List<String>? job_title_from_placed_job;
+  List<String>? job_description_from_placed_job;
+
+  List<String>? job_title_from_rejected_job;
+  List<String>? company_name_from_rejected_job;
+  List<String>? job_description_from_rejected_job;
+
   String? token;
+
+  int? Total_lectures;
+
 
   LoginFieldsResponse({
     this.city,
@@ -101,10 +119,43 @@ class LoginFieldsResponse {
     this.placedJob,
     this.rejectedJob,
     this.token,
-    this.percentage
+    this.percentage,
+    this.Total_lectures,
+
+    this.job_title_selected_job,
+    this.company_name_from_selected_job,
+    this.contact_name_from_selected_job,
+    this.city_from_selected_job,
+    this.job_description_from_selected_job,
+
+    this.company_name_from_placed_job,
+    this.job_title_from_placed_job,
+    this.job_description_from_placed_job,
+
+    this.company_name_from_rejected_job,
+    this.job_title_from_rejected_job,
+    this.job_description_from_rejected_job
+
   });
 
+
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
+
+    company_name_from_rejected_job = json['company_name_from_rejected_job']?.cast<String>();
+    job_title_from_rejected_job = json['job_title_from_rejected_job']?.cast<String>();
+    job_description_from_rejected_job = json['job_description_from_rejected_job']?.cast<String>();
+
+    company_name_from_placed_job = json['company_name_from_placed_job']?.cast<String>();
+    job_title_from_placed_job = json['job_title_from_placed_job']?.cast<String>();
+    job_description_from_placed_job = json['job_description_from_placed_job']?.cast<String>();
+
+
+    job_title_selected_job = json['job_title_selected_job']?.cast<String>();
+    company_name_from_selected_job = json['company_name_from_selected_job']?.cast<String>();
+    contact_name_from_selected_job = json['contact_name_from_selected_job']?.cast<String>();
+    city_from_selected_job = json['city_from_selected_job']?.cast<String>();
+    job_description_from_selected_job = json['job_description_from_selected_job']?.cast<String>();
+
     city = json['city'];
     joiningYear = json['joining_year'];
     password = json['password'];
@@ -121,6 +172,8 @@ class LoginFieldsResponse {
     enrollmentNumber = json['enrollment_number'];
     hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     specializationIdFromSpecializationIds = json['specialization_id (from specialization_ids)']?.cast<String>();
+
+    Total_lectures = json['Total_lectures'];
 
     division = json['division'];
     semester = json['semester'];
@@ -160,6 +213,21 @@ class LoginFieldsResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['company_name_from_rejected_job'] = this.company_name_from_rejected_job;
+    data['job_title_from_rejected_job'] = this.job_title_from_rejected_job;
+    data['job_description_from_rejected_job'] = this.job_description_from_rejected_job;
+
+    data['company_name_from_placed_job'] = this.company_name_from_placed_job;
+    data['job_title_from_placed_job'] = this.job_title_from_placed_job;
+    data['job_description_from_placed_job'] = this.job_description_from_placed_job;
+
+    data['job_title_selected_job'] = this.job_title_selected_job;
+    data['company_name_from_selected_job'] = this.company_name_from_selected_job;
+    data['contact_name_from_selected_job'] = this.contact_name_from_selected_job;
+    data['city_from_selected_job'] = this.city_from_selected_job;
+    data['job_description_from_selected_job'] = this.job_description_from_selected_job;
+
     data['city'] = this.city;
     data['joining_year'] = this.joiningYear;
     data['password'] = this.password;
@@ -176,6 +244,9 @@ class LoginFieldsResponse {
     data['enrollment_number'] = this.enrollmentNumber;
     data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
     data['specialization_id (from specialization_ids)'] = this.specializationIdFromSpecializationIds;
+
+    data['Total_lectures'] = this.Total_lectures;
+
     data['division'] = this.division;
     data['semester'] = this.semester;
     data['lecture_ids'] = this.lectureIds;

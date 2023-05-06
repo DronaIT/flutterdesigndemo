@@ -77,6 +77,7 @@ class strings_name {
   static const String str_home = "Home";
   static const String str_uplaod_doc = "Upload documents";
 
+  static const String str_student_history = "Student History";
 
   static const String str_empty_name = "Please enter employee name";
   static const String str_empty_city = "Please enter city";
@@ -163,7 +164,7 @@ class strings_name {
   static const String str_role = "Role";
   static const String str_student = "Student";
   static const String str_code = "Code";
-
+  static const String str_specilization = "Specialization name";
   static const String str_hubs = "Hubs";
   static const String str_units = "Units";
   static const String str_topics = "Topics";
@@ -214,8 +215,14 @@ class strings_name {
   static const String str_division = "Division";
   static const String str_duration = "Duration";
 
+  static const String str_total_lectures = "Total lectures";
+  static const String str_total_p_lectures = "Total present lectures";
+  static const String str_total_a_lectures = "Total absent lectures";
+  static const String str_total_attendence = "Total Attendence";
+
   static const String str_get_students = "Get Students";
   static const String str_students = "Students";
+
 
   static const String str_empty_semester = "Please select semester";
   static const String str_empty_division = "Please select division";
@@ -426,6 +433,8 @@ class strings_name {
   static const String str_empty_internship_tnc = "Please accept Placement SOP & Terms";
 
   static const String str_placement_info = "Placement info";
+  static const String str_placement = "Placement";
+
   static const String str_completed_placement = "Completed internship process";
   static const String str_pending = "Pending";
   static const String str_reject = "Rejected";

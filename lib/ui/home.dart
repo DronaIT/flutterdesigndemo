@@ -16,6 +16,8 @@ import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
 import 'package:flutterdesigndemo/ui/settings_screen.dart';
+import 'package:flutterdesigndemo/ui/student_history/filter_screen_student.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/ui/upload_documents.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -140,11 +142,11 @@ class _HomeState extends State<Home> {
               icon: Icons.logout,
               onClicked: () => selectedItem(context, 2),
             ),
-            // buildMenuItem(
-            //   text: strings_name.str_uplaod_doc,
-            //   icon: Icons.contact_page,
-            //   onClicked: () => selectedItem(context, 3),
-            // ),
+            buildMenuItem(
+              text: strings_name.str_uplaod_doc,
+              icon: Icons.contact_page,
+              onClicked: () => selectedItem(context, 3),
+            ),
           ],
         ),
       ),
@@ -251,10 +253,10 @@ class _HomeState extends State<Home> {
           Get.offAll(const Login());
         });
         break;
-      // case 3:
-      //   Get.back();
-      //   Get.to(const UploadDocuments());
-      //   break;
+      case 3:
+        Get.back();
+        Get.to(const FilterScreenStudent());
+        break;
     }
   }
 

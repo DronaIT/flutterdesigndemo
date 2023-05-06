@@ -195,6 +195,9 @@ class Utils {
     return specializationId;
   }
 
+
+
+
   static String? getRoleId(String? roleId) {
     final roleList = PreferenceUtils.getRoleList();
     for (int i = 0; i < roleList.records!.length; i++) {

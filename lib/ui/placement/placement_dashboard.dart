@@ -181,7 +181,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_dashboard),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_placement),
       body: Stack(
         children: [
           Container(

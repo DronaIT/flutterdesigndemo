@@ -73,13 +73,15 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    custom_text(
-                                      text: "${jobpportunityData.records?[index].fields!.jobTitle}",
-                                      textStyles: centerTextStyle20,
-                                      topValue: 0,
-                                      maxLines: 2,
-                                      bottomValue: 5,
-                                      leftValue: 5,
+                                    Expanded(
+                                      child: custom_text(
+                                        text: "${jobpportunityData.records?[index].fields!.jobTitle}",
+                                        textStyles: centerTextStyle20,
+                                        topValue: 0,
+                                        maxLines: 2,
+                                        bottomValue: 5,
+                                        leftValue: 5,
+                                      ),
                                     ),
                                     Visibility(
                                         visible: updateJobOppList,
