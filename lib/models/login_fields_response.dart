@@ -67,6 +67,14 @@ class LoginFieldsResponse {
   List<String>? company_name_from_rejected_job;
   List<String>? job_description_from_rejected_job;
 
+
+  List<String>? job_title_from_applied_job;
+  List<String>? company_name_from_applied_job;
+  List<String>? contact_name_from_applied_job;
+  List<String>? job_description_from_applied_job;
+
+
+
   String? token;
 
   int? Total_lectures;
@@ -124,6 +132,13 @@ class LoginFieldsResponse {
     this.percentage,
     this.Total_lectures,
 
+
+    this.job_title_from_applied_job,
+    this.company_name_from_applied_job,
+    this.contact_name_from_applied_job,
+    this.job_description_from_applied_job,
+
+
     this.job_title_selected_job,
     this.company_name_from_selected_job,
     this.contact_name_from_selected_job,
@@ -143,6 +158,14 @@ class LoginFieldsResponse {
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
 
+
+
+    job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
+    company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
+    contact_name_from_applied_job = json['contact_name_from_applied_job']?.cast<String>();
+
+    job_description_from_applied_job = json['job_description_from_applied_job']?.cast<String>();
+
     company_name_from_rejected_job = json['company_name_from_rejected_job']?.cast<String>();
     job_title_from_rejected_job = json['job_title_from_rejected_job']?.cast<String>();
     job_description_from_rejected_job = json['job_description_from_rejected_job']?.cast<String>();
@@ -157,6 +180,14 @@ class LoginFieldsResponse {
     contact_name_from_selected_job = json['contact_name_from_selected_job']?.cast<String>();
     city_from_selected_job = json['city_from_selected_job']?.cast<String>();
     job_description_from_selected_job = json['job_description_from_selected_job']?.cast<String>();
+
+
+
+    job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
+    company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
+    contact_name_from_applied_job = json['contact_name_from_applied_job']?.cast<String>();
+    job_description_from_applied_job = json['job_description_from_applied_job']?.cast<String>();
+
     lecture_subject_title = json['lecture_subject_title']?.cast<String>();
     city = json['city'];
     joiningYear = json['joining_year'];
