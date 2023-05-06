@@ -31,6 +31,7 @@ class LoginFieldsResponse {
   List<String>? presentSubjectId;
   List<String>? lecture_date;
   List<String>? lectureSubjectId;
+  List<String>? lecture_subject_title;
   int attendanceStatus = 1;
 
   String? sr_number;
@@ -101,6 +102,7 @@ class LoginFieldsResponse {
     this.presentSubjectId,
     this.lecture_date,
     this.lectureSubjectId,
+    this.lecture_subject_title,
     this.sr_number,
     this.birthdate,
     this.aadhar_card_number,
@@ -155,7 +157,7 @@ class LoginFieldsResponse {
     contact_name_from_selected_job = json['contact_name_from_selected_job']?.cast<String>();
     city_from_selected_job = json['city_from_selected_job']?.cast<String>();
     job_description_from_selected_job = json['job_description_from_selected_job']?.cast<String>();
-
+    lecture_subject_title = json['lecture_subject_title']?.cast<String>();
     city = json['city'];
     joiningYear = json['joining_year'];
     password = json['password'];
@@ -217,6 +219,7 @@ class LoginFieldsResponse {
     data['company_name_from_rejected_job'] = this.company_name_from_rejected_job;
     data['job_title_from_rejected_job'] = this.job_title_from_rejected_job;
     data['job_description_from_rejected_job'] = this.job_description_from_rejected_job;
+    data['lecture_subject_title'] = this.lecture_subject_title;
 
     data['company_name_from_placed_job'] = this.company_name_from_placed_job;
     data['job_title_from_placed_job'] = this.job_title_from_placed_job;

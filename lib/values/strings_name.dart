@@ -203,7 +203,7 @@ class strings_name {
   static const String str_subject_detail = "Subject detail";
   static const String str_spe_detail = "Specialization detail";
 
-  static const String str_attendence = "Attendance";
+  static const String str_attendence = "Attendance Summary";
 
   static const String str_take_attendence = "Take Attendance";
   static const String str_viewothers_attendence = "Attendance History";
