@@ -161,6 +161,7 @@ class _MyAttendanceState extends State<MyAttendance> {
 
     return outputDate.toString();
   }
+
   void checkPresentAbsentDetailByDate() {
     if (dataByDate.records!.isNotEmpty) {
       if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.presentLectureDate != null) {
@@ -561,9 +562,6 @@ class _MyAttendanceState extends State<MyAttendance> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 8,
-                      ),
                       Expanded(
                           child: Column(
                         children: [
@@ -577,6 +575,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                               leftValue: 0,
                               rightValue: 5,
                             ),
+                            contentPadding: const EdgeInsets.all(0),
                             value: strings_name.str_by_date,
                             groupValue: "",
                             onChanged: (value) {
@@ -620,10 +619,11 @@ class _MyAttendanceState extends State<MyAttendance> {
                               textStyles: blackTextSemiBold16,
                               bottomValue: 0,
                               topValue: 0,
-                              leftValue: 3,
+                              leftValue: 0,
                               rightValue: 5,
                             ),
                             value: strings_name.str_by_subject,
+                            contentPadding: const EdgeInsets.all(0),
                             groupValue: "",
                             onChanged: (value) {
                               _isDate = value.toString();
