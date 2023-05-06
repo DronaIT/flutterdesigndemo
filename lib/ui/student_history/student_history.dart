@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_attendence_history.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_attendence_history_moredetail.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_placement_history.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutter/material.dart';
@@ -192,6 +193,30 @@ class _StudentHistoryState extends State<StudentHistory> {
                   ),
                 ),
 
+
+                const SizedBox(height: 5),
+                GestureDetector(
+                  onTap: (){
+                    Get.to(StudentAttendenceHistoryMoreDetail(),arguments: data.records?.first.fields);
+                  },
+                  child: Card(
+                    elevation: 5,
+                    color: colors_name.colorPrimary,
+                    child: Container(
+                      color: colors_name.colorPrimary,
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.all(5),
+                      child: custom_text(
+                        text: strings_name.str_viewothers_attendence,
+                        alignment: Alignment.centerLeft,
+                        textStyles: whiteTextSemiBold16,
+                        topValue: 0,
+                        bottomValue: 0,
+                        leftValue: 0,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 5),
 
                 GestureDetector(
