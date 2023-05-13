@@ -170,5 +170,6 @@ class TableNames {
   static const EXCEL_COL_MOTHER_NAME = "mother_name";
   static const EXCEL_COL_MOTHER_NUMBER = "mother_number";
   static const EXCEL_COL_FATHER_NUMBER = "father_number";
+  static const EXCEL_COL_BATCH = "batch(20xx-xx)";
   static const APPDATA_TITLE= "Student upload format";
 }
