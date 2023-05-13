@@ -16,7 +16,8 @@ class LoginFieldsResponse {
   String? enrollmentNumber;
   List<String>? hubIdFromHubIds;
   List<String>? specializationIdFromSpecializationIds;
-
+  String? batch;
+  String? passed_out_year;
   String? division;
   String? semester;
   List<String>? lectureIds;
@@ -132,7 +133,8 @@ class LoginFieldsResponse {
     this.percentage,
     this.Total_lectures,
 
-
+    this.batch,
+    this.passed_out_year,
     this.job_title_from_applied_job,
     this.company_name_from_applied_job,
     this.contact_name_from_applied_job,
@@ -234,7 +236,8 @@ class LoginFieldsResponse {
     father_number = json['father_number'];
     pin_code = json['pin_code'];
     is_banned = json['is_banned_from_placement'];
-
+    batch = json['batch'];
+    passed_out_year = json['passed_out_year'];
     appliedJob = json['applied_job']?.cast<String>();
     shortlistedJob = json['shortlisted_job']?.cast<String>();
     selectedJob = json['selected_job']?.cast<String>();
@@ -246,7 +249,8 @@ class LoginFieldsResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-
+    data['batch'] = this.batch;
+    data['passed_out_year'] = this.passed_out_year;
     data['company_name_from_rejected_job'] = this.company_name_from_rejected_job;
     data['job_title_from_rejected_job'] = this.job_title_from_rejected_job;
     data['job_description_from_rejected_job'] = this.job_description_from_rejected_job;
