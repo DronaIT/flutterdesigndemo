@@ -290,7 +290,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                                           items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
                                             return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                                               value: value,
-                                              child: Text(value.fields!.subjectTitle!.toString()),
+                                              child: Text(value.fields!.subjectTitle!.toString(),overflow: TextOverflow.visible),
                                             );
                                           }).toList(),
                                         ),
@@ -568,6 +568,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
           }
         });
         offset = "";
+        Utils.showSnackBarUsingGet(strings_name.str_no_students);
       }
     } on DioError catch (e) {
       setState(() {
