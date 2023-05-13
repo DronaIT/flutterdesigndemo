@@ -324,7 +324,7 @@ class _AddStudent extends State<CreateStudent> {
                 request.pinCode = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_HUB_IDS:
-                request.hubIds = Utils.getHubId(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
+                request.hubIds = Utils.getHubIds(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
                 break;
               case TableNames.EXCEL_COL_SPECIALIZATION_IDS:
                 request.specializationIds = Utils.getSpecializationId(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
@@ -370,6 +370,9 @@ class _AddStudent extends State<CreateStudent> {
                 break;
               case TableNames.EXCEL_COL_FATHER_NUMBER:
                 request.fatherNumber = excel.tables[table]?.rows[row][col]?.value.toString();
+                break;
+              case TableNames.EXCEL_COL_BATCH:
+                request.batch = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
             }
           }
