@@ -14,10 +14,11 @@ class custom_text extends StatefulWidget {
   final double rightValue;
   final double bottomValue;
   final int maxLines;
+  final TextAlign textAlign;
 
   custom_text({required this.text, this.color = Colors.black,
     this.size = 30, this.fontWeight = FontWeight.bold, this.alignment = Alignment.topLeft, this.textStyles = centerTextStyle,
-    this.maxLines = 1, this.topValue = 10.0, this.leftValue = 10.0, this.rightValue = 10.0, this.bottomValue = 10.0});
+    this.maxLines = 1, this.topValue = 10.0, this.leftValue = 10.0, this.rightValue = 10.0, this.bottomValue = 10.0, this.textAlign = TextAlign.start});
 
   @override
   State<custom_text> createState() => _custom_textState();
@@ -33,7 +34,7 @@ class _custom_textState extends State<custom_text> {
         widget.text,
         style: widget.textStyles,
         maxLines: widget.maxLines,
-
+        textAlign: widget.textAlign,
       ),
     );
   }

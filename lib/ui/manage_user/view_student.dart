@@ -271,30 +271,31 @@ class _ViewStudentState extends State<ViewStudent> {
                                           onTap: () async {
                                             var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index].fields?.mobileNumber);
                                             if (response) {
-                                              var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue')";
-                                              setState(() {
-                                                isVisible = true;
-                                              });
-                                              try {
-                                                var data = await apiRepository.loginApi(query);
-                                                if (data.records!.isNotEmpty) {
-                                                  setState(() {
-                                                    isVisible = false;
-                                                    viewStudent = data.records;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    isVisible = false;
-                                                    viewStudent = [];
-                                                  });
-                                                }
-                                              } on DioError catch (e) {
-                                                setState(() {
-                                                  isVisible = false;
-                                                });
-                                                final errorMessage = DioExceptions.fromDioError(e).toString();
-                                                Utils.showSnackBarUsingGet(errorMessage);
-                                              }
+                                              fetchRecords();
+                                            //  var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue')";
+                                            //   setState(() {
+                                            //     isVisible = true;
+                                            //   });
+                                              // try {
+                                              //   var data = await apiRepository.loginApi(query);
+                                              //   if (data.records!.isNotEmpty) {
+                                              //     setState(() {
+                                              //       isVisible = false;
+                                              //       viewStudent = data.records;
+                                              //     });
+                                              //   } else {
+                                              //     setState(() {
+                                              //       isVisible = false;
+                                              //       viewStudent = [];
+                                              //     });
+                                              //   }
+                                              // } on DioError catch (e) {
+                                              //   setState(() {
+                                              //     isVisible = false;
+                                              //   });
+                                              //   final errorMessage = DioExceptions.fromDioError(e).toString();
+                                              //   Utils.showSnackBarUsingGet(errorMessage);
+                                              // }
                                             }
                                           },
                                           child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))

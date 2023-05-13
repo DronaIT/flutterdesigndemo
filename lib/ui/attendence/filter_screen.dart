@@ -24,6 +24,8 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../customwidget/custom_edittext.dart';
+
 class Filter extends StatefulWidget {
   const Filter({Key? key}) : super(key: key);
 
@@ -53,6 +55,8 @@ class _FilterState extends State<Filter> {
   BaseApiResponseWithSerializable<SubjectResponse>? subjectResponse;
   String subjectValue = "";
   String subjectRecordId = "";
+
+  TextEditingController eligibilityR = TextEditingController();
 
   List<BaseApiResponseWithSerializable<UnitsResponse>>? unitResponseArray = [];
   BaseApiResponseWithSerializable<UnitsResponse>? unitResponse;
@@ -95,8 +99,12 @@ class _FilterState extends State<Filter> {
       isFromEligible = Get.arguments[2]["isFromEligible"];
     }
 
-    hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
+    hubResponseArray = PreferenceUtils
+        .getHubList()
+        .records;
+    speResponseArray = PreferenceUtils
+        .getSpecializationList()
+        .records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -132,7 +140,10 @@ class _FilterState extends State<Filter> {
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery.of(context).size.width;
+    var viewWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     return SafeArea(
         child: Scaffold(
             appBar: AppWidgets.appBarWithoutBack(title),
@@ -152,19 +163,25 @@ class _FilterState extends State<Filter> {
                         ),
                       ),
                       Visibility(
-                        visible: !todays,
+                          visible: !todays,
                           child: startDate != null && endDate != null
                               ? GestureDetector(
-                                  child: custom_text(
-                                    text: "${startDate.toString().split(" ").first} - ${endDate.toString().split(" ").first}",
-                                    alignment: Alignment.topLeft,
-                                    textStyles: primaryTextSemiBold16,
-                                    topValue: 0,
-                                  ),
-                                  onTap: () {
-                                    _show();
-                                  },
-                                )
+                            child: custom_text(
+                              text: "${startDate
+                                  .toString()
+                                  .split(" ")
+                                  .first} - ${endDate
+                                  .toString()
+                                  .split(" ")
+                                  .first}",
+                              alignment: Alignment.topLeft,
+                              textStyles: primaryTextSemiBold16,
+                              topValue: 0,
+                            ),
+                            onTap: () {
+                              _show();
+                            },
+                          )
                               : Container()),
                       SizedBox(height: 5.h),
                       custom_text(
@@ -291,49 +308,67 @@ class _FilterState extends State<Filter> {
                       ),
                       subjectResponseArray!.isNotEmpty
                           ? Column(
-                              children: [
-                                SizedBox(height: 5.h),
-                                custom_text(
-                                  text: strings_name.str_view_subject,
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold16,
+                        children: [
+                          SizedBox(height: 5.h),
+                          custom_text(
+                            text: strings_name.str_view_subject,
+                            alignment: Alignment.topLeft,
+                            textStyles: blackTextSemiBold16,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                  width: viewWidth,
+                                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
+                                    value: subjectResponse,
+                                    elevation: 16,
+                                    isExpanded: true,
+                                    style: blackText16,
+                                    focusColor: Colors.white,
+                                    onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
+                                      setState(() {
+                                        subjectValue = newValue!.fields!.ids!.toString();
+                                        subjectResponse = newValue;
+                                        subjectRecordId = newValue.id!;
+                                        // getUnits();
+                                      });
+                                    },
+                                    items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                      return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
+                                        value: value,
+                                        child: Text(value.fields!.subjectTitle!.toString(), overflow: TextOverflow.visible,),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      fit: FlexFit.loose,
-                                      child: Container(
-                                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                                        width: viewWidth,
-                                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
-                                          value: subjectResponse,
-                                          elevation: 16,
-                                          isExpanded: true,
-                                          style: blackText16,
-                                          focusColor: Colors.white,
-                                          onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
-                                            setState(() {
-                                              subjectValue = newValue!.fields!.ids!.toString();
-                                              subjectResponse = newValue;
-                                              subjectRecordId = newValue.id!;
-                                              // getUnits();
-                                            });
-                                          },
-                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
-                                            return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
-                                              value: value,
-                                              child: Text(value.fields!.subjectTitle!.toString()),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
                           : Container(),
+
+                      Visibility(
+                        visible: isFromEligible && subjectValue.isNotEmpty,
+                        child:  custom_text(
+                        text: strings_name.str_eligibiltyC,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),),
+                      Visibility(
+                          visible: isFromEligible && subjectValue.isNotEmpty,
+                          child: custom_edittext(
+                            type: TextInputType.number,
+                            textInputAction: TextInputAction.done,
+                            controller: eligibilityR,
+                            maxLength: 2,
+                          )),
+
+
 /*
                       unitResponseArray!.isNotEmpty
                           ? Column(
@@ -428,17 +463,18 @@ class _FilterState extends State<Filter> {
                       SizedBox(height: 10.h),
                       CustomButton(
                         click: () async {
-
                           if (hubValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_hub);
                           } else if (startDate == null || endDate == null) {
                             Utils.showSnackBar(context, strings_name.str_empty_date_range);
-                          }else if(isFromEligible && divisionValue.isEmpty ){
+                          } else if (isFromEligible && divisionValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_division);
-                          }else if( isFromEligible && subjectValue.isEmpty){
+                          } else if (isFromEligible && subjectValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_subject);
-
-                          } else {
+                          }else if (isFromEligible && eligibilityR.text.isEmpty) {
+                            Utils.showSnackBar(context, strings_name.str_empty_eligibilty);
+                          }
+                          else {
                             viewStudent = [];
                             studentList = [];
 
@@ -608,6 +644,7 @@ class _FilterState extends State<Filter> {
           }
         });
         offset = "";
+        Utils.showSnackBarUsingGet(strings_name.str_no_students);
       }
     } on DioError catch (e) {
       setState(() {
@@ -620,15 +657,14 @@ class _FilterState extends State<Filter> {
 
   void filterData() {
     print(viewStudent?.length);
-    if(continuousCount == 1){
+    if (continuousCount == 1) {
       startDate = DateTime.now();
       endDate = DateTime.now();
     }
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
-
-      if(isFromEligible){
+      if (isFromEligible) {
         studentList?.addAll(viewStudent!);
-      }else{
+      } else {
         for (int i = 0; i < viewStudent!.length; i++) {
           DateTime? strDate;
           var enCheck = DateFormat("yyyy-MM-dd").format(endDate!);
@@ -673,6 +709,7 @@ class _FilterState extends State<Filter> {
           {"hub": hubResponse?.fields?.hubName},
           {"subjectid": subjectResponse?.id},
           {"eligible": isFromEligible},
+          {"eligible_percentage": eligibilityR.text.toString()},
 
         ])?.then((result) {
           if (result != null && result) {

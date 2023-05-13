@@ -24,7 +24,7 @@ class strings_name {
   static const String str_get_started = "Get started";
   static const String str_empty_phone = "Please enter valid phone number.";
   static const String str_empty_password = "Please enter valid password.";
-
+  static const String str_eligibiltyC = "Ineligible criteria (<=%)";
   static const String str_empty_confirm_password = "Please enter valid confirm password.";
   static const String str_confirm_password_length = "Confirm password must be contain minimum 6 digits.";
 
@@ -119,9 +119,11 @@ class strings_name {
   static const String str_address = "Address";
 
   static const String str_joining_year = "Joining year";
+  static const String str_batch = "Batch (20xx-xx)";
   static const String str_empty_sname = "Please enter student name";
   static const String str_empty_address = "Please enter address";
   static const String str_empty_joing_year = "Please enter joing year";
+  static const String str_empty_batch = "Please enter batch";
   static const String str_student_added = "New student added successfully.";
   static const String str_setup_collage = "Setup hub";
   static const String str_add_hub = "Add hub";
@@ -227,6 +229,9 @@ class strings_name {
   static const String str_empty_semester = "Please select semester";
   static const String str_empty_division = "Please select division";
   static const String str_empty_subject = "Please select subject";
+
+  static const String str_empty_eligibilty = "Please select Ineligible criteria";
+
   static const String str_empty_unit = "Please select unit";
   static const String str_empty_topic = "Please select topic";
   static const String str_empty_lduration = "Please select lecture duration";
@@ -477,7 +482,7 @@ class strings_name {
   static const String str_10_days = "Continuous 10 days absents";
   static const String str_today_days = "Today's absents ";
 
-  static const String str_eligiblity_report = "Eligibility report";
+  static const String str_eligiblity_report = "Ineligible report";
   static const String str_export_data = "Export data";
 
   static const String str_no_topic_added = "No topics added";

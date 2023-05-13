@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.topLeft,
                       textStyles: centerTextStyle30,
                     ),
-                    SizedBox(height: 30.h),
+                    SizedBox(height: 10.h),
                     custom_text(
                       text: strings_name.str_phone,
                       alignment: Alignment.topLeft,

@@ -37,6 +37,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController joingYearController = TextEditingController();
+  TextEditingController batchController = TextEditingController();
 
   TextEditingController pincodeController = TextEditingController();
   TextEditingController srnumberController = TextEditingController();
@@ -139,6 +140,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
               joingYearController.text = data.records!.first.fields!.joiningYear ?? "";
               srnumberController.text = data.records!.first.fields!.sr_number ?? "";
               birthdateController.text = data.records!.first.fields!.birthdate ?? "";
+              batchController.text = data.records!.first.fields!.batch ?? "";
               if (data.records!.first.fields!.birthdate?.isNotEmpty == true) {
                 formattedDate = data.records!.first.fields!.birthdate ?? "";
               }
@@ -467,6 +469,21 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                     maxLength: 4,
                   ),
+
+                  SizedBox(height: 2.h),
+                  custom_text(
+                    text: strings_name.str_batch,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    controller: batchController,
+                    topValue: 2,
+                    maxLength: 10,
+                  ),
+
                   SizedBox(height: 2.h),
                   custom_text(
                     text: strings_name.str_serial_number,
@@ -727,6 +744,8 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         Utils.showSnackBar(context, strings_name.str_empty_gender);
                       } else if (joingYearController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_joing_year);
+                      }else if (batchController.text.trim().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_batch);
                       } else if (speValue.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_spe);
                       } else if (hubValue.trim().isEmpty) {
@@ -748,6 +767,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.address = addressController.text.trim().toString();
                         response.specializationIds = Utils.getSpecializationId(speValue)!.split(",");
                         response.joiningYear = joingYearController.text.trim().toString();
+                        response.batch = batchController.text.trim().toString();
                         response.hubIds = Utils.getHubId(hubValue)!.split(",");
                         response.semester = semesterValue.toString();
                         response.division = divisionValue;

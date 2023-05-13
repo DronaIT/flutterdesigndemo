@@ -39,6 +39,7 @@ class _FilterDataState extends State<FilterData> {
   var subjectName ;
   var subjectId ;
   var isFromEligible;
+  var eligiblePersentage;
   var speName;
   var hubName;
   var controllerSearch = TextEditingController();
@@ -54,6 +55,7 @@ class _FilterDataState extends State<FilterData> {
       speName = Get.arguments[2]["specialization"];
       hubName = Get.arguments[3]["hub"];
       isFromEligible = Get.arguments[5]["eligible"];
+      eligiblePersentage = Get.arguments[6]["eligible_percentage"];
       if(isFromEligible){
         checkPresentAbsentDetailBySubject();
       }
@@ -83,7 +85,7 @@ class _FilterDataState extends State<FilterData> {
         }
       }
       var totalPresentPercentage = ((total_present * 100) / total_lecture);
-      if(totalPresentPercentage < 75){
+      if(totalPresentPercentage < int.parse(eligiblePersentage)){
         test.add(studentEligibiltyList[j]);
       }
       studentEligibiltyList[j].fields!.percentage = totalPresentPercentage.toStringAsFixed(2);

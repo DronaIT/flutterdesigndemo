@@ -9,7 +9,8 @@ class CreateStudentRequest {
   String? email;
   String? semester;
   String? division;
-
+  String? batch;
+  String? passed_out_year;
   List<String>? hubIds;
   List<String>? specializationIds;
 
@@ -48,6 +49,8 @@ class CreateStudentRequest {
       this.hscPercentage,
       this.motherName,
       this.motherNumber,
+      this.batch,
+      this.passed_out_year,
       this.fatherNumber});
 
   CreateStudentRequest.fromJson(Map<String, dynamic> json) {
@@ -63,7 +66,8 @@ class CreateStudentRequest {
     division = json['division'];
     hubIds = json['hub_ids']?.cast<String>();
     specializationIds = json['specialization_ids']?.cast<String>();
-
+    batch = json['batch'];
+    passed_out_year = json['passed_out_year'];
     pinCode = json['pin_code'];
     srNumber = json['sr_number'];
     birthdate = json['birthdate'];
@@ -90,8 +94,9 @@ class CreateStudentRequest {
     data['email'] = this.email;
     data['semester'] = this.semester;
     data['division'] = this.division;
+    data['passed_out_year'] = this.passed_out_year;
     data['specialization_ids'] = this.specializationIds;
-
+    data['batch'] = this.batch;
     data['pin_code'] = this.pinCode;
     data['sr_number'] = this.srNumber;
     data['birthdate'] = this.birthdate;

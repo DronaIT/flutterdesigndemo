@@ -80,7 +80,7 @@ class _StudentHistoryState extends State<StudentHistory> {
       body: data.records != null
           ? Column(
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 custom_text(
                   text: "${strings_name.str_name}: ${data.records!.first.fields!.name!}",
                   alignment: Alignment.topLeft,
@@ -109,6 +109,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                   topValue: 10,
+                  maxLines: 2,
                   bottomValue: 0,
                   leftValue: 10,
                 ),
@@ -124,6 +125,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                   text: "${strings_name.str_specilization}: ${Utils.getSpecializationName(data.records!.first.fields!.specializationIds![0])!}",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
+                  maxLines: 2,
                   topValue: 10,
                   bottomValue: 0,
                   leftValue: 10,

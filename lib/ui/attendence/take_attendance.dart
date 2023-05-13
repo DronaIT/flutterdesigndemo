@@ -649,10 +649,10 @@ class _TakeAttendanceState extends State<TakeAttendance> {
           request.unitId = unitRecordId.split(",");
           request.topicId = topicRecordId.split(",");
           request.lecture_duration= lectureValue;
+          request.semesterByStudent = semesterValue.toString();
           Get.to(const AttendanceStudentList(), arguments: [
             {"studentList": studentList},
             {"request": request},
-
           ])?.then((result) {
             if (result != null && result) {
               Get.back(closeOverlays: true);
