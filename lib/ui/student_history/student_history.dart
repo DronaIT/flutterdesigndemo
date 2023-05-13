@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_attendece_past_history.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_attendence_history.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_attendence_history_moredetail.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_placement_history.dart';
@@ -78,176 +79,203 @@ class _StudentHistoryState extends State<StudentHistory> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_student_history),
       body: data.records != null
-          ? Column(
-              children: [
-                const SizedBox(height: 10),
-                custom_text(
-                  text: "${strings_name.str_name}: ${data.records!.first.fields!.name!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: primaryTextSemiBold16,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_phone}: ${data.records!.first.fields!.mobileNumber!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_email}: ${data.records!.first.fields!.email!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_hub_name}: ${Utils.getHubName(data.records!.first.fields!.hubIdFromHubIds![0])!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  maxLines: 2,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_code}: ${data.records!.first.fields!.enrollmentNumber!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_specilization}: ${Utils.getSpecializationName(data.records!.first.fields!.specializationIds![0])!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  maxLines: 2,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_semester}: ${data.records!.first.fields!.semester!}",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_total_lectures}: $total_lecture",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_total_p_lectures}: $total_present",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${strings_name.str_total_a_lectures}: $total_absent",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
-                custom_text(
-                  text: "${"${strings_name.str_total_attendence}: " + totalPresentPercentage}%",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                  topValue: 10,
-                  bottomValue: 0,
-                  leftValue: 10,
-                ),
+          ? Container(
+            margin: EdgeInsets.all(10),
+            child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  custom_text(
+                    text: "${strings_name.str_name}: ${data.records!.first.fields!.name!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: primaryTextSemiBold16,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_phone}: ${data.records!.first.fields!.mobileNumber!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_email}: ${data.records!.first.fields!.email!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_hub_name}: ${Utils.getHubName(data.records!.first.fields!.hubIdFromHubIds![0])!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    maxLines: 2,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_code}: ${data.records!.first.fields!.enrollmentNumber!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_specilization}: ${Utils.getSpecializationName(data.records!.first.fields!.specializationIds![0])!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    maxLines: 2,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_semester}: ${data.records!.first.fields!.semester!}",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_total_lectures}: $total_lecture",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_total_p_lectures}: $total_present",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${strings_name.str_total_a_lectures}: $total_absent",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
+                  custom_text(
+                    text: "${"${strings_name.str_total_attendence}: " + totalPresentPercentage}%",
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    topValue: 10,
+                    bottomValue: 0,
+                    leftValue: 10,
+                  ),
 
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: (){
-                    Get.to(StudentAttendenceHistory(),arguments: data.records?.first.fields);
-                  },
-                  child: Card(
-                    elevation: 5,
-                    color: colors_name.colorPrimary,
-                    child: Container(
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(StudentAttendenceHistory(),arguments: data.records?.first.fields);
+                    },
+                    child: Card(
+                      elevation: 5,
                       color: colors_name.colorPrimary,
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.all(5),
-                      child: custom_text(
-                        text: strings_name.str_attendence,
-                        alignment: Alignment.centerLeft,
-                        textStyles: whiteTextSemiBold16,
-                        topValue: 0,
-                        bottomValue: 0,
-                        leftValue: 0,
+                      child: Container(
+                        color: colors_name.colorPrimary,
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(5),
+                        child: custom_text(
+                          text: strings_name.str_attendence,
+                          alignment: Alignment.centerLeft,
+                          textStyles: whiteTextSemiBold16,
+                          topValue: 0,
+                          bottomValue: 0,
+                          leftValue: 0,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
 
-                const SizedBox(height: 5),
-                GestureDetector(
-                  onTap: (){
-                    Get.to(StudentAttendenceHistoryMoreDetail(),arguments: data.records?.first.fields);
-                  },
-                  child: Card(
-                    elevation: 5,
-                    color: colors_name.colorPrimary,
-                    child: Container(
+                  const SizedBox(height: 5),
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(StudentAttendenceHistoryMoreDetail(),arguments: data.records?.first.fields);
+                    },
+                    child: Card(
+                      elevation: 5,
                       color: colors_name.colorPrimary,
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.all(5),
-                      child: custom_text(
-                        text: strings_name.str_viewothers_attendence,
-                        alignment: Alignment.centerLeft,
-                        textStyles: whiteTextSemiBold16,
-                        topValue: 0,
-                        bottomValue: 0,
-                        leftValue: 0,
+                      child: Container(
+                        color: colors_name.colorPrimary,
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(5),
+                        child: custom_text(
+                          text: strings_name.str_viewothers_attendence,
+                          alignment: Alignment.centerLeft,
+                          textStyles: whiteTextSemiBold16,
+                          topValue: 0,
+                          bottomValue: 0,
+                          leftValue: 0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 5),
+                  const SizedBox(height: 5),
 
-                GestureDetector(
-                  onTap: (){
-                    Get.to(StudentPlacementHistory(),arguments: data.records?.first.fields);
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(StudentPlacementHistory(),arguments: data.records?.first.fields);
 
-                  },
-                  child: Card(
-                    elevation: 5,
-                    color: colors_name.colorPrimary,
-                    child: Container(
+                    },
+                    child: Card(
+                      elevation: 5,
                       color: colors_name.colorPrimary,
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.all(5),
-                      child: custom_text(
-                        text: strings_name.str_placement,
-                        alignment: Alignment.centerLeft,
-                        textStyles: whiteTextSemiBold16,
-                        topValue: 0,
-                        bottomValue: 0,
-                        leftValue: 0,
+                      child: Container(
+                        color: colors_name.colorPrimary,
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(5),
+                        child: custom_text(
+                          text: strings_name.str_placement,
+                          alignment: Alignment.centerLeft,
+                          textStyles: whiteTextSemiBold16,
+                          topValue: 0,
+                          bottomValue: 0,
+                          leftValue: 0,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
 
-              ],
-            )
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(StudenceAttendecPastHistory(),arguments: data.records?.first.fields);
+
+                    },
+                    child: Card(
+                      elevation: 5,
+                      color: colors_name.colorPrimary,
+                      child: Container(
+                        color: colors_name.colorPrimary,
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(5),
+                        child: custom_text(
+                          text: strings_name.str_past_history,
+                          alignment: Alignment.centerLeft,
+                          textStyles: whiteTextSemiBold16,
+                          topValue: 0,
+                          bottomValue: 0,
+                          leftValue: 0,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+          )
           : Container(),
     ));
   }

@@ -77,7 +77,7 @@ class LoginFieldsResponse {
 
 
   String? token;
-
+  List<dynamic>?  semesterByStudent;
   int? Total_lectures;
 
 
@@ -153,7 +153,8 @@ class LoginFieldsResponse {
 
     this.company_name_from_rejected_job,
     this.job_title_from_rejected_job,
-    this.job_description_from_rejected_job
+    this.job_description_from_rejected_job,
+    this.semesterByStudent
 
   });
 
@@ -161,7 +162,7 @@ class LoginFieldsResponse {
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
 
 
-
+    semesterByStudent = json['semester_by_student'];
     job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
     contact_name_from_applied_job = json['contact_name_from_applied_job']?.cast<String>();
@@ -265,7 +266,7 @@ class LoginFieldsResponse {
     data['contact_name_from_selected_job'] = this.contact_name_from_selected_job;
     data['city_from_selected_job'] = this.city_from_selected_job;
     data['job_description_from_selected_job'] = this.job_description_from_selected_job;
-
+    data['semester_by_student'] = this.semesterByStudent;
     data['city'] = this.city;
     data['joining_year'] = this.joiningYear;
     data['password'] = this.password;

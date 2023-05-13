@@ -439,7 +439,7 @@ class strings_name {
 
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";
-
+  static const String str_past_history = "Attendence past history";
   static const String str_completed_placement = "Completed internship process";
   static const String str_pending = "Pending";
   static const String str_reject = "Rejected";
