@@ -43,6 +43,7 @@ import 'package:get/get.dart';
 import '../models/App_data_response.dart';
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
+import '../models/help_desk_type_response.dart';
 import '../models/request/create_company_appr_req.dart';
 import '../models/request/create_company_det_req.dart';
 
@@ -578,6 +579,15 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<HelpDeskTypeResponse>> getHelpdesk() async {
+    try {
+      final response = await userApi.getHelpdesk();
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
 
 
 }

@@ -7,9 +7,9 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
-import 'package:flutterdesigndemo/ui/academic_detail/academic_list.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
+import 'package:flutterdesigndemo/ui/helpdesk/helpdesk.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
@@ -17,7 +17,6 @@ import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
 import 'package:flutterdesigndemo/ui/settings_screen.dart';
 import 'package:flutterdesigndemo/ui/student_history/filter_screen_student.dart';
-import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/ui/upload_documents.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -26,7 +25,6 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import '../api/dio_exception.dart';
 import '../utils/utils.dart';
@@ -204,6 +202,8 @@ class _HomeState extends State<Home> {
                                           Get.to(const UploadDocuments());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
                                           Get.to(const FilterScreenStudent());
+                                        }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
+                                          Get.to(const HelpDesk());
                                         }
                                       },
                                     ),

@@ -216,7 +216,7 @@ class strings_name {
   static const String str_semester = "Semester";
   static const String str_division = "Division";
   static const String str_duration = "Duration";
-
+  static const String str_help_desk_type = "Help desk type";
   static const String str_total_lectures = "Total lectures";
   static const String str_total_p_lectures = "Total present lectures";
   static const String str_total_a_lectures = "Total absent lectures";
@@ -439,7 +439,7 @@ class strings_name {
 
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";
-
+  static const String str_past_history = "Attendence past history";
   static const String str_completed_placement = "Completed internship process";
   static const String str_pending = "Pending";
   static const String str_reject = "Rejected";
@@ -487,4 +487,10 @@ class strings_name {
 
   static const String str_no_topic_added = "No topics added";
   static const String str_unit_detail = "Unit detail";
+
+  static const String str_help_desk = "Help desk";
+  static const String str_attachments = "Attachments";
+  static const String str_empty_type_help = "Please enter help type";
+  static const String str_empty_help_note = "Please enter help note";
+  static const String str_help_note = "Help note";
 }
