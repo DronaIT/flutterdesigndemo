@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/App_data_response.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
+import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
@@ -212,7 +213,6 @@ class ApiRequest {
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
     try {
-
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, options: Options(headers: header));
@@ -596,7 +596,6 @@ class ApiRequest {
     }
   }
 
-
   Future<BaseLoginResponse<App_data_response>> getAppData() async {
     try {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
@@ -608,7 +607,7 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<App_data_response>> addAppDataApi( Map<String, dynamic> data) async {
+  Future<BaseLoginResponse<App_data_response>> addAppDataApi(Map<String, dynamic> data) async {
     try {
       Map<String, dynamic> someMap = {"fields": data};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
@@ -619,20 +618,18 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<LoginFieldsResponse>> addToken(Map<String, dynamic> data,String recordId) async {
+  Future<BaseLoginResponse<LoginFieldsResponse>> addToken(Map<String, dynamic> data, String recordId) async {
     try {
       Map<String, dynamic> someMap = {"fields": data};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
       return BaseLoginResponse<LoginFieldsResponse>.fromJson(response, (response) => LoginFieldsResponse.fromJson(response));
-
     } catch (e) {
       rethrow;
     }
   }
 
-
-  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee(Map<String, dynamic> data,String recordId) async {
+  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee(Map<String, dynamic> data, String recordId) async {
     try {
       Map<String, dynamic> someMap = {"fields": data};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
@@ -642,7 +639,6 @@ class ApiRequest {
       rethrow;
     }
   }
-
 
   Future<BaseLoginResponse<HelpDeskTypeResponse>> getHelpdesk() async {
     try {
@@ -665,4 +661,26 @@ class ApiRequest {
     }
   }
 
+  Future<BaseLoginResponse<CompanyDetailResponse>> addTokenOrganization(Map<String, dynamic> data, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": data};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_COMPANY_DETAIL + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
+      return BaseLoginResponse<CompanyDetailResponse>.fromJson(response, (response) => CompanyDetailResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<HelpdeskResponses>> getTicketsApi(String ticketFormula, [String offset = ""]) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": ticketFormula, if (offset.isNotEmpty) "offset": offset};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_HELPDESK, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<HelpdeskResponses>.fromJson(response.data, (response) => HelpdeskResponses.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
