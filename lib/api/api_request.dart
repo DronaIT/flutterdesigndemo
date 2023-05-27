@@ -43,6 +43,7 @@ import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
+import '../models/help_desk_type_response.dart';
 import '../models/request/create_company_appr_req.dart';
 import '../models/request/create_company_det_req.dart';
 
@@ -635,6 +636,17 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_EMPLOYEE + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
       return BaseLoginResponse<LoginEmployeResponse>.fromJson(response, (response) => LoginEmployeResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  Future<BaseLoginResponse<HelpDeskTypeResponse>> getHelpdesk() async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.get(TableNames.TBL_HELPDESK_TYPE, options: Options(headers: header));
+      return BaseLoginResponse<HelpDeskTypeResponse>.fromJson(response.data, (response) => HelpDeskTypeResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

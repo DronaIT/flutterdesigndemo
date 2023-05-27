@@ -3,7 +3,7 @@ class TableNames {
   static const APIKEY = "keyszHTHXMxxKKs9b";
   static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
-  // Kaleyra keys
+  // Kaleyra keysh
   static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
   static const KALEYRA_SENDER = "DFBVOC";
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
@@ -13,6 +13,7 @@ class TableNames {
   static const CLOUDARY_PRESET = "kgicun2o";
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
+  static const CLOUDARY_FOLDER_HELP_DESK= "HelpDesk";
   static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
   static const CLOUDARY_FOLDER_APP_ASSETS = "AppAssets";
 
@@ -29,7 +30,7 @@ class TableNames {
   static const MODULE_PLACEMENT = "DM04";
   static const MODULE_UPLOAD_DOCUMENT = "DM06";
   static const MODULE_STUDENT_DIRECTORY = "DM07";
-
+  static const MODULE_HELP_DESK = "DM08";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -57,6 +58,7 @@ class TableNames {
   static const TBL_PLACEMENT_ATTENDANCE = "TBL_PLACEMENT_ATTENDANCE";
   static const TBL_APP_TRACKING = "TBL_APP_TRACKING";
   static const TBL_APP_DATA = "TBL_APP_DATA";
+  static const TBL_HELPDESK_TYPE = "TBL_HELPDESK_TYPE";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
