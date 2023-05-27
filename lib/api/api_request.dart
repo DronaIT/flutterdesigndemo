@@ -43,9 +43,11 @@ import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
+import '../models/help_desk_response.dart';
 import '../models/help_desk_type_response.dart';
 import '../models/request/create_company_appr_req.dart';
 import '../models/request/create_company_det_req.dart';
+import '../models/request/help_desk_req.dart';
 
 class ApiRequest {
   final DioClient dioClient;
@@ -647,6 +649,17 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.get(TableNames.TBL_HELPDESK_TYPE, options: Options(headers: header));
       return BaseLoginResponse<HelpDeskTypeResponse>.fromJson(response.data, (response) => HelpDeskTypeResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<HelpDeskResponse> addHelpDeskApi(HelpDeskRequest helpDeskReq) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": helpDeskReq};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_HELPDESK, options: Options(headers: header), data: jsonEncode(someMap));
+      return HelpDeskResponse.fromJson(response.data);
     } catch (e) {
       rethrow;
     }

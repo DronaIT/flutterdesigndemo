@@ -59,6 +59,7 @@ class TableNames {
   static const TBL_APP_TRACKING = "TBL_APP_TRACKING";
   static const TBL_APP_DATA = "TBL_APP_DATA";
   static const TBL_HELPDESK_TYPE = "TBL_HELPDESK_TYPE";
+  static const TBL_HELPDESK = "TBL_HELPDESK";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
