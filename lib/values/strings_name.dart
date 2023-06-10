@@ -499,5 +499,10 @@ class strings_name {
   static const String str_empty_type_help = "Please enter help type";
   static const String str_empty_help_note = "Please enter help note";
   static const String str_help_note = "Help note";
+
+  static const String str_my_tickets = "My tickets";
+  static const String str_others_tickets = "Others tickets";
+  static const String str_ticket_id = "Ticket No:";
+  static const String str_created_by = "Created by:";
   static const String str_help_desk_detail = "Help desk details";
 }
