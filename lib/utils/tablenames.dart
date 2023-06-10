@@ -104,6 +104,8 @@ class TableNames {
 
   static const CLM_ASSIGNED_TO = "assigned_to";
   static const CLM_CREATED_BY_EMPLOYEE = "created_by_employee";
+  static const CLM_CREATED_BY_STUDENT = "created_by_student";
+  static const CLM_CREATED_BY_ORGANIZATION = "created_by_organization";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
