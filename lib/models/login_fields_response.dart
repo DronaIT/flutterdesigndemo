@@ -74,12 +74,11 @@ class LoginFieldsResponse {
   List<String>? contact_name_from_applied_job;
   List<String>? job_description_from_applied_job;
 
-
-
   String? token;
-  List<dynamic>?  semesterByStudent;
+  List<dynamic>? semesterByStudent;
+  List<dynamic>? presentSemesterByStudent;
+  List<dynamic>? absentSemesterByStudent;
   int? Total_lectures;
-
 
   LoginFieldsResponse({
     this.city,
@@ -154,15 +153,18 @@ class LoginFieldsResponse {
     this.company_name_from_rejected_job,
     this.job_title_from_rejected_job,
     this.job_description_from_rejected_job,
-    this.semesterByStudent
-
+    this.semesterByStudent,
+    this.presentSemesterByStudent,
+    this.absentSemesterByStudent
   });
 
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
 
-
     semesterByStudent = json['semester_by_student'];
+    presentSemesterByStudent = json['present_semester_by_student'];
+    absentSemesterByStudent = json['absent_semester_by_student'];
+
     job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
     contact_name_from_applied_job = json['contact_name_from_applied_job']?.cast<String>();
@@ -177,14 +179,11 @@ class LoginFieldsResponse {
     job_title_from_placed_job = json['job_title_from_placed_job']?.cast<String>();
     job_description_from_placed_job = json['job_description_from_placed_job']?.cast<String>();
 
-
     job_title_selected_job = json['job_title_selected_job']?.cast<String>();
     company_name_from_selected_job = json['company_name_from_selected_job']?.cast<String>();
     contact_name_from_selected_job = json['contact_name_from_selected_job']?.cast<String>();
     city_from_selected_job = json['city_from_selected_job']?.cast<String>();
     job_description_from_selected_job = json['job_description_from_selected_job']?.cast<String>();
-
-
 
     job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
@@ -250,6 +249,7 @@ class LoginFieldsResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
     data['batch'] = this.batch;
     data['passed_out_year'] = this.passed_out_year;
     data['company_name_from_rejected_job'] = this.company_name_from_rejected_job;
@@ -266,7 +266,11 @@ class LoginFieldsResponse {
     data['contact_name_from_selected_job'] = this.contact_name_from_selected_job;
     data['city_from_selected_job'] = this.city_from_selected_job;
     data['job_description_from_selected_job'] = this.job_description_from_selected_job;
+
     data['semester_by_student'] = this.semesterByStudent;
+    data['present_semester_by_student'] = this.presentSemesterByStudent;
+    data['absent_semester_by_student'] = this.absentSemesterByStudent;
+
     data['city'] = this.city;
     data['joining_year'] = this.joiningYear;
     data['password'] = this.password;

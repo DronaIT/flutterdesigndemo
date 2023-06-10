@@ -284,7 +284,7 @@ class _LoginState extends State<Login> {
                                   } else {
                                     String? deviceId = await Utils.getId();
                                     Map<String, dynamic> query = {"token": deviceId};
-                                    await loginRepository.addTokenEmployee(query, dataOrg.records!.first.id!);
+                                    await loginRepository.addTokenOrganization(query, dataOrg.records!.first.id!);
                                     await PreferenceUtils.setIsLogin(3);
                                     await PreferenceUtils.setLoginDataOrganization(dataOrg.records!.first.fields!);
                                     await PreferenceUtils.setLoginRecordId(dataOrg.records!.first.id!);

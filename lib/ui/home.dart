@@ -202,7 +202,7 @@ class _HomeState extends State<Home> {
                                           if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
                                             Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
                                           } else if (PreferenceUtils.getIsLogin() == 3){
-
+                                            Get.to(const PlacementDashboard());
                                           } else {
                                             Get.to(const PlacementDashboard());
                                           }

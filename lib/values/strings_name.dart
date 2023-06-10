@@ -242,7 +242,7 @@ class strings_name {
   static const String str_filter_by = "Filter by";
   static const String str_reset = "Reset";
   static const String str_by_date = "Date";
-  static const String str_taken_by = "Taken by : ";
+  static const String str_taken_by = "Taken by";
   static const String str_by_semester = "Semester";
   static const String str_by_subject = "Subject";
   static const String str_attendence_his_detail = "Attendance history detail";
@@ -324,6 +324,7 @@ class strings_name {
   static const String str_empty_company_id_no = "Please enter company indentification no.";
   static const String str_company_det_added = "Company detail added successfully";
   static const String str_view_create_company = "Company list";
+  static const String str_view_company_detail = "Company detail";
   static const String str_company_updated = "Company detail updated successfully.";
   static const String str_job_opp_detail = "Job opportunity form";
   static const String str_create_job_opp_detail = "Create job opportunity";
@@ -439,7 +440,7 @@ class strings_name {
 
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";
-  static const String str_past_history = "Attendence past history";
+  static const String str_past_history = "Attendance past history";
   static const String str_completed_placement = "Completed internship process";
   static const String str_pending = "Pending";
   static const String str_reject = "Rejected";
