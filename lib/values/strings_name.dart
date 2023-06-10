@@ -481,12 +481,17 @@ class strings_name {
   static const String str_5_days = "Continuous 5 days absents";
   static const String str_10_days = "Continuous 10 days absents";
   static const String str_today_days = "Today's absents ";
-
   static const String str_eligiblity_report = "Ineligible report";
+  static const String str_past_data = "Past report";
+
   static const String str_export_data = "Export data";
 
   static const String str_no_topic_added = "No topics added";
   static const String str_unit_detail = "Unit detail";
+
+  static const String str_select_login_role = "Select your role";
+  static const String str_organization_not_found = "Organization does not found";
+  static const String str_organization = "Organization";
 
   static const String str_help_desk = "Help desk";
   static const String str_attachments = "Attachments";

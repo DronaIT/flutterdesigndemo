@@ -22,6 +22,7 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
 
   static const STUDENT_ROLE_ID = "DR09";
+  static const ORGANIZATION_ROLE_ID = "DR24";
 
   static const MODULE_MANAGE_USER = "DM01";
   static const MODULE_SETUP_COLLAGE = "DM02";
@@ -101,6 +102,9 @@ class TableNames {
   static const CLM_PRESENT_SUBJECT_IDS = "present_subject_id";
   static const CLM_ABSENT_SUBJECT_IDS = "absent_subject_id";
 
+  static const CLM_ASSIGNED_TO = "assigned_to";
+  static const CLM_CREATED_BY_EMPLOYEE = "created_by_employee";
+
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
   static const PERMISSION_ID_VIEW_EMPLOYEE = "DP0103";
@@ -151,6 +155,10 @@ class TableNames {
 
   static const PERMISSION_ID_VIEW_STUDENT_DIRECTORY = "DP0701";
 
+  static const PERMISSION_ID_VIEW_OTHER_TICKET = "DP0801";
+  static const PERMISSION_ID_UPDATE_TICKET_STATUS = "DP0802";
+  static const PERMISSION_ID_UPDATE_TICKET_CATEGORY = "DP0803";
+
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
   static const EXCEL_COL_GENDER = "gender";
@@ -175,4 +183,10 @@ class TableNames {
   static const EXCEL_COL_FATHER_NUMBER = "father_number";
   static const EXCEL_COL_BATCH = "batch(20xx-xx)";
   static const APPDATA_TITLE= "Student upload format";
+
+  static const LOGIN_ROLE_EMPLOYEE = "Employee";
+  static const LOGIN_ROLE_STUDENT = "Student";
+  static const LOGIN_ROLE_ORGANIZATION = "Organization";
+
+  static const TB_CONTACT_NUMBER = "contact_number";
 }

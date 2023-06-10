@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutterdesigndemo/models/company_detail_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
@@ -38,6 +39,7 @@ class PreferenceUtils {
   //0 = not login
   //1 = student
   //2 = employee
+  //3 = organization
 
   static Future setIsLogin(int amount) async => await _preferences.setInt(_keyisLogin, amount);
 
@@ -66,6 +68,10 @@ class PreferenceUtils {
   static Future setLoginDataEmployee(LoginEmployeResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
 
   static LoginEmployeResponse getLoginDataEmployee() => LoginEmployeResponse.fromJson(jsonDecode(_preferences.getString(_keyLoginData)!));
+
+  static Future setLoginDataOrganization(CompanyDetailResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
+
+  static CompanyDetailResponse getLoginDataOrganization() => CompanyDetailResponse.fromJson(jsonDecode(_preferences.getString(_keyLoginData)!));
 
   static Future setSpecializationList(BaseLoginResponse<SpecializationResponse> specializationResponse) async => await _preferences.setString(_keySpecializationList, jsonEncode(specializationResponse));
 

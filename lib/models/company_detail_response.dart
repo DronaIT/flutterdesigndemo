@@ -15,6 +15,8 @@ class CompanyDetailResponse {
   String? reporting_branch;
   String? reporting_address;
   String? city;
+  String? password;
+  String? token;
 
   CompanyDetailResponse(
       {this.id,
@@ -32,7 +34,10 @@ class CompanyDetailResponse {
         this.reporting_branch,
         this.reporting_address,
         this.city,
-        this.sectorTitleFromCompanySector});
+        this.sectorTitleFromCompanySector,
+        this.password,
+        this.token
+      });
 
   CompanyDetailResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -52,6 +57,8 @@ class CompanyDetailResponse {
     reporting_branch = json['reporting_branch'] ?? " ";
     reporting_address = json['reporting_address'] ?? " ";
     city = json['city'] ?? " ";
+    password = json['password'] ?? " ";
+    token = json['token'] ?? " ";
   }
 
   Map<String, dynamic> toJson() {
@@ -72,6 +79,8 @@ class CompanyDetailResponse {
     data['reporting_branch'] = this.reporting_branch;
     data['reporting_address'] = this.reporting_address;
     data['city'] = this.city;
+    data['password'] = this.password;
+    data['token'] = this.token;
     return data;
   }
 }

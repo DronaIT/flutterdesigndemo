@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
+import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
@@ -595,6 +596,26 @@ class ApiRepository {
   Future<HelpDeskResponse> addHelpDeskApi(HelpDeskRequest helpDeskReq) async {
     try {
       final response = await userApi.addHelpDeskApi(helpDeskReq);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<CompanyDetailResponse>> addTokenOrganization(Map<String, dynamic> data, String recordId) async {
+    try {
+      final response = await userApi.addTokenOrganization(data, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<HelpdeskResponses>> getTicketsApi(String ticketFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getTicketsApi(ticketFormula, offset);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

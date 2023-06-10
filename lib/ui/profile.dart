@@ -23,10 +23,12 @@ class _ProfileState extends State<Profile> {
   String city = "";
   String email = "";
   String address = "";
+  var isLogin = 0;
+
   @override
   void initState() {
     super.initState();
-    var isLogin = PreferenceUtils.getIsLogin();
+    isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
       name = loginData.name.toString();
@@ -46,6 +48,16 @@ class _ProfileState extends State<Profile> {
       hubName = Utils.getHubName(loginData.hubIdFromHubIds![0]) ?? "";
       employeeCode = loginData.employeeCode.toString();
       address = loginData.address.toString();
+      city = loginData.city.toString();
+    } else if (isLogin == 3){
+      var loginData = PreferenceUtils.getLoginDataOrganization();
+      name = loginData.companyName.toString();
+      phone = loginData.contactNumber.toString();
+      email = loginData.contactEmail.toString();
+      roleName = strings_name.str_organization;
+      hubName = loginData.reporting_branch.toString();
+      employeeCode = loginData.company_code.toString();
+      address = loginData.reporting_address.toString();
       city = loginData.city.toString();
     }
   }
@@ -89,28 +101,31 @@ class _ProfileState extends State<Profile> {
             leftValue: 20,
           ),
           custom_text(
-            text: strings_name.str_hub_name + ": " + hubName,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-            topValue: 10,
-            bottomValue: 0,
-            leftValue: 20,
-          ),
-          custom_text(
-            text: strings_name.str_role + ": " + roleName,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-            topValue: 10,
-            bottomValue: 0,
-            leftValue: 20,
-          ),
-          custom_text(
             text: strings_name.str_code + ": " + employeeCode,
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             topValue: 10,
             bottomValue: 0,
             leftValue: 20,
+          ),
+          custom_text(
+            text: "${isLogin == 3 ? strings_name.str_reporting_branch : strings_name.str_hub_name} : $hubName",
+            alignment: Alignment.topLeft,
+            textStyles: blackTextSemiBold16,
+            topValue: 10,
+            bottomValue: 0,
+            leftValue: 20,
+          ),
+          Visibility(
+            visible: isLogin != 3,
+            child: custom_text(
+              text: strings_name.str_role + ": " + roleName,
+              alignment: Alignment.topLeft,
+              textStyles: blackTextSemiBold16,
+              topValue: 10,
+              bottomValue: 0,
+              leftValue: 20,
+            ),
           ),
           custom_text(
             text: strings_name.str_address + ": " + address,
