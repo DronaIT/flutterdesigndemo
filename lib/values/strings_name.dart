@@ -499,4 +499,5 @@ class strings_name {
   static const String str_empty_type_help = "Please enter help type";
   static const String str_empty_help_note = "Please enter help note";
   static const String str_help_note = "Help note";
+  static const String str_help_desk_detail = "Help desk details";
 }
