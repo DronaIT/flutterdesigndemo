@@ -65,22 +65,41 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                     // custom_text(text: helpDeskTypeResponse!.employeeName?[0].toString() ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0),
+                      // custom_text(text: helpDeskTypeResponse!.employeeName?[0].toString() ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0),
                       custom_text(
-                          text: helpDeskTypeResponse!.studentName?.isNotEmpty == true ?helpDeskTypeResponse!.studentName![0].toString() :
-                          (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() :
-                          (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
-                          textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0),
-
+                          text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
+                              ? helpDeskTypeResponse!.studentName![0].toString()
+                              : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                          textStyles: blackTextSemiBold16,
+                          leftValue: 5,
+                          topValue: 0),
                     ],
                   ),
                   custom_text(
-                    text: "${strings_name.str_notes} ${helpDeskTypeResponse!.notes}",
+                    text: "${helpDeskTypeResponse!.notes}",
                     textStyles: blackText16,
                     topValue: 0,
                     bottomValue: 5,
                     leftValue: 5,
                     maxLines: 4,
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      custom_text(
+                        text: "${strings_name.str_status}",
+                        textStyles: primaryTextSemiBold16,
+                        topValue: 0,
+                        bottomValue: 5,
+                        leftValue: 5,
+                        maxLines: 4,
+                      ),
+                      Container(
+                          decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                          padding: const EdgeInsets.all(1),
+                          margin: const EdgeInsets.only(right: 5),
+                          child: custom_text(text: helpDeskTypeResponse!.status.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                    ],
                   ),
                   SizedBox(height: 10.h),
                   custom_edittext(

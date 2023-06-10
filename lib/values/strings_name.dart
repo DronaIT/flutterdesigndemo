@@ -506,5 +506,6 @@ class strings_name {
   static const String str_created_by = "Created by:";
   static const String str_help_desk_detail = "Help desk details";
   static const String str_notes = "Notes:";
+  static const String str_status = "Status:";
   static const String str_type_here = "Type here..";
 }
