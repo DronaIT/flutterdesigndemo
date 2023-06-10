@@ -35,6 +35,7 @@ class _custom_textState extends State<custom_text> {
         style: widget.textStyles,
         maxLines: widget.maxLines,
         textAlign: widget.textAlign,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

@@ -23,6 +23,7 @@ class HelpdeskResponses {
   List<String>? companyContactNumber;
 
   String? createdOn;
+  String? resolutionRemark;
 
   HelpdeskResponses(
       {this.ticketId,
@@ -44,7 +45,9 @@ class HelpdeskResponses {
         this.createdByOrganization,
         this.companyName,
         this.companyContactNumber,
-        this.createdOn});
+        this.createdOn,
+        this.resolutionRemark,
+      });
 
   HelpdeskResponses.fromJson(Map<String, dynamic> json) {
     ticketId = json['ticket_id'];
@@ -70,6 +73,7 @@ class HelpdeskResponses {
     companyName = json['company_name']?.cast<String>();
     companyContactNumber = json['company_contact_number']?.cast<String>();
     createdOn = json['created_on'];
+    resolutionRemark = json['resolution_remark'];
   }
 
   Map<String, dynamic> toJson() {
@@ -98,6 +102,7 @@ class HelpdeskResponses {
     data['company_contact_number'] = this.companyContactNumber;
 
     data['created_on'] = this.createdOn;
+    data['resolution_remark'] = this.resolutionRemark;
     return data;
   }
 }

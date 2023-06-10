@@ -622,4 +622,15 @@ class ApiRepository {
       rethrow;
     }
   }
+
+  Future<HelpDeskResponse> updateTicket(Map<String, String> ticketFormula, String recordId) async {
+    try {
+      final response = await userApi.updateTicket(ticketFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
 }
