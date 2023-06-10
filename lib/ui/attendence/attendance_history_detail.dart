@@ -62,7 +62,6 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
             studentAttendanceResponseDisplay.nameFromStudentIds = dataMain.fields!.nameFromStudentIds![i];
             data.add(studentAttendanceResponseDisplay);
             dataSearch.add(studentAttendanceResponseDisplay);
-
           }
         }
       } else {
@@ -77,7 +76,6 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override

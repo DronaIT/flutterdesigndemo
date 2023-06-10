@@ -62,6 +62,7 @@ class StartState extends State<SplashScreen> {
 
   //isLogin=1 student login
   //isLogin=2 employee login
+  //isLogin=3 organization login
   void initialization() async {
     await checkAppUpdate();
     if (updateType == 1) {
@@ -129,6 +130,36 @@ class StartState extends State<SplashScreen> {
           } else if( dataEmployee.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
+            Get.offAll(const Home());
+          }else{
+            PreferenceUtils.clearPreference();
+            Get.offAll(const Login());
+          }
+        } else {
+          Get.offAll(const Login());
+        }
+      } on DioError catch (e) {
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
+      }
+    } else if (isLogin == 3) {
+      var loginData = PreferenceUtils.getLoginDataOrganization();
+      var query = "FIND('${loginData.contactNumber.toString()}', ${TableNames.TB_CONTACT_NUMBER}, 0)";
+      try {
+        var dataOrganization = await apiRepository.getCompanyDetailApi(query);
+        if (dataOrganization.records!.isNotEmpty) {
+          String? deviceId = await Utils.getId();
+          if(dataOrganization.records!.first.fields!.token == null){
+            Map<String, dynamic> query = {
+              "token":deviceId
+            };
+            await apiRepository.addTokenOrganization(query,dataOrganization.records!.first.id!);
+            await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
+            await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
+            Get.offAll(const Home());
+          } else if( dataOrganization.records!.first.fields!.token == deviceId){
+            await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
+            await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
             Get.offAll(const Home());
           }else{
             PreferenceUtils.clearPreference();
