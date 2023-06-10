@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
                                           Get.to(const FilterScreenStudent());
                                         }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
-                                          Get.to(const HelpDesk());
+                                          Get.to(const HelpdeskDashboard());
                                         }
                                       },
                                     ),
