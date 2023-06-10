@@ -83,88 +83,61 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
+    } else if (isLogin == 3) {
+      query = "AND(FIND('${TableNames.ORGANIZATION_ROLE_ID}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
     }
-    try{
+    try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPANY_APPROCH) {
-            setState(() {
-              companyApproach = true;
-            });
+            companyApproach = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CREATE_COMPANY) {
-            setState(() {
-              createCompany = true;
-            });
+            createCompany = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_GET_COMPANY_DETAIL) {
-            setState(() {
-              getCompanyDetail = true;
-            });
+            getCompanyDetail = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDIT_COMPANY_DETAIL) {
-            setState(() {
-              editCompanyDetail = true;
-            });
+            editCompanyDetail = true;
           }
-
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
-            setState(() {
-              createJobsAlerts = true;
-            });
+            createJobsAlerts = true;
           }
-
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLY_INTERNSHIP) {
-            setState(() {
-              applyInternship = true;
-            });
+            applyInternship = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPLIED_INTERNSHIP) {
-            setState(() {
-              appliedInternship = true;
-            });
+            appliedInternship = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORT_LISTED_INTERNSHIP) {
-            setState(() {
-              shortListedInternship = true;
-            });
+            shortListedInternship = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PUBLISHED_INTERSHIP) {
-            setState(() {
-              publishedList = true;
-            });
+            publishedList = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPROVED_INTERSHIP) {
-            setState(() {
-              approvedList = true;
-            });
+            approvedList = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_STUDENT) {
-            setState(() {
-              selectedStudent = true;
-            });
+            selectedStudent = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlIST_STUDENTS) {
-            setState(() {
-              shortListed = true;
-            });
+            shortListed = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP) {
-            setState(() {
-              selectedInternship = true;
-            });
+            selectedInternship = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPLETED_INTERNSHIP) {
-            setState(() {
-              completedInternShip = true;
-            });
+            completedInternShip = true;
           }
         }
+        setState(() {});
       } else {
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -235,13 +208,17 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         color: colors_name.colorWhite,
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_view_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text(PreferenceUtils.getIsLogin() != 3 ? strings_name.str_view_create_company : strings_name.str_company_detail, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)]),
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const GetCompanyDetail(), arguments: editCompanyDetail);
+                      if (PreferenceUtils.getIsLogin() != 3) {
+                        Get.to(() => const GetCompanyDetail(), arguments: editCompanyDetail);
+                      } else {
+                        var companyData = PreferenceUtils.getLoginDataOrganization();
+                        Get.to(const CompanyDetail(), arguments: companyData.company_code);
+                      }
                     },
                   ),
                 ),

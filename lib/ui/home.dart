@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk.dart';
+import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
@@ -85,6 +86,11 @@ class _HomeState extends State<Home> {
       name = loginData.employeeName.toString();
       phone = loginData.mobileNumber.toString();
       getRecords(loginData.roleIdFromRoleIds![0]);
+    } else if (isLogin == 3) {
+      var loginData = PreferenceUtils.getLoginDataOrganization();
+      name = loginData.companyName.toString();
+      phone = loginData.contactNumber.toString();
+      getRecords(TableNames.ORGANIZATION_ROLE_ID);
     }
   }
 
@@ -195,6 +201,8 @@ class _HomeState extends State<Home> {
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
                                           if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
                                             Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
+                                          } else if (PreferenceUtils.getIsLogin() == 3){
+                                            Get.to(const PlacementDashboard());
                                           } else {
                                             Get.to(const PlacementDashboard());
                                           }
@@ -203,7 +211,7 @@ class _HomeState extends State<Home> {
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
                                           Get.to(const FilterScreenStudent());
                                         }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
-                                          Get.to(const HelpDesk());
+                                          Get.to(const HelpdeskDashboard());
                                         }
                                       },
                                     ),

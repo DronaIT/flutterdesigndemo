@@ -30,9 +30,12 @@ class _StudentHistoryState extends State<StudentHistory> {
   BaseLoginResponse<LoginFieldsResponse> data = BaseLoginResponse();
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
-  var total_lecture = 0, total_present = 0, totalPresentPercentage , total_absent = 0;
+  var total_lecture = 0, total_present = 0, totalPresentPercentage, total_absent = 0;
 
   getStudentHistory() async {
+    setState(() {
+      isVisible = true;
+    });
     var query = "(${TableNames.TB_USERS_PHONE}='$mobileNumber')";
     try {
       data = await apiRepository.loginApi(query);
@@ -66,9 +69,20 @@ class _StudentHistoryState extends State<StudentHistory> {
 
   void checkPresentAbsentDetailBySubject() {
     if (data.records != null) {
-      total_lecture = data.records!.first.fields!.lectureSubjectId!.length;
-      total_present = data.records!.first.fields!.presentSubjectId!.length;
-      total_absent = data.records!.first.fields!.absentSubjectId!.length;
+      if (data.records!.first.fields!.lectureSubjectId?.isNotEmpty == true) {
+        for (var i = 0; i < data.records!.first.fields!.presentLectureIds!.length; i++) {
+          if (data.records!.first.fields!.presentSemesterByStudent![i] == data.records!.first.fields?.semester) {
+            total_present += 1;
+            total_lecture += 1;
+          }
+        }
+        for (var i = 0; i < data.records!.first.fields!.absentLectureIds!.length; i++) {
+          if (data.records!.first.fields!.absentSemesterByStudent![i] == data.records!.first.fields?.semester) {
+            total_absent += 1;
+            total_lecture += 1;
+          }
+        }
+      }
       totalPresentPercentage = ((total_present * 100) / total_lecture).toStringAsFixed(2);
     }
   }
@@ -80,8 +94,8 @@ class _StudentHistoryState extends State<StudentHistory> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_student_history),
       body: data.records != null
           ? Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
+              margin: EdgeInsets.all(10),
+              child: Column(
                 children: [
                   const SizedBox(height: 10),
                   custom_text(
@@ -173,11 +187,10 @@ class _StudentHistoryState extends State<StudentHistory> {
                     bottomValue: 0,
                     leftValue: 10,
                   ),
-
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: (){
-                      Get.to(StudentAttendenceHistory(),arguments: data.records?.first.fields);
+                    onTap: () {
+                      Get.to(StudentAttendanceHistory(), arguments: data.records?.first.fields);
                     },
                     child: Card(
                       elevation: 5,
@@ -197,12 +210,10 @@ class _StudentHistoryState extends State<StudentHistory> {
                       ),
                     ),
                   ),
-
-
                   const SizedBox(height: 5),
                   GestureDetector(
-                    onTap: (){
-                      Get.to(StudentAttendenceHistoryMoreDetail(),arguments: data.records?.first.fields);
+                    onTap: () {
+                      Get.to(StudentAttendanceHistoryMoreDetail(), arguments: data.records?.first.fields);
                     },
                     child: Card(
                       elevation: 5,
@@ -223,11 +234,9 @@ class _StudentHistoryState extends State<StudentHistory> {
                     ),
                   ),
                   const SizedBox(height: 5),
-
                   GestureDetector(
-                    onTap: (){
-                      Get.to(StudentPlacementHistory(),arguments: data.records?.first.fields);
-
+                    onTap: () {
+                      Get.to(StudentPlacementHistory(), arguments: data.records?.first.fields);
                     },
                     child: Card(
                       elevation: 5,
@@ -247,12 +256,9 @@ class _StudentHistoryState extends State<StudentHistory> {
                       ),
                     ),
                   ),
-
-
                   GestureDetector(
-                    onTap: (){
-                      Get.to(StudenceAttendecPastHistory(),arguments: data.records?.first.fields);
-
+                    onTap: () {
+                      Get.to(StudentAttendancePastHistory(), arguments: data.records?.first.fields);
                     },
                     child: Card(
                       elevation: 5,
@@ -272,11 +278,12 @@ class _StudentHistoryState extends State<StudentHistory> {
                       ),
                     ),
                   ),
-
                 ],
               ),
-          )
-          : Container(),
+            )
+          : Center(
+              child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+            ),
     ));
   }
 }

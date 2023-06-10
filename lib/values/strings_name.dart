@@ -242,7 +242,7 @@ class strings_name {
   static const String str_filter_by = "Filter by";
   static const String str_reset = "Reset";
   static const String str_by_date = "Date";
-  static const String str_taken_by = "Taken by : ";
+  static const String str_taken_by = "Taken by";
   static const String str_by_semester = "Semester";
   static const String str_by_subject = "Subject";
   static const String str_attendence_his_detail = "Attendance history detail";
@@ -324,6 +324,7 @@ class strings_name {
   static const String str_empty_company_id_no = "Please enter company indentification no.";
   static const String str_company_det_added = "Company detail added successfully";
   static const String str_view_create_company = "Company list";
+  static const String str_view_company_detail = "Company detail";
   static const String str_company_updated = "Company detail updated successfully.";
   static const String str_job_opp_detail = "Job opportunity form";
   static const String str_create_job_opp_detail = "Create job opportunity";
@@ -439,7 +440,7 @@ class strings_name {
 
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";
-  static const String str_past_history = "Attendence past history";
+  static const String str_past_history = "Attendance past history";
   static const String str_completed_placement = "Completed internship process";
   static const String str_pending = "Pending";
   static const String str_reject = "Rejected";
@@ -481,16 +482,30 @@ class strings_name {
   static const String str_5_days = "Continuous 5 days absents";
   static const String str_10_days = "Continuous 10 days absents";
   static const String str_today_days = "Today's absents ";
-
   static const String str_eligiblity_report = "Ineligible report";
+  static const String str_past_data = "Past report";
+
   static const String str_export_data = "Export data";
 
   static const String str_no_topic_added = "No topics added";
   static const String str_unit_detail = "Unit detail";
+
+  static const String str_select_login_role = "Select your role";
+  static const String str_organization_not_found = "Organization does not found";
+  static const String str_organization = "Organization";
 
   static const String str_help_desk = "Help desk";
   static const String str_attachments = "Attachments";
   static const String str_empty_type_help = "Please enter help type";
   static const String str_empty_help_note = "Please enter help note";
   static const String str_help_note = "Help note";
+
+  static const String str_my_tickets = "My tickets";
+  static const String str_others_tickets = "Others tickets";
+  static const String str_ticket_id = "Ticket No:";
+  static const String str_created_by = "Created by:";
+  static const String str_help_desk_detail = "Help desk details";
+  static const String str_notes = "Notes:";
+  static const String str_status = "Status:";
+  static const String str_type_here = "Type here..";
 }

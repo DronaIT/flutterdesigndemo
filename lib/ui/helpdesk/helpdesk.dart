@@ -4,8 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/request/help_desk_req.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
+import 'package:get/get.dart';
 
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
@@ -15,6 +17,7 @@ import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_edittext.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/help_desk_type_response.dart';
+import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
@@ -35,12 +38,26 @@ class _HelpDeskState extends State<HelpDesk> {
   int helpDeskId = 0;
   String helpPath = "", helpTitle = "";
   var cloudinary;
+  List<String> hub_ids = [];
+  var hubName;
+  var isLogin = 0;
 
   @override
   void initState() {
     super.initState();
     helpDeskType();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
+    isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      var loginData = PreferenceUtils.getLoginData();
+      hubName = loginData.hubIdFromHubIds;
+    } else if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      hubName = loginData.hubIdFromHubIds;
+    } else if(isLogin == 3) {
+      var loginData = PreferenceUtils.getLoginDataOrganization();
+      hubName = [""];
+    }
   }
 
   @override
@@ -148,9 +165,61 @@ class _HelpDeskState extends State<HelpDesk> {
                         });
                         if (helpPath.isNotEmpty) {
                           CloudinaryResponse response = await cloudinary.uploadFile(
-                            CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI),
+                            CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
                           );
                           helpPath = response.secureUrl;
+                        }
+                        if (helpDeskTypeResponses!.fields!.centerAutority != null) {
+                          for (int j = 0; j < helpDeskTypeResponses!.fields!.centerAutority!.length; j++) {
+                            if (helpDeskTypeResponses!.fields!.centerAuthorityHubId![j] == hubName[0]) {
+                              if (hub_ids.isEmpty || !hub_ids.contains(helpDeskTypeResponses!.fields!.centerAutority![j])) {
+                                hub_ids.add(helpDeskTypeResponses!.fields!.centerAutority![j]);
+                              }
+                            }
+                          }
+                        }
+
+                        if (helpDeskTypeResponses!.fields!.concernPerson != null) {
+                          for (int j = 0; j < helpDeskTypeResponses!.fields!.concernPerson!.length; j++) {
+                            if (helpDeskTypeResponses!.fields!.concernPersonHubId![j] == hubName[0]) {
+                              if (hub_ids.isEmpty || !hub_ids.contains(helpDeskTypeResponses!.fields!.concernPerson![j])) {
+                                hub_ids.add(helpDeskTypeResponses!.fields!.concernPerson![j]);
+                              }
+                            }
+                          }
+                        }
+
+                        HelpDeskRequest helpDeskReq = HelpDeskRequest();
+                        helpDeskReq.ticket_type_id = helpDeskTypeResponses?.id?.split("|||");
+                        helpDeskReq.Notes = helpNoteController.text.trim().toString();
+                        if (helpPath.isNotEmpty) {
+                          Map<String, dynamic> map = Map();
+                          map["url"] = helpPath;
+                          List<Map<String, dynamic>> listData = [];
+                          listData.add(map);
+                          helpDeskReq.attachments = listData;
+                        }
+                        helpDeskReq.assigned_to = hub_ids;
+                        try {
+                          var resp = await helpRepository.addHelpDeskApi(helpDeskReq);
+                          if (resp.id != null) {
+                            setState(() {
+                              isVisible = false;
+                            });
+                            Utils.showSnackBar(context, strings_name.str_company_updated);
+                            await Future.delayed(const Duration(milliseconds: 2000));
+                            Get.back(result: true);
+                          } else {
+                            setState(() {
+                              isVisible = false;
+                            });
+                          }
+                        } on DioError catch (e) {
+                          setState(() {
+                            isVisible = false;
+                          });
+                          final errorMessage = DioExceptions.fromDioError(e).toString();
+                          Utils.showSnackBarUsingGet(errorMessage);
                         }
                       }
                     },

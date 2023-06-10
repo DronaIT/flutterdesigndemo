@@ -36,8 +36,13 @@ class _LoginState extends State<Login> {
   TextEditingController passController = TextEditingController();
   final loginRepository = getIt.get<ApiRepository>();
   bool value = false;
+
+  List<String> loginRole = <String>[TableNames.LOGIN_ROLE_EMPLOYEE, TableNames.LOGIN_ROLE_STUDENT, TableNames.LOGIN_ROLE_ORGANIZATION];
+  String loginValue = TableNames.LOGIN_ROLE_EMPLOYEE;
+
   @override
   Widget build(BuildContext context) {
+    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Stack(
         children: [
@@ -53,6 +58,40 @@ class _LoginState extends State<Login> {
                       text: strings_name.str_lest_started,
                       alignment: Alignment.topLeft,
                       textStyles: centerTextStyle30,
+                    ),
+                    custom_text(
+                      text: strings_name.str_select_login_role,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 0),
+                            width: viewWidth,
+                            child: DropdownButtonFormField<String>(
+                              elevation: 16,
+                              style: blackText16,
+                              focusColor: Colors.white,
+                              value: loginValue,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  loginValue = newValue!;
+                                });
+                              },
+                              items: loginRole.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 10.h),
                     custom_text(
@@ -72,7 +111,6 @@ class _LoginState extends State<Login> {
                               readOnly: true,
                               hintText: "+91",
                               textalign: TextAlign.center,
-
                             ),
                           ),
                         ),
@@ -117,39 +155,41 @@ class _LoginState extends State<Login> {
                           },
                         ),
                         const SizedBox(width: 5),
-                        Expanded(child:
-                        // custom_text(text: strings_name.str_terms_privacy_policy, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: 'I hereby accept the ',
-                                style: blackTextSemiBold14,
-                              ),
-                              TextSpan(
-                                text: 'Terms & Conditions',
-                                style: linkTextSemiBold14,
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    await launchUrl(Uri.parse("https://pastebin.com/raw/HAHds12N"), mode: LaunchMode.inAppWebView);
-                                  },
-                              ),
-                              const TextSpan(
-                                text: ' and ',
-                                style: blackTextSemiBold14,
-                              ),
-                              TextSpan(
-                                text: 'Privacy Policy',
-                                style: linkTextSemiBold14,
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    await launchUrl(Uri.parse("https://pastebin.com/raw/QwwednCb"), mode: LaunchMode.inAppWebView);
-                                  },
-                              ),
-                            ],
-                          ),
-                        ), //Text
-                      )],
+                        Expanded(
+                          child:
+                              // custom_text(text: strings_name.str_terms_privacy_policy, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)
+                              Text.rich(
+                            TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: 'I hereby accept the ',
+                                  style: blackTextSemiBold14,
+                                ),
+                                TextSpan(
+                                  text: 'Terms & Conditions',
+                                  style: linkTextSemiBold14,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      await launchUrl(Uri.parse("https://pastebin.com/raw/HAHds12N"), mode: LaunchMode.inAppWebView);
+                                    },
+                                ),
+                                const TextSpan(
+                                  text: ' and ',
+                                  style: blackTextSemiBold14,
+                                ),
+                                TextSpan(
+                                  text: 'Privacy Policy',
+                                  style: linkTextSemiBold14,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      await launchUrl(Uri.parse("https://pastebin.com/raw/QwwednCb"), mode: LaunchMode.inAppWebView);
+                                    },
+                                ),
+                              ],
+                            ),
+                          ), //Text
+                        )
+                      ],
                     ),
                     SizedBox(height: 20.h),
                     CustomButton(
@@ -161,18 +201,117 @@ class _LoginState extends State<Login> {
                             Utils.showSnackBar(context, phone);
                           } else if (password.isNotEmpty) {
                             Utils.showSnackBar(context, password);
-                          } else if(!value){
+                          } else if (!value) {
                             Utils.showSnackBar(context, strings_name.str_accept_terms);
-                          } else{
+                          } else {
                             setState(() {
                               isVisible = true;
                             });
-                            // var query = "AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}')";
 
                             var query = "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
+                            try {
+                              if (loginValue == TableNames.LOGIN_ROLE_STUDENT) {
+                                var data = await loginRepository.loginApi(query);
+                                if (data.records!.isNotEmpty) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  if (data.records!.first.fields?.password == null) {
+                                    Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
+                                  } else if (data.records!.first.fields?.password != passController.text.toString()) {
+                                    Utils.showSnackBar(context, strings_name.str_invalide_password);
+                                  } else {
+                                    String? deviceId = await Utils.getId();
+                                    Map<String, dynamic> query = {"token": deviceId};
+                                    await loginRepository.addToken(query, data.records!.first.id!);
+                                    await PreferenceUtils.setIsLogin(1);
+                                    await PreferenceUtils.setLoginData(data.records!.first.fields!);
+                                    await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
+                                    Get.offAll(() => const Home());
+                                  }
+                                } else if (data.records!.length == 0) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_user_not_found);
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                }
+                              } else if(loginValue == TableNames.LOGIN_ROLE_EMPLOYEE){
+                                var dataEmployee = await loginRepository.loginEmployeeApi(query);
+                                if (dataEmployee.records!.isNotEmpty) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  if (dataEmployee.records!.first.fields?.password == null) {
+                                    Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
+                                  } else if (dataEmployee.records!.first.fields?.password != passController.text.toString()) {
+                                    Utils.showSnackBar(context, strings_name.str_invalide_password);
+                                  } else {
+                                    String? deviceId = await Utils.getId();
+                                    Map<String, dynamic> query = {"token": deviceId};
+                                    await loginRepository.addTokenEmployee(query, dataEmployee.records!.first.id!);
+                                    await PreferenceUtils.setIsLogin(2);
+                                    await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
+                                    await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
+                                    Get.offAll(() => const Home());
+                                  }
+                                } else if (dataEmployee.records!.length == 0) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_user_not_found);
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                }
+                              } else if(loginValue == TableNames.LOGIN_ROLE_ORGANIZATION){
+                                var queryOrg = "OR(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',AND(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
+                                var dataOrg = await loginRepository.getCompanyDetailApi(queryOrg);
+                                if (dataOrg.records!.isNotEmpty) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  if (dataOrg.records!.first.fields?.password == null) {
+                                    Utils.showSnackBar(context, strings_name.str_invalide_mobile_password);
+                                  } else if (dataOrg.records!.first.fields?.password != passController.text.toString()) {
+                                    Utils.showSnackBar(context, strings_name.str_invalide_password);
+                                  } else {
+                                    String? deviceId = await Utils.getId();
+                                    Map<String, dynamic> query = {"token": deviceId};
+                                    await loginRepository.addTokenOrganization(query, dataOrg.records!.first.id!);
+                                    await PreferenceUtils.setIsLogin(3);
+                                    await PreferenceUtils.setLoginDataOrganization(dataOrg.records!.first.fields!);
+                                    await PreferenceUtils.setLoginRecordId(dataOrg.records!.first.id!);
+                                    Get.offAll(() => const Home());
+                                  }
+                                } else if (dataOrg.records!.length == 0) {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_organization_not_found);
+                                } else {
+                                  setState(() {
+                                    isVisible = false;
+                                  });
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
+                                }
+                              }
+                            } on DioError catch (e) {
+                              setState(() {
+                                isVisible = false;
+                              });
+                              final errorMessage = DioExceptions.fromDioError(e).toString();
+                              Utils.showSnackBarUsingGet(errorMessage);
+                            }
 
-                            var data = await loginRepository.loginApi(query);
-                            try{
+                            /*var data = await loginRepository.loginApi(query);
+                            try {
                               if (data.records!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;
@@ -183,17 +322,15 @@ class _LoginState extends State<Login> {
                                   Utils.showSnackBar(context, strings_name.str_invalide_password);
                                 } else {
                                   String? deviceId = await Utils.getId();
-                                  Map<String, dynamic> query = {
-                                    "token":deviceId
-                                  };
-                                  await loginRepository.addToken(query,data.records!.first.id!);
+                                  Map<String, dynamic> query = {"token": deviceId};
+                                  await loginRepository.addToken(query, data.records!.first.id!);
                                   await PreferenceUtils.setIsLogin(1);
                                   await PreferenceUtils.setLoginData(data.records!.first.fields!);
                                   await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
                                   Get.offAll(() => const Home());
                                 }
                               } else if (data.records!.length == 0) {
-                                try{
+                                try {
                                   var dataEmployee = await loginRepository.loginEmployeeApi(query);
                                   if (dataEmployee.records!.isNotEmpty) {
                                     setState(() {
@@ -205,10 +342,8 @@ class _LoginState extends State<Login> {
                                       Utils.showSnackBar(context, strings_name.str_invalide_password);
                                     } else {
                                       String? deviceId = await Utils.getId();
-                                      Map<String, dynamic> query = {
-                                        "token":deviceId
-                                      };
-                                      await loginRepository.addTokenEmployee(query,dataEmployee.records!.first.id!);
+                                      Map<String, dynamic> query = {"token": deviceId};
+                                      await loginRepository.addTokenEmployee(query, dataEmployee.records!.first.id!);
                                       await PreferenceUtils.setIsLogin(2);
                                       await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
                                       await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
@@ -225,11 +360,10 @@ class _LoginState extends State<Login> {
                                     });
                                     Utils.showSnackBar(context, strings_name.str_something_wrong);
                                   }
-                                }on DioError catch (e) {
+                                } on DioError catch (e) {
                                   final errorMessage = DioExceptions.fromDioError(e).toString();
                                   Utils.showSnackBarUsingGet(errorMessage);
                                 }
-
                               } else {
                                 setState(() {
                                   isVisible = false;
@@ -242,9 +376,7 @@ class _LoginState extends State<Login> {
                               });
                               final errorMessage = DioExceptions.fromDioError(e).toString();
                               Utils.showSnackBarUsingGet(errorMessage);
-                            }
-
-
+                            }*/
                           }
                         }),
                     SizedBox(height: 20.h),

@@ -14,14 +14,14 @@ import '../../models/login_fields_response.dart';
 import '../../models/view_student_attendance.dart';
 import '../../values/text_styles.dart';
 
-class StudentAttendenceHistoryMoreDetail extends StatefulWidget {
-  const StudentAttendenceHistoryMoreDetail({Key? key}) : super(key: key);
+class StudentAttendanceHistoryMoreDetail extends StatefulWidget {
+  const StudentAttendanceHistoryMoreDetail({Key? key}) : super(key: key);
 
   @override
-  State<StudentAttendenceHistoryMoreDetail> createState() => _StudentAttendenceHistoryMoreDetailState();
+  State<StudentAttendanceHistoryMoreDetail> createState() => _StudentAttendanceHistoryMoreDetailState();
 }
 
-class _StudentAttendenceHistoryMoreDetailState extends State<StudentAttendenceHistoryMoreDetail> {
+class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHistoryMoreDetail> {
   var controllerSearch = TextEditingController();
   bool isVisible = false;
   LoginFieldsResponse? fields;
@@ -42,19 +42,20 @@ class _StudentAttendenceHistoryMoreDetailState extends State<StudentAttendenceHi
   void checkPresentAbsentDetailBySubject() {
     if (fields != null && fields?.lectureIds != null) {
       for (int i = 0; i < fields!.lectureIds!.length; i++) {
-        if(fields!.presentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
-          var viewAttendence = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
-              subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
-          viewAttendence.present_lectures = 1;
-          viewAttendence.total_lectures += 1;
-          studentList.add(viewAttendence);
-
-        }else if(fields!.absentLectureIds?.contains(fields!.lectureIds?[i]) == true){
-          var viewAttendence = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
-              subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
-          viewAttendence.absent_lectures = 1;
-          viewAttendence.total_lectures += 1;
-          studentList.add(viewAttendence);
+        if(fields!.semesterByStudent![i] == fields?.semester) {
+          if (fields!.presentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
+            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
+                subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
+            viewAttendance.present_lectures = 1;
+            viewAttendance.total_lectures += 1;
+            studentList.add(viewAttendance);
+          } else if (fields!.absentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
+            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
+                subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
+            viewAttendance.absent_lectures = 1;
+            viewAttendance.total_lectures += 1;
+            studentList.add(viewAttendance);
+          }
         }
       }
     }

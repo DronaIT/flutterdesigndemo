@@ -196,39 +196,43 @@ class _MyAttendanceState extends State<MyAttendance> {
       var records = dataByDate.records?.first.fields;
       if (records != null && records.presentSubjectId != null) {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
-          var isAdded = false;
-          for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
-            if (studentAttendanceBySubjectArray![j].subject_id == records.presentSubjectId![i]) {
-              isAdded = true;
-              studentAttendanceBySubjectArray![j].total_lectures += 1;
-              studentAttendanceBySubjectArray![j].present_lectures += 1;
-              break;
+          if(records.presentSemesterByStudent![i] == records.semester) {
+            var isAdded = false;
+            for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
+              if (studentAttendanceBySubjectArray![j].subject_id == records.presentSubjectId![i]) {
+                isAdded = true;
+                studentAttendanceBySubjectArray![j].total_lectures += 1;
+                studentAttendanceBySubjectArray![j].present_lectures += 1;
+                break;
+              }
             }
-          }
-          if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
-            attendanceData.total_lectures += 1;
-            attendanceData.present_lectures += 1;
-            studentAttendanceBySubjectArray!.add(attendanceData);
+            if (!isAdded) {
+              var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
+              attendanceData.total_lectures += 1;
+              attendanceData.present_lectures += 1;
+              studentAttendanceBySubjectArray!.add(attendanceData);
+            }
           }
         }
       }
       if (records != null && records.absentSubjectId != null) {
         for (int i = 0; i < records.absentSubjectId!.length; i++) {
-          var isAdded = false;
-          for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
-            if (studentAttendanceBySubjectArray![j].subject_id == records.absentSubjectId![i]) {
-              isAdded = true;
-              studentAttendanceBySubjectArray![j].total_lectures += 1;
-              studentAttendanceBySubjectArray![j].absent_lectures += 1;
-              break;
+          if(records.absentSemesterByStudent![i] == records.semester) {
+            var isAdded = false;
+            for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
+              if (studentAttendanceBySubjectArray![j].subject_id == records.absentSubjectId![i]) {
+                isAdded = true;
+                studentAttendanceBySubjectArray![j].total_lectures += 1;
+                studentAttendanceBySubjectArray![j].absent_lectures += 1;
+                break;
+              }
             }
-          }
-          if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
-            attendanceData.total_lectures += 1;
-            attendanceData.absent_lectures += 1;
-            studentAttendanceBySubjectArray!.add(attendanceData);
+            if (!isAdded) {
+              var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
+              attendanceData.total_lectures += 1;
+              attendanceData.absent_lectures += 1;
+              studentAttendanceBySubjectArray!.add(attendanceData);
+            }
           }
         }
       }
@@ -254,39 +258,43 @@ class _MyAttendanceState extends State<MyAttendance> {
       var records = dataByDate.records?.first.fields;
       if (records != null && records.presentSubjectId != null) {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
-          var isAdded = false;
-          for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
-            if (studentAttendanceBySubjectArray[j].subject_id == records.presentSubjectId![i]) {
-              isAdded = true;
-              studentAttendanceBySubjectArray[j].total_lectures += 1;
-              studentAttendanceBySubjectArray[j].present_lectures += 1;
-              break;
+          if(records.presentSemesterByStudent![i] == records.semester) {
+            var isAdded = false;
+            for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
+              if (studentAttendanceBySubjectArray[j].subject_id == records.presentSubjectId![i]) {
+                isAdded = true;
+                studentAttendanceBySubjectArray[j].total_lectures += 1;
+                studentAttendanceBySubjectArray[j].present_lectures += 1;
+                break;
+              }
             }
-          }
-          if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
-            attendanceData.total_lectures += 1;
-            attendanceData.present_lectures += 1;
-            studentAttendanceBySubjectArray.add(attendanceData);
+            if (!isAdded) {
+              var attendanceData = ViewStudentAttendance(subject_id: records.presentSubjectId![i], subject_title: records.presentSubjectTitle![i], lecture_date: records.presentLectureDate![i], status: 1);
+              attendanceData.total_lectures += 1;
+              attendanceData.present_lectures += 1;
+              studentAttendanceBySubjectArray.add(attendanceData);
+            }
           }
         }
       }
       if (records != null && records.absentSubjectId != null) {
         for (int i = 0; i < records.absentSubjectId!.length; i++) {
-          var isAdded = false;
-          for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
-            if (studentAttendanceBySubjectArray[j].subject_id == records.absentSubjectId![i]) {
-              isAdded = true;
-              studentAttendanceBySubjectArray[j].total_lectures += 1;
-              studentAttendanceBySubjectArray[j].absent_lectures += 1;
-              break;
+          if(records.absentSemesterByStudent![i] == records.semester) {
+            var isAdded = false;
+            for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
+              if (studentAttendanceBySubjectArray[j].subject_id == records.absentSubjectId![i]) {
+                isAdded = true;
+                studentAttendanceBySubjectArray[j].total_lectures += 1;
+                studentAttendanceBySubjectArray[j].absent_lectures += 1;
+                break;
+              }
             }
-          }
-          if (!isAdded) {
-            var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
-            attendanceData.total_lectures += 1;
-            attendanceData.absent_lectures += 1;
-            studentAttendanceBySubjectArray.add(attendanceData);
+            if (!isAdded) {
+              var attendanceData = ViewStudentAttendance(subject_id: records.absentSubjectId![i], subject_title: records.absentSubjectTitle![i], lecture_date: records.absentLectureDate![i], status: 0);
+              attendanceData.total_lectures += 1;
+              attendanceData.absent_lectures += 1;
+              studentAttendanceBySubjectArray.add(attendanceData);
+            }
           }
         }
       }

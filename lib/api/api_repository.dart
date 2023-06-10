@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
+import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
@@ -43,16 +44,18 @@ import 'package:get/get.dart';
 import '../models/App_data_response.dart';
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
+import '../models/help_desk_response.dart';
 import '../models/help_desk_type_response.dart';
 import '../models/request/create_company_appr_req.dart';
 import '../models/request/create_company_det_req.dart';
+import '../models/request/help_desk_req.dart';
 
 class ApiRepository {
   final ApiRequest userApi;
 
   ApiRepository(this.userApi);
 
-  Future<BaseLoginResponse<LoginFieldsResponse>> loginApi(String query, [String offset=""]) async {
+  Future<BaseLoginResponse<LoginFieldsResponse>> loginApi(String query, [String offset = ""]) async {
     try {
       final response = await userApi.loginRegisterApi(query, offset);
       return response;
@@ -550,7 +553,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<App_data_response>> addAppDataApi( Map<String, dynamic> data) async {
+  Future<BaseLoginResponse<App_data_response>> addAppDataApi(Map<String, dynamic> data) async {
     try {
       final response = await userApi.addAppDataApi(data);
       return response;
@@ -560,18 +563,19 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<LoginFieldsResponse>> addToken( Map<String, dynamic> data , String recordId) async {
+  Future<BaseLoginResponse<LoginFieldsResponse>> addToken(Map<String, dynamic> data, String recordId) async {
     try {
-      final response = await userApi.addToken(data,recordId);
+      final response = await userApi.addToken(data, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       rethrow;
     }
   }
-  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee( Map<String, dynamic> data , String recordId) async {
+
+  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee(Map<String, dynamic> data, String recordId) async {
     try {
-      final response = await userApi.addTokenEmployee(data,recordId);
+      final response = await userApi.addTokenEmployee(data, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -589,5 +593,33 @@ class ApiRepository {
     }
   }
 
+  Future<HelpDeskResponse> addHelpDeskApi(HelpDeskRequest helpDeskReq) async {
+    try {
+      final response = await userApi.addHelpDeskApi(helpDeskReq);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
 
+  Future<BaseLoginResponse<CompanyDetailResponse>> addTokenOrganization(Map<String, dynamic> data, String recordId) async {
+    try {
+      final response = await userApi.addTokenOrganization(data, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<HelpdeskResponses>> getTicketsApi(String ticketFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getTicketsApi(ticketFormula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
 }
