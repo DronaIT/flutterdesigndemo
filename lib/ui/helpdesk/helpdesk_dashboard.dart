@@ -134,7 +134,11 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           });
           if (ticketList?.isNotEmpty == true) {
             for (int i = 0; i < ticketList!.length; i++) {
-              if (ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
+              if (isLogin == 1 && ticketList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
+                myTicketList?.add(ticketList![i]);
+              } else if (isLogin == 2 && ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
+                myTicketList?.add(ticketList![i]);
+              } else if (isLogin == 3 && ticketList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
                 myTicketList?.add(ticketList![i]);
               } else {
                 othersTicketList?.add(ticketList![i]);
@@ -179,9 +183,9 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                   child: Container(
                     color: colors_name.lightGrayColor,
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [Text(strings_name.str_my_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      children: [Text(strings_name.str_my_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
                 ),
@@ -194,9 +198,10 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                           return GestureDetector(
                             onTap: () {
                               Get.to(const HelpdeskDetail(), arguments: [
-                                {"fields": othersTicketList?[index].fields},
+                                {"fields": myTicketList?[index].fields},
                                 {"canUpdateTicketStatus": canUpdateTicketStatus},
-                                {"canUpdateTicketCategory": canUpdateTicketCategory}
+                                {"canUpdateTicketCategory": canUpdateTicketCategory},
+                                {"recordId": myTicketList?[index].id}
                               ]);
                             },
                             child: Column(children: [
@@ -221,11 +226,28 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                             child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                       ],
                                     ),
-                                    custom_text(text: myTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5),
+                                    custom_text(text: myTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                    Row(
+                                      children: [
+                                        custom_text(
+                                          text: strings_name.str_status,
+                                          textStyles: primaryTextSemiBold16,
+                                          topValue: 5,
+                                          bottomValue: 5,
+                                          leftValue: 5,
+                                          alignment: Alignment.center,
+                                        ),
+                                        Container(
+                                            decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                            padding: const EdgeInsets.all(1),
+                                            margin: const EdgeInsets.only(right: 5),
+                                            child: custom_text(text: myTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
-                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: EdgeInsets.all(0.5)),
+                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
                             ]),
                           );
                         })
@@ -239,9 +261,9 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                             child: Container(
                               color: colors_name.lightGrayColor,
                               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [Text(strings_name.str_others_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [Text(strings_name.str_others_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
                             ),
                           ),
@@ -256,7 +278,8 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                         Get.to(const HelpdeskDetail(), arguments: [
                                           {"fields": othersTicketList?[index].fields},
                                           {"canUpdateTicketStatus": canUpdateTicketStatus},
-                                          {"canUpdateTicketCategory": canUpdateTicketCategory}
+                                          {"canUpdateTicketCategory": canUpdateTicketCategory},
+                                          {"recordId": othersTicketList?[index].id}
                                         ]);
                                       },
                                       child: Column(children: [
@@ -296,11 +319,28 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                       topValue: 0),
                                                 ],
                                               ),
-                                              custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5),
+                                              custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                              Row(
+                                                children: [
+                                                  custom_text(
+                                                    text: strings_name.str_status,
+                                                    textStyles: primaryTextSemiBold16,
+                                                    topValue: 5,
+                                                    bottomValue: 5,
+                                                    leftValue: 5,
+                                                    alignment: Alignment.center,
+                                                  ),
+                                                  Container(
+                                                      decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                      padding: const EdgeInsets.all(1),
+                                                      margin: const EdgeInsets.only(right: 5),
+                                                      child: custom_text(text: othersTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ),
-                                        Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: EdgeInsets.all(0.5)),
+                                        Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
                                       ]),
                                     );
                                   })

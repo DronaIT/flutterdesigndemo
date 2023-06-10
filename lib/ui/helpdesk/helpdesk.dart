@@ -54,7 +54,7 @@ class _HelpDeskState extends State<HelpDesk> {
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       hubName = loginData.hubIdFromHubIds;
-    } else if(isLogin == 3) {
+    } else if (isLogin == 3) {
       var loginData = PreferenceUtils.getLoginDataOrganization();
       hubName = [""];
     }
@@ -192,6 +192,13 @@ class _HelpDeskState extends State<HelpDesk> {
                         HelpDeskRequest helpDeskReq = HelpDeskRequest();
                         helpDeskReq.ticket_type_id = helpDeskTypeResponses?.id?.split("|||");
                         helpDeskReq.Notes = helpNoteController.text.trim().toString();
+                        if (isLogin == 1) {
+                          helpDeskReq.createdByStudent = PreferenceUtils.getLoginRecordId().split(",");
+                        } else if (isLogin == 2) {
+                          helpDeskReq.createdByEmployee = PreferenceUtils.getLoginRecordId().split(",");
+                        } else if (isLogin == 3) {
+                          helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
+                        }
                         if (helpPath.isNotEmpty) {
                           Map<String, dynamic> map = Map();
                           map["url"] = helpPath;

@@ -191,4 +191,10 @@ class TableNames {
   static const LOGIN_ROLE_ORGANIZATION = "Organization";
 
   static const TB_CONTACT_NUMBER = "contact_number";
+
+  static const TICKET_STATUS_OPEN = "Open";
+  static const TICKET_STATUS_INPROGRESS = "In Progress";
+  static const TICKET_STATUS_HOLD = "Hold";
+  static const TICKET_STATUS_RESOLVED = "Resolved";
+  static const TICKET_STATUS_SUGGESTION = "Suggestions";
 }

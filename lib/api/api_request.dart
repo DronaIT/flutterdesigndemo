@@ -683,4 +683,16 @@ class ApiRequest {
       rethrow;
     }
   }
+
+  Future<HelpDeskResponse> updateTicket(Map<String, String> ticketFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": ticketFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_HELPDESK + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      return HelpDeskResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
