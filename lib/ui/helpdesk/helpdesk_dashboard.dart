@@ -191,34 +191,43 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                         shrinkWrap: true,
                         itemCount: myTicketList!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Column(children: [
-                            Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                          custom_text(text: myTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
-                                        ],
-                                      ),
-                                      Container(
-                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                          padding: const EdgeInsets.all(1),
-                                          child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
-                                    ],
-                                  ),
-                                  custom_text(text: myTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5),
-                                ],
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(const HelpdeskDetail(), arguments: [
+                                {"fields": othersTicketList?[index].fields},
+                                {"canUpdateTicketStatus": canUpdateTicketStatus},
+                                {"canUpdateTicketCategory": canUpdateTicketCategory}
+                              ]);
+                            },
+                            child: Column(children: [
+                              Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                            custom_text(text: myTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                          ],
+                                        ),
+                                        Container(
+                                            decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                            padding: const EdgeInsets.all(1),
+                                            child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                      ],
+                                    ),
+                                    custom_text(text: myTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: EdgeInsets.all(0.5)),
-                          ]);
+                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: EdgeInsets.all(0.5)),
+                            ]),
+                          );
                         })
                     : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
                 canViewOther
