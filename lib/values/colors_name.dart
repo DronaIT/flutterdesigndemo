@@ -30,6 +30,7 @@ abstract class colors_name{
   static const Color buttonBgColor = colorPrimary;
   static const Color disabledButtonBgColor = Color(0xFFBFBFC0);
   static const Color defaultRippleColor = Color(0x0338686A);
+  static const Color lightGrayColor = Color(0xFFE4E4E4);
 
   static const Color textColorPrimary = Color(0xFF323232);
   static const Color textColorSecondary = Color(0xFF9FA4B0);

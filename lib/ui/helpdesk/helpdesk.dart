@@ -40,19 +40,23 @@ class _HelpDeskState extends State<HelpDesk> {
   var cloudinary;
   List<String> hub_ids = [];
   var hubName;
+  var isLogin = 0;
 
   @override
   void initState() {
     super.initState();
     helpDeskType();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
-    var isLogin = PreferenceUtils.getIsLogin();
+    isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
       hubName = loginData.hubIdFromHubIds;
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       hubName = loginData.hubIdFromHubIds;
+    } else if(isLogin == 3) {
+      var loginData = PreferenceUtils.getLoginDataOrganization();
+      hubName = [""];
     }
   }
 
@@ -204,7 +208,7 @@ class _HelpDeskState extends State<HelpDesk> {
                             });
                             Utils.showSnackBar(context, strings_name.str_company_updated);
                             await Future.delayed(const Duration(milliseconds: 2000));
-                            Get.back();
+                            Get.back(result: true);
                           } else {
                             setState(() {
                               isVisible = false;
