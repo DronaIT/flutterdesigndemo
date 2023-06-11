@@ -183,7 +183,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                   child: Container(
                     color: colors_name.lightGrayColor,
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [Text(strings_name.str_my_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
@@ -261,7 +261,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                             child: Container(
                               color: colors_name.lightGrayColor,
                               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [Text(strings_name.str_others_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
