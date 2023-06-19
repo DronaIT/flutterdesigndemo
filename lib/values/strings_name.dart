@@ -76,7 +76,7 @@ class strings_name {
   static const String str_logout = "Logout";
   static const String str_home = "Home";
   static const String str_uplaod_doc = "Upload documents";
-
+  static const String str_uplaod_resume = "Upload resume";
   static const String str_student_history = "Student History";
 
   static const String str_empty_name = "Please enter employee name";
@@ -442,6 +442,7 @@ class strings_name {
   static const String str_placement = "Placement";
   static const String str_past_history = "Attendance past history";
   static const String str_completed_placement = "Completed internship process";
+  static const String str_upload_resume = "Upload resume";
   static const String str_pending = "Pending";
   static const String str_reject = "Rejected";
   static const String str_placed = "Placed";
@@ -475,7 +476,7 @@ class strings_name {
 
   static const String str_document = "Document";
   static const String str_doc_added = "Document uploaded successfully.";
-
+  static const String str_resume_added = "Resume uploaded successfully.";
   static const String str_invalid_mobile = "Invalid mobile number";
   static const String str_call = "Call";
   static const String str_3_days = "Continuous 3 days absents";

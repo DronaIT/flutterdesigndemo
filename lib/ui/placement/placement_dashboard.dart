@@ -11,6 +11,7 @@ import 'package:flutterdesigndemo/ui/placement/completed_internship_list.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';
+import 'package:flutterdesigndemo/ui/placement/upload_documents_placement.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -44,7 +45,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
 
   // For student
-  bool applyInternship = false, appliedInternship = false, completedInternShip = false, shortListedInternship = false, selectedInternship = false;
+  bool applyInternship = false, appliedInternship = false, completedInternShip = false, uploadResume = false,shortListedInternship = false, selectedInternship = false;
 
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
@@ -131,6 +132,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_COMPLETED_INTERNSHIP) {
             completedInternShip = true;
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPLOAD_RESUME) {
+            uploadResume = true;
           }
         }
         setState(() {});
@@ -413,6 +417,25 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                     ),
                     onTap: () {
                       Get.to(() => const CompletedInternList());
+                    },
+                  ),
+                ),
+                Visibility(
+                  visible: uploadResume,
+                  child: GestureDetector(
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        color: colors_name.colorWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text(strings_name.str_upload_resume, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => const UploadDocumentsPlacement());
                     },
                   ),
                 ),

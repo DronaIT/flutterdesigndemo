@@ -16,7 +16,7 @@ class TableNames {
   static const CLOUDARY_FOLDER_HELP_DESK= "HelpDesk";
   static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
   static const CLOUDARY_FOLDER_APP_ASSETS = "AppAssets";
-
+  static const CLOUDARY_FOLDER_STUDENT_RESUME = "student_resume";
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
   static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
@@ -151,7 +151,7 @@ class TableNames {
   static const PERMISSION_ID_SHORT_LISTED_INTERNSHIP = "DP0417";
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
   static const PERMISSION_ID_COMPLETED_INTERNSHIP = "DP0419";
-
+  static const PERMISSION_ID_UPLOAD_RESUME = "DP0420";
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";
   static const PERMISSION_ID_UPLOAD_DOCUMENTS = "DP0601";
 

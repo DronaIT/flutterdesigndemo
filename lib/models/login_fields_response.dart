@@ -1,3 +1,5 @@
+import 'attachment_response.dart';
+
 class LoginFieldsResponse {
   String? city;
   String? percentage;
@@ -79,6 +81,7 @@ class LoginFieldsResponse {
   List<dynamic>? presentSemesterByStudent;
   List<dynamic>? absentSemesterByStudent;
   int? Total_lectures;
+  List<Attachment_response>? resume;
 
   LoginFieldsResponse({
     this.city,
@@ -155,7 +158,8 @@ class LoginFieldsResponse {
     this.job_description_from_rejected_job,
     this.semesterByStudent,
     this.presentSemesterByStudent,
-    this.absentSemesterByStudent
+    this.absentSemesterByStudent,
+    this.resume
   });
 
 
@@ -245,6 +249,12 @@ class LoginFieldsResponse {
     rejectedJob = json['rejected_job']?.cast<String>();
     token = json['token'];
     percentage = json['percentage'];
+    if (json['resume'] != null) {
+      resume = <Attachment_response>[];
+      json['resume'].forEach((v) {
+        resume!.add(new Attachment_response.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -323,6 +333,9 @@ class LoginFieldsResponse {
     data['placed_job'] = this.placedJob;
     data['rejected_job'] = this.rejectedJob;
     data['token'] = this.token;
+    if (this.resume != null) {
+      data['resume'] = this.resume!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
