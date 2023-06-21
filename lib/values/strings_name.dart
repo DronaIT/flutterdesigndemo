@@ -441,6 +441,7 @@ class strings_name {
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";
   static const String str_past_history = "Attendance past history";
+  static const String str_view_resume = "View resume";
   static const String str_completed_placement = "Completed internship process";
   static const String str_upload_resume = "Upload resume";
   static const String str_pending = "Pending";

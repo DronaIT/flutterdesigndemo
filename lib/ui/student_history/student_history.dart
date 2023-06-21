@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/ui/student_history/student_attendece_past_hist
 import 'package:flutterdesigndemo/ui/student_history/student_attendence_history.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_attendence_history_moredetail.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_placement_history.dart';
+import 'package:flutterdesigndemo/ui/student_history/view_resume_placement.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ import '../../models/base_api_response.dart';
 import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
+import '../placement/upload_documents_placement.dart';
 
 class StudentHistory extends StatefulWidget {
   const StudentHistory({Key? key}) : super(key: key);
@@ -72,18 +74,23 @@ class _StudentHistoryState extends State<StudentHistory> {
   void checkPresentAbsentDetailBySubject() {
     if (data.records != null) {
       if (data.records!.first.fields!.lectureSubjectId?.isNotEmpty == true) {
-        for (var i = 0; i < data.records!.first.fields!.presentLectureIds!.length; i++) {
-          if (data.records!.first.fields!.presentSemesterByStudent![i] == data.records!.first.fields?.semester) {
-            total_present += 1;
-            total_lecture += 1;
+        if(data.records!.first.fields!.presentLectureIds != null){
+          for (var i = 0; i < data.records!.first.fields!.presentLectureIds!.length; i++) {
+            if (data.records!.first.fields!.presentSemesterByStudent![i] == data.records!.first.fields?.semester) {
+              total_present += 1;
+              total_lecture += 1;
+            }
           }
         }
-        for (var i = 0; i < data.records!.first.fields!.absentLectureIds!.length; i++) {
-          if (data.records!.first.fields!.absentSemesterByStudent![i] == data.records!.first.fields?.semester) {
-            total_absent += 1;
-            total_lecture += 1;
+        if(data.records!.first.fields!.absentLectureIds != null){
+          for (var i = 0; i < data.records!.first.fields!.absentLectureIds!.length; i++) {
+            if (data.records!.first.fields!.absentSemesterByStudent![i] == data.records!.first.fields?.semester) {
+              total_absent += 1;
+              total_lecture += 1;
+            }
           }
         }
+
       }
       totalPresentPercentage = ((total_present * 100) / total_lecture).toStringAsFixed(2);
     }
@@ -295,6 +302,29 @@ class _StudentHistoryState extends State<StudentHistory> {
                         margin: const EdgeInsets.all(5),
                         child: custom_text(
                           text: strings_name.str_past_history,
+                          alignment: Alignment.centerLeft,
+                          textStyles: whiteTextSemiBold16,
+                          topValue: 0,
+                          bottomValue: 0,
+                          leftValue: 0,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => const ViewResumePlacement(),arguments: data.records?.first.fields);
+                    },
+                    child: Card(
+                      elevation: 5,
+                      color: colors_name.colorPrimary,
+                      child: Container(
+                        color: colors_name.colorPrimary,
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(5),
+                        child: custom_text(
+                          text: strings_name.str_view_resume,
                           alignment: Alignment.centerLeft,
                           textStyles: whiteTextSemiBold16,
                           topValue: 0,
