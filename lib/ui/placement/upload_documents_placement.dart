@@ -31,7 +31,7 @@ class UploadDocumentsPlacement extends StatefulWidget {
 class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
   bool isVisible = false;
   final createStudentRepository = getIt.get<ApiRepository>();
- LoginFieldsResponse appData = LoginFieldsResponse();
+  LoginFieldsResponse appData = LoginFieldsResponse();
 
   var titleController = TextEditingController();
   var desController = TextEditingController();
@@ -39,6 +39,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
 
   String docPath = "";
   String docName = "";
+
 
   @override
   void initState() {
@@ -54,7 +55,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
     try {
       var query = "(${TableNames.TB_USERS_PHONE}='${PreferenceUtils.getLoginData().mobileNumber}')";
       var data = await createStudentRepository.registerApi(query);
-      if(data != null){
+      if (data != null) {
         appData = data.records!.first.fields!;
       }
       setState(() {
@@ -100,7 +101,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
                                       Expanded(child: Text("${appData.resume?[index].filename}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
                                       GestureDetector(
                                           onTap: () async {
-                                           await launchUrl(Uri.parse(appData.resume![index].url!), mode: LaunchMode.externalApplication);
+                                            await launchUrl(Uri.parse(appData.resume![index].url!), mode: LaunchMode.externalApplication);
                                           },
                                           child: const Icon(Icons.download, size: 30, color: colors_name.colorPrimary))
                                     ],
@@ -226,13 +227,17 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
       isVisible = true;
     });
     try {
+      List<Map<String, dynamic>> listData = [];
+      for(int i = 0 ;i <appData.resume!.length ; i++){
+        Map<String, dynamic> map = Map();
+        map["url"] = appData.resume?[i].url;
+        listData.add(map);
+      }
       if (path.isNotEmpty) {
         Map<String, dynamic> map = Map();
         map["url"] = path;
-        List<Map<String, dynamic>> listData = [];
         listData.add(map);
         Map<String, dynamic> query = {"resume": listData};
-        print("etstst=>${query}=>${PreferenceUtils.getLoginRecordId()}");
         var resp = await createStudentRepository.addToken(query, PreferenceUtils.getLoginRecordId());
         if (resp != null) {
           setState(() {

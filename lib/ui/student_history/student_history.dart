@@ -8,10 +8,12 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
+import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
 import '../../utils/tablenames.dart';
@@ -104,19 +106,43 @@ class _StudentHistoryState extends State<StudentHistory> {
                     textStyles: primaryTextSemiBold16,
                     bottomValue: 0,
                     leftValue: 10,
+                    maxLines: 2,
                   ),
-                  custom_text(
-                    text: "${strings_name.str_phone}: ${data.records!.first.fields!.mobileNumber!}",
-                    alignment: Alignment.topLeft,
-                    textStyles: blackTextSemiBold16,
-                    topValue: 10,
-                    bottomValue: 0,
-                    leftValue: 10,
+                  Row(
+                    children: [
+                      custom_text(
+                        text: "${strings_name.str_phone}:",
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                        topValue: 10,
+                        bottomValue: 0,
+                        leftValue: 10,
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          _launchCaller(data.records!.first.fields!.mobileNumber ?? "");
+                        },
+                        child: Container(
+                          alignment:Alignment.topLeft ,
+                          margin: EdgeInsets.only(top: 10,bottom: 0,),
+                          child: Text(
+                            "${data.records!.first.fields!.mobileNumber!}",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                   custom_text(
                     text: "${strings_name.str_email}: ${data.records!.first.fields!.email!}",
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
+                    maxLines: 2,
                     topValue: 10,
                     bottomValue: 0,
                     leftValue: 10,
@@ -285,5 +311,12 @@ class _StudentHistoryState extends State<StudentHistory> {
               child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
             ),
     ));
+  }
+  _launchCaller(String mobile) async {
+    try {
+      await launchUrl(Uri.parse("tel:$mobile"));
+    } catch (e) {
+      Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
+    }
   }
 }
