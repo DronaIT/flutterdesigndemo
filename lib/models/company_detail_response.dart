@@ -1,3 +1,5 @@
+import 'package:flutterdesigndemo/models/attachment_response.dart';
+
 class CompanyDetailResponse {
   int? id;
   String? companyName;
@@ -12,6 +14,8 @@ class CompanyDetailResponse {
   String? company_landline;
   List<String>? companySector;
   List<String>? sectorTitleFromCompanySector;
+  List<String>? hubIds;
+  List<Attachment_response>?company_loi;
   String? reporting_branch;
   String? reporting_address;
   String? city;
@@ -36,11 +40,14 @@ class CompanyDetailResponse {
         this.city,
         this.sectorTitleFromCompanySector,
         this.password,
-        this.token
+        this.token,
+        this.hubIds,
+        this.company_loi
       });
 
   CompanyDetailResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    hubIds = json['hub_id']?.cast<String>();
     companyName = json['company_name'];
     contactName = json['contact_name'];
     contactNumber = json['contact_number'];
@@ -59,12 +66,19 @@ class CompanyDetailResponse {
     city = json['city'] ?? " ";
     password = json['password'] ?? " ";
     token = json['token'] ?? " ";
+    if (json['company_loi'] != null) {
+      company_loi = <Attachment_response>[];
+      json['company_loi'].forEach((v) {
+        company_loi!.add(Attachment_response.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['company_name'] = this.companyName;
+    data['hub_id'] = this.hubIds;
     data['contact_name'] = this.contactName;
     data['contact_number'] = this.contactNumber;
     data['contact_whatsapp_number'] = this.contactWhatsappNumber;
@@ -81,6 +95,9 @@ class CompanyDetailResponse {
     data['city'] = this.city;
     data['password'] = this.password;
     data['token'] = this.token;
+    if (this.company_loi != null) {
+      data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

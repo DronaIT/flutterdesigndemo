@@ -19,6 +19,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/dio_exception.dart';
+import '../../customwidget/custom_edittext_search.dart';
 
 class ApprovedInternship extends StatefulWidget {
   const ApprovedInternship({Key? key}) : super(key: key);
@@ -36,8 +37,11 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
 
+  List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityListMain = [];
+
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityList = [];
   String offset = "";
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -50,18 +54,20 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       isVisible = true;
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}')";
-    try{
+    try {
       var data = await apiRepository.getJoboppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           jobOpportunityList?.clear();
         }
+        jobOpportunityListMain?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<JobOpportunityResponse>>);
         jobOpportunityList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<JobOpportunityResponse>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           getRecords();
         } else {
           setState(() {
+            jobOpportunityListMain?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
             jobOpportunityList?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
             isVisible = false;
           });
@@ -71,18 +77,18 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
           isVisible = false;
           if (offset.isEmpty) {
             jobOpportunityList = [];
+            jobOpportunityListMain = [];
           }
         });
         offset = "";
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -92,93 +98,132 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_list_pending_job_opp),
       body: Stack(
         children: [
-          jobOpportunityList != null && jobOpportunityList!.isNotEmpty
-              ? Container(
-                  margin: const EdgeInsets.all(10),
-                  child: ListView.builder(
-                      itemCount: jobOpportunityList?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                custom_text(
-                                  text: "${jobOpportunityList?[index].fields!.jobTitle}",
-                                  textStyles: centerTextStyle20,
-                                  topValue: 0,
-                                  maxLines: 2,
-                                  bottomValue: 5,
-                                  leftValue: 5,
-                                ),
-                                jobOpportunityList?[index].fields!.stipendRangeMin != null && jobOpportunityList?[index].fields!.stipendRangeMax != null
-                                    ? custom_text(
-                                        text: "Stipend: ${jobOpportunityList?[index].fields!.stipendRangeMin} - ${jobOpportunityList?[index].fields!.stipendRangeMax}",
-                                        textStyles: blackTextSemiBold12,
-                                        topValue: 5,
-                                        maxLines: 2,
-                                        bottomValue: 5,
-                                        leftValue: 5,
-                                      )
-                                    : Container(),
-                                custom_text(text: "Timings: ${jobOpportunityList?[index].fields!.timingStart} - ${jobOpportunityList?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                custom_text(text: "Vacancies: ${jobOpportunityList?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                custom_text(
-                                  text: "Location: ${jobOpportunityList?[index].fields!.reportingAddress?.first} ${jobOpportunityList?[index].fields!.city?.first}",
-                                  textStyles: blackTextSemiBold12,
-                                  topValue: 5,
-                                  maxLines: 2,
-                                  bottomValue: 5,
-                                  leftValue: 5,
-                                ),
-                                custom_text(
-                                  text: "Internship : ${jobOpportunityList?[index].fields!.internshipModes} - ${jobOpportunityList?[index].fields!.internshipDuration}",
-                                  textStyles: blackTextSemiBold12,
-                                  topValue: 5,
-                                  maxLines: 2,
-                                  bottomValue: 5,
-                                  leftValue: 5,
-                                ),
-                                custom_text(
-                                  text: "Description: ${jobOpportunityList![index].fields!.jobDescription!}",
-                                  textStyles: blackTextSemiBold12,
-                                  bottomValue: 5,
-                                  topValue: 5,
-                                  leftValue: 5,
-                                  maxLines: 1000,
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: Visibility(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        confirmationDialog(jobOpportunityList![index]);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: colors_name.presentColor,
-                                        padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+          SingleChildScrollView(
+              child: Column(
+            children: [
+              SizedBox(
+                height: 8,
+              ),
+              CustomEditTextSearch(
+                type: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                controller: controllerSearch,
+                onChanges: (value) {
+                  if (value.isEmpty) {
+                    jobOpportunityList = [];
+                    jobOpportunityList = jobOpportunityListMain;
+                    setState(() {});
+                  } else {
+                    jobOpportunityList = [];
+                    for (var i = 0; i < jobOpportunityListMain!.length; i++) {
+                      if (jobOpportunityListMain![i].fields!.companyName!.first.toLowerCase().contains(value.toLowerCase())) {
+                        jobOpportunityList?.add(jobOpportunityListMain![i]);
+                      }
+                    }
+                    setState(() {});
+                  }
+                },
+              ),
+              SizedBox(height: 5),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: jobOpportunityList != null && jobOpportunityList!.isNotEmpty
+                    ? ListView.builder(
+                    primary: false,
+                    shrinkWrap: true,
+                    itemCount: jobOpportunityList?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  custom_text(
+                                    text: "Job title: ${jobOpportunityList?[index].fields!.jobTitle}",
+                                    textStyles: centerTextStyle16,
+                                    topValue: 0,
+                                    maxLines: 2,
+                                    bottomValue: 5,
+                                    leftValue: 5,
+                                  ),
+                                  custom_text(
+                                    text: "Company name: ${jobOpportunityList?[index].fields!.companyName?.first}",
+                                    textStyles: blackTextSemiBold15,
+                                    topValue: 2,
+                                    maxLines: 2,
+                                    bottomValue: 5,
+                                    leftValue: 5,
+                                  ),
+                                  jobOpportunityList?[index].fields!.stipendRangeMin != null && jobOpportunityList?[index].fields!.stipendRangeMax != null
+                                      ? custom_text(
+                                          text: "Stipend: ${jobOpportunityList?[index].fields!.stipendRangeMin} - ${jobOpportunityList?[index].fields!.stipendRangeMax}",
+                                          textStyles: blackTextSemiBold12,
+                                          topValue: 0,
+                                          maxLines: 2,
+                                          bottomValue: 5,
+                                          leftValue: 5,
+                                        )
+                                      : Container(),
+                                  custom_text(text: "Timings: ${jobOpportunityList?[index].fields!.timingStart} - ${jobOpportunityList?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                  custom_text(text: "Vacancies: ${jobOpportunityList?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                  custom_text(
+                                    text: jobOpportunityList?[index].fields?.reportingAddress?.first != null ? "Location: ${jobOpportunityList?[index].fields?.reportingAddress?.first.toString().trim()} ${jobOpportunityList?[index].fields!.city?.first}" : "Location:N/A",
+                                    textStyles: blackTextSemiBold12,
+                                    topValue: 5,
+                                    maxLines: 3,
+                                    bottomValue: 5,
+                                    leftValue: 5,
+                                  ),
+                                  custom_text(
+                                    text: "Internship : ${jobOpportunityList?[index].fields!.internshipModes} - ${jobOpportunityList?[index].fields!.internshipDuration}",
+                                    textStyles: blackTextSemiBold12,
+                                    topValue: 5,
+                                    maxLines: 2,
+                                    bottomValue: 5,
+                                    leftValue: 5,
+                                  ),
+                                  custom_text(
+                                    text: "Description: ${jobOpportunityList![index].fields!.jobDescription}",
+                                    textStyles: blackTextSemiBold12,
+                                    bottomValue: 5,
+                                    topValue: 5,
+                                    leftValue: 5,
+                                    maxLines: 1000,
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: Visibility(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          confirmationDialog(jobOpportunityList![index]);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: colors_name.presentColor,
+                                          padding: const EdgeInsets.only(top: 5, bottom: 10, left: 20, right: 20),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          elevation: 5.0,
                                         ),
-                                        elevation: 5.0,
-                                      ),
-                                      child: const Text(
-                                        strings_name.str_approve,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                        child: const Text(
+                                          strings_name.str_approve,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-                )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                          );
+                        })
+                    : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              )
+            ],
+          )),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
@@ -324,7 +369,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
 
     var json = request.toJson();
     json.removeWhere((key, value) => value == null);
-    try{
+    try {
       var resp = await apiRepository.updateJobOpportunityApi(json, jobData.id.toString());
       if (resp.id!.isNotEmpty) {
         setState(() {
@@ -338,14 +383,12 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
           isVisible = false;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
-
   }
 }
