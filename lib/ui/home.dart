@@ -18,6 +18,7 @@ import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
 import 'package:flutterdesigndemo/ui/settings_screen.dart';
 import 'package:flutterdesigndemo/ui/student_history/filter_screen_student.dart';
+import 'package:flutterdesigndemo/ui/task/task_dashboard.dart';
 import 'package:flutterdesigndemo/ui/upload_documents.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -201,17 +202,19 @@ class _HomeState extends State<Home> {
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
                                           if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
                                             Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
-                                          } else if (PreferenceUtils.getIsLogin() == 3){
+                                          } else if (PreferenceUtils.getIsLogin() == 3) {
                                             Get.to(const PlacementDashboard());
                                           } else {
                                             Get.to(const PlacementDashboard());
                                           }
-                                        }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
                                           Get.to(const UploadDocuments());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
                                           Get.to(const FilterScreenStudent());
-                                        }else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
                                           Get.to(const HelpdeskDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TASK) {
+                                          Get.to(const TaskDashboard());
                                         }
                                       },
                                     ),
