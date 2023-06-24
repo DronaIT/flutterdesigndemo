@@ -4,13 +4,11 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 
 extension E on String {
   String lastChars(int n) => substring(length - n);
@@ -164,7 +162,6 @@ class Utils {
     return deviceId;
   }
 
-
   static void showSnackBarDuration(BuildContext context, String message, int second) {
     Flushbar(
       flushbarStyle: FlushbarStyle.GROUNDED,
@@ -206,9 +203,6 @@ class Utils {
     }
     return specializationId;
   }
-
-
-
 
   static String? getRoleId(String? roleId) {
     final roleList = PreferenceUtils.getRoleList();

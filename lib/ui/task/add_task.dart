@@ -2,6 +2,8 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pickers/pickers.dart';
+import 'package:flutter_pickers/style/picker_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/help_desk_req.dart';
@@ -22,24 +24,30 @@ import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 
-class HelpDesk extends StatefulWidget {
-  const HelpDesk({Key? key}) : super(key: key);
+class AddTask extends StatefulWidget {
+  const AddTask({Key? key}) : super(key: key);
 
   @override
-  State<HelpDesk> createState() => _HelpDeskState();
+  State<AddTask> createState() => _AddTaskState();
 }
 
-class _HelpDeskState extends State<HelpDesk> {
-  final helpRepository = getIt.get<ApiRepository>();
+class _AddTaskState extends State<AddTask> {
+  final apiRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>? helpDeskTypeResponse = [];
-  BaseApiResponseWithSerializable<HelpDeskTypeResponse>? helpDeskTypeResponses;
-  TextEditingController helpNoteController = TextEditingController();
-  int helpDeskId = 0;
-  String helpPath = "", helpTitle = "";
   var cloudinary;
-  List<String> assigned_to = [];
-  List<String> authority_of = [];
+
+  List<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>? taskTypeResponse = [];
+  BaseApiResponseWithSerializable<HelpDeskTypeResponse>? taskTypeResponses;
+
+  TextEditingController taskNoteController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+
+  int durationHrsController = 0, durationMinController = 0, taskTypeId = 0;
+  String taskFilePath = "", taskFileTitle = "";
+
+  List<String> assignedTo = [];
+  List<String> authorityOf = [];
+
   var hubName;
   var isLogin = 0;
 
@@ -66,7 +74,7 @@ class _HelpDeskState extends State<HelpDesk> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_help_desk),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_task),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -75,7 +83,7 @@ class _HelpDeskState extends State<HelpDesk> {
               child: Column(
                 children: [
                   custom_text(
-                    text: strings_name.str_help_desk_type,
+                    text: strings_name.str_task_type,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),
@@ -88,17 +96,17 @@ class _HelpDeskState extends State<HelpDesk> {
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                           width: viewWidth,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
-                            value: helpDeskTypeResponses,
+                            value: taskTypeResponses,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,
                             onChanged: (BaseApiResponseWithSerializable<HelpDeskTypeResponse>? newValue) {
                               setState(() {
-                                helpDeskId = newValue!.fields!.id!;
-                                helpDeskTypeResponses = newValue;
+                                taskTypeId = newValue!.fields!.id!;
+                                taskTypeResponses = newValue;
                               });
                             },
-                            items: helpDeskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
+                            items: taskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
                               return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
                                 value: value,
                                 child: Text(value.fields!.title.toString()),
@@ -111,20 +119,40 @@ class _HelpDeskState extends State<HelpDesk> {
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
-                    text: strings_name.str_help_note,
+                    text: strings_name.str_task_detail,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),
                   custom_edittext(
                     type: TextInputType.multiline,
                     textInputAction: TextInputAction.newline,
-                    controller: helpNoteController,
+                    controller: taskNoteController,
                     topValue: 5,
                     maxLines: 5,
                     minLines: 4,
                     maxLength: 5000,
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.h),
+                  custom_text(
+                    text: strings_name.str_task_detail,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  InkWell(
+                    child: IgnorePointer(
+                      child: custom_edittext(
+                        hintText: strings_name.str_required_duration,
+                        type: TextInputType.none,
+                        textInputAction: TextInputAction.next,
+                        controller: durationController,
+                        topValue: 0,
+                      ),
+                    ),
+                    onTap: () {
+                      onTap();
+                    },
+                  ),
+                  SizedBox(height: 5.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -143,11 +171,11 @@ class _HelpDeskState extends State<HelpDesk> {
                     ],
                   ),
                   Visibility(
-                    visible: helpPath.isNotEmpty,
+                    visible: taskFilePath.isNotEmpty,
                     child: Column(
                       children: [
                         SizedBox(height: 3.h),
-                        custom_text(text: helpTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                        custom_text(text: taskFileTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
                       ],
                     ),
                   ),
@@ -155,43 +183,43 @@ class _HelpDeskState extends State<HelpDesk> {
                   CustomButton(
                     text: strings_name.str_submit,
                     click: () async {
-                      if (helpDeskId == 0) {
-                        Utils.showSnackBar(context, strings_name.str_empty_type_help);
-                      } else if (helpNoteController.text.trim().toString().isEmpty) {
-                        Utils.showSnackBar(context, strings_name.str_empty_help_note);
+                      if (taskTypeId == 0) {
+                        Utils.showSnackBar(context, strings_name.str_empty_type_task);
+                      } else if (taskNoteController.text.trim().toString().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_task_note);
                       } else {
                         setState(() {
                           isVisible = true;
                         });
-                        if (helpPath.isNotEmpty) {
+                        if (taskFilePath.isNotEmpty) {
                           CloudinaryResponse response = await cloudinary.uploadFile(
-                            CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
+                            CloudinaryFile.fromFile(taskFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
                           );
-                          helpPath = response.secureUrl;
+                          taskFilePath = response.secureUrl;
                         }
-                        if (helpDeskTypeResponses!.fields!.centerAutority != null) {
-                          for (int j = 0; j < helpDeskTypeResponses!.fields!.centerAutority!.length; j++) {
-                            if (helpDeskTypeResponses!.fields!.centerAuthorityHubId![j] == hubName[0]) {
-                              if (authority_of.isEmpty || !authority_of.contains(helpDeskTypeResponses!.fields!.centerAutority![j])) {
-                                authority_of.add(helpDeskTypeResponses!.fields!.centerAutority![j]);
+                        if (taskTypeResponses!.fields!.centerAutority != null) {
+                          for (int j = 0; j < taskTypeResponses!.fields!.centerAutority!.length; j++) {
+                            if (taskTypeResponses!.fields!.centerAuthorityHubId![j] == hubName[0]) {
+                              if (authorityOf.isEmpty || !authorityOf.contains(taskTypeResponses!.fields!.centerAutority![j])) {
+                                authorityOf.add(taskTypeResponses!.fields!.centerAutority![j]);
                               }
                             }
                           }
                         }
 
-                        if (helpDeskTypeResponses!.fields!.concernPerson != null) {
-                          for (int j = 0; j < helpDeskTypeResponses!.fields!.concernPerson!.length; j++) {
-                            if (helpDeskTypeResponses!.fields!.concernPersonHubId![j] == hubName[0]) {
-                              if (assigned_to.isEmpty || !assigned_to.contains(helpDeskTypeResponses!.fields!.concernPerson![j])) {
-                                assigned_to.add(helpDeskTypeResponses!.fields!.concernPerson![j]);
+                        if (taskTypeResponses!.fields!.concernPerson != null) {
+                          for (int j = 0; j < taskTypeResponses!.fields!.concernPerson!.length; j++) {
+                            if (taskTypeResponses!.fields!.concernPersonHubId![j] == hubName[0]) {
+                              if (assignedTo.isEmpty || !assignedTo.contains(taskTypeResponses!.fields!.concernPerson![j])) {
+                                assignedTo.add(taskTypeResponses!.fields!.concernPerson![j]);
                               }
                             }
                           }
                         }
 
                         HelpDeskRequest helpDeskReq = HelpDeskRequest();
-                        helpDeskReq.ticket_type_id = helpDeskTypeResponses?.id?.split("|||");
-                        helpDeskReq.Notes = helpNoteController.text.trim().toString();
+                        helpDeskReq.ticket_type_id = taskTypeResponses?.id?.split("|||");
+                        helpDeskReq.Notes = taskNoteController.text.trim().toString();
                         if (isLogin == 1) {
                           helpDeskReq.createdByStudent = PreferenceUtils.getLoginRecordId().split(",");
                         } else if (isLogin == 2) {
@@ -199,18 +227,18 @@ class _HelpDeskState extends State<HelpDesk> {
                         } else if (isLogin == 3) {
                           helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
                         }
-                        if (helpPath.isNotEmpty) {
+                        if (taskFilePath.isNotEmpty) {
                           Map<String, dynamic> map = Map();
-                          map["url"] = helpPath;
+                          map["url"] = taskFilePath;
                           List<Map<String, dynamic>> listData = [];
                           listData.add(map);
                           helpDeskReq.attachments = listData;
                         }
-                        helpDeskReq.assigned_to = assigned_to;
-                        helpDeskReq.authority_of = authority_of;
-                        helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TICKET;
+                        helpDeskReq.assigned_to = assignedTo;
+                        helpDeskReq.authority_of = authorityOf;
+                        helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TASK;
                         try {
-                          var resp = await helpRepository.addHelpDeskApi(helpDeskReq);
+                          var resp = await apiRepository.addHelpDeskApi(helpDeskReq);
                           if (resp.id != null) {
                             setState(() {
                               isVisible = false;
@@ -250,11 +278,11 @@ class _HelpDeskState extends State<HelpDesk> {
       isVisible = true;
     });
     try {
-      var resp = await helpRepository.getHelpdesk();
+      var resp = await apiRepository.getHelpdesk();
       if (resp != null) {
         setState(() {
           isVisible = false;
-          helpDeskTypeResponse = resp.records;
+          taskTypeResponse = resp.records;
         });
       } else {
         setState(() {
@@ -270,12 +298,33 @@ class _HelpDeskState extends State<HelpDesk> {
     }
   }
 
+  void onTap() {
+    final timeData = [
+      List.generate(250, (index) => (index + 1).toString()).toList(),
+      List.generate(59, (index) => (index + 1).toString()).toList(),
+    ];
+
+    Pickers.showMultiPicker(
+      context,
+      data: timeData,
+      suffix: [" Hour", " Minute"],
+      onConfirm: (p, position) {
+        durationHrsController = p[0];
+        print(position.join(","));
+      },
+      pickerStyle: PickerStyle(
+        title: custom_text(text: strings_name.str_required_duration, textStyles: blackTextSemiBold14, alignment: Alignment.center),
+        cancelButton: custom_text(text: strings_name.str_cancle, textStyles: blackTextSemiBold14, alignment: Alignment.center),
+        commitButton: custom_text(text: strings_name.str_confirm, textStyles: primaryTextSemiBold14, alignment: Alignment.center))
+    );
+  }
+
   picLOIFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
       setState(() {
-        helpTitle = result.files.single.name;
-        helpPath = result.files.single.path!;
+        taskFileTitle = result.files.single.name;
+        taskFilePath = result.files.single.path!;
       });
     }
   }

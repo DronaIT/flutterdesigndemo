@@ -8,7 +8,8 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
-import 'package:flutterdesigndemo/ui/helpdesk/helpdesk.dart';
+import 'package:flutterdesigndemo/ui/task/add_task.dart';
+import 'package:flutterdesigndemo/ui/task/task_details.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -17,24 +18,22 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
-import 'helpdesk_details.dart';
-
-class HelpdeskDashboard extends StatefulWidget {
-  const HelpdeskDashboard({Key? key}) : super(key: key);
+class TaskDashboard extends StatefulWidget {
+  const TaskDashboard({Key? key}) : super(key: key);
 
   @override
-  State<HelpdeskDashboard> createState() => _HelpdeskDashboardState();
+  State<TaskDashboard> createState() => _TaskDashboardState();
 }
 
-class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
+class _TaskDashboardState extends State<TaskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
 
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
-  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? ticketList = [];
-  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? myTicketList = [];
-  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? othersTicketList = [];
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskList = [];
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? myTaskList = [];
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskAssignedList = [];
   String offset = "";
   var loginId = "";
   var isLogin = 0;
@@ -63,7 +62,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
       loginId = PreferenceUtils.getLoginDataOrganization().id.toString();
     }
 
-    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_HELP_DESK}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_TASK}')";
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
@@ -96,7 +95,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     setState(() {
       isVisible = true;
     });
-    var query = "AND(${TableNames.CLM_FIELD_TYPE}='${TableNames.HELPDESK_TYPE_TICKET}', OR(";
+    var query = "AND(${TableNames.CLM_FIELD_TYPE}='${TableNames.HELPDESK_TYPE_TASK}', OR(";
     if (isLogin == 1) {
       query += "${TableNames.CLM_CREATED_BY_STUDENT}='$loginId'";
     } else if (isLogin == 2) {
@@ -116,28 +115,28 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
       var data = await apiRepository.getTicketsApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
-          ticketList?.clear();
+          taskList?.clear();
         }
-        ticketList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<HelpdeskResponses>>);
+        taskList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<HelpdeskResponses>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           getRecords();
         } else {
-          ticketList?.sort((a, b) {
+          taskList?.sort((a, b) {
             var adate = a.fields!.createdOn;
             var bdate = b.fields!.createdOn;
             return bdate!.compareTo(adate!);
           });
-          if (ticketList?.isNotEmpty == true) {
-            for (int i = 0; i < ticketList!.length; i++) {
-              if (isLogin == 1 && ticketList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTicketList?.add(ticketList![i]);
-              } else if (isLogin == 2 && ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTicketList?.add(ticketList![i]);
-              } else if (isLogin == 3 && ticketList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTicketList?.add(ticketList![i]);
+          if (taskList?.isNotEmpty == true) {
+            for (int i = 0; i < taskList!.length; i++) {
+              if (isLogin == 1 && taskList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
+                myTaskList?.add(taskList![i]);
+              } else if (isLogin == 2 && taskList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
+                myTaskList?.add(taskList![i]);
+              } else if (isLogin == 3 && taskList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
+                myTaskList?.add(taskList![i]);
               } else {
-                othersTicketList?.add(ticketList![i]);
+                taskAssignedList?.add(taskList![i]);
               }
             }
           }
@@ -149,7 +148,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
         setState(() {
           isVisible = false;
           if (offset.isEmpty) {
-            ticketList = [];
+            taskList = [];
           }
         });
         offset = "";
@@ -167,7 +166,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_help_desk),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_task),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -179,25 +178,25 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                   child: Container(
                     color: colors_name.lightGrayColor,
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text(strings_name.str_my_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      children: [Text(strings_name.str_my_task, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
                 ),
-                myTicketList?.isNotEmpty == true
+                myTaskList?.isNotEmpty == true
                     ? ListView.builder(
                         primary: false,
                         shrinkWrap: true,
-                        itemCount: myTicketList!.length,
+                        itemCount: myTaskList!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              Get.to(const HelpdeskDetail(), arguments: [
-                                {"fields": myTicketList?[index].fields},
+                              Get.to(const TaskDetail(), arguments: [
+                                {"fields": myTaskList?[index].fields},
                                 {"canUpdateTicketStatus": canUpdateTicketStatus},
                                 {"canUpdateTicketCategory": canUpdateTicketCategory},
-                                {"recordId": myTicketList?[index].id}
+                                {"recordId": myTaskList?[index].id}
                               ]);
                             },
                             child: Column(children: [
@@ -212,17 +211,17 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                            custom_text(text: myTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                            custom_text(text: strings_name.str_task_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                            custom_text(text: myTaskList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
                                           ],
                                         ),
                                         Container(
                                             decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
                                             padding: const EdgeInsets.all(1),
-                                            child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                            child: custom_text(text: myTaskList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                       ],
                                     ),
-                                    custom_text(text: myTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                    custom_text(text: myTaskList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
                                     Row(
                                       children: [
                                         custom_text(
@@ -237,7 +236,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                             decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
                                             padding: const EdgeInsets.all(1),
                                             margin: const EdgeInsets.only(right: 5),
-                                            child: custom_text(text: myTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                            child: custom_text(text: myTaskList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                       ],
                                     ),
                                   ],
@@ -257,25 +256,25 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                             child: Container(
                               color: colors_name.lightGrayColor,
                               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text(strings_name.str_others_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [Text(strings_name.str_others_task, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
                             ),
                           ),
-                          othersTicketList?.isNotEmpty == true
+                          taskAssignedList?.isNotEmpty == true
                               ? ListView.builder(
                                   primary: false,
                                   shrinkWrap: true,
-                                  itemCount: othersTicketList!.length,
+                                  itemCount: taskAssignedList!.length,
                                   itemBuilder: (BuildContext context, int index) {
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.to(const HelpdeskDetail(), arguments: [
-                                          {"fields": othersTicketList?[index].fields},
+                                        Get.to(const TaskDetail(), arguments: [
+                                          {"fields": taskAssignedList?[index].fields},
                                           {"canUpdateTicketStatus": canUpdateTicketStatus},
                                           {"canUpdateTicketCategory": canUpdateTicketCategory},
-                                          {"recordId": othersTicketList?[index].id}
+                                          {"recordId": taskAssignedList?[index].id}
                                         ]);
                                       },
                                       child: Column(children: [
@@ -291,13 +290,13 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
                                                       custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                      custom_text(text: othersTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                                      custom_text(text: taskAssignedList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
                                                     ],
                                                   ),
                                                   Container(
                                                       decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
                                                       padding: const EdgeInsets.all(1),
-                                                      child: custom_text(text: othersTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                      child: custom_text(text: taskAssignedList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                                 ],
                                               ),
                                               Row(
@@ -305,17 +304,17 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                 children: [
                                                   custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                                                   custom_text(
-                                                      text: othersTicketList![index].fields!.studentName?.isNotEmpty == true
-                                                          ? othersTicketList![index].fields!.studentName![0].toString()
-                                                          : (othersTicketList![index].fields!.employeeName?.isNotEmpty == true
-                                                              ? othersTicketList![index].fields!.employeeName![0].toString()
-                                                              : (othersTicketList![index].fields!.companyName?.isNotEmpty == true ? othersTicketList![index].fields!.companyName![0].toString() : "")),
+                                                      text: taskAssignedList![index].fields!.studentName?.isNotEmpty == true
+                                                          ? taskAssignedList![index].fields!.studentName![0].toString()
+                                                          : (taskAssignedList![index].fields!.employeeName?.isNotEmpty == true
+                                                              ? taskAssignedList![index].fields!.employeeName![0].toString()
+                                                              : (taskAssignedList![index].fields!.companyName?.isNotEmpty == true ? taskAssignedList![index].fields!.companyName![0].toString() : "")),
                                                       textStyles: blackTextSemiBold16,
                                                       leftValue: 5,
                                                       topValue: 0),
                                                 ],
                                               ),
-                                              custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                              custom_text(text: taskAssignedList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
                                               Row(
                                                 children: [
                                                   custom_text(
@@ -330,7 +329,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                       decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
                                                       padding: const EdgeInsets.all(1),
                                                       margin: const EdgeInsets.only(right: 5),
-                                                      child: custom_text(text: othersTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                      child: custom_text(text: taskAssignedList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                                 ],
                                               ),
                                             ],
@@ -356,10 +355,10 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           elevation: 0.0,
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
-            Get.to(const HelpDesk())?.then((value) {
-              ticketList?.clear();
-              myTicketList?.clear();
-              othersTicketList?.clear();
+            Get.to(const AddTask())?.then((value) {
+              taskList?.clear();
+              myTaskList?.clear();
+              taskAssignedList?.clear();
 
               getRecords();
             });

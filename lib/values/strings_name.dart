@@ -497,9 +497,10 @@ class strings_name {
   static const String str_organization = "Organization";
 
   static const String str_help_desk = "Help desk";
+  static const String str_add_help_desk = "Add help desk";
   static const String str_attachments = "Attachments";
-  static const String str_empty_type_help = "Please enter help type";
-  static const String str_empty_help_note = "Please enter help note";
+  static const String str_empty_type_help = "Please select help type";
+  static const String str_empty_help_note = "Please enter help detail";
   static const String str_help_note = "Help note";
 
   static const String str_my_tickets = "My tickets";
@@ -513,4 +514,19 @@ class strings_name {
   static const String str_update_ticket_status = "Update ticket status";
   static const String str_update_ticket_type = "Update ticket category";
   static const String str_update_ticket_message = "Ticket updated successfully";
+  static const String str_create_ticket_message = "Ticket created successfully";
+
+  static const String str_task = "Task";
+  static const String str_my_task = "My task";
+  static const String str_others_task = "Others task";
+
+  static const String str_task_id = "Task No:";
+  static const String str_add_task = "Add task";
+  static const String str_task_type = "Task type";
+  static const String str_task_detail = "Task detail";
+
+  static const String str_empty_type_task = "Please select task type";
+  static const String str_empty_task_note = "Please enter task detail";
+  static const String str_required_duration = "Required duration";
+
 }

@@ -18,14 +18,14 @@ import '../../models/helpdesk_responses.dart';
 import '../../values/text_styles.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 
-class HelpdeskDetail extends StatefulWidget {
-  const HelpdeskDetail({Key? key}) : super(key: key);
+class TaskDetail extends StatefulWidget {
+  const TaskDetail({Key? key}) : super(key: key);
 
   @override
-  State<HelpdeskDetail> createState() => _HelpdeskDetailState();
+  State<TaskDetail> createState() => _TaskDetailState();
 }
 
-class _HelpdeskDetailState extends State<HelpdeskDetail> {
+class _TaskDetailState extends State<TaskDetail> {
   final helpRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
 
