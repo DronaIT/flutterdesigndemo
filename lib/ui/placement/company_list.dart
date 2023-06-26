@@ -18,6 +18,7 @@ import '../../customwidget/custom_edittext_search.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
 import '../../models/company_detail_response.dart';
+import '../../models/hub_response.dart';
 import '../../values/text_styles.dart';
 
 class GetCompanyDetail extends StatefulWidget {
@@ -36,13 +37,56 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
   bool createJobsAlerts = false, viewJobAlerts = false, updateJobAlerts = false;
   var controllerSearch = TextEditingController();
   String offset = "";
+  BaseApiResponseWithSerializable<HubResponse>? hubResponse;
+  String hubValue = "";
+  List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
 
   @override
   void initState() {
     super.initState();
     update = Get.arguments;
-    // getRecords();
+
+    hubResponseArray = PreferenceUtils.getHubList().records;
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
+    if(hubResponseArray != null ){
+      hubResponse = hubResponseArray?.first;
+      hubValue = hubResponseArray!.first.fields!.id!.toString();
+      setState(() {
+
+      });
+    }
     getPermission();
+
+
   }
 
   Future<void> getRecords() async {
@@ -50,7 +94,8 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       isVisible = true;
     });
     try {
-      var data = await apiRepository.getCompanyDetailApi("", offset);
+      var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_ID},0)";
+      var data = await apiRepository.getCompanyDetailApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           companyList?.clear();
@@ -120,7 +165,6 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
             });
           }
         }
-
         getRecords();
       } else {
         setState(() {
@@ -148,7 +192,40 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 8,
+                  height: 5,
+                ),
+                custom_text(
+                  text: strings_name.str_select_hub,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                  bottomValue: 0,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                  width: MediaQuery.of(context).size.width,
+                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                    value: hubResponse,
+                    elevation: 16,
+                    style: blackText16,
+                    focusColor: Colors.white,
+                    onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                      setState(() {
+                        hubValue = newValue!.fields!.id!.toString();
+                        hubResponse = newValue;
+                        getRecords();
+
+                      });
+                    },
+                    items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                      return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                        value: value,
+                        child: Text(value.fields!.hubName!.toString()),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
                 ),
                 CustomEditTextSearch(
                   type: TextInputType.text,

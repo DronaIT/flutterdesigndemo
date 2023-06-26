@@ -228,11 +228,11 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
     });
     try {
       List<Map<String, dynamic>> listData = [];
-      for(int i = 0 ;i <appData.resume!.length ; i++){
-        Map<String, dynamic> map = Map();
-        map["url"] = appData.resume?[i].url;
-        listData.add(map);
-      }
+      // for(int i = 0 ;i <appData.resume!.length ; i++){
+      //   Map<String, dynamic> map = Map();
+      //   map["url"] = appData.resume?[i].url;
+      //   listData.add(map);
+      // }
       if (path.isNotEmpty) {
         Map<String, dynamic> map = Map();
         map["url"] = path;

@@ -19,7 +19,7 @@ class CustomEditTextSearch extends StatefulWidget {
 
   CustomEditTextSearch(
       {super.key,
-      this.hintText = "",
+      this.hintText = "Search here..",
       this.color = Colors.black,
       required this.type,
       required this.textInputAction,

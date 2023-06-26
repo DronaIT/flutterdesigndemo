@@ -68,6 +68,8 @@ class TableNames {
   static const TB_USERS_PASSWORD = "password";
   static const CLM_ROLE_ID = "role_ids";
   static const CLM_HUB_IDS = "hub_ids";
+  static const CLM_HUB_ID = "hub_id";
+
   static const CLM_SPE_ID = "specialization_id";
   static const CLM_SPE_IDS = "specialization_ids";
   static const CLM_SUBJECT_IDS = "subject_ids";

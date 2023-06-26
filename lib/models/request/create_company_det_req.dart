@@ -9,6 +9,7 @@ class CreateCompanyDetailRequest {
   String? contact_email;
   String? company_website;
   List<String>? company_sector;
+  List<String>? hub_id;
 
   String? reporting_branch;
   String? reporting_address;
@@ -17,7 +18,9 @@ class CreateCompanyDetailRequest {
   List<Map<String, dynamic>>? company_loi;
 
   CreateCompanyDetailRequest(
+
       {this.company_identity_number,
+        this.hub_id,
       this.company_name,
       this.contact_name,
       this.contact_number,
@@ -37,6 +40,8 @@ class CreateCompanyDetailRequest {
     company_identity_number = json['company_identity_number'];
     company_name = json['company_name'];
     contact_name = json['contact_name'];
+    hub_id = json['hub_id']?.cast<String>();
+
     contact_number = json['contact_number'];
     contact_whatsapp_number = json['contact_whatsapp_number'];
     company_sector = json['company_sector']?.cast<String>();
@@ -53,22 +58,24 @@ class CreateCompanyDetailRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['company_identity_number'] = this.company_identity_number;
-    data['company_name'] = this.company_name;
-    data['contact_name'] = this.contact_name;
-    data['contact_number'] = this.contact_number;
-    data['contact_whatsapp_number'] = this.contact_whatsapp_number;
-    data['company_sector'] = this.company_sector;
-    data['contact_designation'] = this.contact_designation;
-    data['company_website'] = this.company_website;
-    data['contact_email'] = this.contact_email;
-    data['reporting_branch'] = this.reporting_branch;
-    data['reporting_address'] = this.reporting_address;
-    data['city'] = this.city;
-    data['company_landline'] = this.company_landline;
-    data['company_logo'] = this.company_logo;
-    data['company_loi'] = this.company_loi;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['company_identity_number'] = company_identity_number;
+    data['hub_id'] = hub_id;
+
+    data['company_name'] = company_name;
+    data['contact_name'] = contact_name;
+    data['contact_number'] = contact_number;
+    data['contact_whatsapp_number'] = contact_whatsapp_number;
+    data['company_sector'] = company_sector;
+    data['contact_designation'] = contact_designation;
+    data['company_website'] = company_website;
+    data['contact_email'] = contact_email;
+    data['reporting_branch'] = reporting_branch;
+    data['reporting_address'] = reporting_address;
+    data['city'] = city;
+    data['company_landline'] = company_landline;
+    data['company_logo'] = company_logo;
+    data['company_loi'] = company_loi;
     return data;
   }
 }

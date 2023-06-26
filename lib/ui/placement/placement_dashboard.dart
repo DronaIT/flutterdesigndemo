@@ -163,283 +163,285 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
         children: [
           Container(
             margin: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                Visibility(
-                  visible: companyApproach,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_company_approach, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Get.to(() => const CompanyApproach());
-                    },
-                  ),
-                ),
-                Visibility(
-                  visible: createCompany,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Get.to(() => const CompanyDetail());
-                    },
-                  ),
-                ),
-                Visibility(
-                  visible: getCompanyDetail,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: companyApproach,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [Text(PreferenceUtils.getIsLogin() != 3 ? strings_name.str_view_create_company : strings_name.str_company_detail, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)]),
-                      ),
-                    ),
-                    onTap: () {
-                      if (PreferenceUtils.getIsLogin() != 3) {
-                        Get.to(() => const GetCompanyDetail(), arguments: editCompanyDetail);
-                      } else {
-                        var companyData = PreferenceUtils.getLoginDataOrganization();
-                        Get.to(const CompanyDetail(), arguments: companyData.company_code);
-                      }
-                    },
-                  ),
-                ),
-                // Visibility(
-                //   visible: createJobsAlerts,
-                //   child: GestureDetector(
-                //     child: Card(
-                //       elevation: 5,
-                //       child: Container(
-                //         color: colors_name.colorWhite,
-                //         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: const [Text(strings_name.str_create_job_alert, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                //             Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                //         ),
-                //       ),
-                //     ),
-                //     onTap: () {
-                //       Get.to(() => const JobOpportunityForm());
-                //     },
-                //   ),
-                // ),
-                //SizedBox(height: 5.h),
-                Visibility(
-                  visible: applyInternship,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_apply_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                            children: const [Text(strings_name.str_company_approach, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const CompanyApproach());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const ApplyForInternship());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: appliedInternship,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_applied_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: createCompany,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const CompanyDetail());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const AppliedInternship());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: shortListedInternship,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_short_listed_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: getCompanyDetail,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [Text(PreferenceUtils.getIsLogin() != 3 ? strings_name.str_view_create_company : strings_name.str_company_detail, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)]),
                         ),
                       ),
+                      onTap: () {
+                        if (PreferenceUtils.getIsLogin() != 3) {
+                          Get.to(() => const GetCompanyDetail(), arguments: editCompanyDetail);
+                        } else {
+                          var companyData = PreferenceUtils.getLoginDataOrganization();
+                          Get.to(const CompanyDetail(), arguments: companyData.company_code);
+                        }
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const ShortListedForInternship());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: approvedList,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_approved_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  // Visibility(
+                  //   visible: createJobsAlerts,
+                  //   child: GestureDetector(
+                  //     child: Card(
+                  //       elevation: 5,
+                  //       child: Container(
+                  //         color: colors_name.colorWhite,
+                  //         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  //         child: Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: const [Text(strings_name.str_create_job_alert, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                  //             Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     onTap: () {
+                  //       Get.to(() => const JobOpportunityForm());
+                  //     },
+                  //   ),
+                  // ),
+                  //SizedBox(height: 5.h),
+                  Visibility(
+                    visible: applyInternship,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_apply_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const ApplyForInternship());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const ApprovedInternship());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: publishedList,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_published_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: appliedInternship,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_applied_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const AppliedInternship());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const PublishInternship());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: shortListed,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_sortlist_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: shortListedInternship,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_short_listed_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const ShortListedForInternship());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const ShortListStudent());
-                    },
                   ),
-                ),
+                  Visibility(
+                    visible: approvedList,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_approved_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Get.to(() => const ApprovedInternship());
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: publishedList,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_published_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Get.to(() => const PublishInternship());
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: shortListed,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_sortlist_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Get.to(() => const ShortListStudent());
+                      },
+                    ),
+                  ),
 
-                Visibility(
-                  visible: selectedStudent,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_selected_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: selectedStudent,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_selected_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const SelectedStudentList());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const SelectedStudentList());
-                    },
                   ),
-                ),
 
-                Visibility(
-                  visible: selectedInternship,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_selected_for_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: selectedInternship,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_selected_for_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const SelectedForInternship());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const SelectedForInternship());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: completedInternShip,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_completed_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: completedInternShip,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_completed_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const CompletedInternList());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const CompletedInternList());
-                    },
                   ),
-                ),
-                Visibility(
-                  visible: uploadResume,
-                  child: GestureDetector(
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        color: colors_name.colorWhite,
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_upload_resume, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                  Visibility(
+                    visible: uploadResume,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_upload_resume, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        Get.to(() => const UploadDocumentsPlacement());
+                      },
                     ),
-                    onTap: () {
-                      Get.to(() => const UploadDocumentsPlacement());
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Visibility(

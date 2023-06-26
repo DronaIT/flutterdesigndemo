@@ -20,11 +20,12 @@ class JobOpportunityResponse {
   List<String>? specializationIds;
   List<String>? companyCode;
   List<String>? companyName;
-  List<String>? reportingAddress;
+  List<dynamic>? reportingAddress;
   List<String>? reportingBranch;
-  List<String>? city;
+  List<dynamic>? city;
   String? jobCode;
   List<String>? contactNameFromCompanyId;
+
   String? joiningDate;
   List<String>? selectedStudents;
   List<String>? attendance_data;
@@ -132,9 +133,9 @@ class JobOpportunityResponse {
     specializationIds = json['specialization_ids']?.cast<String>();
     companyCode = json['company_code']?.cast<String>();
     companyName = json['company_name']?.cast<String>();
-    reportingAddress = json['reporting_address']?.cast<String>();
-    reportingBranch = json['reporting_branch']?.cast<String>();
-    city = json['city']?.cast<String>();
+    reportingAddress = json['reporting_address']?.cast<dynamic>() ?? " ";
+    reportingBranch = json['reporting_branch']?.cast<String>() ;
+    city = json['city']?.cast<dynamic>() ?? " ";
     jobCode = json['job_code'];
     contactNameFromCompanyId = json['contact_name (from company_id)']?.cast<String>();
     joiningDate = json['joining_date'];

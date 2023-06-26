@@ -18,6 +18,7 @@ import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../models/base_api_response.dart';
 import '../../models/company_detail_response.dart';
+import '../../models/hub_response.dart';
 import '../../models/request/create_company_det_req.dart';
 import '../../models/typeofsectoreresponse.dart';
 import '../../utils/preference.dart';
@@ -53,6 +54,11 @@ class _CompanyDetailState extends State<CompanyDetail> {
   final companyDetailRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? compnayDetailData = [];
+  BaseApiResponseWithSerializable<HubResponse>? hubResponse;
+  String hubValue = "";
+  String hubRecordId = "";
+
+  List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
 
   var cloudinary;
 
@@ -60,6 +66,37 @@ class _CompanyDetailState extends State<CompanyDetail> {
   void initState() {
     super.initState();
     typeofResponseArray = PreferenceUtils.getTypeOFSectoreList().records;
+    hubResponseArray = PreferenceUtils.getHubList().records;
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
     initialization();
   }
@@ -70,7 +107,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
         isVisible = true;
       });
       var query = "FIND('${Get.arguments}', ${TableNames.CLM_COMPANY_CODE}, 0)";
-      try{
+      try {
         var data = await companyDetailRepository.getCompanyDetailApi(query);
         if (data.records?.isNotEmpty == true) {
           setState(() {
@@ -91,11 +128,27 @@ class _CompanyDetailState extends State<CompanyDetail> {
               reportBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
               reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
               cityController.text = compnayDetailData![0].fields!.city.toString();
+              if(compnayDetailData![0].fields!.company_loi != null){
+                loiPath = compnayDetailData![0].fields!.company_loi!.first.url!;
+                loiTitle = compnayDetailData![0].fields!.company_loi!.first.filename!;
+
+              }
+
               for (var i = 0; i < typeofResponseArray!.length; i++) {
-                if (compnayDetailData![0].fields!.id == typeofResponseArray![i].fields!.id) {
+                if (compnayDetailData![0].fields!.companySector?.first == typeofResponseArray![i].id) {
                   setState(() {
                     typeOfResponse = typeofResponseArray![i];
                     typeofValue = typeofResponseArray![i].id!.toString();
+                  });
+                  break;
+                }
+              }
+              for (var i = 0; i < hubResponseArray!.length; i++) {
+                if (compnayDetailData![0].fields!.hubIds?.first == hubResponseArray![i].id) {
+                  setState(() {
+                    hubResponse = hubResponseArray![i];
+                    hubValue = hubResponseArray![i].fields!.hubId.toString();
+                    hubRecordId= hubResponseArray![i].id!;
                   });
                   break;
                 }
@@ -105,7 +158,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
         } else {
           Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
@@ -188,6 +241,36 @@ class _CompanyDetailState extends State<CompanyDetail> {
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(height: 5.h),
+                  custom_text(
+                    text: strings_name.str_select_hub,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    bottomValue: 0,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                    width: MediaQuery.of(context).size.width,
+                    child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                      value: hubResponse,
+                      elevation: 16,
+                      style: blackText16,
+                      focusColor: Colors.white,
+                      onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                        setState(() {
+                          hubValue = newValue!.fields!.hubId!.toString();
+                          hubRecordId = newValue.id!;
+                          hubResponse = newValue;
+                        });
+                      },
+                      items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                        return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                          value: value,
+                          child: Text(value.fields!.hubName!.toString()),
+                        );
+                      }).toList(),
+                    ),
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
@@ -376,6 +459,8 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           Utils.showSnackBar(context, strings_name.str_empty_company_id_no);
                         } else if (typeofValue.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_type_of);
+                        } else if (hubValue.toString().trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_hub);
                         } else if (nameOfContactPController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_contact_person_name);
                         } else if (contactPdesiController.text.trim().isEmpty) {
@@ -403,7 +488,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                             );
                             updatedPath = response.secureUrl;
                           }
-                          if (loiPath.isNotEmpty) {
+                          if (loiPath.isNotEmpty && !loiPath.contains("https")) {
                             CloudinaryResponse response = await cloudinary.uploadFile(
                               CloudinaryFile.fromFile(loiPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI),
                             );
@@ -423,13 +508,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           response.reporting_branch = reportBranchController.text.trim().toString();
                           response.reporting_address = reportAddressController.text.trim().toString();
                           response.city = cityController.text.trim().toString();
+                          response.hub_id = hubRecordId.split(",");
 
                           if (updatedPath.isNotEmpty) {
                             Map<String, dynamic> map = Map();
                             map["url"] = updatedPath;
                             List<Map<String, dynamic>> listData = [];
                             listData.add(map);
-
                             response.company_logo = listData;
                           }
 
@@ -438,7 +523,12 @@ class _CompanyDetailState extends State<CompanyDetail> {
                             map["url"] = loiFilePath;
                             List<Map<String, dynamic>> listData = [];
                             listData.add(map);
-
+                            response.company_loi = listData;
+                          }else{
+                            Map<String, dynamic> map = Map();
+                            map["url"] = loiPath;
+                            List<Map<String, dynamic>> listData = [];
+                            listData.add(map);
                             response.company_loi = listData;
                           }
 
