@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -34,8 +35,9 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
   int helpDeskTypeSelectedId = 0;
 
   HelpdeskResponses? helpDeskTypeResponse;
-  String? helpDeskTypeResponseId;
-  bool canUpdateTicketStatus = false, canUpdateTicketCategory = false, updateStatusNow = false, updateCategoryNow = false, isUpdated = false;
+  String? helpDeskTypeResponseId, title;
+  bool canUpdateTicketStatus = false, canUpdateTicketCategory = false;
+
   TextEditingController helpDoneController = TextEditingController();
 
   List<String> ticketStatusArray = <String>[TableNames.TICKET_STATUS_OPEN, TableNames.TICKET_STATUS_INPROGRESS, TableNames.TICKET_STATUS_HOLD, TableNames.TICKET_STATUS_RESOLVED, TableNames.TICKET_STATUS_SUGGESTION];
@@ -48,9 +50,10 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
     canUpdateTicketStatus = Get.arguments[1]["canUpdateTicketStatus"];
     canUpdateTicketCategory = Get.arguments[2]["canUpdateTicketCategory"];
     helpDeskTypeResponseId = Get.arguments[3]["recordId"];
-    if(canUpdateTicketCategory) {
+    title = Get.arguments[4]["title"];
+    ticketValue = helpDeskTypeResponse?.status ?? TableNames.TICKET_STATUS_OPEN;
+    if (canUpdateTicketCategory) {
       helpDeskType();
-      ticketValue = helpDeskTypeResponse?.status ?? TableNames.TICKET_STATUS_OPEN;
     }
   }
 
@@ -81,13 +84,10 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_help_desk_detail),
+      appBar: AppWidgets.appBarWithoutBack(title ?? strings_name.str_help_desk_detail),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -128,16 +128,16 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                   custom_text(
                     text: "${helpDeskTypeResponse!.notes}",
                     textStyles: blackText16,
-                    topValue: 0,
+                    topValue: 5,
                     bottomValue: 5,
                     leftValue: 5,
-                    maxLines: 4,
+                    maxLines: 5000,
                   ),
                   SizedBox(height: 10.h),
                   Row(
                     children: [
                       custom_text(
-                        text: "${strings_name.str_status}",
+                        text: strings_name.str_status,
                         textStyles: primaryTextSemiBold16,
                         topValue: 5,
                         bottomValue: 5,
@@ -150,6 +150,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           child: custom_text(text: helpDeskTypeResponse!.status.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                     ],
                   ),
+                  SizedBox(height: 5.h),
                   Visibility(
                     visible: helpDeskTypeResponse!.resolutionRemark?.trim().isNotEmpty == true,
                     child: custom_text(
@@ -161,132 +162,20 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                       maxLines: 5000,
                     ),
                   ),
-                  Visibility(visible: helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED && canUpdateTicketStatus, child: CustomButton(text: strings_name.str_update_ticket_status, click: () {
-                    setState(() {
-                      updateCategoryNow = false;
-                      updateStatusNow = true;
-                    });
-                  })),
-                  Visibility(visible: helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED && canUpdateTicketCategory, child: CustomButton(text: strings_name.str_update_ticket_type, click: () {
-                    setState(() {
-                      updateStatusNow = false;
-                      updateCategoryNow = true;
-                    });
-                  })),
                   Visibility(
-                    visible: updateStatusNow,
-                    child: Column(
-                      children: [
-                        custom_text(
-                          text: strings_name.str_status,
-                          alignment: Alignment.topLeft,
-                          textStyles: blackTextSemiBold16,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                                width: viewWidth,
-                                child: DropdownButtonFormField<String>(
-                                  elevation: 16,
-                                  value: ticketValue,
-                                  style: blackText16,
-                                  focusColor: Colors.white,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      ticketValue = newValue!;
-                                    });
-                                  },
-                                  items: ticketStatusArray.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Visibility(
-                          visible: ticketValue != TableNames.TICKET_STATUS_OPEN && ticketValue != TableNames.TICKET_STATUS_INPROGRESS,
-                          child: custom_edittext(
-                            type: TextInputType.multiline,
-                            textInputAction: TextInputAction.newline,
-                            controller: helpDoneController,
-                            topValue: 5,
-                            maxLines: 5,
-                            minLines: 4,
-                            hintText: strings_name.str_type_here,
-                            maxLength: 5000,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        CustomButton(text: strings_name.str_update, click: (){
-                          Map<String, String> ticketFormula = {};
-                          ticketFormula["Status"] = ticketValue;
-                          if(ticketValue != TableNames.TICKET_STATUS_OPEN && ticketValue != TableNames.TICKET_STATUS_INPROGRESS){
-                            if(helpDoneController.text.trim().isNotEmpty) {
-                              ticketFormula["resolution_remark"] = helpDoneController.text.trim();
-                            }
-                          }
-                          updateTicket(ticketFormula);
-                        })
-                      ],
-                    ),
-                  ),
+                      visible: helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED && canUpdateTicketStatus,
+                      child: CustomButton(
+                          text: strings_name.str_update_ticket_status,
+                          click: () {
+                            showStatusUpdateDialog(viewWidth);
+                          })),
                   Visibility(
-                    visible: updateCategoryNow,
-                    child: Column(
-                      children: [
-                        custom_text(
-                          text: strings_name.str_help_desk_type,
-                          alignment: Alignment.topLeft,
-                          textStyles: blackTextSemiBold16,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                                width: viewWidth,
-                                child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
-                                  value: helpDeskTypeSelected,
-                                  elevation: 16,
-                                  style: blackText16,
-                                  focusColor: Colors.white,
-                                  onChanged: (BaseApiResponseWithSerializable<HelpDeskTypeResponse>? newValue) {
-                                    setState(() {
-                                      helpDeskTypeSelectedId = newValue!.fields!.id!;
-                                      helpDeskTypeSelected = newValue;
-                                    });
-                                  },
-                                  items: helpDeskTypeArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
-                                    return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
-                                      value: value,
-                                      child: Text(value.fields!.title.toString()),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-                        CustomButton(text: strings_name.str_update, click: (){
-                          Map<String, String> ticketFormula = {};
-                          ticketFormula["ticket_type_id"] = helpDeskTypeSelected?.id ?? "";
-
-                          updateTicket(ticketFormula);
-                        })
-                      ],
-                    ),
-                  ),
+                      visible: helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED && canUpdateTicketCategory,
+                      child: CustomButton(
+                          text: strings_name.str_update_ticket_type,
+                          click: () {
+                            showCategoryUpdateDialog(viewWidth);
+                          })),
                 ],
               ),
             ),
@@ -299,7 +188,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
     ));
   }
 
-  Future<void> updateTicket(Map<String, String> ticketFormula) async {
+  Future<void> updateTicket(Map<String, dynamic> ticketFormula) async {
     setState(() {
       isVisible = true;
     });
@@ -308,13 +197,10 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
       if (resp != null) {
         Utils.showSnackBarUsingGet(strings_name.str_update_ticket_message);
         setState(() {
-          updateCategoryNow = false;
-          updateStatusNow = false;
-          isUpdated = true;
-
           helpDeskTypeResponse = resp.fields;
           isVisible = false;
         });
+        Get.back(result: true);
       } else {
         setState(() {
           isVisible = false;
@@ -327,5 +213,173 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
+  }
+
+  Future<void> showCategoryUpdateDialog(double viewWidth) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, StateSetter setState) {
+            return Dialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    custom_text(
+                      text: strings_name.str_help_desk_type,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                            width: viewWidth,
+                            child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
+                              value: helpDeskTypeSelected,
+                              elevation: 16,
+                              style: blackText16,
+                              focusColor: Colors.white,
+                              onChanged: (BaseApiResponseWithSerializable<HelpDeskTypeResponse>? newValue) {
+                                setState(() {
+                                  helpDeskTypeSelectedId = newValue!.fields!.id!;
+                                  helpDeskTypeSelected = newValue;
+                                });
+                              },
+                              items: helpDeskTypeArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
+                                return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
+                                  value: value,
+                                  child: Text(value.fields!.title.toString()),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    CustomButton(
+                        text: strings_name.str_update,
+                        click: () {
+                          Get.back();
+
+                          List<String> assigned_to = [];
+                          List<String> authority_of = [];
+                          var hubName = PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0];
+
+                          if (helpDeskTypeSelected!.fields!.centerAutority != null) {
+                            for (int j = 0; j < helpDeskTypeSelected!.fields!.centerAutority!.length; j++) {
+                              if (helpDeskTypeSelected!.fields!.centerAuthorityHubId![j] == hubName) {
+                                if (authority_of.isEmpty || !authority_of.contains(helpDeskTypeSelected!.fields!.centerAutority![j])) {
+                                  authority_of.add(helpDeskTypeSelected!.fields!.centerAutority![j]);
+                                }
+                              }
+                            }
+                          }
+
+                          if (helpDeskTypeSelected!.fields!.concernPerson != null) {
+                            for (int j = 0; j < helpDeskTypeSelected!.fields!.concernPerson!.length; j++) {
+                              if (helpDeskTypeSelected!.fields!.concernPersonHubId![j] == hubName) {
+                                if (assigned_to.isEmpty || !assigned_to.contains(helpDeskTypeSelected!.fields!.concernPerson![j])) {
+                                  assigned_to.add(helpDeskTypeSelected!.fields!.concernPerson![j]);
+                                }
+                              }
+                            }
+                          }
+
+                          Map<String, dynamic> ticketFormula = {};
+                          ticketFormula["ticket_type_id"] = [helpDeskTypeSelected?.id] ?? [];
+                          ticketFormula["assigned_to"] = assigned_to;
+                          ticketFormula["authority_of"] = authority_of;
+
+                          updateTicket(ticketFormula);
+                        }),
+                  ],
+                ));
+          });
+        });
+  }
+
+  Future<void> showStatusUpdateDialog(double viewWidth) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, StateSetter setState) {
+            return Dialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    custom_text(
+                      text: strings_name.str_status,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                            width: viewWidth,
+                            child: DropdownButtonFormField<String>(
+                              elevation: 16,
+                              value: ticketValue,
+                              style: blackText16,
+                              focusColor: Colors.white,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  ticketValue = newValue!;
+                                });
+                              },
+                              items: ticketStatusArray.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Visibility(
+                      visible: ticketValue != TableNames.TICKET_STATUS_OPEN && ticketValue != TableNames.TICKET_STATUS_INPROGRESS,
+                      child: custom_edittext(
+                        type: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                        controller: helpDoneController,
+                        topValue: 5,
+                        maxLines: 5,
+                        minLines: 4,
+                        hintText: strings_name.str_type_here,
+                        maxLength: 5000,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    CustomButton(
+                        text: strings_name.str_update,
+                        click: () {
+                          Get.back();
+
+                          Map<String, dynamic> ticketFormula = {};
+                          ticketFormula["Status"] = ticketValue;
+                          if (ticketValue != TableNames.TICKET_STATUS_OPEN && ticketValue != TableNames.TICKET_STATUS_INPROGRESS) {
+                            if (helpDoneController.text.trim().isNotEmpty) {
+                              ticketFormula["resolution_remark"] = helpDoneController.text.trim();
+                            }
+                          }
+                          updateTicket(ticketFormula);
+                        })
+                  ],
+                ));
+          });
+        });
   }
 }

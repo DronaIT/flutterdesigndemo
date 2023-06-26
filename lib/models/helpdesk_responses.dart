@@ -24,6 +24,12 @@ class HelpdeskResponses {
 
   String? createdOn;
   String? resolutionRemark;
+  String? fieldType;
+
+  String? deadline;
+  String? required_time;
+  String? actual_time_taken;
+  String? actual_finished_on;
 
   HelpdeskResponses(
       {this.ticketId,
@@ -47,6 +53,11 @@ class HelpdeskResponses {
         this.companyContactNumber,
         this.createdOn,
         this.resolutionRemark,
+        this.fieldType,
+        this.deadline,
+        this.required_time,
+        this.actual_time_taken,
+        this.actual_finished_on,
       });
 
   HelpdeskResponses.fromJson(Map<String, dynamic> json) {
@@ -74,6 +85,12 @@ class HelpdeskResponses {
     companyContactNumber = json['company_contact_number']?.cast<String>();
     createdOn = json['created_on'];
     resolutionRemark = json['resolution_remark'];
+    fieldType = json['field_type'];
+
+    deadline = json['deadline'];
+    required_time = json['required_time'];
+    actual_time_taken = json['actual_time_taken'];
+    actual_finished_on = json['actual_finished_on'];
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +120,12 @@ class HelpdeskResponses {
 
     data['created_on'] = this.createdOn;
     data['resolution_remark'] = this.resolutionRemark;
+    data['field_type'] = this.fieldType;
+
+    data['deadline'] = this.deadline;
+    data['required_time'] = this.required_time;
+    data['actual_time_taken'] = this.actual_time_taken;
+    data['actual_finished_on'] = this.actual_finished_on;
     return data;
   }
 }

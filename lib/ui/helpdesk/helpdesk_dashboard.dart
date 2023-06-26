@@ -76,12 +76,11 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
             canUpdateTicketCategory = true;
           }
         }
-        getRecords();
       } else {
         setState(() {
           isVisible = false;
         });
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+        // Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
     } on DioError catch (e) {
       setState(() {
@@ -89,6 +88,8 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    } finally {
+      getRecords();
     }
   }
 
@@ -98,7 +99,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     });
     var query = "AND(${TableNames.CLM_FIELD_TYPE}='${TableNames.HELPDESK_TYPE_TICKET}', OR(";
     if (isLogin == 1) {
-      query += "${TableNames.CLM_CREATED_BY_STUDENT}='$loginId'";
+      query += "${TableNames.CLM_CREATED_BY_STUDENT}='${PreferenceUtils.getLoginData().mobileNumber}'";
     } else if (isLogin == 2) {
       query += "${TableNames.CLM_CREATED_BY_EMPLOYEE}='$loginId'";
     } else if (isLogin == 3) {
@@ -106,7 +107,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     }
 
     if (canViewOther) {
-      query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
+      // query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
       query += ", FIND('$loginId', ${TableNames.CLM_AUTHORITY_OF}, 0)";
     }
     query += "))";
@@ -195,9 +196,10 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                             onTap: () {
                               Get.to(const HelpdeskDetail(), arguments: [
                                 {"fields": myTicketList?[index].fields},
-                                {"canUpdateTicketStatus": canUpdateTicketStatus},
-                                {"canUpdateTicketCategory": canUpdateTicketCategory},
-                                {"recordId": myTicketList?[index].id}
+                                {"canUpdateTicketStatus": false},
+                                {"canUpdateTicketCategory": false},
+                                {"recordId": myTicketList?[index].id},
+                                {"title": strings_name.str_help_desk_detail},
                               ]);
                             },
                             child: Column(children: [
@@ -275,7 +277,8 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                           {"fields": othersTicketList?[index].fields},
                                           {"canUpdateTicketStatus": canUpdateTicketStatus},
                                           {"canUpdateTicketCategory": canUpdateTicketCategory},
-                                          {"recordId": othersTicketList?[index].id}
+                                          {"recordId": othersTicketList?[index].id},
+                                          {"title": strings_name.str_help_desk_detail},
                                         ]);
                                       },
                                       child: Column(children: [
@@ -315,7 +318,15 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                       topValue: 0),
                                                 ],
                                               ),
-                                              custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                              custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 5, bottomValue: 10, leftValue: 5, maxLines: 2),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 5),
+                                                  Expanded(child: custom_text(text: othersTicketList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0, rightValue: 5, maxLines: 5000)),
+                                                ],
+                                              ),
                                               Row(
                                                 children: [
                                                   custom_text(

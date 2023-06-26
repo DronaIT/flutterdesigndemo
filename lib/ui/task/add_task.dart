@@ -6,10 +6,14 @@ import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/style/picker_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/request/help_desk_req.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
+import 'package:flutterdesigndemo/ui/task/employee_selection.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
@@ -41,8 +45,11 @@ class _AddTaskState extends State<AddTask> {
 
   TextEditingController taskNoteController = TextEditingController();
   TextEditingController durationController = TextEditingController();
+  TextEditingController deadlineController = TextEditingController();
+  TextEditingController actualDurationController = TextEditingController();
+  TextEditingController actualFinishedOnController = TextEditingController();
 
-  int durationHrsController = 0, durationMinController = 0, taskTypeId = 0;
+  int taskTypeId = 0;
   String taskFilePath = "", taskFileTitle = "";
 
   List<String> assignedTo = [];
@@ -51,10 +58,16 @@ class _AddTaskState extends State<AddTask> {
   var hubName;
   var isLogin = 0;
 
+  var fromUpdate = false;
+  HelpdeskResponses? helpDeskTypeResponse;
+  String? helpDeskTypeResponseId;
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
+  String offset = "";
+
   @override
   void initState() {
     super.initState();
-    helpDeskType();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
     isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
@@ -67,14 +80,85 @@ class _AddTaskState extends State<AddTask> {
       var loginData = PreferenceUtils.getLoginDataOrganization();
       hubName = [""];
     }
+
+    if (Get.arguments != null) {
+      helpDeskTypeResponse = Get.arguments[0]["fields"];
+      fromUpdate = Get.arguments[1]["fromUpdate"];
+      helpDeskTypeResponseId = Get.arguments[2]["recordId"];
+
+      taskNoteController.text = helpDeskTypeResponse?.notes ?? "";
+      durationController.text = helpDeskTypeResponse?.required_time ?? "";
+      if (helpDeskTypeResponse?.deadline != null && helpDeskTypeResponse?.deadline?.isNotEmpty == true) {
+        deadlineController.text = DateFormat("yyyy-MM-dd hh:mm aa").format(DateTime.parse(helpDeskTypeResponse!.deadline!).toLocal());
+      }
+
+      if (helpDeskTypeResponse?.assignedTo != null && helpDeskTypeResponse?.assignedTo?.isNotEmpty == true) {
+        if (helpDeskTypeResponse?.assignedTo![0] != PreferenceUtils.getLoginRecordId()) {
+          getEmployeeData();
+        }
+      }
+    }
+  }
+
+  getEmployeeData() async {
+    setState(() {
+      if (!isVisible) isVisible = true;
+    });
+
+    var query = "OR(";
+    for (int i = 0; i < helpDeskTypeResponse!.assignedMobileNumber!.length; i++) {
+      query += "${TableNames.TB_USERS_PHONE}='${helpDeskTypeResponse!.assignedMobileNumber![i]}'";
+      if (i + 1 < helpDeskTypeResponse!.assignedMobileNumber!.length) query += ",";
+    }
+    query += ")";
+    print(query);
+
+    try {
+      var data = await apiRepository.getEmployeeListApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          employeeData?.clear();
+        }
+        employeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          getEmployeeData();
+        } else {
+          employeeData?.sort((a, b) {
+            var adate = a.fields!.employeeName;
+            var bdate = b.fields!.employeeName;
+            return adate!.compareTo(bdate!);
+          });
+          for (var j = 0; j < employeeData!.length; j++) {
+            employeeData![j].fields!.selected = true;
+          }
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } else {
+        setState(() {
+          isVisible = false;
+          if (offset.isEmpty) {
+            employeeData = [];
+          }
+        });
+        offset = "";
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_task),
+      appBar: AppWidgets.appBarWithoutBack(fromUpdate ? strings_name.str_update_task : strings_name.str_add_task),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -82,41 +166,55 @@ class _AddTaskState extends State<AddTask> {
               margin: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  custom_text(
-                    text: strings_name.str_task_type,
-                    alignment: Alignment.topLeft,
-                    textStyles: blackTextSemiBold16,
-                  ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                          width: viewWidth,
-                          child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
-                            value: taskTypeResponses,
-                            elevation: 16,
-                            style: blackText16,
-                            focusColor: Colors.white,
-                            onChanged: (BaseApiResponseWithSerializable<HelpDeskTypeResponse>? newValue) {
-                              setState(() {
-                                taskTypeId = newValue!.fields!.id!;
-                                taskTypeResponses = newValue;
-                              });
-                            },
-                            items: taskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
-                              return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
-                                value: value,
-                                child: Text(value.fields!.title.toString()),
-                              );
-                            }).toList(),
-                          ),
+                      custom_text(
+                        text: strings_name.str_assigned_to,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                      GestureDetector(
+                        child: custom_text(
+                          text: employeeData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                          alignment: Alignment.topLeft,
+                          textStyles: primaryTextSemiBold16,
                         ),
+                        onTap: () {
+                          Get.to(const EmployeeSelection(), arguments: employeeData)?.then((result) {
+                            if (result != null) {
+                              setState(() {
+                                employeeData = result;
+                              });
+                            }
+                          });
+                        },
                       ),
                     ],
                   ),
+                  employeeData!.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: employeeData?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 2,
+                              child: GestureDetector(
+                                child: Container(
+                                  color: colors_name.colorWhite,
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                  ),
+                                ),
+                                onTap: () {
+                                  // Get.to(const SpecializationDetail(), arguments: employeeData![index].fields?.id);
+                                },
+                              ),
+                            );
+                          })
+                      : Container(),
                   SizedBox(height: 5.h),
                   custom_text(
                     text: strings_name.str_task_detail,
@@ -134,14 +232,14 @@ class _AddTaskState extends State<AddTask> {
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
-                    text: strings_name.str_task_detail,
+                    text: strings_name.str_required_duration,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),
                   InkWell(
                     child: IgnorePointer(
                       child: custom_edittext(
-                        hintText: strings_name.str_required_duration,
+                        hintText: strings_name.str_select_duration,
                         type: TextInputType.none,
                         textInputAction: TextInputAction.next,
                         controller: durationController,
@@ -149,9 +247,123 @@ class _AddTaskState extends State<AddTask> {
                       ),
                     ),
                     onTap: () {
-                      onTap();
+                      onTap(1);
                     },
                   ),
+                  SizedBox(height: 5.h),
+                  custom_text(
+                    text: strings_name.str_set_deadline,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  InkWell(
+                    child: IgnorePointer(
+                      child: custom_edittext(
+                        hintText: strings_name.str_set_deadline,
+                        type: TextInputType.none,
+                        textInputAction: TextInputAction.next,
+                        controller: deadlineController,
+                        topValue: 0,
+                      ),
+                    ),
+                    onTap: () {
+                      DateTime dateSelected = DateTime.now();
+                      TimeOfDay timeSelected = TimeOfDay.now();
+                      if (deadlineController.text.isNotEmpty || false) {
+                        dateSelected = DateFormat("yyyy-MM-dd").parse(deadlineController.text);
+                        DateTime time = DateFormat("hh:mm aa").parse(deadlineController.text);
+                        timeSelected = TimeOfDay.fromDateTime(time);
+                      }
+                      showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100)).then((pickedDate) {
+                        if (pickedDate == null) {
+                          return;
+                        }
+                        setState(() {
+                          showTimePicker(context: context, initialTime: timeSelected).then((pickedTime) {
+                            if (pickedTime == null) {
+                              return;
+                            }
+                            setState(() {
+                              var dateTime = pickedDate;
+                              var formatter = DateFormat('yyyy-MM-dd hh:mm aa');
+                              var time = DateTime(dateTime.year, dateTime.month, dateTime.day, pickedTime.hour, pickedTime.minute);
+                              deadlineController.text = formatter.format(time);
+                            });
+                          });
+                        });
+                      });
+                    },
+                  ),
+                  fromUpdate
+                      ? Column(
+                          children: [
+                            SizedBox(height: 5.h),
+                            custom_text(
+                              text: strings_name.str_actual_duration,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                            ),
+                            InkWell(
+                              child: IgnorePointer(
+                                child: custom_edittext(
+                                  hintText: strings_name.str_select_duration,
+                                  type: TextInputType.none,
+                                  textInputAction: TextInputAction.next,
+                                  controller: actualDurationController,
+                                  topValue: 0,
+                                ),
+                              ),
+                              onTap: () {
+                                onTap(2);
+                              },
+                            ),
+                            SizedBox(height: 5.h),
+                            custom_text(
+                              text: strings_name.str_actual_date,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                            ),
+                            InkWell(
+                              child: IgnorePointer(
+                                child: custom_edittext(
+                                  hintText: strings_name.str_actual_date,
+                                  type: TextInputType.none,
+                                  textInputAction: TextInputAction.next,
+                                  controller: actualFinishedOnController,
+                                  topValue: 0,
+                                ),
+                              ),
+                              onTap: () {
+                                DateTime dateSelected = DateTime.now();
+                                TimeOfDay timeSelected = TimeOfDay.now();
+                                if (actualFinishedOnController.text.isNotEmpty) {
+                                  dateSelected = DateFormat("yyyy-MM-dd").parse(actualFinishedOnController.text);
+                                  DateTime time = DateFormat("hh:mm aa").parse(actualFinishedOnController.text);
+                                  timeSelected = TimeOfDay.fromDateTime(time);
+                                }
+                                showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime(2005), lastDate: DateTime(2100)).then((pickedDate) {
+                                  if (pickedDate == null) {
+                                    return;
+                                  }
+                                  setState(() {
+                                    showTimePicker(context: context, initialTime: timeSelected).then((pickedTime) {
+                                      if (pickedTime == null) {
+                                        return;
+                                      }
+                                      setState(() {
+                                        var dateTime = pickedDate;
+                                        var formatter = DateFormat('yyyy-MM-dd hh:mm aa');
+                                        var time = DateTime(dateTime.year, dateTime.month, dateTime.day, pickedTime.hour, pickedTime.minute);
+                                        actualFinishedOnController.text = formatter.format(time);
+                                      });
+                                    });
+                                  });
+                                });
+                              },
+                            ),
+                          ],
+                        )
+                      : Container(),
                   SizedBox(height: 5.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,81 +395,26 @@ class _AddTaskState extends State<AddTask> {
                   CustomButton(
                     text: strings_name.str_submit,
                     click: () async {
-                      if (taskTypeId == 0) {
-                        Utils.showSnackBar(context, strings_name.str_empty_type_task);
-                      } else if (taskNoteController.text.trim().toString().isEmpty) {
+                      if (taskNoteController.text.trim().toString().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_task_note);
+                      } else if (durationController.text.trim().toString().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_duration);
+                      } else if (deadlineController.text.trim().toString().isEmpty) {
+                        Utils.showSnackBar(context, strings_name.str_empty_deadline);
+                      } else if (fromUpdate && actualDurationController.text.trim().toString().isNotEmpty) {
+                        if (actualFinishedOnController.text.trim().toString().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_actual_date);
+                        } else {
+                          updateTask();
+                        }
+                      } else if (fromUpdate && actualFinishedOnController.text.trim().toString().isNotEmpty) {
+                        if (actualDurationController.text.trim().toString().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_actual_duration);
+                        } else {
+                          updateTask();
+                        }
                       } else {
-                        setState(() {
-                          isVisible = true;
-                        });
-                        if (taskFilePath.isNotEmpty) {
-                          CloudinaryResponse response = await cloudinary.uploadFile(
-                            CloudinaryFile.fromFile(taskFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
-                          );
-                          taskFilePath = response.secureUrl;
-                        }
-                        if (taskTypeResponses!.fields!.centerAutority != null) {
-                          for (int j = 0; j < taskTypeResponses!.fields!.centerAutority!.length; j++) {
-                            if (taskTypeResponses!.fields!.centerAuthorityHubId![j] == hubName[0]) {
-                              if (authorityOf.isEmpty || !authorityOf.contains(taskTypeResponses!.fields!.centerAutority![j])) {
-                                authorityOf.add(taskTypeResponses!.fields!.centerAutority![j]);
-                              }
-                            }
-                          }
-                        }
-
-                        if (taskTypeResponses!.fields!.concernPerson != null) {
-                          for (int j = 0; j < taskTypeResponses!.fields!.concernPerson!.length; j++) {
-                            if (taskTypeResponses!.fields!.concernPersonHubId![j] == hubName[0]) {
-                              if (assignedTo.isEmpty || !assignedTo.contains(taskTypeResponses!.fields!.concernPerson![j])) {
-                                assignedTo.add(taskTypeResponses!.fields!.concernPerson![j]);
-                              }
-                            }
-                          }
-                        }
-
-                        HelpDeskRequest helpDeskReq = HelpDeskRequest();
-                        helpDeskReq.ticket_type_id = taskTypeResponses?.id?.split("|||");
-                        helpDeskReq.Notes = taskNoteController.text.trim().toString();
-                        if (isLogin == 1) {
-                          helpDeskReq.createdByStudent = PreferenceUtils.getLoginRecordId().split(",");
-                        } else if (isLogin == 2) {
-                          helpDeskReq.createdByEmployee = PreferenceUtils.getLoginRecordId().split(",");
-                        } else if (isLogin == 3) {
-                          helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
-                        }
-                        if (taskFilePath.isNotEmpty) {
-                          Map<String, dynamic> map = Map();
-                          map["url"] = taskFilePath;
-                          List<Map<String, dynamic>> listData = [];
-                          listData.add(map);
-                          helpDeskReq.attachments = listData;
-                        }
-                        helpDeskReq.assigned_to = assignedTo;
-                        helpDeskReq.authority_of = authorityOf;
-                        helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TASK;
-                        try {
-                          var resp = await apiRepository.addHelpDeskApi(helpDeskReq);
-                          if (resp.id != null) {
-                            setState(() {
-                              isVisible = false;
-                            });
-                            Utils.showSnackBar(context, strings_name.str_create_ticket_message);
-                            await Future.delayed(const Duration(milliseconds: 2000));
-                            Get.back(result: true);
-                          } else {
-                            setState(() {
-                              isVisible = false;
-                            });
-                          }
-                        } on DioError catch (e) {
-                          setState(() {
-                            isVisible = false;
-                          });
-                          final errorMessage = DioExceptions.fromDioError(e).toString();
-                          Utils.showSnackBarUsingGet(errorMessage);
-                        }
+                        updateTask();
                       }
                     },
                   ),
@@ -273,49 +430,38 @@ class _AddTaskState extends State<AddTask> {
     ));
   }
 
-  Future<void> helpDeskType() async {
-    setState(() {
-      isVisible = true;
-    });
-    try {
-      var resp = await apiRepository.getHelpdesk();
-      if (resp != null) {
-        setState(() {
-          isVisible = false;
-          taskTypeResponse = resp.records;
-        });
-      } else {
-        setState(() {
-          isVisible = false;
-        });
-      }
-    } on DioError catch (e) {
-      setState(() {
-        isVisible = false;
-      });
-      final errorMessage = DioExceptions.fromDioError(e).toString();
-      Utils.showSnackBarUsingGet(errorMessage);
-    }
-  }
+  /*
+  *   durationType values
+  *   1 = deadlineDuration, 2 = actualDuration
+  */
+  void onTap(int durationType) {
+    var hourList = List.generate(250, (index) => (index).toString()).toList();
+    var minuteList = List.generate(59, (index) => (index).toString()).toList();
 
-  void onTap() {
-    final timeData = [
-      List.generate(250, (index) => (index + 1).toString()).toList(),
-      List.generate(59, (index) => (index + 1).toString()).toList(),
-    ];
+    final timeData = [hourList, minuteList];
 
     Pickers.showMultiPicker(
       context,
       data: timeData,
       suffix: [" Hour", " Minute"],
       onConfirm: (p, position) {
-        durationHrsController = p[0];
-        print(position.join(","));
+        if (position[0] != 0 || position[1] != 0) {
+          var durationHrsController = hourList[position[0]].split(" ").first;
+          var durationMinController = minuteList[position[1]].split(" ").first;
+
+          setState(() {
+            if (durationType == 1) {
+              durationController.text = "$durationHrsController:$durationMinController";
+            } else if (durationType == 2) {
+              actualDurationController.text = "$durationHrsController:$durationMinController";
+            }
+          });
+        }
       },
       pickerStyle: PickerStyle(
-        title: custom_text(text: strings_name.str_required_duration, textStyles: blackTextSemiBold14, alignment: Alignment.center),
-        cancelButton: custom_text(text: strings_name.str_cancle, textStyles: blackTextSemiBold14, alignment: Alignment.center),
-        commitButton: custom_text(text: strings_name.str_confirm, textStyles: primaryTextSemiBold14, alignment: Alignment.center))
+          title: custom_text(text: strings_name.str_required_duration, textStyles: blackTextSemiBold14, alignment: Alignment.center),
+          cancelButton: custom_text(text: strings_name.str_cancle, textStyles: blackTextSemiBold14, alignment: Alignment.center),
+          commitButton: custom_text(text: strings_name.str_confirm, textStyles: primaryTextSemiBold14, alignment: Alignment.center)),
     );
   }
 
@@ -326,6 +472,100 @@ class _AddTaskState extends State<AddTask> {
         taskFileTitle = result.files.single.name;
         taskFilePath = result.files.single.path!;
       });
+    }
+  }
+
+  updateTask() async {
+    setState(() {
+      isVisible = true;
+    });
+    if (taskFilePath.isNotEmpty) {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(taskFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
+      );
+      taskFilePath = response.secureUrl;
+    }
+
+    HelpDeskRequest helpDeskReq = HelpDeskRequest();
+    helpDeskReq.Notes = taskNoteController.text.trim().toString();
+    if (!fromUpdate) {
+      if (isLogin == 1) {
+        helpDeskReq.createdByStudent = PreferenceUtils.getLoginRecordId().split(",");
+      } else if (isLogin == 2) {
+        helpDeskReq.createdByEmployee = PreferenceUtils.getLoginRecordId().split(",");
+      } else if (isLogin == 3) {
+        helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
+      }
+      helpDeskReq.Status = TableNames.TICKET_STATUS_OPEN;
+    }
+    if (taskFilePath.isNotEmpty) {
+      Map<String, dynamic> map = Map();
+      map["url"] = taskFilePath;
+      List<Map<String, dynamic>> listData = [];
+      listData.add(map);
+      helpDeskReq.attachments = listData;
+    }
+
+    assignedTo.clear();
+    if (employeeData?.isNotEmpty == true) {
+      for (var i = 0; i < employeeData!.length; i++) {
+        assignedTo.add(employeeData![i].id.toString());
+      }
+    } else {
+      assignedTo.add(PreferenceUtils.getLoginRecordId());
+    }
+
+    helpDeskReq.assigned_to = assignedTo;
+    helpDeskReq.authority_of = authorityOf;
+    helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TASK;
+    helpDeskReq.deadline = deadlineController.text;
+    helpDeskReq.required_time = durationController.text;
+    if (actualDurationController.text.trim().toString().isNotEmpty) {
+      helpDeskReq.actual_time_taken = actualDurationController.text;
+    }
+    if (actualFinishedOnController.text.trim().toString().isNotEmpty) {
+      helpDeskReq.actual_finished_on = actualFinishedOnController.text;
+      helpDeskReq.Status = TableNames.TICKET_STATUS_COMPLETED;
+    }
+    try {
+      if (fromUpdate) {
+        var json = helpDeskReq.toJson();
+        json.removeWhere((key, value) => value == null);
+
+        var resp = await apiRepository.updateTicket(json, helpDeskTypeResponseId!);
+        if (resp.id != null) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_update_task_message);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } else {
+        var resp = await apiRepository.addHelpDeskApi(helpDeskReq);
+        if (resp.id != null) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_create_task_message);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

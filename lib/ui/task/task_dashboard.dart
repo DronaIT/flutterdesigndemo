@@ -8,6 +8,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
+import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_details.dart';
 import 'package:flutterdesigndemo/ui/task/add_task.dart';
 import 'package:flutterdesigndemo/ui/task/task_details.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -62,7 +63,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
       loginId = PreferenceUtils.getLoginDataOrganization().id.toString();
     }
 
-    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_TASK}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_HELP_DESK}')";
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
@@ -75,12 +76,11 @@ class _TaskDashboardState extends State<TaskDashboard> {
             canUpdateTicketCategory = true;
           }
         }
-        getRecords();
       } else {
         setState(() {
           isVisible = false;
         });
-        Utils.showSnackBar(context, strings_name.str_something_wrong);
+        // Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
     } on DioError catch (e) {
       setState(() {
@@ -88,27 +88,28 @@ class _TaskDashboardState extends State<TaskDashboard> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    } finally {
+      getRecords();
     }
   }
 
   getRecords() async {
     setState(() {
-      isVisible = true;
+      if (!isVisible) isVisible = true;
     });
-    var query = "AND(${TableNames.CLM_FIELD_TYPE}='${TableNames.HELPDESK_TYPE_TASK}', OR(";
+    var query = "OR(";
     if (isLogin == 1) {
-      query += "${TableNames.CLM_CREATED_BY_STUDENT}='$loginId'";
+      query += "${TableNames.CLM_CREATED_BY_STUDENT}='${PreferenceUtils.getLoginData().mobileNumber}'";
     } else if (isLogin == 2) {
       query += "${TableNames.CLM_CREATED_BY_EMPLOYEE}='$loginId'";
     } else if (isLogin == 3) {
       query += "${TableNames.CLM_CREATED_BY_ORGANIZATION}='$loginId'";
     }
 
-    if (canViewOther) {
-      query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
-      query += ", FIND('$loginId', ${TableNames.CLM_AUTHORITY_OF}, 0)";
-    }
-    query += "))";
+    query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
+    // query += ", FIND('$loginId', ${TableNames.CLM_AUTHORITY_OF}, 0)";
+
+    query += ")";
     print(query);
 
     try {
@@ -129,11 +130,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
           });
           if (taskList?.isNotEmpty == true) {
             for (int i = 0; i < taskList!.length; i++) {
-              if (isLogin == 1 && taskList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTaskList?.add(taskList![i]);
-              } else if (isLogin == 2 && taskList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTaskList?.add(taskList![i]);
-              } else if (isLogin == 3 && taskList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
+              if (taskList![i].fields!.assignedTo?.contains(PreferenceUtils.getLoginRecordId()) == true) {
                 myTaskList?.add(taskList![i]);
               } else {
                 taskAssignedList?.add(taskList![i]);
@@ -192,12 +189,33 @@ class _TaskDashboardState extends State<TaskDashboard> {
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              Get.to(const TaskDetail(), arguments: [
-                                {"fields": myTaskList?[index].fields},
-                                {"canUpdateTicketStatus": canUpdateTicketStatus},
-                                {"canUpdateTicketCategory": canUpdateTicketCategory},
-                                {"recordId": myTaskList?[index].id}
-                              ]);
+                              if(myTaskList![index].fields!.fieldType == TableNames.HELPDESK_TYPE_TASK){
+                                Get.to(const TaskDetail(), arguments: [
+                                  {"fields": myTaskList?[index].fields},
+                                  {"canUpdateTask": true},
+                                  {"recordId": myTaskList?[index].id}
+                                ])?.then((value) {
+                                  taskList?.clear();
+                                  myTaskList?.clear();
+                                  taskAssignedList?.clear();
+
+                                  getRecords();
+                                });
+                              } else {
+                                Get.to(const HelpdeskDetail(), arguments: [
+                                  {"fields": myTaskList?[index].fields},
+                                  {"canUpdateTicketStatus": true},
+                                  {"canUpdateTicketCategory": false},
+                                  {"recordId": myTaskList?[index].id},
+                                  {"title": strings_name.str_task_detail},
+                                ])?.then((value) {
+                                  taskList?.clear();
+                                  myTaskList?.clear();
+                                  taskAssignedList?.clear();
+
+                                  getRecords();
+                                });
+                              }
                             },
                             child: Column(children: [
                               Container(
@@ -216,11 +234,34 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                           ],
                                         ),
                                         Container(
-                                            decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            padding: const EdgeInsets.all(1),
-                                            child: custom_text(text: myTaskList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                          padding: const EdgeInsets.all(1),
+                                          child: custom_text(
+                                              text: myTaskList![index].fields!.ticketTitle != null && myTaskList![index].fields!.ticketTitle?.isNotEmpty == true ? myTaskList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
+                                              textStyles: whiteTextSemiBold16,
+                                              alignment: Alignment.centerRight,
+                                              topValue: 1,
+                                              bottomValue: 1,
+                                              leftValue: 3,
+                                              rightValue: 3),
+                                        ),
                                       ],
                                     ),
+                                    isLogin == 2 && myTaskList![index].fields!.employeeName?.isNotEmpty == true && myTaskList![index].fields!.employeeMobileNumber![0] != PreferenceUtils.getLoginDataEmployee().mobileNumber
+                                        ? Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              custom_text(text: strings_name.str_assigned_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                              custom_text(
+                                                  text: myTaskList![index].fields!.studentName?.isNotEmpty == true
+                                                      ? myTaskList![index].fields!.studentName![0].toString()
+                                                      : (myTaskList![index].fields!.employeeName?.isNotEmpty == true ? myTaskList![index].fields!.employeeName![0].toString() : (myTaskList![index].fields!.companyName?.isNotEmpty == true ? myTaskList![index].fields!.companyName![0].toString() : "")),
+                                                  textStyles: blackTextSemiBold16,
+                                                  leftValue: 5,
+                                                  topValue: 0),
+                                            ],
+                                          )
+                                        : Container(),
                                     custom_text(text: myTaskList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
                                     Row(
                                       children: [
@@ -247,7 +288,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                           );
                         })
                     : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
-                canViewOther
+                taskAssignedList?.isNotEmpty == true
                     ? Column(
                         children: [
                           SizedBox(height: 15.h),
@@ -272,10 +313,15 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       onTap: () {
                                         Get.to(const TaskDetail(), arguments: [
                                           {"fields": taskAssignedList?[index].fields},
-                                          {"canUpdateTicketStatus": canUpdateTicketStatus},
-                                          {"canUpdateTicketCategory": canUpdateTicketCategory},
+                                          {"canUpdateTask": true},
                                           {"recordId": taskAssignedList?[index].id}
-                                        ]);
+                                        ])?.then((value) {
+                                          taskList?.clear();
+                                          myTaskList?.clear();
+                                          taskAssignedList?.clear();
+
+                                          getRecords();
+                                        });
                                       },
                                       child: Column(children: [
                                         Container(
@@ -296,25 +342,33 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                                   Container(
                                                       decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
                                                       padding: const EdgeInsets.all(1),
-                                                      child: custom_text(text: taskAssignedList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                      child: custom_text(
+                                                        text: taskAssignedList![index].fields!.ticketTitle != null && taskAssignedList![index].fields!.ticketTitle?.isNotEmpty == true ? taskAssignedList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
+                                                        textStyles: whiteTextSemiBold16,
+                                                        alignment: Alignment.centerRight,
+                                                        topValue: 1,
+                                                        bottomValue: 1,
+                                                        leftValue: 3,
+                                                        rightValue: 3,
+                                                      )),
                                                 ],
                                               ),
+                                              custom_text(text: taskAssignedList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 10, leftValue: 5, maxLines: 2),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                                                  custom_text(
-                                                      text: taskAssignedList![index].fields!.studentName?.isNotEmpty == true
-                                                          ? taskAssignedList![index].fields!.studentName![0].toString()
-                                                          : (taskAssignedList![index].fields!.employeeName?.isNotEmpty == true
-                                                              ? taskAssignedList![index].fields!.employeeName![0].toString()
-                                                              : (taskAssignedList![index].fields!.companyName?.isNotEmpty == true ? taskAssignedList![index].fields!.companyName![0].toString() : "")),
-                                                      textStyles: blackTextSemiBold16,
-                                                      leftValue: 5,
-                                                      topValue: 0),
+                                                  custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                  Expanded(
+                                                    child: custom_text(
+                                                        text: taskAssignedList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "",
+                                                        textStyles: blackTextSemiBold16,
+                                                        leftValue: 5,
+                                                        maxLines: 5000,
+                                                        topValue: 0),
+                                                  ),
                                                 ],
                                               ),
-                                              custom_text(text: taskAssignedList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
                                               Row(
                                                 children: [
                                                   custom_text(
