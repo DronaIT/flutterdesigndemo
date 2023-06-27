@@ -187,7 +187,7 @@ class _TaskDetailState extends State<TaskDetail> {
                   Visibility(
                       visible: (helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED || helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_COMPLETED) && canUpdateTask,
                       child: CustomButton(
-                          text: strings_name.str_update_ticket_status,
+                          text: strings_name.str_update_task,
                           click: () {
                             Get.to(const AddTask(), arguments: [
                               {"fields": helpDeskTypeResponse},

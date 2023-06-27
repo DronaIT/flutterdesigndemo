@@ -497,6 +497,7 @@ class _AddTaskState extends State<AddTask> {
         helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
       }
       helpDeskReq.Status = TableNames.TICKET_STATUS_OPEN;
+      helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TASK;
     }
     if (taskFilePath.isNotEmpty) {
       Map<String, dynamic> map = Map();
@@ -517,7 +518,6 @@ class _AddTaskState extends State<AddTask> {
 
     helpDeskReq.assigned_to = assignedTo;
     helpDeskReq.authority_of = authorityOf;
-    helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TASK;
     helpDeskReq.deadline = deadlineController.text;
     helpDeskReq.required_time = durationController.text;
     if (actualDurationController.text.trim().toString().isNotEmpty) {
