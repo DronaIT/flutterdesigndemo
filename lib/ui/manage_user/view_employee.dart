@@ -115,13 +115,19 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                     if (hubValue.isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_hub);
                     } else {
-                      var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_IDS},0)";
+                      var query = "SEARCH('$hubValue',${TableNames.CLM_HUB_IDS},0)";
                       setState(() {
                         isVisible = true;
                       });
-                      try{
+                      try {
                         var data = await apiRepository.viewEmployeeApi(query);
                         if (data.records!.isNotEmpty) {
+                          for (var i = 0; i < data.records!.length; i++) {
+                            if (data.records![i].fields!.is_working != "1") {
+                              data.records!.removeAt(i);
+                              if (i > 0) i--;
+                            }
+                          }
                           viewEmployee = data.records;
                           setState(() {
                             isVisible = false;
@@ -133,7 +139,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                             viewEmployee = [];
                           });
                         }
-                      }on DioError catch (e) {
+                      } on DioError catch (e) {
                         setState(() {
                           isVisible = false;
                         });
@@ -167,16 +173,23 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                             onTap: () async {
                                               var response = await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);
                                               if (response) {
-                                                var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_IDS},0)";
+                                                var query = "SEARCH('$hubValue',${TableNames.CLM_HUB_IDS},0)";
                                                 setState(() {
                                                   isVisible = true;
                                                 });
-                                                try{
+                                                try {
                                                   var data = await apiRepository.viewEmployeeApi(query);
                                                   if (data.records!.isNotEmpty) {
+                                                    for (var i = 0; i < data.records!.length; i++) {
+                                                      if (data.records![i].fields!.is_working != "1") {
+                                                        data.records!.removeAt(i);
+                                                        if (i > 0) i--;
+                                                      }
+                                                    }
+                                                    viewEmployee = data.records;
                                                     setState(() {
                                                       isVisible = false;
-                                                      viewEmployee = data.records;
+                                                      viewEmployee?.sort((a, b) => a.fields!.employeeName!.trim().compareTo(b.fields!.employeeName!.trim()));
                                                     });
                                                   } else {
                                                     setState(() {

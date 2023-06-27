@@ -623,7 +623,7 @@ class ApiRepository {
     }
   }
 
-  Future<HelpDeskResponse> updateTicket(Map<String, String> ticketFormula, String recordId) async {
+  Future<HelpDeskResponse> updateTicket(Map<String, dynamic> ticketFormula, String recordId) async {
     try {
       final response = await userApi.updateTicket(ticketFormula, recordId);
       return response;
@@ -633,4 +633,13 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<ViewEmployeeResponse>> getEmployeeListApi(String viewEmpFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getEmployeeListApi(viewEmpFormula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
 }

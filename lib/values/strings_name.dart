@@ -504,7 +504,7 @@ class strings_name {
   static const String str_help_note = "Help note";
 
   static const String str_my_tickets = "My tickets";
-  static const String str_others_tickets = "Others tickets";
+  static const String str_others_tickets = "Tickets assigned to me as Moderator";
   static const String str_ticket_id = "Ticket No:";
   static const String str_created_by = "Created by:";
   static const String str_help_desk_detail = "Help desk details";
@@ -518,15 +518,33 @@ class strings_name {
 
   static const String str_task = "Task";
   static const String str_my_task = "My task";
-  static const String str_others_task = "Others task";
+  static const String str_others_task = "Task assigned to other";
 
   static const String str_task_id = "Task No:";
   static const String str_add_task = "Add task";
+  static const String str_update_task = "Update task";
   static const String str_task_type = "Task type";
   static const String str_task_detail = "Task detail";
 
   static const String str_empty_type_task = "Please select task type";
   static const String str_empty_task_note = "Please enter task detail";
   static const String str_required_duration = "Required duration";
+  static const String str_select_duration = "Select duration";
+  static const String str_empty_duration = "Please select duration";
+  static const String str_set_deadline = "Set deadline";
+  static const String str_empty_deadline = "Please set deadline";
+  static const String str_actual_duration = "Actual duration";
+  static const String str_empty_actual_duration = "Please select actual duration";
+  static const String str_actual_date = "Actual finished on";
+  static const String str_empty_actual_date = "Please select actual finished on";
+  static const String str_zero_duration = "Please select valid duration";
+  static const String str_create_task_message = "Task created successfully";
+  static const String str_update_task_message = "Task updated successfully";
 
+  static const String str_assigned_by = "Assigned by:";
+  static const String str_assigned_to = "Assigned to:";
+  static const String str_employee = "Employees";
+  static const String str_select_employee = "Select employee";
+  static const String str_provided_duration = "Provided duration: ";
+  static const String str_deadline = "Deadline: ";
 }

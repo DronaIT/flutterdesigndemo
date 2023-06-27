@@ -684,13 +684,25 @@ class ApiRequest {
     }
   }
 
-  Future<HelpDeskResponse> updateTicket(Map<String, String> ticketFormula, String recordId) async {
+  Future<HelpDeskResponse> updateTicket(Map<String, dynamic> ticketFormula, String recordId) async {
     try {
       Map<String, dynamic> someMap = {"fields": ticketFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_HELPDESK + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
       return HelpDeskResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<ViewEmployeeResponse>> getEmployeeListApi(String viewEmpFormula, [String offset = ""]) async {
+    try {
+      Map<String, String> someMap = {"filterByFormula": viewEmpFormula, if (offset.isNotEmpty) "offset": offset};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_EMPLOYEE, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<ViewEmployeeResponse>.fromJson(response.data, (response) => ViewEmployeeResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

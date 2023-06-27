@@ -111,6 +111,7 @@ class TableNames {
   static const CLM_CREATED_BY_STUDENT = "created_by_student";
   static const CLM_CREATED_BY_ORGANIZATION = "created_by_organization";
   static const CLM_FIELD_TYPE = "field_type";
+  static const CLM_EMPLOYEE_ID = "employee_id";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -203,6 +204,7 @@ class TableNames {
   static const TICKET_STATUS_HOLD = "Hold";
   static const TICKET_STATUS_RESOLVED = "Resolved";
   static const TICKET_STATUS_SUGGESTION = "Suggestions";
+  static const TICKET_STATUS_COMPLETED = "Completed";
 
   static const HELPDESK_TYPE_TICKET = "ticket";
   static const HELPDESK_TYPE_TASK = "task";

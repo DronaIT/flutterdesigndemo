@@ -209,6 +209,7 @@ class _HelpDeskState extends State<HelpDesk> {
                         helpDeskReq.assigned_to = assigned_to;
                         helpDeskReq.authority_of = authority_of;
                         helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TICKET;
+                        helpDeskReq.Status = TableNames.TICKET_STATUS_OPEN;
                         try {
                           var resp = await helpRepository.addHelpDeskApi(helpDeskReq);
                           if (resp.id != null) {

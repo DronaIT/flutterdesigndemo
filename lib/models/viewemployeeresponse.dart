@@ -18,6 +18,8 @@ class ViewEmployeeResponse {
   String? spouse_mobile_number = "";
   String? pin_code = "";
   List<String>? accessible_hub_ids;
+  String? is_working;
+  bool selected = false;
 
   ViewEmployeeResponse(
       {this.gender,
@@ -38,7 +40,8 @@ class ViewEmployeeResponse {
       this.parents_mobile_number,
       this.spouse_mobile_number,
       this.pin_code,
-      this.accessible_hub_ids});
+      this.accessible_hub_ids,
+      this.is_working});
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -60,6 +63,7 @@ class ViewEmployeeResponse {
     spouse_mobile_number = json['spouse_mobile_number'];
     pin_code = json['pin_code'];
     accessible_hub_ids = json['accessible_hub_ids']?.cast<String>();
+    is_working = json['is_working'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +87,7 @@ class ViewEmployeeResponse {
     data['spouse_mobile_number'] = this.spouse_mobile_number;
     data['pin_code'] = this.pin_code;
     data['accessible_hub_ids'] = this.accessible_hub_ids;
+    data['is_working'] = this.is_working;
     return data;
   }
 }

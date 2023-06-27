@@ -8,6 +8,11 @@ class HelpDeskRequest {
   List<String>? createdByEmployee;
   List<String>? createdByStudent;
   List<String>? createdByOrganization;
+  String? deadline;
+  String? required_time;
+  String? actual_time_taken;
+  String? actual_finished_on;
+  String? Status;
 
   HelpDeskRequest({
     this.Notes,
@@ -18,7 +23,12 @@ class HelpDeskRequest {
     this.attachments,
     this.createdByStudent,
     this.createdByEmployee,
-    this.createdByOrganization
+    this.createdByOrganization,
+    this.deadline,
+    this.required_time,
+    this.actual_time_taken,
+    this.actual_finished_on,
+    this.Status,
   });
 
   HelpDeskRequest.fromJson(Map<String, dynamic> json) {
@@ -31,6 +41,11 @@ class HelpDeskRequest {
     createdByStudent = json['created_by_student']?.cast<String>();
     createdByEmployee = json['created_by_employee']?.cast<String>();
     createdByOrganization = json['created_by_organization']?.cast<String>();
+    deadline = json['deadline'];
+    required_time = json['required_time'];
+    actual_time_taken = json['actual_time_taken'];
+    actual_finished_on = json['actual_finished_on'];
+    Status = json['Status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +59,11 @@ class HelpDeskRequest {
     data['created_by_student'] = this.createdByStudent;
     data['created_by_employee'] = this.createdByEmployee;
     data['created_by_organization'] = this.createdByOrganization;
+    data['deadline'] = this.deadline;
+    data['required_time'] = this.required_time;
+    data['actual_time_taken'] = this.actual_time_taken;
+    data['actual_finished_on'] = this.actual_finished_on;
+    data['Status'] = this.Status;
     return data;
   }
 }
