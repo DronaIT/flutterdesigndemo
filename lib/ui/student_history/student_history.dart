@@ -150,7 +150,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       text: "${strings_name.str_email}: ${data.records!.first.fields!.email!}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
-                      maxLines: 2,
+                      maxLines: 3,
                       topValue: 10,
                       bottomValue: 0,
                       leftValue: 10,
