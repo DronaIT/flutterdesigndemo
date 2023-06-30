@@ -307,15 +307,18 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                                                  custom_text(
-                                                      text: othersTicketList![index].fields!.studentName?.isNotEmpty == true
-                                                          ? othersTicketList![index].fields!.studentName![0].toString()
-                                                          : (othersTicketList![index].fields!.employeeName?.isNotEmpty == true
-                                                              ? othersTicketList![index].fields!.employeeName![0].toString()
-                                                              : (othersTicketList![index].fields!.companyName?.isNotEmpty == true ? othersTicketList![index].fields!.companyName![0].toString() : "")),
-                                                      textStyles: blackTextSemiBold16,
-                                                      leftValue: 5,
-                                                      topValue: 0),
+                                                  Expanded(
+                                                    child: custom_text(
+                                                        text: othersTicketList![index].fields!.studentName?.isNotEmpty == true
+                                                            ? othersTicketList![index].fields!.studentName![0].toString()
+                                                            : (othersTicketList![index].fields!.employeeName?.isNotEmpty == true
+                                                                ? othersTicketList![index].fields!.employeeName![0].toString()
+                                                                : (othersTicketList![index].fields!.companyName?.isNotEmpty == true ? othersTicketList![index].fields!.companyName![0].toString() : "")),
+                                                        textStyles: blackTextSemiBold16,
+                                                        leftValue: 5,
+                                                        maxLines: 2,
+                                                        topValue: 0),
+                                                  ),
                                                 ],
                                               ),
                                               custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 5, bottomValue: 10, leftValue: 5, maxLines: 2),

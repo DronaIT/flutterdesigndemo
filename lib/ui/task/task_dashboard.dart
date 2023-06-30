@@ -252,13 +252,16 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
                                               custom_text(text: strings_name.str_assigned_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                                              custom_text(
-                                                  text: myTaskList![index].fields!.studentName?.isNotEmpty == true
-                                                      ? myTaskList![index].fields!.studentName![0].toString()
-                                                      : (myTaskList![index].fields!.employeeName?.isNotEmpty == true ? myTaskList![index].fields!.employeeName![0].toString() : (myTaskList![index].fields!.companyName?.isNotEmpty == true ? myTaskList![index].fields!.companyName![0].toString() : "")),
-                                                  textStyles: blackTextSemiBold16,
-                                                  leftValue: 5,
-                                                  topValue: 0),
+                                              Expanded(
+                                                child: custom_text(
+                                                    text: myTaskList![index].fields!.studentName?.isNotEmpty == true
+                                                        ? myTaskList![index].fields!.studentName![0].toString()
+                                                        : (myTaskList![index].fields!.employeeName?.isNotEmpty == true ? myTaskList![index].fields!.employeeName![0].toString() : (myTaskList![index].fields!.companyName?.isNotEmpty == true ? myTaskList![index].fields!.companyName![0].toString() : "")),
+                                                    textStyles: blackTextSemiBold16,
+                                                    leftValue: 5,
+                                                    maxLines: 2,
+                                                    topValue: 0),
+                                              ),
                                             ],
                                           )
                                         : Container(),

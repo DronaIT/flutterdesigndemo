@@ -245,7 +245,7 @@ class _ManageUserState extends State<ManageUser> {
                     ),
                   ),
                   onTap: () {
-                    Get.to(const ViewStudent() , arguments: canUpdateEmployee);
+                    Get.to(const ViewStudent() , arguments: canUpdateStudent);
                   },
                 ),
               ),
