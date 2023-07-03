@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
@@ -33,11 +34,14 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? ticketList = [];
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? mainList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? myTicketList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? othersTicketList = [];
   String offset = "";
   var loginId = "";
   var isLogin = 0;
+
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -117,31 +121,17 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
       var data = await apiRepository.getTicketsApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
-          ticketList?.clear();
+          mainList?.clear();
         }
-        ticketList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<HelpdeskResponses>>);
+        mainList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<HelpdeskResponses>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           getRecords();
         } else {
-          ticketList?.sort((a, b) {
-            var adate = a.fields!.createdOn;
-            var bdate = b.fields!.createdOn;
-            return bdate!.compareTo(adate!);
-          });
-          if (ticketList?.isNotEmpty == true) {
-            for (int i = 0; i < ticketList!.length; i++) {
-              if (isLogin == 1 && ticketList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTicketList?.add(ticketList![i]);
-              } else if (isLogin == 2 && ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTicketList?.add(ticketList![i]);
-              } else if (isLogin == 3 && ticketList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
-                myTicketList?.add(ticketList![i]);
-              } else {
-                othersTicketList?.add(ticketList![i]);
-              }
-            }
-          }
+          ticketList = [];
+          ticketList = List.from(mainList!);
+          differentiateTickets();
+
           setState(() {
             isVisible = false;
           });
@@ -150,7 +140,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
         setState(() {
           isVisible = false;
           if (offset.isEmpty) {
-            ticketList = [];
+            mainList = [];
           }
         });
         offset = "";
@@ -164,6 +154,31 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     }
   }
 
+  differentiateTickets() {
+    myTicketList?.clear();
+    othersTicketList?.clear();
+
+    ticketList?.sort((a, b) {
+      var adate = a.fields!.createdOn;
+      var bdate = b.fields!.createdOn;
+      return bdate!.compareTo(adate!);
+    });
+    if (ticketList?.isNotEmpty == true) {
+      for (int i = 0; i < ticketList!.length; i++) {
+        if (isLogin == 1 && ticketList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
+          myTicketList?.add(ticketList![i]);
+        } else if (isLogin == 2 && ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
+          myTicketList?.add(ticketList![i]);
+        } else if (isLogin == 3 && ticketList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
+          myTicketList?.add(ticketList![i]);
+        } else {
+          othersTicketList?.add(ticketList![i]);
+        }
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -174,6 +189,29 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(height: 5.h),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  hintText: "Search by ticket notes..",
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      ticketList = [];
+                      ticketList = List.from(mainList!);
+                      setState(() {});
+                    } else {
+                      ticketList = [];
+                      for (var i = 0; i < mainList!.length; i++) {
+                        if (mainList![i].fields!.notes!.toLowerCase().contains(value.toLowerCase())) {
+                          ticketList?.add(mainList![i]);
+                        }
+                      }
+                      differentiateTickets();
+                      setState(() {});
+                    }
+                  },
+                ),
                 SizedBox(height: 5.h),
                 Card(
                   elevation: 5,
@@ -215,7 +253,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                            custom_text(text: myTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                            custom_text(text: myTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
                                           ],
                                         ),
                                         Container(
@@ -294,7 +332,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
                                                       custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                      custom_text(text: othersTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                                      custom_text(text: othersTicketList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
                                                     ],
                                                   ),
                                                   Container(
@@ -304,6 +342,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                 ],
                                               ),
                                               Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
@@ -326,8 +365,8 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 5),
-                                                  Expanded(child: custom_text(text: othersTicketList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0, rightValue: 5, maxLines: 5000)),
+                                                  custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                  Expanded(child: custom_text(text: othersTicketList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ").trim() ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0, rightValue: 5, maxLines: 5000)),
                                                 ],
                                               ),
                                               Row(

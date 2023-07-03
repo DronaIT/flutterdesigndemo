@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
@@ -32,12 +33,15 @@ class _TaskDashboardState extends State<TaskDashboard> {
 
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? mainList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? myTaskList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskAssignedList = [];
   String offset = "";
   var loginId = "";
   var isLogin = 0;
+
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -107,7 +111,6 @@ class _TaskDashboardState extends State<TaskDashboard> {
     }
 
     query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
-    // query += ", FIND('$loginId', ${TableNames.CLM_AUTHORITY_OF}, 0)";
 
     query += ")";
     print(query);
@@ -116,27 +119,17 @@ class _TaskDashboardState extends State<TaskDashboard> {
       var data = await apiRepository.getTicketsApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
-          taskList?.clear();
+          mainList?.clear();
         }
-        taskList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<HelpdeskResponses>>);
+        mainList?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<HelpdeskResponses>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           getRecords();
         } else {
-          taskList?.sort((a, b) {
-            var adate = a.fields!.createdOn;
-            var bdate = b.fields!.createdOn;
-            return bdate!.compareTo(adate!);
-          });
-          if (taskList?.isNotEmpty == true) {
-            for (int i = 0; i < taskList!.length; i++) {
-              if (taskList![i].fields!.assignedTo?.contains(PreferenceUtils.getLoginRecordId()) == true) {
-                myTaskList?.add(taskList![i]);
-              } else {
-                taskAssignedList?.add(taskList![i]);
-              }
-            }
-          }
+          taskList = [];
+          taskList = List.from(mainList!);
+          differentiateTasks();
+
           setState(() {
             isVisible = false;
           });
@@ -159,6 +152,27 @@ class _TaskDashboardState extends State<TaskDashboard> {
     }
   }
 
+  differentiateTasks() {
+    myTaskList?.clear();
+    taskAssignedList?.clear();
+
+    taskList?.sort((a, b) {
+      var adate = a.fields!.createdOn;
+      var bdate = b.fields!.createdOn;
+      return bdate!.compareTo(adate!);
+    });
+    if (taskList?.isNotEmpty == true) {
+      for (int i = 0; i < taskList!.length; i++) {
+        if (taskList![i].fields!.assignedTo?.contains(PreferenceUtils.getLoginRecordId()) == true) {
+          myTaskList?.add(taskList![i]);
+        } else {
+          taskAssignedList?.add(taskList![i]);
+        }
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -169,6 +183,33 @@ class _TaskDashboardState extends State<TaskDashboard> {
           SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(height: 5.h),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  hintText: "Search by name..",
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      taskList = [];
+                      taskList = List.from(mainList!);
+                      setState(() {});
+                    } else {
+                      taskList = [];
+                      for (var i = 0; i < mainList!.length; i++) {
+                        if(mainList![i].fields!.assignedEmployeeName?.isNotEmpty == true) {
+                          for (var j = 0; j < mainList![i].fields!.assignedEmployeeName!.length; j++) {
+                            if (mainList![i].fields!.assignedEmployeeName![j].toLowerCase().contains(value.toLowerCase())) {
+                              taskList?.add(mainList![i]);
+                            }
+                          }
+                        }
+                      }
+                      differentiateTasks();
+                      setState(() {});
+                    }
+                  },
+                ),
                 SizedBox(height: 5.h),
                 Card(
                   elevation: 5,
@@ -230,7 +271,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             custom_text(text: strings_name.str_task_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                            custom_text(text: myTaskList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                            custom_text(text: myTaskList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
                                           ],
                                         ),
                                         Container(
@@ -339,7 +380,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
                                                       custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                      custom_text(text: taskAssignedList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                                                      custom_text(text: taskAssignedList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
                                                     ],
                                                   ),
                                                   Container(

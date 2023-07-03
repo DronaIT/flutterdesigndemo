@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/request/help_desk_req.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
@@ -51,10 +52,10 @@ class _HelpDeskState extends State<HelpDesk> {
     isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
-      hubName = loginData.hubIdFromHubIds;
+      hubName = loginData.hubIds;
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
-      hubName = loginData.hubIdFromHubIds;
+      hubName = loginData.hubIds;
     } else if (isLogin == 3) {
       var loginData = PreferenceUtils.getLoginDataOrganization();
       hubName = [""];
@@ -160,77 +161,7 @@ class _HelpDeskState extends State<HelpDesk> {
                       } else if (helpNoteController.text.trim().toString().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_help_note);
                       } else {
-                        setState(() {
-                          isVisible = true;
-                        });
-                        if (helpPath.isNotEmpty) {
-                          CloudinaryResponse response = await cloudinary.uploadFile(
-                            CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
-                          );
-                          helpPath = response.secureUrl;
-                        }
-                        if (helpDeskTypeResponses!.fields!.centerAutority != null) {
-                          for (int j = 0; j < helpDeskTypeResponses!.fields!.centerAutority!.length; j++) {
-                            if (helpDeskTypeResponses!.fields!.centerAuthorityHubId![j] == hubName[0]) {
-                              if (authority_of.isEmpty || !authority_of.contains(helpDeskTypeResponses!.fields!.centerAutority![j])) {
-                                authority_of.add(helpDeskTypeResponses!.fields!.centerAutority![j]);
-                              }
-                            }
-                          }
-                        }
-
-                        if (helpDeskTypeResponses!.fields!.concernPerson != null) {
-                          for (int j = 0; j < helpDeskTypeResponses!.fields!.concernPerson!.length; j++) {
-                            if (helpDeskTypeResponses!.fields!.concernPersonHubId![j] == hubName[0]) {
-                              if (assigned_to.isEmpty || !assigned_to.contains(helpDeskTypeResponses!.fields!.concernPerson![j])) {
-                                assigned_to.add(helpDeskTypeResponses!.fields!.concernPerson![j]);
-                              }
-                            }
-                          }
-                        }
-
-                        HelpDeskRequest helpDeskReq = HelpDeskRequest();
-                        helpDeskReq.ticket_type_id = helpDeskTypeResponses?.id?.split("|||");
-                        helpDeskReq.Notes = helpNoteController.text.trim().toString();
-                        if (isLogin == 1) {
-                          helpDeskReq.createdByStudent = PreferenceUtils.getLoginRecordId().split(",");
-                        } else if (isLogin == 2) {
-                          helpDeskReq.createdByEmployee = PreferenceUtils.getLoginRecordId().split(",");
-                        } else if (isLogin == 3) {
-                          helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
-                        }
-                        if (helpPath.isNotEmpty) {
-                          Map<String, dynamic> map = Map();
-                          map["url"] = helpPath;
-                          List<Map<String, dynamic>> listData = [];
-                          listData.add(map);
-                          helpDeskReq.attachments = listData;
-                        }
-                        helpDeskReq.assigned_to = assigned_to;
-                        helpDeskReq.authority_of = authority_of;
-                        helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TICKET;
-                        helpDeskReq.Status = TableNames.TICKET_STATUS_OPEN;
-                        try {
-                          var resp = await helpRepository.addHelpDeskApi(helpDeskReq);
-                          if (resp.id != null) {
-                            setState(() {
-                              isVisible = false;
-                            });
-                            Utils.showSnackBar(context, strings_name.str_create_ticket_message);
-                            await Future.delayed(const Duration(milliseconds: 2000));
-                            Get.back(result: true);
-                          } else {
-                            setState(() {
-                              isVisible = false;
-                            });
-                          }
-                        } on DioError catch (e) {
-                          setState(() {
-                            isVisible = false;
-                          });
-                          final errorMessage = DioExceptions.fromDioError(e).toString();
-                          Utils.showSnackBarUsingGet(errorMessage);
-                        }
+                        createTicket();
                       }
                     },
                   ),
@@ -244,6 +175,71 @@ class _HelpDeskState extends State<HelpDesk> {
         ],
       ),
     ));
+  }
+
+  createTicket() async {
+    authority_of.clear();
+    if (helpDeskTypeResponses!.fields!.centerAutority != null) {
+      await getEmployeeData(1);
+    }
+
+    assigned_to.clear();
+    if (helpDeskTypeResponses!.fields!.concernPerson != null) {
+      await getEmployeeData(2);
+    }
+
+    setState(() {
+      isVisible = true;
+    });
+    if (helpPath.isNotEmpty) {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
+      );
+      helpPath = response.secureUrl;
+    }
+
+    HelpDeskRequest helpDeskReq = HelpDeskRequest();
+    helpDeskReq.ticket_type_id = helpDeskTypeResponses?.id?.split("|||");
+    helpDeskReq.Notes = helpNoteController.text.trim().toString();
+    if (isLogin == 1) {
+      helpDeskReq.createdByStudent = PreferenceUtils.getLoginRecordId().split(",");
+    } else if (isLogin == 2) {
+      helpDeskReq.createdByEmployee = PreferenceUtils.getLoginRecordId().split(",");
+    } else if (isLogin == 3) {
+      helpDeskReq.createdByOrganization = PreferenceUtils.getLoginRecordId().split(",");
+    }
+    if (helpPath.isNotEmpty) {
+      Map<String, dynamic> map = Map();
+      map["url"] = helpPath;
+      List<Map<String, dynamic>> listData = [];
+      listData.add(map);
+      helpDeskReq.attachments = listData;
+    }
+    helpDeskReq.assigned_to = assigned_to;
+    helpDeskReq.authority_of = authority_of;
+    helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TICKET;
+    helpDeskReq.Status = TableNames.TICKET_STATUS_OPEN;
+    try {
+      var resp = await helpRepository.addHelpDeskApi(helpDeskReq);
+      if (resp.id != null) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_create_ticket_message);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   Future<void> helpDeskType() async {
@@ -278,6 +274,82 @@ class _HelpDeskState extends State<HelpDesk> {
         helpTitle = result.files.single.name;
         helpPath = result.files.single.path!;
       });
+    }
+  }
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
+  String offset = "";
+
+  /*
+  * type : 1=authority, 2=assignee
+  */
+  getEmployeeData(int type) async {
+    setState(() {
+      if (!isVisible) isVisible = true;
+    });
+
+    var query = "";
+    if (type == 1) {
+      if (helpDeskTypeResponses!.fields!.centerAuthorityMobileNumber != null) {
+        query += "OR(";
+        for (int j = 0; j < helpDeskTypeResponses!.fields!.centerAuthorityMobileNumber!.length; j++) {
+          query += "${TableNames.TB_USERS_PHONE}='${helpDeskTypeResponses!.fields?.centerAuthorityMobileNumber![j]}'";
+          if (j + 1 < helpDeskTypeResponses!.fields!.centerAuthorityMobileNumber!.length) query += ",";
+        }
+        query += ")";
+      }
+    } else if (type == 2) {
+      if (helpDeskTypeResponses!.fields!.concernPersonMobileNumber != null) {
+        query += "OR(";
+        for (int j = 0; j < helpDeskTypeResponses!.fields!.concernPersonMobileNumber!.length; j++) {
+          query += "${TableNames.TB_USERS_PHONE}='${helpDeskTypeResponses!.fields?.concernPersonMobileNumber![j]}'";
+          if (j + 1 < helpDeskTypeResponses!.fields!.concernPersonMobileNumber!.length) query += ",";
+        }
+        query += ")";
+      }
+    }
+    print(query);
+
+    try {
+      var data = await helpRepository.getEmployeeListApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          employeeData?.clear();
+        }
+        employeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          getEmployeeData(type);
+        } else {
+          for (var j = 0; j < employeeData!.length; j++) {
+            if (employeeData![j].fields!.accessible_hub_ids?.contains(hubName[0]) == true) {
+              if (type == 1) {
+                authority_of.add(employeeData![j].id.toString());
+              } else {
+                assigned_to.add(employeeData![j].id.toString());
+              }
+            }
+          }
+          employeeData = [];
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } else {
+        setState(() {
+          isVisible = false;
+          if (offset.isEmpty) {
+            employeeData = [];
+          }
+        });
+        offset = "";
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

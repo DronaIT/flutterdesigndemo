@@ -102,7 +102,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                          custom_text(text: helpDeskTypeResponse!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                          custom_text(text: helpDeskTypeResponse!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
                         ],
                       ),
                       Container(
@@ -113,16 +113,20 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                      custom_text(
-                          text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
-                              ? helpDeskTypeResponse!.studentName![0].toString()
-                              : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
-                          textStyles: blackTextSemiBold16,
-                          leftValue: 5,
-                          topValue: 0),
+                      Expanded(
+                        child: custom_text(
+                            text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
+                                ? helpDeskTypeResponse!.studentName![0].toString()
+                                : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                            textStyles: blackTextSemiBold16,
+                            leftValue: 5,
+                            maxLines: 2,
+                            topValue: 0),
+                      ),
                     ],
                   ),
                   custom_text(

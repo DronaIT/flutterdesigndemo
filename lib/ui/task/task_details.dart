@@ -61,7 +61,6 @@ class _TaskDetailState extends State<TaskDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_task_detail),
@@ -79,7 +78,7 @@ class _TaskDetailState extends State<TaskDetail> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                          custom_text(text: helpDeskTypeResponse!.ticketId.toString(), textStyles: blackTextSemiBold16, leftValue: 5),
+                          custom_text(text: helpDeskTypeResponse!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
                         ],
                       ),
                       helpDeskTypeResponse!.ticketTitle != null && helpDeskTypeResponse!.ticketTitle!.isNotEmpty
@@ -93,16 +92,20 @@ class _TaskDetailState extends State<TaskDetail> {
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       custom_text(text: strings_name.str_assigned_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                      custom_text(
-                          text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
-                              ? helpDeskTypeResponse!.studentName![0].toString()
-                              : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
-                          textStyles: blackTextSemiBold16,
-                          leftValue: 5,
-                          topValue: 0),
+                      Expanded(
+                        child: custom_text(
+                            text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
+                                ? helpDeskTypeResponse!.studentName![0].toString()
+                                : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                            textStyles: blackTextSemiBold16,
+                            leftValue: 5,
+                            maxLines: 2,
+                            topValue: 0),
+                      ),
                     ],
                   ),
                   Row(
@@ -116,6 +119,7 @@ class _TaskDetailState extends State<TaskDetail> {
                             textStyles: blackTextSemiBold16,
                             maxLines: 5000,
                             leftValue: 5,
+                            rightValue: 0,
                             topValue: 0),
                       ),
                     ],
