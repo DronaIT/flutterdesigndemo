@@ -65,7 +65,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
         if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.appliedStudents != null) {
           for (var j = 0; j < jobpportunityData.records![i].fields!.appliedStudents!.length; j++) {
             var jobModuleResponse = JobModuleResponse(
-                applied_students_email: jobpportunityData.records![i].fields!.applied_students_email![j],
+                applied_students_email: jobpportunityData.records![i].fields!.applied_students_email?[j],
                 applied_students_enrollment_number: jobpportunityData.records![i].fields!.applied_students_enrollment_number![j],
                 applied_students_name: jobpportunityData.records![i].fields!.applied_students_name![j],
                 applied_students_number: jobpportunityData.records![i].fields!.appliedStudents![j]);

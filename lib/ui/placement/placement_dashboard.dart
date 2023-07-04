@@ -8,6 +8,7 @@ import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/company_list.dart';
 import 'package:flutterdesigndemo/ui/placement/completed_internship_list.dart';
+import 'package:flutterdesigndemo/ui/placement/placed_unplaced_list.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';
@@ -45,7 +46,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
 
   // For student
-  bool applyInternship = false, appliedInternship = false, completedInternShip = false, uploadResume = false,shortListedInternship = false, selectedInternship = false;
+  bool applyInternship = false, appliedInternship = false, completedInternShip = false,palced_uplaced_sList = false, uploadResume = false,shortListedInternship = false, selectedInternship = false;
 
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
@@ -135,6 +136,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPLOAD_RESUME) {
             uploadResume = true;
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PLACED_UNPLACED_STUDENT_LIST) {
+            palced_uplaced_sList = true;
           }
         }
         setState(() {});
@@ -402,6 +406,26 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                       },
                     ),
                   ),
+                  Visibility(
+                    visible: palced_uplaced_sList,
+                    child: GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        child: Container(
+                          color: colors_name.colorWhite,
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [Text(strings_name.str_placed_unplaced_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Get.to(() => const Placed_unplaced_SList());
+                      },
+                    ),
+                  ),
+
                   Visibility(
                     visible: completedInternShip,
                     child: GestureDetector(

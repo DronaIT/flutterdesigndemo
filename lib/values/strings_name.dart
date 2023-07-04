@@ -299,6 +299,8 @@ class strings_name {
 
   static const String str_contact_person_designation = "Contact person's designation";
   static const String str_approved_internship = "Approve internship";
+  static const String str_placed_unplaced_student = "Placed Unplaced Student List";
+
   static const String str_company_lan_num = "Company's landline no.";
   static const String str_contact_person_email = "Contact person's email";
   static const String str_company_website = "Company's website";
@@ -547,4 +549,6 @@ class strings_name {
   static const String str_select_employee = "Select employee";
   static const String str_provided_duration = "Provided duration: ";
   static const String str_deadline = "Deadline: ";
+
+
 }

@@ -90,9 +90,11 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
   }
 
   Future<void> getRecords() async {
-    setState(() {
-      isVisible = true;
-    });
+    if(!isVisible) {
+      setState(() {
+        isVisible = true;
+      });
+    }
     try {
       var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_ID},0)";
       var data = await apiRepository.getCompanyDetailApi(query, offset);
@@ -107,9 +109,9 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
         if (offset.isNotEmpty) {
           getRecords();
         } else {
+          companyList?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
+          companyListMain?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
           setState(() {
-            companyList?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
-            companyListMain?.sort((a, b) => a.fields!.companyName!.trim().compareTo(b.fields!.companyName!.trim()));
             isVisible = false;
           });
         }

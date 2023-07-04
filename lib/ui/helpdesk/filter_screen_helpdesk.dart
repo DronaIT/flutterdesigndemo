@@ -8,10 +8,12 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/help_desk_type_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/ui/student_history/filter_data_screen_student.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -20,16 +22,14 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
-import 'filter_data_screen_student.dart';
-
-class FilterScreenStudent extends StatefulWidget {
-  const FilterScreenStudent({Key? key}) : super(key: key);
+class FilterScreenHelpdesk extends StatefulWidget {
+  const FilterScreenHelpdesk({Key? key}) : super(key: key);
 
   @override
-  State<FilterScreenStudent> createState() => _FilterScreenStudentState();
+  State<FilterScreenHelpdesk> createState() => _FilterScreenHelpdeskState();
 }
 
-class _FilterScreenStudentState extends State<FilterScreenStudent> {
+class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
   bool isVisible = false;
   var type = 0;
 
@@ -51,6 +51,10 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   BaseApiResponseWithSerializable<SubjectResponse>? subjectResponse;
   String subjectValue = "";
   String subjectRecordId = "";
+
+  List<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>? helpDeskTypeResponse = [];
+  BaseApiResponseWithSerializable<HelpDeskTypeResponse>? helpDeskTypeResponses;
+  int helpDeskId = 0;
 
   final apiRepository = getIt.get<ApiRepository>();
   String offset = "";
@@ -95,6 +99,8 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
           }
         }
       }
+
+      helpDeskType();
     }
   }
 
@@ -109,7 +115,42 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 15.h),
+                      custom_text(
+                        text: strings_name.str_help_desk_type,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                              width: viewWidth,
+                              child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
+                                value: helpDeskTypeResponses,
+                                elevation: 16,
+                                style: blackText16,
+                                focusColor: Colors.white,
+                                onChanged: (BaseApiResponseWithSerializable<HelpDeskTypeResponse>? newValue) {
+                                  setState(() {
+                                    helpDeskId = newValue!.fields!.id!;
+                                    helpDeskTypeResponses = newValue;
+                                  });
+                                },
+                                items: helpDeskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
+                                  return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
+                                    value: value,
+                                    child: Text(value.fields!.title.toString()),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 5.h),
                       custom_text(
                         text: strings_name.str_select_hub_r,
@@ -284,10 +325,13 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                           if (hubValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_hub);
                           } else {
-                            viewStudent = [];
-                            studentList = [];
-
-                            fetchRecords();
+                            Get.back(result: [
+                              {"hubName": hubResponse?.fields?.hubName},
+                              {"specializationName": speResponse?.fields?.specializationName ?? ""},
+                              {"semester": semesterValue.toString() ?? ""},
+                              {"division": divisionValue.toString() ?? ""},
+                              {"helpdeskTypeId": helpDeskId ?? 0},
+                            ]);
                           }
                         },
                         text: strings_name.str_submit,
@@ -408,6 +452,31 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
       } else {
         Utils.showSnackBarUsingGet(strings_name.str_no_students);
       }
+    }
+  }
+
+  Future<void> helpDeskType() async {
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      var resp = await apiRepository.getHelpdesk();
+      if (resp != null) {
+        setState(() {
+          isVisible = false;
+          helpDeskTypeResponse = resp.records;
+        });
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

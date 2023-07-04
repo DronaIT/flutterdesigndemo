@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
+import 'package:flutterdesigndemo/ui/helpdesk/filter_screen_helpdesk.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -29,7 +30,7 @@ class HelpdeskDashboard extends StatefulWidget {
 
 class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
-  bool isVisible = false;
+  bool isVisible = false, fromFilter = false;
 
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
@@ -42,6 +43,8 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   var isLogin = 0;
 
   var controllerSearch = TextEditingController();
+  var filterHubName = "", filterSpecialization = "", filterSemester = "", filterDivision = "";
+  var filterTicketTypeId = 0;
 
   @override
   void initState() {
@@ -111,10 +114,19 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     }
 
     if (canViewOther) {
-      // query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
       query += ", FIND('$loginId', ${TableNames.CLM_AUTHORITY_OF}, 0)";
     }
-    query += "))";
+
+    query += ")";
+
+    if (fromFilter) {
+      if (filterHubName.isNotEmpty) query += ", FIND('$filterHubName', ${TableNames.CLM_STUDENT_HUBNAME}, 0)";
+      if (filterSpecialization.isNotEmpty) query += ", FIND('$filterSpecialization', ${TableNames.CLM_STUDENT_SPENAME}, 0)";
+      if (filterSemester.isNotEmpty) query += ", FIND('$filterSemester', ${TableNames.CLM_STUDENT_SEMESTER}, 0)";
+      if (filterDivision.isNotEmpty) query += ", FIND('$filterDivision', ${TableNames.CLM_STUDENT_DIVISION}, 0)";
+      if (filterTicketTypeId != 0) query += ", FIND('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID}, 0)";
+    }
+    query += ")";
     print(query);
 
     try {
@@ -131,6 +143,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           ticketList = [];
           ticketList = List.from(mainList!);
           differentiateTickets();
+          print("Result size: ${ticketList?.length}");
 
           setState(() {
             isVisible = false;
@@ -190,28 +203,52 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
             child: Column(
               children: [
                 SizedBox(height: 5.h),
-                CustomEditTextSearch(
-                  type: TextInputType.text,
-                  hintText: "Search by ticket notes..",
-                  textInputAction: TextInputAction.done,
-                  controller: controllerSearch,
-                  onChanges: (value) {
-                    if (value.isEmpty) {
-                      ticketList = [];
-                      ticketList = List.from(mainList!);
-                      setState(() {});
-                    } else {
-                      ticketList = [];
-                      for (var i = 0; i < mainList!.length; i++) {
-                        if (mainList![i].fields!.notes!.toLowerCase().contains(value.toLowerCase())) {
-                          ticketList?.add(mainList![i]);
+                Row(children: [
+                  Flexible(
+                    flex: 1,
+                    child: CustomEditTextSearch(
+                      type: TextInputType.text,
+                      hintText: "Search by ticket notes..",
+                      textInputAction: TextInputAction.done,
+                      controller: controllerSearch,
+                      onChanges: (value) {
+                        if (value.isEmpty) {
+                          ticketList = [];
+                          ticketList = List.from(mainList!);
+                          setState(() {});
+                        } else {
+                          ticketList = [];
+                          for (var i = 0; i < mainList!.length; i++) {
+                            if (mainList![i].fields!.notes!.toLowerCase().contains(value.toLowerCase())) {
+                              ticketList?.add(mainList![i]);
+                            }
+                          }
+                          differentiateTickets();
+                          setState(() {});
                         }
-                      }
-                      differentiateTickets();
-                      setState(() {});
-                    }
-                  },
-                ),
+                      },
+                    ),
+                  ),
+                  IconButton(
+                      iconSize: 28,
+                      onPressed: () {
+                        Get.to(const FilterScreenHelpdesk())?.then((value) {
+                          ticketList?.clear();
+                          myTicketList?.clear();
+                          othersTicketList?.clear();
+
+                          fromFilter = true;
+                          filterHubName = value[0]["hubName"];
+                          filterSpecialization = value[1]["specializationName"];
+                          filterSemester = value[2]["semester"];
+                          filterDivision = value[3]["division"];
+                          filterTicketTypeId = value[4]["helpdeskTypeId"];
+
+                          getRecords();
+                        });
+                      },
+                      icon: const Icon(Icons.filter_alt, color: colors_name.colorPrimary))
+                ]),
                 SizedBox(height: 5.h),
                 Card(
                   elevation: 5,
@@ -220,7 +257,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text(strings_name.str_my_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      children: [Text("${strings_name.str_my_tickets}(${myTicketList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
                 ),
@@ -262,7 +299,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                             child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                       ],
                                     ),
-                                    custom_text(text: myTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                    custom_text(text: myTicketList![index].fields!.notes.toString().trim(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
                                     Row(
                                       children: [
                                         custom_text(
@@ -299,7 +336,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text(strings_name.str_others_tickets, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [Text("${strings_name.str_others_tickets}(${othersTicketList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
                             ),
                           ),
@@ -360,7 +397,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                                   ),
                                                 ],
                                               ),
-                                              custom_text(text: othersTicketList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 5, bottomValue: 10, leftValue: 5, maxLines: 2),
+                                              custom_text(text: othersTicketList![index].fields!.notes.toString().trim(), textStyles: blackText16, topValue: 5, bottomValue: 10, leftValue: 5, maxLines: 2),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.start,

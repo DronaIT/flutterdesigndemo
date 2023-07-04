@@ -218,7 +218,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child:  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text(strings_name.str_my_task, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      children: [Text("${strings_name.str_my_task}(${myTaskList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                     ),
                   ),
                 ),
@@ -343,7 +343,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                               child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text(strings_name.str_others_task, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [Text("${strings_name.str_others_task}(${taskAssignedList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                               ),
                             ),
                           ),

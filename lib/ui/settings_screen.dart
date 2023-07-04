@@ -66,7 +66,7 @@ class _SettingsState extends State<Settings> {
                   //   {"title": "Terms & condition"},
                   //   {"url": "https://pastebin.com/raw/HAHds12N"}
                   // ]);
-                  await launchUrl(Uri.parse("https://pastebin.com/raw/HAHds12N"), mode: LaunchMode.inAppWebView);
+                  await launchUrl(Uri.parse("https://pastebin.com/raw/HAHds12N"), mode: LaunchMode.inAppWebView, webViewConfiguration: const WebViewConfiguration(enableDomStorage: true, enableJavaScript: true));
                 },
                 child: Card(
                   elevation: 5,
@@ -82,7 +82,7 @@ class _SettingsState extends State<Settings> {
                   //   {"title": "Privacy policy"},
                   //   {"url": "https://pastebin.com/raw/QwwednCb"}
                   // ]);
-                  await launchUrl(Uri.parse("https://pastebin.com/raw/QwwednCb"), mode: LaunchMode.inAppWebView);
+                  await launchUrl(Uri.parse("https://pastebin.com/raw/QwwednCb"), mode: LaunchMode.inAppWebView, webViewConfiguration: const WebViewConfiguration(enableDomStorage: true, enableJavaScript: true));
                 },
                 child: Card(
                   elevation: 5,

@@ -44,6 +44,7 @@ class _CustomState extends State<CustomEditTextSearch> {
           keyboardType: widget.type,
           textInputAction: widget.textInputAction,
           controller: widget.controller,
+          textAlignVertical: TextAlignVertical.center,
           textAlign: TextAlign.start,
           maxLines: 1,
           cursorColor: colors_name.colorPrimary,

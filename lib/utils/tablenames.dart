@@ -113,7 +113,12 @@ class TableNames {
   static const CLM_CREATED_BY_STUDENT = "created_by_student";
   static const CLM_CREATED_BY_ORGANIZATION = "created_by_organization";
   static const CLM_FIELD_TYPE = "field_type";
-  static const CLM_EMPLOYEE_ID = "employee_id";
+
+  static const CLM_STUDENT_HUBNAME = "student_hub_name";
+  static const CLM_STUDENT_SPENAME = "student_specialization_name";
+  static const CLM_STUDENT_SEMESTER = "student_semester";
+  static const CLM_STUDENT_DIVISION = "student_division";
+  static const CLM_TICKET_TYPEID = "ticket_type_id";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -160,6 +165,8 @@ class TableNames {
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
   static const PERMISSION_ID_COMPLETED_INTERNSHIP = "DP0419";
   static const PERMISSION_ID_UPLOAD_RESUME = "DP0420";
+  static const PERMISSION_ID_PLACED_UNPLACED_STUDENT_LIST = "DP0421";
+
   static const PERMISSION_ID_VIEW_RESUME = "DP0421";
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";
   static const PERMISSION_ID_UPLOAD_DOCUMENTS = "DP0601";

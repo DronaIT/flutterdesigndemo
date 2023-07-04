@@ -147,7 +147,7 @@ class ApiRequest {
       Map<String, dynamic> someMap = {"records": createCompanydFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
-      final Response response = await dioClient.patch(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header), data: jsonEncode(someMap));
+      final Response response = await dioClient.post(TableNames.TBL_COMPANY_DETAIL, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseLoginResponse<CompanyDetailResponse>.fromJson(response.data, (response) => CompanyDetailResponse.fromJson(response));
     } catch (e) {
       rethrow;
