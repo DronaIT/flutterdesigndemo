@@ -1,10 +1,10 @@
 class TableNames {
-  static const APIKEY = "";
-  static const PROJECTBASE = "";
-  static const APIENDPOINTS = "https://api.airtable.com/v0/$PROJECTBASE/";
+  static const APIENDPOINTS = "https://api.airtable.com/v0/appwU8yBYoG1yhBXx/";
+  static const APIKEY = "keyszHTHXMxxKKs9b";
+  static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
-  // Kaleyra keys
-  static const KALEYRA_APIKEY = "";
+  // Kaleyra keysh
+  static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
   static const KALEYRA_SENDER = "DFBVOC";
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
   static const TEMPLATE_ID_FORGOT_PASSWORD = "1007956316471143887";
