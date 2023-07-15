@@ -1,10 +1,6 @@
-import 'dart:io';
-
-import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
@@ -14,11 +10,7 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:open_filex/open_filex.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../models/login_fields_report_response.dart';
 import '../../values/text_styles.dart';
 
 class FilterDataStudent extends StatefulWidget {
@@ -30,9 +22,6 @@ class FilterDataStudent extends StatefulWidget {
 
 class _FilterDataStudentState extends State<FilterDataStudent> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
-
-  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentEligibiltyList = [];
-
 
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> test = [];
 
@@ -114,7 +103,8 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
                                     children: [
                                       custom_text(text: "${studentList[index].fields?.name}", textStyles: primaryTextSemiBold16),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
-                                      custom_text(topValue: 0, bottomValue: 5, text: "Specialization: ${Utils.getSpecializationName(studentList[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
+                                      custom_text(topValue: 0, bottomValue: 5,maxLines: 2,
+                                          text: "Specialization: ${Utils.getSpecializationName(studentList[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Mobile No: ${studentList[index].fields?.mobileNumber}", textStyles: blackTextSemiBold14),
                                     ],
                                   ),
@@ -134,11 +124,5 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
     ));
   }
 
-  _launchCaller(String mobile) async {
-    try {
-      await launchUrl(Uri.parse("tel:$mobile"));
-    } catch (e) {
-      Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
-    }
-  }
+
 }
