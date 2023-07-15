@@ -553,4 +553,7 @@ class strings_name {
   static const String str_deadline = "Deadline: ";
 
 
+  static const String str_materials = "Materials";
+
+
 }
