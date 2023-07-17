@@ -336,7 +336,10 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text("${strings_name.str_others_tickets}(${othersTicketList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [
+                                  Expanded(child: custom_text(text: "${strings_name.str_others_tickets}(${othersTicketList?.length ?? 0})", textAlign: TextAlign.start, textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 0, maxLines: 2, topValue: 0, bottomValue: 0)),
+                                  Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                ],
                               ),
                             ),
                           ),
@@ -365,12 +368,14 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                      custom_text(text: othersTicketList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
-                                                    ],
+                                                  Expanded(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                        custom_text(text: othersTicketList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                      ],
+                                                    ),
                                                   ),
                                                   Container(
                                                       decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),

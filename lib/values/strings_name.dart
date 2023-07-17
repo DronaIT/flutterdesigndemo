@@ -512,6 +512,8 @@ class strings_name {
   static const String str_help_desk_detail = "Help desk details";
   static const String str_notes = "Notes:";
   static const String str_status = "Status:";
+  static const String str_hubname = "Hub: ";
+  static const String str_specialization = "Specializations: ";
   static const String str_type_here = "Provide feedback...";
   static const String str_update_ticket_status = "Update ticket status";
   static const String str_update_ticket_type = "Update ticket category";
@@ -549,6 +551,5 @@ class strings_name {
   static const String str_select_employee = "Select employee";
   static const String str_provided_duration = "Provided duration: ";
   static const String str_deadline = "Deadline: ";
-
 
 }

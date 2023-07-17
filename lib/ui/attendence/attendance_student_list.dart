@@ -29,7 +29,7 @@ class AttendanceStudentList extends StatefulWidget {
 
 class _AttendanceStudentListState extends State<AttendanceStudentList> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
-  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> test = [];
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> mainData = [];
 
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
@@ -47,7 +47,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     super.initState();
     checkCurrentData();
     if (Get.arguments[0]["studentList"] != null) {
-      test = Get.arguments[0]["studentList"];
+      mainData = Get.arguments[0]["studentList"];
       studentList = Get.arguments[0]["studentList"];
     } else if (Get.arguments[0]["lectureId"] != null) {
       lectureId = Get.arguments[0]["lectureId"];
@@ -82,11 +82,12 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               var studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
               studentData.id = data.fields?.studentIds![i];
               studentData.fields = loginFieldResponse;
-              test.add(studentData);
-              studentList = List.from(test);
+              mainData.add(studentData);
             }
+            mainData.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+
+            studentList = List.from(mainData);
             studentList.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
-            test.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
           }
         });
       } else {
@@ -114,6 +115,8 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     formattedTime = timeFormatter.format(dateTime);
     print(formattedTime);
   }
+
+  List<GlobalKey<CustomRadioButtonState<String>>> key = [];
 
   @override
   Widget build(BuildContext context) {
@@ -180,23 +183,60 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     custom_text(text: "${studentList[index].fields?.name}", textStyles: blackTextSemiBold16),
-                                    custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
-                                    CustomRadioButton(
+                                    custom_text(topValue: 0, bottomValue: 10, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              studentList[index].fields?.attendanceStatus = 1;
+                                              for (int i = 0; i < mainData.length; i++) {
+                                                if (studentList[index].fields!.enrollmentNumber == mainData[i].fields!.enrollmentNumber) {
+                                                  mainData[i].fields!.attendanceStatus = studentList[index].fields!.attendanceStatus;
+                                                }
+                                              }
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(color: studentList[index].fields?.attendanceStatus == 1 ? colors_name.colorPrimary : Theme.of(context).cardColor, border: Border.all(color: colors_name.colorDark)),
+                                                child: custom_text(text: strings_name.str_present, textStyles: studentList[index].fields?.attendanceStatus == 1 ? whiteText14 : blackText14, topValue: 5, bottomValue: 5, leftValue: 15, rightValue: 15))),
+                                        SizedBox(width: 8.h),
+                                        GestureDetector(
+                                            onTap: () {
+                                              studentList[index].fields?.attendanceStatus = 0;
+                                              for (int i = 0; i < mainData.length; i++) {
+                                                if (studentList[index].fields!.enrollmentNumber == mainData[i].fields!.enrollmentNumber) {
+                                                  mainData[i].fields!.attendanceStatus = studentList[index].fields!.attendanceStatus;
+                                                }
+                                              }
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(color: studentList[index].fields?.attendanceStatus == 0 ? colors_name.colorPrimary : Theme.of(context).cardColor, border: Border.all(color: colors_name.colorDark)),
+                                                child: custom_text(text: strings_name.str_absent, textStyles: studentList[index].fields?.attendanceStatus == 0 ? whiteText14 : blackText14, topValue: 5, bottomValue: 5, leftValue: 15, rightValue: 15)))
+                                      ],
+                                    ),
+/*                                    CustomRadioButton(
                                       unSelectedColor: Theme.of(context).cardColor,
                                       buttonLables: [strings_name.str_present, strings_name.str_absent],
                                       buttonValues: [strings_name.str_present, strings_name.str_absent],
                                       radioButtonValue: (value) {
-                                        setState(() {
-                                          if (value == strings_name.str_present) {
-                                            studentList[index].fields?.attendanceStatus = 1;
-                                          } else if (value == strings_name.str_absent) {
-                                            studentList[index].fields?.attendanceStatus = 0;
+                                        if (value == strings_name.str_present) {
+                                          studentList[index].fields?.attendanceStatus = 1;
+                                        } else if (value == strings_name.str_absent) {
+                                          studentList[index].fields?.attendanceStatus = 0;
+                                        }
+                                        key[index].currentState?.selectButton(value);
+                                        for (int i = 0; i < mainData.length; i++) {
+                                          if (studentList[index].fields!.mobileNumber == mainData[i].fields!.mobileNumber) {
+                                            mainData[i].fields!.attendanceStatus = studentList[index].fields!.attendanceStatus;
                                           }
-                                        });
+                                        }
+                                        setState(() {});
                                       },
                                       selectedColor: colors_name.colorPrimary,
                                       defaultSelected: studentList[index].fields?.attendanceStatus == 1 ? strings_name.str_present : strings_name.str_absent,
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),
@@ -382,13 +422,14 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
   void filterResult(String value) {
     if (value.isEmpty) {
       studentList = [];
-      studentList = List.from(test);
+      studentList = List.from(mainData);
       setState(() {});
     } else {
       studentList = [];
-      for (var i = 0; i < test.length; i++) {
-        if (test[i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
-          studentList.add(test[i]);
+      setState(() {});
+      for (var i = 0; i < mainData.length; i++) {
+        if (mainData[i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
+          studentList.add(mainData[i]);
         }
       }
       setState(() {});

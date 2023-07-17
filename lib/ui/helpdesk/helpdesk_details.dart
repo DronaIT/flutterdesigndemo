@@ -129,6 +129,36 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                       ),
                     ],
                   ),
+                  helpDeskTypeResponse!.studentHubName?.isNotEmpty == true ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      custom_text(text: strings_name.str_hubname, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                      Expanded(
+                        child: custom_text(
+                            text: helpDeskTypeResponse!.studentHubName![0].toString(),
+                            textStyles: blackText16,
+                            leftValue: 5,
+                            maxLines: 2,
+                            topValue: 0),
+                      ),
+                    ],
+                  ) : Container(),
+                  helpDeskTypeResponse!.studentSpecializationName?.isNotEmpty == true ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      custom_text(text: strings_name.str_specialization, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                      Expanded(
+                        child: custom_text(
+                            text: helpDeskTypeResponse!.studentSpecializationName![0].toString(),
+                            textStyles: blackText16,
+                            leftValue: 5,
+                            maxLines: 2,
+                            topValue: 0),
+                      ),
+                    ],
+                  ) : Container(),
                   custom_text(
                     text: "${helpDeskTypeResponse!.notes}",
                     textStyles: blackText16,

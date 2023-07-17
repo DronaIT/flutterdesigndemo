@@ -74,6 +74,18 @@ const centerTextStylePrimary18 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const blackText14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+
+const whiteText14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.white,
+);
+
 const blackText16 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w400,

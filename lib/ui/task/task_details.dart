@@ -50,11 +50,11 @@ class _TaskDetailState extends State<TaskDetail> {
     canUpdateTask = Get.arguments[1]["canUpdateTask"];
     helpDeskTypeResponseId = Get.arguments[2]["recordId"];
 
-    if(helpDeskTypeResponse?.deadline != null && helpDeskTypeResponse?.deadline?.isNotEmpty == true) {
+    if (helpDeskTypeResponse?.deadline != null && helpDeskTypeResponse?.deadline?.isNotEmpty == true) {
       dateTimeDeadline = DateFormat("yyyy-MM-dd hh:mm aa").format(DateTime.parse(helpDeskTypeResponse!.deadline!).toLocal());
     }
 
-    if(helpDeskTypeResponse?.status == TableNames.TICKET_STATUS_COMPLETED){
+    if (helpDeskTypeResponse?.status == TableNames.TICKET_STATUS_COMPLETED) {
       canUpdateTask = false;
     }
   }
@@ -108,59 +108,62 @@ class _TaskDetailState extends State<TaskDetail> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      custom_text(text: "${strings_name.str_task}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                      Expanded(
-                        child: custom_text(
-                            text: "${helpDeskTypeResponse!.notes}",
-                            textStyles: blackTextSemiBold16,
-                            maxLines: 5000,
-                            leftValue: 5,
-                            rightValue: 0,
-                            topValue: 0),
-                      ),
-                    ],
-                  ),
-                  helpDeskTypeResponse!.required_time != null ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      custom_text(text: strings_name.str_provided_duration, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                      custom_text(
-                          text: helpDeskTypeResponse!.required_time != null ? "${helpDeskTypeResponse?.required_time} Hours" : "",
-                          textStyles: blackTextSemiBold16,
-                          leftValue: 5,
-                          topValue: 0),
-                    ],
-                  ) : Container(),
-                  dateTimeDeadline.isNotEmpty ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      custom_text(text: strings_name.str_deadline, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                      custom_text(
-                          text: dateTimeDeadline,
-                          textStyles: blackTextSemiBold16,
-                          leftValue: 5,
-                          topValue: 0),
-                    ],
-                  ) : Container(),
-                  helpDeskTypeResponse!.assignedEmployeeName != null && helpDeskTypeResponse!.assignedEmployeeName!.isNotEmpty ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                      Expanded(
-                        child: custom_text(
-                            text: helpDeskTypeResponse!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "",
-                            textStyles: blackTextSemiBold16,
-                            leftValue: 5,
-                            maxLines: 5000,
-                            topValue: 0),
-                      ),
-                    ],
-                  ) : Container(),
+                  helpDeskTypeResponse!.studentHubName?.isNotEmpty == true
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_hubname, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            Expanded(
+                              child: custom_text(text: helpDeskTypeResponse!.studentHubName![0].toString(), textStyles: blackText16, leftValue: 5, maxLines: 2, topValue: 0),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  helpDeskTypeResponse!.studentSpecializationName?.isNotEmpty == true
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_specialization, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            Expanded(
+                              child: custom_text(text: helpDeskTypeResponse!.studentSpecializationName![0].toString(), textStyles: blackText16, leftValue: 5, maxLines: 2, topValue: 0),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  custom_text(text: "${strings_name.str_task}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0, bottomValue: 5),
+                  custom_text(text: "${helpDeskTypeResponse!.notes}", textStyles: blackTextSemiBold16, maxLines: 5000, leftValue: 5, rightValue: 0, topValue: 0),
+                  helpDeskTypeResponse!.required_time != null
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_provided_duration, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            custom_text(text: helpDeskTypeResponse!.required_time != null ? "${helpDeskTypeResponse?.required_time} Hours" : "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0),
+                          ],
+                        )
+                      : Container(),
+                  dateTimeDeadline.isNotEmpty
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_deadline, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            custom_text(text: dateTimeDeadline, textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0),
+                          ],
+                        )
+                      : Container(),
+                  helpDeskTypeResponse!.assignedEmployeeName != null && helpDeskTypeResponse!.assignedEmployeeName!.isNotEmpty
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            Expanded(
+                              child: custom_text(text: helpDeskTypeResponse!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, maxLines: 5000, topValue: 0),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   Row(
                     children: [
                       custom_text(
@@ -199,7 +202,8 @@ class _TaskDetailState extends State<TaskDetail> {
                               {"recordId": helpDeskTypeResponseId}
                             ])?.then((value) {
                               Get.back(result: true);
-                            });;
+                            });
+                            ;
                           })),
                 ],
               ),
