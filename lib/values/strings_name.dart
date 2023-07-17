@@ -225,6 +225,8 @@ class strings_name {
   static const String str_get_students = "Get Students";
   static const String str_students = "Students";
 
+  static const String str_select_type = "Select Placed-Unplaced type";
+
 
   static const String str_empty_semester = "Please select semester";
   static const String str_empty_division = "Please select division";
@@ -551,5 +553,9 @@ class strings_name {
   static const String str_select_employee = "Select employee";
   static const String str_provided_duration = "Provided duration: ";
   static const String str_deadline = "Deadline: ";
+
+
+  static const String str_materials = "Materials";
+
 
 }

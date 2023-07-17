@@ -26,6 +26,7 @@ import '../../api/dio_exception.dart';
 import '../../models/base_api_response.dart';
 import '../../models/typeofsectoreresponse.dart';
 import 'approved_internship.dart';
+import 'filter_placement_screen_student.dart';
 import 'published_internship.dart';
 import 'selected_student.dart';
 import 'shortlist_students.dart';
@@ -46,7 +47,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
 
   // For student
-  bool applyInternship = false, appliedInternship = false, completedInternShip = false,palced_uplaced_sList = false, uploadResume = false,shortListedInternship = false, selectedInternship = false;
+  bool applyInternship = false, appliedInternship = false, completedInternShip = false, palced_uplaced_sList = false, uploadResume = false, shortListedInternship = false, selectedInternship = false;
 
   BaseLoginResponse<TypeOfsectoreResponse> typeOfResponse = BaseLoginResponse();
 
@@ -421,7 +422,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(() => const Placed_unplaced_SList());
+                        Get.to(() => const FilterPlacementScreenStudent());
                       },
                     ),
                   ),

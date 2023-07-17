@@ -13,22 +13,25 @@ import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
+import '../../models/base_api_response.dart';
 import '../../models/login_fields_response.dart';
+import '../../models/specialization_response.dart';
+import '../../models/subject_response.dart';
 import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 
-class UploadDocumentsPlacement extends StatefulWidget {
-  const UploadDocumentsPlacement({Key? key}) : super(key: key);
+class UploadDocumentsAcademic extends StatefulWidget {
+  const UploadDocumentsAcademic({Key? key}) : super(key: key);
 
   @override
-  State<UploadDocumentsPlacement> createState() => _UploadDocumentsPlacementState();
+  State<UploadDocumentsAcademic> createState() => _UploadDocumentsAcademicState();
 }
 
-class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
+class _UploadDocumentsAcademicState extends State<UploadDocumentsAcademic> {
   bool isVisible = false;
-  final createStudentRepository = getIt.get<ApiRepository>();
+  final apiRepository = getIt.get<ApiRepository>();
   LoginFieldsResponse appData = LoginFieldsResponse();
 
   var titleController = TextEditingController();
@@ -37,28 +40,31 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
 
   String docPath = "";
   String docName = "";
-
+  List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
 
   @override
   void initState() {
     super.initState();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
-    getSampleFile();
+    callSubjectData();
   }
 
-  Future<void> getSampleFile() async {
+
+
+  callSubjectData() async {
     setState(() {
       isVisible = true;
     });
     try {
-      var query = "(${TableNames.TB_USERS_PHONE}='${PreferenceUtils.getLoginData().mobileNumber}')";
-      var data = await createStudentRepository.registerApi(query);
-      if (data.records != null) {
-        appData = data.records!.first.fields!;
-      }
-      setState(() {
-        isVisible = false;
-      });
+
+        //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+
+        // var data = await apiRepository.getSubjectsApi(query);
+        // if (data.records?.isNotEmpty == true) {
+        //   data.records?.sort((a, b) => a.fields!.subjectTitle!.toLowerCase().compareTo(b.fields!.subjectTitle!.toLowerCase()));
+        //   subjectData = data.records;
+        // }
+
     } on DioError catch (e) {
       setState(() {
         isVisible = false;
@@ -66,6 +72,9 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
+    setState(() {
+      isVisible = false;
+    });
   }
 
   @override
@@ -78,38 +87,6 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
               Center(
                 child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: appData.resume?.isNotEmpty == true
-                    ? Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        child: ListView.builder(
-                            primary: false,
-                            shrinkWrap: true,
-                            itemCount: appData.resume?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 5,
-                                child: Container(
-                                  color: colors_name.colorWhite,
-                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(child: Text("${appData.resume?[index].filename}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            await launchUrl(Uri.parse(appData.resume![index].url!), mode: LaunchMode.externalApplication);
-                                          },
-                                          child: const Icon(Icons.download, size: 30, color: colors_name.colorPrimary))
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                      )
-                    : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
-              )
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -236,7 +213,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
         map["url"] = path;
         listData.add(map);
         Map<String, dynamic> query = {"resume": listData};
-        var resp = await createStudentRepository.addToken(query, PreferenceUtils.getLoginRecordId());
+        var resp = await apiRepository.addToken(query, PreferenceUtils.getLoginRecordId());
         if (resp != null) {
           setState(() {
             isVisible = false;

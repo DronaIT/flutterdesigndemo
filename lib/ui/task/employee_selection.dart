@@ -1,23 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
-import 'package:flutterdesigndemo/utils/preference.dart';
-import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
+import '../../customwidget/custom_edittext_search.dart';
 
 class EmployeeSelection extends StatefulWidget {
   const EmployeeSelection({Key? key}) : super(key: key);
@@ -29,10 +27,13 @@ class EmployeeSelection extends StatefulWidget {
 class _EmployeeSelectionState extends State<EmployeeSelection> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? testEmployeeData = [];
+
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? selectedData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
   String offset = "";
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -65,11 +66,17 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
           employeeData?.clear();
         }
         employeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        testEmployeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           getRecords();
         } else {
           employeeData?.sort((a, b) {
+            var adate = a.fields!.employeeName;
+            var bdate = b.fields!.employeeName;
+            return adate!.compareTo(bdate!);
+          });
+          testEmployeeData?.sort((a, b) {
             var adate = a.fields!.employeeName;
             var bdate = b.fields!.employeeName;
             return adate!.compareTo(bdate!);
@@ -91,6 +98,7 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
           isVisible = false;
           if (offset.isEmpty) {
             employeeData = [];
+            testEmployeeData = [];
           }
         });
         offset = "";
@@ -112,6 +120,29 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
       body: Stack(children: [
         employeeData?.isNotEmpty == true
             ? Column(children: [
+                SizedBox(height: 10.h),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      employeeData = [];
+                      employeeData = List.from(testEmployeeData as Iterable);
+                      setState(() {});
+                    } else {
+                      employeeData = [];
+                      if (testEmployeeData != null && testEmployeeData?.isNotEmpty == true) {
+                        for (var i = 0; i < testEmployeeData!.length; i++) {
+                          if (testEmployeeData![i].fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
+                            employeeData?.add(testEmployeeData![i]);
+                          }
+                        }
+                      }
+                      setState(() {});
+                    }
+                  },
+                ),
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.all(10),
