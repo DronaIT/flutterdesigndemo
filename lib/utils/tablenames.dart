@@ -109,6 +109,7 @@ class TableNames {
   static const CLM_ABSENT_SUBJECT_IDS = "absent_subject_id";
 
   static const CLM_ASSIGNED_TO = "assigned_to";
+  static const CLM_ASSIGNED_NUMBER = "assigned_mobile_number";
   static const CLM_AUTHORITY_OF = "authority_of";
   static const CLM_AUTHORITY_OF_NUMBER = "authority_mobile_number";
   static const CLM_CREATED_BY_EMPLOYEE = "created_by_employee";
@@ -116,6 +117,7 @@ class TableNames {
   static const CLM_CREATED_BY_STUDENT = "created_by_student";
   static const CLM_CREATED_BY_ORGANIZATION = "created_by_organization";
   static const CLM_FIELD_TYPE = "field_type";
+  static const CLM_TICKET_STATUS = "Status";
 
   static const CLM_STUDENT_HUBNAME = "student_hub_name";
   static const CLM_STUDENT_SPENAME = "student_specialization_name";

@@ -13,6 +13,7 @@ class HelpDeskRequest {
   String? actual_time_taken;
   String? actual_finished_on;
   String? Status;
+  String? remarks;
 
   HelpDeskRequest({
     this.Notes,
@@ -29,6 +30,7 @@ class HelpDeskRequest {
     this.actual_time_taken,
     this.actual_finished_on,
     this.Status,
+    this.remarks,
   });
 
   HelpDeskRequest.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class HelpDeskRequest {
     actual_time_taken = json['actual_time_taken'];
     actual_finished_on = json['actual_finished_on'];
     Status = json['Status'];
+    remarks = json['resolution_remark'];
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +67,7 @@ class HelpDeskRequest {
     data['actual_time_taken'] = this.actual_time_taken;
     data['actual_finished_on'] = this.actual_finished_on;
     data['Status'] = this.Status;
+    data['resolution_remark'] = this.remarks;
     return data;
   }
 }

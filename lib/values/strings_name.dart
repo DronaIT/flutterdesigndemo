@@ -554,8 +554,9 @@ class strings_name {
   static const String str_provided_duration = "Provided duration: ";
   static const String str_deadline = "Deadline: ";
 
-
   static const String str_materials = "Materials";
-
-
+  static const String str_ticket_status = "Status";
+  static const String str_ticket_category = "Ticket category";
+  static const String str_type_remarks = "Provide remarks...";
+  static const String str_remarks = "Remarks";
 }

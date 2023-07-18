@@ -27,7 +27,7 @@ class EmployeeSelection extends StatefulWidget {
 class _EmployeeSelectionState extends State<EmployeeSelection> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
-  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? testEmployeeData = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mainEmployeeData = [];
 
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? selectedData = [];
 
@@ -63,32 +63,32 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
       var data = await apiRepository.getEmployeeListApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
-          employeeData?.clear();
+          mainEmployeeData?.clear();
         }
-        employeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
-        testEmployeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        mainEmployeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           getRecords();
         } else {
-          employeeData?.sort((a, b) {
+
+          mainEmployeeData?.sort((a, b) {
             var adate = a.fields!.employeeName;
             var bdate = b.fields!.employeeName;
             return adate!.compareTo(bdate!);
           });
-          testEmployeeData?.sort((a, b) {
-            var adate = a.fields!.employeeName;
-            var bdate = b.fields!.employeeName;
-            return adate!.compareTo(bdate!);
-          });
+
           for (var i = 0; i < selectedData!.length; i++) {
-            for (var j = 0; j < employeeData!.length; j++) {
-              if (employeeData![j].fields!.employeeId == selectedData![i].fields!.employeeId) {
-                employeeData![j].fields!.selected = true;
+            for (var j = 0; j < mainEmployeeData!.length; j++) {
+              if (mainEmployeeData![j].fields!.employeeId == selectedData![i].fields!.employeeId) {
+                mainEmployeeData![j].fields!.selected = true;
                 break;
               }
             }
           }
+
+          employeeData = [];
+          employeeData = List.from(mainEmployeeData!);
+
           setState(() {
             isVisible = false;
           });
@@ -98,7 +98,7 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
           isVisible = false;
           if (offset.isEmpty) {
             employeeData = [];
-            testEmployeeData = [];
+            mainEmployeeData = [];
           }
         });
         offset = "";
@@ -118,7 +118,7 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_employee),
       body: Stack(children: [
-        employeeData?.isNotEmpty == true
+        mainEmployeeData?.isNotEmpty == true
             ? Column(children: [
                 SizedBox(height: 10.h),
                 CustomEditTextSearch(
@@ -128,14 +128,14 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
                   onChanges: (value) {
                     if (value.isEmpty) {
                       employeeData = [];
-                      employeeData = List.from(testEmployeeData as Iterable);
+                      employeeData = List.from(mainEmployeeData as Iterable);
                       setState(() {});
                     } else {
                       employeeData = [];
-                      if (testEmployeeData != null && testEmployeeData?.isNotEmpty == true) {
-                        for (var i = 0; i < testEmployeeData!.length; i++) {
-                          if (testEmployeeData![i].fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
-                            employeeData?.add(testEmployeeData![i]);
+                      if (mainEmployeeData != null && mainEmployeeData?.isNotEmpty == true) {
+                        for (var i = 0; i < mainEmployeeData!.length; i++) {
+                          if (mainEmployeeData![i].fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
+                            employeeData?.add(mainEmployeeData![i]);
                           }
                         }
                       }
@@ -143,45 +143,53 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
                     }
                   },
                 ),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: ListView.builder(
-                        itemCount: employeeData?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            margin: const EdgeInsets.all(5),
-                            child: GestureDetector(
-                              child: Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.all(12),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
-                                    if (employeeData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  employeeData![index].fields!.selected = !employeeData![index].fields!.selected;
-                                });
-                              },
-                            ),
-                          );
-                        }),
-                  ),
-                ),
+                employeeData?.isNotEmpty == true
+                    ? Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          child: ListView.builder(
+                              itemCount: employeeData?.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 5,
+                                  margin: const EdgeInsets.all(5),
+                                  child: GestureDetector(
+                                    child: Container(
+                                      color: colors_name.colorWhite,
+                                      padding: const EdgeInsets.all(12),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
+                                          if (employeeData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary),
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        employeeData![index].fields!.selected = !employeeData![index].fields!.selected;
+                                        for (int i = 0; i < mainEmployeeData!.length; i++) {
+                                          if (employeeData![index].fields!.mobileNumber == mainEmployeeData![i].fields!.mobileNumber) {
+                                            mainEmployeeData![i].fields!.selected = employeeData![index].fields!.selected;
+                                          }
+                                        }
+                                        setState(() {});
+                                      });
+                                    },
+                                  ),
+                                );
+                              }),
+                        ),
+                      )
+                    : Container(),
                 SizedBox(height: 20.h),
                 CustomButton(
                   text: strings_name.str_submit,
                   click: () {
                     List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? selectedEmployeeData = [];
-                    for (var i = 0; i < employeeData!.length; i++) {
-                      if (employeeData![i].fields!.selected) {
-                        selectedEmployeeData.add(employeeData![i]);
+                    for (var i = 0; i < mainEmployeeData!.length; i++) {
+                      if (mainEmployeeData![i].fields!.selected) {
+                        selectedEmployeeData.add(mainEmployeeData![i]);
                       }
                     }
                     if (selectedEmployeeData.isNotEmpty) {

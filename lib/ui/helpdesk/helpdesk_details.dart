@@ -187,14 +187,11 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                   SizedBox(height: 5.h),
                   Visibility(
                     visible: helpDeskTypeResponse!.resolutionRemark?.trim().isNotEmpty == true,
-                    child: custom_text(
-                      text: "Remarks: ${helpDeskTypeResponse!.resolutionRemark}",
-                      textStyles: blackText16,
-                      topValue: 5,
-                      bottomValue: 5,
-                      leftValue: 5,
-                      maxLines: 5000,
-                    ),
+                    child: Column(children: [
+                      SizedBox(height: 3.h),
+                      custom_text(text: "${strings_name.str_remarks}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0, bottomValue: 5),
+                      custom_text(text: "${helpDeskTypeResponse!.resolutionRemark}", textStyles: blackTextSemiBold16, maxLines: 5000, leftValue: 5, rightValue: 0, topValue: 0),
+                    ]),
                   ),
                   Visibility(
                       visible: helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED && canUpdateTicketStatus,

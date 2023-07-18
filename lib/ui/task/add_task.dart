@@ -48,6 +48,7 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController deadlineController = TextEditingController();
   TextEditingController actualDurationController = TextEditingController();
   TextEditingController actualFinishedOnController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
 
   int taskTypeId = 0;
   String taskFilePath = "", taskFileTitle = "";
@@ -361,6 +362,16 @@ class _AddTaskState extends State<AddTask> {
                                 });
                               },
                             ),
+                            custom_edittext(
+                              type: TextInputType.multiline,
+                              textInputAction: TextInputAction.newline,
+                              controller: commentController,
+                              topValue: 5,
+                              maxLines: 5,
+                              minLines: 4,
+                              hintText: strings_name.str_type_remarks,
+                              maxLength: 5000,
+                            ),
                           ],
                         )
                       : Container(),
@@ -498,6 +509,10 @@ class _AddTaskState extends State<AddTask> {
       }
       helpDeskReq.Status = TableNames.TICKET_STATUS_OPEN;
       helpDeskReq.field_type = TableNames.HELPDESK_TYPE_TASK;
+    } else {
+      if (commentController.text.trim().isNotEmpty) {
+        helpDeskReq.remarks = commentController.text.trim();
+      }
     }
     if (taskFilePath.isNotEmpty) {
       Map<String, dynamic> map = Map();

@@ -30,7 +30,7 @@ class FilterScreenHelpdesk extends StatefulWidget {
 }
 
 class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
-  bool isVisible = false;
+  bool isVisible = false, fromTask = false;
   var type = 0;
 
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
@@ -42,7 +42,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? speResponseArray = [];
 
   List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
-  int semesterValue = 1;
+  int semesterValue = -1;
 
   List<String> divisionResponseArray = <String>[TableNames.DIVISION_A, TableNames.DIVISION_B, TableNames.DIVISION_C, TableNames.DIVISION_D];
   String divisionValue = "";
@@ -56,6 +56,9 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
   BaseApiResponseWithSerializable<HelpDeskTypeResponse>? helpDeskTypeResponses;
   int helpDeskId = 0;
 
+  List<String> ticketStatusArray = <String>[TableNames.TICKET_STATUS_OPEN, TableNames.TICKET_STATUS_INPROGRESS, TableNames.TICKET_STATUS_HOLD, TableNames.TICKET_STATUS_RESOLVED, TableNames.TICKET_STATUS_SUGGESTION, TableNames.TICKET_STATUS_COMPLETED];
+  String ticketValue = "";
+
   final apiRepository = getIt.get<ApiRepository>();
   String offset = "";
 
@@ -66,9 +69,14 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
   @override
   void initState() {
     super.initState();
+    fromTask = Get.arguments;
 
-    hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
+    hubResponseArray = PreferenceUtils
+        .getHubList()
+        .records;
+    speResponseArray = PreferenceUtils
+        .getSpecializationList()
+        .records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -106,7 +114,10 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery.of(context).size.width;
+    var viewWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     return SafeArea(
         child: Scaffold(
             appBar: AppWidgets.appBarWithoutBack(title),
@@ -117,7 +128,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                     children: [
                       SizedBox(height: 15.h),
                       custom_text(
-                        text: strings_name.str_help_desk_type,
+                        text: strings_name.str_ticket_category,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                       ),
@@ -153,7 +164,41 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                       ),
                       SizedBox(height: 5.h),
                       custom_text(
-                        text: strings_name.str_select_hub_r,
+                        text: strings_name.str_ticket_status,
+                        alignment: Alignment.topLeft,
+                        textStyles: blackTextSemiBold16,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                              width: viewWidth,
+                              child: DropdownButtonFormField<String>(
+                                elevation: 16,
+                                style: blackText16,
+                                focusColor: Colors.white,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    ticketValue = newValue!;
+                                  });
+                                },
+                                items: ticketStatusArray.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.h),
+                      custom_text(
+                        text: fromTask ? strings_name.str_select_hub : strings_name.str_select_hub_r,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                         bottomValue: 0,
@@ -221,7 +266,6 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                         width: viewWidth,
                         child: DropdownButtonFormField<int>(
-                          value: semesterValue,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -276,61 +320,62 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                       ),
                       subjectResponseArray!.isNotEmpty
                           ? Column(
-                              children: [
-                                SizedBox(height: 5.h),
-                                custom_text(
-                                  text: strings_name.str_view_subject,
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold16,
+                        children: [
+                          SizedBox(height: 5.h),
+                          custom_text(
+                            text: strings_name.str_view_subject,
+                            alignment: Alignment.topLeft,
+                            textStyles: blackTextSemiBold16,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                  width: viewWidth,
+                                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
+                                    value: subjectResponse,
+                                    elevation: 16,
+                                    isExpanded: true,
+                                    style: blackText16,
+                                    focusColor: Colors.white,
+                                    onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
+                                      setState(() {
+                                        subjectValue = newValue!.fields!.ids!.toString();
+                                        subjectResponse = newValue;
+                                        subjectRecordId = newValue.id!;
+                                        // getUnits();
+                                      });
+                                    },
+                                    items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                      return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
+                                        value: value,
+                                        child: Text(value.fields!.subjectTitle!.toString(), overflow: TextOverflow.visible),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      fit: FlexFit.loose,
-                                      child: Container(
-                                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                                        width: viewWidth,
-                                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
-                                          value: subjectResponse,
-                                          elevation: 16,
-                                          isExpanded: true,
-                                          style: blackText16,
-                                          focusColor: Colors.white,
-                                          onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
-                                            setState(() {
-                                              subjectValue = newValue!.fields!.ids!.toString();
-                                              subjectResponse = newValue;
-                                              subjectRecordId = newValue.id!;
-                                              // getUnits();
-                                            });
-                                          },
-                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
-                                            return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
-                                              value: value,
-                                              child: Text(value.fields!.subjectTitle!.toString(), overflow: TextOverflow.visible),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
                           : Container(),
                       SizedBox(height: 10.h),
                       CustomButton(
                         click: () async {
-                          if (hubValue.isEmpty) {
+                          if (!fromTask && hubValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_hub);
                           } else {
                             Get.back(result: [
-                              {"hubName": hubResponse?.fields?.hubName},
+                              {"hubName": hubResponse?.fields?.hubName ?? ""},
                               {"specializationName": speResponse?.fields?.specializationName ?? ""},
-                              {"semester": semesterValue.toString() ?? ""},
+                              {"semester": semesterValue != -1 ? semesterValue.toString() : ""},
                               {"division": divisionValue.toString() ?? ""},
                               {"helpdeskTypeId": helpDeskId ?? 0},
+                              {"ticketValue": ticketValue.toString() ?? ""},
                             ]);
                           }
                         },
