@@ -236,7 +236,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
         map["url"] = path;
         listData.add(map);
         Map<String, dynamic> query = {"resume": listData};
-        var resp = await createStudentRepository.addToken(query, PreferenceUtils.getLoginRecordId());
+        var resp = await createStudentRepository.updateStudentDataApi(query, PreferenceUtils.getLoginRecordId());
         if (resp != null) {
           setState(() {
             isVisible = false;

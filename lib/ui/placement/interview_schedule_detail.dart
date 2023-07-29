@@ -83,24 +83,27 @@ class _InterViewScheduleDetailState extends State<InterViewScheduleDetail> {
                       ),
                       custom_text(text: "${strings_name.str_interview_date_time} : ${formatterShow.format(DateTime.parse(jobOpportunityData.records!.first.fields!.interviewDatetime!))}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
                       custom_text(text: "${strings_name.str_special_instrcutor} :", textStyles: blackTextSemiBold15, topValue: 8, maxLines: 1000, bottomValue: 0, leftValue: 5),
-                      custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewInstruction}", textStyles: blackTextSemiBold14, topValue: 2, maxLines: 1000, bottomValue: 5, leftValue: 5),
+                      custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewInstruction}", textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
                       custom_text(text: "${strings_name.str_interview_address} :", textStyles: blackTextSemiBold15, topValue: 8, bottomValue: 5, leftValue: 5),
                       custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewPlaceAddress}", textStyles: blackTextSemiBold14, topValue: 2, maxLines: 100, bottomValue: 5, leftValue: 5),
-                      Container(
-                          padding: const EdgeInsets.all(5),
-                          child: Column(children: [
-                            custom_text(text: "${strings_name.str_google_map_link} : ", textStyles: blackTextSemiBold15, topValue: 5, bottomValue: 3, leftValue: 0),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: SelectableLinkify(
-                                text: "${jobOpportunityData.records?.first.fields!.interviewPlaceUrl}",
-                                style: blackTextSemiBold15,
-                                onOpen: (link) async {
-                                  await launchUrl(Uri.parse(link.url));
-                                },
+                      Visibility(
+                        visible: jobOpportunityData.records?.first.fields!.interviewPlaceUrl != null,
+                        child: Container(
+                            padding: const EdgeInsets.all(5),
+                            child: Column(children: [
+                              custom_text(text: "${strings_name.str_google_map_link} : ", textStyles: blackTextSemiBold15, topValue: 5, bottomValue: 3, leftValue: 0),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: SelectableLinkify(
+                                  text: "${jobOpportunityData.records?.first.fields!.interviewPlaceUrl}",
+                                  style: blackTextSemiBold15,
+                                  onOpen: (link) async {
+                                    await launchUrl(Uri.parse(link.url));
+                                  },
+                                ),
                               ),
-                            ),
-                          ])),
+                            ])),
+                      ),
                       custom_text(text: "${strings_name.str_contact_person}: ${jobOpportunityData.records?.first.fields!.contactNameFromCompanyId?.first}", textStyles: blackTextSemiBold15, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                       custom_text(text: "${strings_name.str_codinator_name}: ${jobOpportunityData.records?.first.fields!.coordinatorName}", textStyles: blackTextSemiBold15, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                       custom_text(text: "${strings_name.str_codinator_number}: ${jobOpportunityData.records?.first.fields!.coordinatorMobileNumber}", textStyles: blackTextSemiBold15, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),

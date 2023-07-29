@@ -142,14 +142,6 @@ class Utils {
 
   static Future<String?> getId() async {
     String? deviceId;
-/*
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      deviceId = await PlatformDeviceId.getDeviceId;
-    } on PlatformException {
-      deviceId = 'Failed to get deviceId.';
-    }
-*/
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     if (Platform.isIOS) {
       messaging.requestPermission();

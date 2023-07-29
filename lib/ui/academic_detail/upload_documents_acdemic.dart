@@ -213,7 +213,7 @@ class _UploadDocumentsAcademicState extends State<UploadDocumentsAcademic> {
         map["url"] = path;
         listData.add(map);
         Map<String, dynamic> query = {"resume": listData};
-        var resp = await apiRepository.addToken(query, PreferenceUtils.getLoginRecordId());
+        var resp = await apiRepository.updateStudentDataApi(query, PreferenceUtils.getLoginRecordId());
         if (resp != null) {
           setState(() {
             isVisible = false;
