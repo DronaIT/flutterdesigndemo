@@ -75,7 +75,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                 applied_students_enrollment_number: jobpportunityData.records![i].fields!.applied_students_enrollment_number![j],
                 applied_students_name: jobpportunityData.records![i].fields!.applied_students_name![j],
                 applied_students: jobpportunityData.records![i].fields!.appliedStudents![j],
-                applied_students_number: jobpportunityData.records![i].fields!.applied_students_mobile![j],
+                applied_students_number: jobpportunityData.records![i].fields!.applied_students_number![j],
                 applied_students_resume: jobpportunityData.records![i].fields!.applied_students_resume![j].url
             );
             studentResponse.add(jobModuleResponse);
