@@ -395,6 +395,7 @@ class strings_name {
 
   static const String str_please_select_one_student = "Please shortlist one student";
   static const String str_schadule_interview = "Schedule interview";
+  static const String str_export_selected_student = "Export selected student details";
 
   static const String str_job_interview_job_timing = "Interview job timing";
   static const String str_enter_time = "Enter date time";

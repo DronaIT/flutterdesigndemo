@@ -55,7 +55,7 @@ class _PublishedInterDetailState extends State<PublishedInterDetail> {
                 applied_students_email: jobpportunityData.records![i].fields!.applied_students_email![j],
                 applied_students_enrollment_number: jobpportunityData.records![i].fields!.applied_students_enrollment_number![j],
                 applied_students_name: jobpportunityData.records![i].fields!.applied_students_name![j],
-                applied_students_number: jobpportunityData.records![i].fields!.appliedStudents![j]);
+                applied_students: jobpportunityData.records![i].fields!.appliedStudents![j]);
             studentResponse.add(jobModuleResponse);
           }
         }
