@@ -90,6 +90,8 @@ class StartState extends State<SplashScreen> {
         if (data.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
           if(data.records!.first.fields!.token == null){
+            redirectToLogin();
+/*
             Map<String, dynamic> query = {
               "token":deviceId
             };
@@ -97,16 +99,16 @@ class StartState extends State<SplashScreen> {
             await PreferenceUtils.setLoginData(data.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
             Get.offAll(const Home());
-          } else if( data.records!.first.fields!.token == deviceId){
+*/
+          } else if(data.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginData(data.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
             Get.offAll(const Home());
           }else{
-            PreferenceUtils.clearPreference();
-            Get.offAll(const Login());
+            redirectToLogin();
           }
         } else {
-          Get.offAll(const Login());
+          redirectToLogin();
         }
       } on DioError catch (e) {
         final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -120,6 +122,8 @@ class StartState extends State<SplashScreen> {
         if (dataEmployee.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
           if(dataEmployee.records!.first.fields!.token == null){
+            redirectToLogin();
+/*
             Map<String, dynamic> query = {
               "token":deviceId
             };
@@ -127,16 +131,16 @@ class StartState extends State<SplashScreen> {
             await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
             Get.offAll(const Home());
+*/
           } else if( dataEmployee.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
             Get.offAll(const Home());
           }else{
-            PreferenceUtils.clearPreference();
-            Get.offAll(const Login());
+            redirectToLogin();
           }
         } else {
-          Get.offAll(const Login());
+          redirectToLogin();
         }
       } on DioError catch (e) {
         final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -150,29 +154,27 @@ class StartState extends State<SplashScreen> {
         if (dataOrganization.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
           if(dataOrganization.records!.first.fields!.token == null){
-            Map<String, dynamic> query = {
-              "token":deviceId
-            };
-            await apiRepository.addTokenOrganization(query,dataOrganization.records!.first.id!);
-            await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
-            await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
-            Get.offAll(const Home());
+            redirectToLogin();
           } else if( dataOrganization.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
             Get.offAll(const Home());
           }else{
-            PreferenceUtils.clearPreference();
-            Get.offAll(const Login());
+            redirectToLogin();
           }
         } else {
-          Get.offAll(const Login());
+          redirectToLogin();
         }
       } on DioError catch (e) {
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
     }
+  }
+
+  redirectToLogin() {
+    PreferenceUtils.clearPreference();
+    Get.offAll(const Login());
   }
 
   initScreen(BuildContext context) {
