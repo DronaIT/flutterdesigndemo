@@ -125,21 +125,24 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            custom_text(
-                                              text: "${studentResponse[index].applied_students_name}",
-                                              textStyles: centerTextStyle14,
-                                              topValue: 0,
-                                              maxLines: 2,
-                                              bottomValue: 5,
-                                              leftValue: 5,
-                                            ),
-                                            //custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
-                                            custom_text(text: "${strings_name.str_email}: ${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                            custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              custom_text(
+                                                text: "${studentResponse[index].applied_students_name}",
+                                                textStyles: centerTextStyle14,
+                                                topValue: 0,
+                                                maxLines: 2,
+                                                bottomValue: 5,
+                                                leftValue: 5,
+                                              ),
+                                              //custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_email}: ${studentResponse[index].applied_students_email}",
+                                                  textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                            ],
+                                          ),
                                         ),
                                         if (studentResponse[index].selected) const Icon(Icons.check, size: 25, color: colors_name.colorPrimary)
                                       ],
