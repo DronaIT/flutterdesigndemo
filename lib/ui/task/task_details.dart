@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -11,6 +12,7 @@ import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_edittext.dart';
@@ -132,7 +134,24 @@ class _TaskDetailState extends State<TaskDetail> {
                         )
                       : Container(),
                   custom_text(text: "${strings_name.str_task}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0, bottomValue: 5),
-                  custom_text(text: "${helpDeskTypeResponse!.notes}", textStyles: blackTextSemiBold16, maxLines: 5000, leftValue: 5, rightValue: 0, topValue: 0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 8),
+                          child: SelectableLinkify(
+                            text: "${helpDeskTypeResponse!.notes?.trim()}",
+                            style: blackText16,
+                            onOpen: (link) async {
+                              await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication);
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                   helpDeskTypeResponse!.required_time != null
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -187,6 +206,13 @@ class _TaskDetailState extends State<TaskDetail> {
                       custom_text(text: "${helpDeskTypeResponse!.resolutionRemark}", textStyles: blackTextSemiBold16, maxLines: 5000, leftValue: 5, rightValue: 0, topValue: 0),
                     ]),
                   ),
+                  helpDeskTypeResponse?.status_updated_by_employee_name?.isNotEmpty != null ? Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        custom_text(text: "${strings_name.str_updated_by}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 5, bottomValue: 5),
+                        custom_text(text: helpDeskTypeResponse!.status_updated_by_employee_name![0], textStyles: blackTextSemiBold16, maxLines: 2, leftValue: 5, rightValue: 0, topValue: 5),
+                      ]) : Container(),
                   Visibility(
                       visible: (helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED || helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_COMPLETED) && canUpdateTask,
                       child: CustomButton(

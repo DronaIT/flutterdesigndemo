@@ -525,7 +525,8 @@ class strings_name {
 
   static const String str_task = "Task";
   static const String str_my_task = "My task";
-  static const String str_others_task = "Task assigned to other";
+  static const String str_task_assigned_byme = "Task assigned by me";
+  static const String str_others_task = "Task of my subordinates";
 
   static const String str_task_id = "Task No:";
   static const String str_add_task = "Add task";
@@ -560,4 +561,5 @@ class strings_name {
   static const String str_ticket_category = "Ticket category";
   static const String str_type_remarks = "Provide remarks...";
   static const String str_remarks = "Remarks";
+  static const String str_updated_by = "Updated by";
 }

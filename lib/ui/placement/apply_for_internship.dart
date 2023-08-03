@@ -39,9 +39,11 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
 
   getRecords() async {
     if (PreferenceUtils.getIsLogin() == 1) {
-      setState(() {
-        isVisible = true;
-      });
+      if(!isVisible) {
+        setState(() {
+          isVisible = true;
+        });
+      }
       var loginData = PreferenceUtils.getLoginData();
       var query = "AND(";
       query += "FIND('${strings_name.str_job_status_published}',${TableNames.CLM_STATUS}, 0)";
@@ -140,7 +142,6 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
         Utils.showSnackBarUsingGet(errorMessage);
       }
 
-
       setState(() {
         isVisible = false;
       });
@@ -218,6 +219,7 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
                                   bottomValue: 5,
                                   leftValue: 5,
                                 ),
+                                custom_text(text: "Company Name: ${jobOpportunityList?[index].fields!.companyName?.first}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 jobOpportunityList?[index].fields!.stipendRangeMin != null && jobOpportunityList?[index].fields!.stipendRangeMax != null
                                     ? custom_text(
                                         text: "Stipend: ${jobOpportunityList?[index].fields!.stipendRangeMin} - ${jobOpportunityList?[index].fields!.stipendRangeMax}",
@@ -231,10 +233,10 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
                                 custom_text(text: "Timings: ${jobOpportunityList?[index].fields!.timingStart} - ${jobOpportunityList?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(text: "Vacancies: ${jobOpportunityList?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(
-                                  text: "Location: ${jobOpportunityList?[index].fields!.city?.first}",
+                                  text: "Location: ${jobOpportunityList?[index].fields!.reportingAddress?.first}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
-                                  maxLines: 2,
+                                  maxLines: 5,
                                   bottomValue: 5,
                                   leftValue: 5,
                                 ),

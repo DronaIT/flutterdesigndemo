@@ -99,6 +99,11 @@ class _FilterState extends State<Filter> {
       isFromEligible = Get.arguments[2]["isFromEligible"];
     }
 
+    if(continuousCount > 0){
+      int day = continuousCount - 1;
+      startDate = DateTime.now().add(Duration(days: -day));
+    }
+
     hubResponseArray = PreferenceUtils
         .getHubList()
         .records;

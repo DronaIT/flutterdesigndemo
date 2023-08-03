@@ -31,6 +31,9 @@ class HelpdeskResponses {
   String? actual_time_taken;
   String? actual_finished_on;
 
+  List<String>? status_updated_by;
+  List<String>? status_updated_by_employee_name;
+
   HelpdeskResponses(
       {this.ticketId,
         this.notes,
@@ -58,6 +61,8 @@ class HelpdeskResponses {
         this.required_time,
         this.actual_time_taken,
         this.actual_finished_on,
+        this.status_updated_by,
+        this.status_updated_by_employee_name,
       });
 
   HelpdeskResponses.fromJson(Map<String, dynamic> json) {
@@ -91,6 +96,9 @@ class HelpdeskResponses {
     required_time = json['required_time'];
     actual_time_taken = json['actual_time_taken'];
     actual_finished_on = json['actual_finished_on'];
+
+    status_updated_by = json['status_updated_by']?.cast<String>();
+    status_updated_by_employee_name = json['status_updated_by_employee_name']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -126,6 +134,9 @@ class HelpdeskResponses {
     data['required_time'] = this.required_time;
     data['actual_time_taken'] = this.actual_time_taken;
     data['actual_finished_on'] = this.actual_finished_on;
+
+    data['status_updated_by'] = this.status_updated_by;
+    data['status_updated_by_employee_name'] = this.status_updated_by_employee_name;
     return data;
   }
 }

@@ -5,8 +5,8 @@ class JobModuleResponse {
   String? applied_students;
   String? applied_students_number;
   String? applied_students_resume;
+  String? applied_students_specialization;
   bool selected = false;
-
 
   JobModuleResponse({
     this.applied_students_name,
@@ -14,7 +14,8 @@ class JobModuleResponse {
     this.applied_students,
     this.applied_students_number,
     this.applied_students_enrollment_number,
-    this.applied_students_resume
+    this.applied_students_resume,
+    this.applied_students_specialization,
   });
 
   JobModuleResponse.fromJson(Map<String, dynamic> json) {
@@ -24,6 +25,7 @@ class JobModuleResponse {
     applied_students_enrollment_number = json['applied_students_enrollment_number'];
     applied_students_number = json['applied_students_number'];
     applied_students_resume = json['applied_students_resume'];
+    applied_students_specialization = json['applied_students_specialization'];
   }
 
   Map<String, dynamic> toJson() {
@@ -34,6 +36,7 @@ class JobModuleResponse {
     data['applied_students_enrollment_number'] = this.applied_students_enrollment_number;
     data['applied_students_number'] = this.applied_students_number;
     data['applied_students_resume'] = this.applied_students_resume;
+    data['applied_students_specialization'] = this.applied_students_specialization;
     return data;
   }
 }

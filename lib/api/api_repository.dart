@@ -37,9 +37,6 @@ import 'package:flutterdesigndemo/models/update_topics.dart';
 import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
-import 'package:flutterdesigndemo/ui/manage_user/addemployee.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
-import 'package:get/get.dart';
 
 import '../models/App_data_response.dart';
 import '../models/company_approch_response.dart';
@@ -201,14 +198,6 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      // Get.showSnackbar(
-      //   GetSnackBar(
-      //     message: errorMessage,
-      //     isDismissible: true,
-      //     backgroundColor: colors_name.errorColor,
-      //     duration: const Duration(seconds: 2),
-      //   ),
-      // );
       rethrow;
     }
   }

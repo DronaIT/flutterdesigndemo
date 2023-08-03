@@ -513,6 +513,16 @@ class _AddTaskState extends State<AddTask> {
       if (commentController.text.trim().isNotEmpty) {
         helpDeskReq.remarks = commentController.text.trim();
       }
+      var updatedBy = PreferenceUtils.getLoginRecordId();
+      if (helpDeskTypeResponse?.status_updated_by?.isNotEmpty == true) {
+        if (helpDeskTypeResponse?.status_updated_by?.contains(PreferenceUtils.getLoginRecordId()) == true) {
+          helpDeskTypeResponse?.status_updated_by?.remove(PreferenceUtils.getLoginRecordId());
+        }
+        if (helpDeskTypeResponse?.status_updated_by?.isNotEmpty == true) {
+          updatedBy = "$updatedBy,${helpDeskTypeResponse!.status_updated_by!.join(",")}";
+        }
+      }
+      helpDeskReq.status_updated_by = updatedBy.split(",");
     }
     if (taskFilePath.isNotEmpty) {
       Map<String, dynamic> map = Map();

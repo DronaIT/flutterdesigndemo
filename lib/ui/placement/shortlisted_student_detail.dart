@@ -65,7 +65,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
       isVisible = true;
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
-    try{
+    try {
       jobpportunityData = await apiRepository.getJoboppoApi(query);
       for (var i = 0; i < jobpportunityData.records!.length; i++) {
         if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.appliedStudents != null) {
@@ -76,8 +76,8 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                 applied_students_name: jobpportunityData.records![i].fields!.applied_students_name![j],
                 applied_students: jobpportunityData.records![i].fields!.appliedStudents![j],
                 applied_students_number: jobpportunityData.records![i].fields!.applied_students_number![j],
-                applied_students_resume: jobpportunityData.records![i].fields!.applied_students_resume![j].url
-            );
+                applied_students_resume: jobpportunityData.records![i].fields!.applied_students_resume![j].url,
+                applied_students_specialization: jobpportunityData.records![i].fields!.applied_students_specialization![j]);
             studentResponse.add(jobModuleResponse);
           }
         }
@@ -92,7 +92,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
           }
         }
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -151,9 +151,9 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                                                   Get.to(const StudentHistory(), arguments: studentResponse[index].applied_students_number);
                                                 },
                                               ),
-                                              //custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
-                                              custom_text(text: "${strings_name.str_email}: ${studentResponse[index].applied_students_email}",
-                                                  textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_specializations}: ${studentResponse[index].applied_students_specialization}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
+                                              custom_text(text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                               custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
                                             ],
                                           ),
@@ -204,6 +204,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                       ),
                     ),
                     CustomButton(
+                      fontSize: 15,
                       text: strings_name.str_export_selected_student,
                       click: () async {
                         List<String> selectedStudentsData = [];
@@ -212,7 +213,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                             selectedStudentsData.add(studentResponse[i].applied_students!);
                           }
                         }
-                        if(selectedStudentsData.isNotEmpty){
+                        if (selectedStudentsData.isNotEmpty) {
                           exportStudentData();
                         } else {
                           Utils.showSnackBar(context, strings_name.str_please_select_one_student);
@@ -246,25 +247,18 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     }
 
     myData.forEach((row) {
-      sheet.appendRow([
-        row.applied_students_name,
-        row.applied_students_email,
-        row.applied_students_enrollment_number,
-        row.applied_students_number,
-        row.applied_students_resume
-      ]);
+      sheet.appendRow([row.applied_students_name, row.applied_students_email, row.applied_students_enrollment_number, row.applied_students_number, row.applied_students_resume]);
     });
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
     var file = File("${appDocumentsDirectory.path}/ShortlistedFor$company_name.xlsx");
     await file.writeAsBytes(excel.encode()!);
-    try{
+    try {
       await OpenFilex.open(file.path);
       setState(() {
         isVisible = false;
       });
-
-    }catch(e){
+    } catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -287,7 +281,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
       setState(() {
         isVisible = true;
       });
-      try{
+      try {
         var resp = await apiRepository.updateJobSortListedApi(json, jobpportunityData.records!.first.id!);
         if (resp.id!.isNotEmpty) {
           setState(() {
@@ -301,7 +295,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             isVisible = false;
           });
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
@@ -467,7 +461,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       var resp = await apiRepository.updateJobOpportunityApi(json, jobpportunityData.records!.first.id!);
       if (resp.id!.isNotEmpty) {
         setState(() {
@@ -482,7 +476,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
           isVisible = false;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });

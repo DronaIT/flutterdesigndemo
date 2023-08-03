@@ -176,7 +176,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                     text: jobOpportunityList?[index].fields?.reportingAddress?.first != null ? "Location: ${jobOpportunityList?[index].fields?.reportingAddress?.first.toString().trim()} ${jobOpportunityList?[index].fields!.city?.first}" : "Location:N/A",
                                     textStyles: blackTextSemiBold12,
                                     topValue: 5,
-                                    maxLines: 3,
+                                    maxLines: 5,
                                     bottomValue: 5,
                                     leftValue: 5,
                                   ),
