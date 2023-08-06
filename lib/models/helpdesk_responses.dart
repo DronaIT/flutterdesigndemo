@@ -3,6 +3,7 @@ class HelpdeskResponses {
   String? notes;
   List<String>? ticketTypeId;
   String? status;
+  String? task_importance;
   List<String>? ticketTitle;
   List<String>? assignedTo;
   List<String>? assignedEmployeeName;
@@ -39,6 +40,7 @@ class HelpdeskResponses {
         this.notes,
         this.ticketTypeId,
         this.status,
+        this.task_importance,
         this.ticketTitle,
         this.assignedTo,
         this.assignedEmployeeName,
@@ -70,6 +72,7 @@ class HelpdeskResponses {
     notes = json['Notes'];
     ticketTypeId = json['ticket_type_id']?.cast<String>();
     status = json['Status'];
+    task_importance = json['task_importance'];
     ticketTitle = json['ticket_title']?.cast<String>();
     assignedTo = json['assigned_to']?.cast<String>();
     assignedEmployeeName = json['assigned_employee_name']?.cast<String>();
@@ -107,6 +110,7 @@ class HelpdeskResponses {
     data['Notes'] = this.notes;
     data['ticket_type_id'] = this.ticketTypeId;
     data['Status'] = this.status;
+    data['task_importance'] = this.task_importance;
     data['ticket_title'] = this.ticketTitle;
     data['assigned_to'] = this.assignedTo;
     data['assigned_employee_name'] = this.assignedEmployeeName;

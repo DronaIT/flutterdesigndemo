@@ -46,6 +46,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
   var controllerSearch = TextEditingController();
   var filterHubName = "", filterSpecialization = "", filterSemester = "", filterDivision = "", filterTicketValue = "";
   var filterTicketTypeId = 0;
+  var filterOnlyTask = false;
 
   @override
   void initState() {
@@ -126,6 +127,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
       if (filterDivision.isNotEmpty) query += ", FIND('$filterDivision', ${TableNames.CLM_STUDENT_DIVISION}, 0)";
       if (filterTicketTypeId != 0) query += ", FIND('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID}, 0)";
       if (filterTicketValue.isNotEmpty) query += ", FIND('$filterTicketValue', ${TableNames.CLM_TICKET_STATUS}, 0)";
+      if (filterOnlyTask) query += ", FIND('${TableNames.HELPDESK_TYPE_TASK}', ${TableNames.CLM_FIELD_TYPE}, 0)";
     }
 
     query += ")";
@@ -259,6 +261,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                               filterDivision = value[3]["division"];
                               filterTicketTypeId = value[4]["helpdeskTypeId"];
                               filterTicketValue = value[5]["ticketValue"];
+                              filterOnlyTask = value[6]["onlyTask"];
 
                               getRecords();
                             }
@@ -303,12 +306,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"canUpdateTask": true},
                                       {"recordId": myTaskList?[index].id}
                                     ])?.then((value) {
-                                      taskList?.clear();
-                                      myTaskList?.clear();
-                                      taskAssignedList?.clear();
-                                      taskAssignedByMeList?.clear();
+                                      if(value) {
+                                        taskList?.clear();
+                                        myTaskList?.clear();
+                                        taskAssignedList?.clear();
+                                        taskAssignedByMeList?.clear();
 
-                                      getRecords();
+                                        getRecords();
+                                      }
                                     });
                                   } else {
                                     Get.to(const HelpdeskDetail(), arguments: [
@@ -318,12 +323,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"recordId": myTaskList?[index].id},
                                       {"title": strings_name.str_task_detail},
                                     ])?.then((value) {
-                                      taskList?.clear();
-                                      myTaskList?.clear();
-                                      taskAssignedList?.clear();
-                                      taskAssignedByMeList?.clear();
+                                      if(value) {
+                                        taskList?.clear();
+                                        myTaskList?.clear();
+                                        taskAssignedList?.clear();
+                                        taskAssignedByMeList?.clear();
 
-                                      getRecords();
+                                        getRecords();
+                                      }
                                     });
                                   }
                                 },
@@ -447,12 +454,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                               {"canUpdateTask": true},
                                               {"recordId": taskAssignedByMeList?[index].id}
                                             ])?.then((value) {
-                                              taskList?.clear();
-                                              myTaskList?.clear();
-                                              taskAssignedList?.clear();
-                                              taskAssignedByMeList?.clear();
+                                              if (value) {
+                                                taskList?.clear();
+                                                myTaskList?.clear();
+                                                taskAssignedList?.clear();
+                                                taskAssignedByMeList?.clear();
 
-                                              getRecords();
+                                                getRecords();
+                                              }
                                             });
                                           },
                                           child: Column(children: [
@@ -563,18 +572,39 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       itemBuilder: (BuildContext context, int index) {
                                         return GestureDetector(
                                           onTap: () {
-                                            Get.to(const TaskDetail(), arguments: [
-                                              {"fields": taskAssignedList?[index].fields},
-                                              {"canUpdateTask": true},
-                                              {"recordId": taskAssignedList?[index].id}
-                                            ])?.then((value) {
-                                              taskList?.clear();
-                                              myTaskList?.clear();
-                                              taskAssignedList?.clear();
-                                              taskAssignedByMeList?.clear();
+                                            if (taskAssignedList![index].fields!.fieldType == TableNames.HELPDESK_TYPE_TASK) {
+                                              Get.to(const TaskDetail(), arguments: [
+                                                {"fields": taskAssignedList?[index].fields},
+                                                {"canUpdateTask": true},
+                                                {"recordId": taskAssignedList?[index].id}
+                                              ])?.then((value) {
+                                                if(value) {
+                                                  taskList?.clear();
+                                                  myTaskList?.clear();
+                                                  taskAssignedList?.clear();
+                                                  taskAssignedByMeList?.clear();
 
-                                              getRecords();
-                                            });
+                                                  getRecords();
+                                                }
+                                              });
+                                            } else {
+                                              Get.to(const HelpdeskDetail(), arguments: [
+                                                {"fields": taskAssignedList?[index].fields},
+                                                {"canUpdateTicketStatus": true},
+                                                {"canUpdateTicketCategory": true},
+                                                {"recordId": taskAssignedList?[index].id},
+                                                {"title": strings_name.str_task_detail},
+                                              ])?.then((value) {
+                                                if(value) {
+                                                  taskList?.clear();
+                                                  myTaskList?.clear();
+                                                  taskAssignedList?.clear();
+                                                  taskAssignedByMeList?.clear();
+
+                                                  getRecords();
+                                                }
+                                              });
+                                            }
                                           },
                                           child: Column(children: [
                                             Container(
@@ -661,12 +691,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const AddTask())?.then((value) {
-              taskList?.clear();
-              myTaskList?.clear();
-              taskAssignedList?.clear();
-              taskAssignedByMeList?.clear();
+              if(value) {
+                taskList?.clear();
+                myTaskList?.clear();
+                taskAssignedList?.clear();
+                taskAssignedByMeList?.clear();
 
-              getRecords();
+                getRecords();
+              }
             });
           },
           child: const Icon(

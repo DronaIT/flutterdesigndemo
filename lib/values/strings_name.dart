@@ -227,7 +227,6 @@ class strings_name {
 
   static const String str_select_type = "Select Placed-Unplaced type";
 
-
   static const String str_empty_semester = "Please select semester";
   static const String str_empty_division = "Please select division";
   static const String str_empty_subject = "Please select subject";
@@ -541,6 +540,7 @@ class strings_name {
   static const String str_empty_duration = "Please select duration";
   static const String str_set_deadline = "Set deadline";
   static const String str_empty_deadline = "Please set deadline";
+  static const String str_empty_task_importance = "Please selet task importance";
   static const String str_actual_duration = "Actual duration";
   static const String str_empty_actual_duration = "Please select actual duration";
   static const String str_actual_date = "Actual finished on";
@@ -555,6 +555,7 @@ class strings_name {
   static const String str_select_employee = "Select employee";
   static const String str_provided_duration = "Provided duration: ";
   static const String str_deadline = "Deadline: ";
+  static const String str_task_importance = "Task importance: ";
 
   static const String str_materials = "Materials";
   static const String str_ticket_status = "Status";
@@ -562,4 +563,5 @@ class strings_name {
   static const String str_type_remarks = "Provide remarks...";
   static const String str_remarks = "Remarks";
   static const String str_updated_by = "Updated by";
+  static const String str_only_task = "Show only tasks";
 }

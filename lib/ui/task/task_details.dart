@@ -15,7 +15,6 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
-import '../../customwidget/custom_edittext.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/help_desk_type_response.dart';
 import '../../models/helpdesk_responses.dart';
@@ -170,6 +169,15 @@ class _TaskDetailState extends State<TaskDetail> {
                           ],
                         )
                       : Container(),
+                  helpDeskTypeResponse?.task_importance?.isNotEmpty == true
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_task_importance, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            custom_text(text: helpDeskTypeResponse!.task_importance.toString(), textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0),
+                          ],
+                        )
+                      : Container(),
                   helpDeskTypeResponse!.assignedEmployeeName != null && helpDeskTypeResponse!.assignedEmployeeName!.isNotEmpty
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -223,9 +231,10 @@ class _TaskDetailState extends State<TaskDetail> {
                               {"fromUpdate": true},
                               {"recordId": helpDeskTypeResponseId}
                             ])?.then((value) {
-                              Get.back(result: true);
+                              if(value) {
+                                Get.back(result: true);
+                              }
                             });
-                            ;
                           })),
                 ],
               ),

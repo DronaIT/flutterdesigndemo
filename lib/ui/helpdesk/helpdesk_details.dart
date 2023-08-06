@@ -173,7 +173,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                       )
                     ],
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.h),
                   Row(
                     children: [
                       custom_text(

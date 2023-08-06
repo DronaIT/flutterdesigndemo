@@ -39,6 +39,10 @@ class TableNames {
   static const DIVISION_C = "Class C";
   static const DIVISION_D = "Class D";
 
+  static const TASK_IMPORTANCE_HIGH = "High";
+  static const TASK_IMPORTANCE_MEDIUM = "Medium";
+  static const TASK_IMPORTANCE_LOW = "Low";
+
   static const PLACED = "Placed";
   static const UNPLACED = "UnPlaced";
 
