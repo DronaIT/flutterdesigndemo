@@ -47,3 +47,32 @@ class BaseApiResponseWithSerializable<T> {
 abstract class Serializable {
   Map<String, dynamic> toJson();
 }
+
+
+class BaseResponse<T> {
+  List<BaseApiResponseWithSerializable<T>>? records;
+  String offset = "";
+
+  BaseResponse({this.records});
+
+  BaseResponse.fromJson(Map<String, dynamic> json, Function(Map<String, dynamic>) create) {
+    if (json['records'] != null) {
+      records = <BaseApiResponseWithSerializable<T>>[];
+      json['records'].forEach((v) {
+        records!.add(BaseApiResponseWithSerializable<T>.fromJson(v, create));
+      });
+    }
+    if (json['offset'] != null && json['offset'].toString().isNotEmpty){
+      offset = json['offset'];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (this.records != null) {
+      data['records'] = this.records!.map((v) => v.toJson()).toList();
+    }
+    data['offset'] = offset;
+    return data;
+  }
+}

@@ -3,7 +3,7 @@ class TableNames {
   static const APIKEY = "keyszHTHXMxxKKs9b";
   static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
-  // Kaleyra keysh
+  // Kaleyra keys
   static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
   static const KALEYRA_SENDER = "DFBVOC";
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
@@ -20,9 +20,11 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
   static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
+  static const CLOUDARY_FOLDER_ANNOUNCEMENT = "Announcement";
 
   static const STUDENT_ROLE_ID = "DR09";
   static const ORGANIZATION_ROLE_ID = "DR24";
+  static const FACULTY_ROLE_ID = "DR05";
 
   static const MODULE_MANAGE_USER = "DM01";
   static const MODULE_SETUP_COLLAGE = "DM02";
@@ -33,6 +35,8 @@ class TableNames {
   static const MODULE_STUDENT_DIRECTORY = "DM07";
   static const MODULE_HELP_DESK = "DM08";
   static const MODULE_TASK = "DM09";
+  static const MODULE_ANNOUNCEMENT = "DM10";
+  static const MODULE_TIME_TABLE = "DM11";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -69,16 +73,20 @@ class TableNames {
   static const TBL_APP_DATA = "TBL_APP_DATA";
   static const TBL_HELPDESK_TYPE = "TBL_HELPDESK_TYPE";
   static const TBL_HELPDESK = "TBL_HELPDESK";
+  static const TBL_ANNOUNCEMENT = "TBL_ANNOUNCEMENT";
+  static const TBL_TIMETABLE = "TBL_TIMETABLE";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
   static const TB_USERS_PASSWORD = "password";
   static const CLM_ROLE_ID = "role_ids";
   static const CLM_HUB_IDS = "hub_ids";
+  static const CLM_HUB_IDS_FROM_HUB_ID = "hub_id (from hub_ids)";
   static const CLM_HUB_ID = "hub_id";
 
   static const CLM_SPE_ID = "specialization_id";
   static const CLM_SPE_IDS = "specialization_ids";
+  static const CLM_SPE_IDS_FROM_SPE_ID = "specialization_name (from specialization_ids)";
   static const CLM_SUBJECT_IDS = "subject_ids";
   static const CLM_COMPANY_CODE = "company_code";
   static const CLM_JOB_CODE = "job_code";
@@ -186,6 +194,15 @@ class TableNames {
   static const PERMISSION_ID_UPDATE_TICKET_STATUS = "DP0802";
   static const PERMISSION_ID_UPDATE_TICKET_CATEGORY = "DP0803";
 
+  static const PERMISSION_ID_VIEW_ANNOUNCEMENT = "DP1001";
+  static const PERMISSION_ID_ADD_ANNOUNCEMENT = "DP1002";
+  static const PERMISSION_ID_UPDATE_ANNOUNCEMENT = "DP1003";
+
+  static const PERMISSION_ID_VIEW_TIME_TABLE = "DP1101";
+  static const PERMISSION_ID_ADD_TIME_TABLE = "DP1102";
+  static const PERMISSION_ID_UPDATE_TIME_TABLE = "DP1103";
+  static const PERMISSION_ID_VIEW_ALL_TIME_TABLE = "DP1104";
+
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
   static const EXCEL_COL_GENDER = "gender";
@@ -215,6 +232,10 @@ class TableNames {
   static const LOGIN_ROLE_STUDENT = "Student";
   static const LOGIN_ROLE_ORGANIZATION = "Organization";
 
+  static const ANNOUNCEMENT_ROLE_EMPLOYEE = "employee";
+  static const ANNOUNCEMENT_ROLE_STUDENT = "student";
+  static const ANNOUNCEMENT_ROLE_ORGANIZATION = "organization";
+
   static const TB_CONTACT_NUMBER = "contact_number";
 
   static const TICKET_STATUS_OPEN = "Open";
@@ -226,4 +247,9 @@ class TableNames {
 
   static const HELPDESK_TYPE_TICKET = "ticket";
   static const HELPDESK_TYPE_TASK = "task";
+
+  static const TIMETABLE_MODE_STATUS_ONLINE = "online";
+
+  static const LUK_ADD_TIME_TABLE = "addTimeTable";
+  static const LUK_UPDATE_TIME_TABLE = "updateTimeTable";
 }

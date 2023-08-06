@@ -231,7 +231,7 @@ class _TaskDetailState extends State<TaskDetail> {
                               {"fromUpdate": true},
                               {"recordId": helpDeskTypeResponseId}
                             ])?.then((value) {
-                              if(value) {
+                              if (value != null && value) {
                                 Get.back(result: true);
                               }
                             });

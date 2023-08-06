@@ -491,7 +491,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const HelpDesk())?.then((value) {
-              if(value) {
+              if (value != null && value) {
                 ticketList?.clear();
                 myTicketList?.clear();
                 othersTicketList?.clear();

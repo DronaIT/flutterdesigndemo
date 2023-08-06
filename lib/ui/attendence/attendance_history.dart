@@ -317,7 +317,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                                   canUpdateAccessibleAttendance
                                       ? GestureDetector(
                                           onTap: () async {
-                                            Get.to(const AttendanceStudentList(), arguments: [
+                                            Get.to(AttendanceStudentList(), arguments: [
                                               {"lectureId": viewLectureArray![index].lecture_id},
                                             ])?.then((result) {
                                               if (result != null && result) {

@@ -274,6 +274,22 @@ class AppWidgets {
     );
   }
 
+
+  static AppBar appBarWithAction(String title,List<Widget>? actions) {
+    return AppBar(
+      centerTitle: true,
+      backgroundColor: colors_name.colorPrimary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(14),
+        ),
+      ),
+      title: Text(title),
+      actions: actions,
+    );
+  }
+
+
   static AppBar appBar(BuildContext context, String title,
       {List<Widget>? actions}) {
     return AppBar(

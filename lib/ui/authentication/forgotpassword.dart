@@ -50,9 +50,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       alignment: Alignment.centerLeft,
                       child: IconButton(iconSize:30,icon: Icon(Icons.arrow_circle_left_rounded,color: colors_name.colorPrimary,), onPressed: () {
                         Get.back();
-
                       },)
-
                   ),
                   Container(
                     alignment: Alignment.topLeft,
@@ -108,8 +106,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           setState(() {
                             isVisible = true;
                           });
-                          var query =
-                              "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
+                          var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
                           try {
                             var data =
                                 await registerRepository.registerApi(query);

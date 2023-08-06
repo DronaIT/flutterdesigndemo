@@ -117,7 +117,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       body: Stack(children: [
         SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.only(left: 10, right: 10),
             child: Column(
               children: [
                 Column(
@@ -650,7 +650,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
           request.topicId = topicRecordId.split(",");
           request.lecture_duration= lectureValue;
           request.semesterByStudent = semesterValue.toString();
-          Get.to(const AttendanceStudentList(), arguments: [
+          Get.to(AttendanceStudentList(), arguments: [
             {"studentList": studentList},
             {"request": request},
           ])?.then((result) {

@@ -51,7 +51,7 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController commentController = TextEditingController();
 
   List<String> taskImportanceArray = <String>[TableNames.TASK_IMPORTANCE_HIGH, TableNames.TASK_IMPORTANCE_MEDIUM, TableNames.TASK_IMPORTANCE_LOW];
-  String taskImportanceValue = "";
+  String taskImportanceValue = TableNames.TASK_IMPORTANCE_MEDIUM;
 
   int taskTypeId = 0;
   String taskFilePath = "", taskFileTitle = "";
@@ -92,7 +92,7 @@ class _AddTaskState extends State<AddTask> {
 
       taskNoteController.text = helpDeskTypeResponse?.notes ?? "";
       durationController.text = helpDeskTypeResponse?.required_time ?? "";
-      taskImportanceValue = helpDeskTypeResponse?.task_importance ?? "";
+      taskImportanceValue = helpDeskTypeResponse?.task_importance ?? TableNames.TASK_IMPORTANCE_MEDIUM;
       if (helpDeskTypeResponse?.deadline != null && helpDeskTypeResponse?.deadline?.isNotEmpty == true) {
         deadlineController.text = DateFormat("yyyy-MM-dd hh:mm aa").format(DateTime.parse(helpDeskTypeResponse!.deadline!).toLocal());
       }
@@ -457,16 +457,16 @@ class _AddTaskState extends State<AddTask> {
                         if (actualFinishedOnController.text.trim().toString().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_actual_date);
                         } else {
-                          updateTask();
+                          addMultipleTask();
                         }
                       } else if (fromUpdate && actualFinishedOnController.text.trim().toString().isNotEmpty) {
                         if (actualDurationController.text.trim().toString().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_actual_duration);
                         } else {
-                          updateTask();
+                          addMultipleTask();
                         }
                       } else {
-                        updateTask();
+                        addMultipleTask();
                       }
                     },
                   ),
@@ -480,6 +480,16 @@ class _AddTaskState extends State<AddTask> {
         ],
       ),
     ));
+  }
+
+  void addMultipleTask() {
+    if (employeeData?.isNotEmpty == true) {
+      for (var i = 0; i < employeeData!.length; i++) {
+        updateTask(employeeData![i].id.toString().split("..."), i == employeeData!.length - 1);
+      }
+    } else {
+      updateTask(PreferenceUtils.getLoginRecordId().split("..."), true);
+    }
   }
 
   /*
@@ -527,10 +537,12 @@ class _AddTaskState extends State<AddTask> {
     }
   }
 
-  updateTask() async {
-    setState(() {
-      isVisible = true;
-    });
+  updateTask(List<String> assignedTo, bool canClose) async {
+    if (!isVisible) {
+      setState(() {
+        isVisible = true;
+      });
+    }
     if (taskFilePath.isNotEmpty) {
       CloudinaryResponse response = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(taskFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
@@ -574,6 +586,7 @@ class _AddTaskState extends State<AddTask> {
       helpDeskReq.attachments = listData;
     }
 
+/*
     assignedTo.clear();
     if (employeeData?.isNotEmpty == true) {
       for (var i = 0; i < employeeData!.length; i++) {
@@ -582,7 +595,7 @@ class _AddTaskState extends State<AddTask> {
     } else {
       assignedTo.add(PreferenceUtils.getLoginRecordId());
     }
-
+*/
     helpDeskReq.assigned_to = assignedTo;
     helpDeskReq.authority_of = authorityOf;
     helpDeskReq.deadline = deadlineController.text;
@@ -601,12 +614,14 @@ class _AddTaskState extends State<AddTask> {
 
         var resp = await apiRepository.updateTicket(json, helpDeskTypeResponseId!);
         if (resp.id != null) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_update_task_message);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(result: true);
+          if (canClose) {
+            setState(() {
+              isVisible = false;
+            });
+            Utils.showSnackBar(context, strings_name.str_update_task_message);
+            await Future.delayed(const Duration(milliseconds: 2000));
+            Get.back(result: true);
+          }
         } else {
           setState(() {
             isVisible = false;
@@ -615,12 +630,14 @@ class _AddTaskState extends State<AddTask> {
       } else {
         var resp = await apiRepository.addHelpDeskApi(helpDeskReq);
         if (resp.id != null) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_create_task_message);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(result: true);
+          if (canClose) {
+            setState(() {
+              isVisible = false;
+            });
+            Utils.showSnackBar(context, strings_name.str_create_task_message);
+            await Future.delayed(const Duration(milliseconds: 2000));
+            Get.back(result: true);
+          }
         } else {
           setState(() {
             isVisible = false;

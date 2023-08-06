@@ -306,7 +306,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"canUpdateTask": true},
                                       {"recordId": myTaskList?[index].id}
                                     ])?.then((value) {
-                                      if(value) {
+                                      if (value != null && value) {
                                         taskList?.clear();
                                         myTaskList?.clear();
                                         taskAssignedList?.clear();
@@ -323,7 +323,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"recordId": myTaskList?[index].id},
                                       {"title": strings_name.str_task_detail},
                                     ])?.then((value) {
-                                      if(value) {
+                                      if (value != null && value) {
                                         taskList?.clear();
                                         myTaskList?.clear();
                                         taskAssignedList?.clear();
@@ -454,7 +454,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                               {"canUpdateTask": true},
                                               {"recordId": taskAssignedByMeList?[index].id}
                                             ])?.then((value) {
-                                              if (value) {
+                                              if (value != null && value) {
                                                 taskList?.clear();
                                                 myTaskList?.clear();
                                                 taskAssignedList?.clear();
@@ -578,7 +578,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                                 {"canUpdateTask": true},
                                                 {"recordId": taskAssignedList?[index].id}
                                               ])?.then((value) {
-                                                if(value) {
+                                                if (value != null && value) {
                                                   taskList?.clear();
                                                   myTaskList?.clear();
                                                   taskAssignedList?.clear();
@@ -595,7 +595,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                                 {"recordId": taskAssignedList?[index].id},
                                                 {"title": strings_name.str_task_detail},
                                               ])?.then((value) {
-                                                if(value) {
+                                                if (value != null && value) {
                                                   taskList?.clear();
                                                   myTaskList?.clear();
                                                   taskAssignedList?.clear();
@@ -691,7 +691,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const AddTask())?.then((value) {
-              if(value) {
+              if (value != null && value) {
                 taskList?.clear();
                 myTaskList?.clear();
                 taskAssignedList?.clear();
