@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">694081930115-07nd39k40ej21r765vqm3kqmuh24136i.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">694081930115</string>
+    <string name="google_api_key" translatable="false">AIzaSyBgDPOA9H2c5rb3aIs0vXf5XzBWo3W3bAE</string>
+    <string name="google_app_id" translatable="false">1:694081930115:android:9253b7907ba53b98716cb6</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBgDPOA9H2c5rb3aIs0vXf5XzBWo3W3bAE</string>
+    <string name="google_storage_bucket" translatable="false">dronaapp-36d3c.appspot.com</string>
+    <string name="project_id" translatable="false">dronaapp-36d3c</string>
+</resources>

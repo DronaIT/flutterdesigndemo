@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '10'
+    flutterVersionCode = '11'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.8'
+    flutterVersionName = '1.0.9'
 }
 
 apply plugin: 'com.android.application'
@@ -38,8 +38,8 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
@@ -57,6 +57,7 @@ android {
         compileSdkVersion 33
         minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -65,7 +66,7 @@ android {
         release {
             keyAlias keystoreProperties['drona']
             keyPassword keystoreProperties['drona123']
-            storeFile keystoreProperties['/home/hb/AndroidStudioProjects/flutterdesigndemo/live_detail/drona.jks']
+            storeFile keystoreProperties['G:\\DronaApp\\live_detail\\drona.jks']
             storePassword keystoreProperties['drona123']
         }
     }
@@ -89,4 +90,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:multidex:1.0.3'
 }
