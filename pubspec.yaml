@@ -47,7 +47,7 @@ dependencies:
   lottie: ^2.0.0
   flutter_lints: ^2.0.0
   excel:
-  file_picker: 5.2.4
+  file_picker: ^5.2.4
   open_filex:
   path_provider:
   firebase_messaging: ^14.6.5
@@ -73,9 +73,11 @@ dependencies:
   permission_handler: ^10.4.3
   expansion_tile_group: ^1.2.1
   smooth_page_indicator: ^1.1.0
-  syncfusion_flutter_datepicker: ^22.1.39
+  syncfusion_flutter_datepicker: 21.2.4
+  syncfusion_flutter_core: 21.2.4
   dropdown_search: ^5.0.6
   firebase_core: ^2.15.0
+  file_selector: ^1.0.0
 
 dev_dependencies:
   change_app_package_name: ^1.1.0

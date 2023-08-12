@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/style/picker_style.dart';
@@ -55,6 +56,7 @@ class _AddTaskState extends State<AddTask> {
 
   int taskTypeId = 0;
   String taskFilePath = "", taskFileTitle = "";
+  var taskFileData;
 
   List<String> assignedTo = [];
   List<String> authorityOf = [];
@@ -432,15 +434,23 @@ class _AddTaskState extends State<AddTask> {
                       ),
                     ],
                   ),
-                  Visibility(
-                    visible: taskFilePath.isNotEmpty,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 3.h),
-                        custom_text(text: taskFileTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
-                      ],
-                    ),
-                  ),
+                  taskFileData == null
+                      ? const SizedBox()
+                      : Visibility(
+                          visible: taskFilePath.isNotEmpty,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 3.h),
+                              // custom_text(text: taskFileTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                              custom_text(
+                                  text: taskFileData.name,
+                                  alignment: Alignment.topLeft,
+                                  textStyles: grayTextstyle,
+                                  topValue: 0,
+                                  bottomValue: 0),
+                            ],
+                          ),
+                        ),
                   SizedBox(height: 50.h),
                   CustomButton(
                     text: strings_name.str_submit,
@@ -530,10 +540,17 @@ class _AddTaskState extends State<AddTask> {
   picLOIFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
-      setState(() {
+      if (kIsWeb) {
         taskFileTitle = result.files.single.name;
-        taskFilePath = result.files.single.path!;
-      });
+        setState(() {
+          taskFilePath = result.files.single.bytes.toString();
+          taskFileData = result.files.single;
+        });
+      } else {
+        setState(() {
+          taskFilePath = result.files.single.path!;
+        });
+      }
     }
   }
 
@@ -544,10 +561,21 @@ class _AddTaskState extends State<AddTask> {
       });
     }
     if (taskFilePath.isNotEmpty) {
-      CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(taskFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
-      );
-      taskFilePath = response.secureUrl;
+      if(kIsWeb) {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(taskFileData.bytes!),
+              resourceType: CloudinaryResourceType.Auto,
+              folder: TableNames.CLOUDARY_FOLDER_HELP_DESK, identifier: taskFileData.name),
+        );
+        taskFilePath = response.secureUrl;
+      }else{
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(taskFilePath,
+              resourceType: CloudinaryResourceType.Auto,
+              folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
+        );
+        taskFilePath = response.secureUrl;
+      }
     }
 
     HelpDeskRequest helpDeskReq = HelpDeskRequest();

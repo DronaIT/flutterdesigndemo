@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:expansion_tile_group/expansion_tile_group.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -54,6 +56,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
   TabController? tabController;
 
   List<PlatformFile> attachmentFiles = [];
+  List<XFile> files = [];
 
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
   String hubValue = "";
@@ -253,11 +256,20 @@ class _AddAnnouncementState extends State<AddAnnouncement>
   }
 
   _pickAttachment() async {
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(type: FileType.any, allowMultiple: true);
-    setState(() {
-      attachmentFiles.addAll(result?.files??[]);
-    });
+    if(kIsWeb){
+      final List<XFile> tmpFiles = await openFiles();
+      if(tmpFiles.isNotEmpty){
+        setState(() {
+          files.addAll(tmpFiles);
+        });
+      }
+      debugPrint('../ files ${files[0].path}');
+    }else {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: true);
+      setState(() {
+        attachmentFiles.addAll(result?.files??[]);
+      });
+    }
   }
 
   addAnnouncement() {
@@ -341,17 +353,35 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       List<CloudinaryResponse> attachmentResultCloudinaryResponse = [];
       List<Attachment>? attachmentResultCloudinary = [];
 
-      if (attachmentFiles.isNotEmpty ?? false) {
-        attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
-          for (var data in attachmentFiles)
-            CloudinaryFile.fromFile(data.path ?? '',
-                resourceType: CloudinaryResourceType.Auto,
-                folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
-        ]);
+      if(!kIsWeb) {
+        if (attachmentFiles.isNotEmpty ?? false) {
+          attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
+            for (var data in attachmentFiles)
+            // CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+              CloudinaryFile.fromFile(
+                  data.path ?? '', resourceType: CloudinaryResourceType.Auto,
+                  folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+          ]);
 
-        for (var data in attachmentResultCloudinaryResponse) {
-          attachmentResultCloudinary
-              .add(Attachment(url: data.secureUrl.toString()));
+          for (var data in attachmentResultCloudinaryResponse) {
+            attachmentResultCloudinary
+                .add(Attachment(url: data.secureUrl.toString()));
+          }
+        }
+      }else {
+        if (files.isNotEmpty ?? false) {
+          debugPrint('../ files ${files[0].path}');
+          attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
+            for (var data in files)
+              CloudinaryFile.fromFile(
+                  data.path ?? '', resourceType: CloudinaryResourceType.Auto,
+                  folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+          ]);
+
+          for (var data in attachmentResultCloudinaryResponse) {
+            attachmentResultCloudinary
+                .add(Attachment(url: data.secureUrl.toString()));
+          }
         }
       }
       String createdBy = PreferenceUtils.getLoginRecordId();
@@ -489,6 +519,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
         attachmentResultCloudinary.add(UpdateAttachment(url: data.url));
       }
 
+      if(!kIsWeb){
       if (attachmentFiles.isNotEmpty ?? false) {
         List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
           for (var data in attachmentFiles)
@@ -498,6 +529,22 @@ class _AddAnnouncementState extends State<AddAnnouncement>
         ]);
         for (var data in attachmentResultCloudinaryResponse) {
           attachmentResultCloudinary.add(UpdateAttachment(url: data.secureUrl.toString()));
+        }
+      }}else {
+        if (files.isNotEmpty ?? false) {
+          debugPrint('../ files ${files[0].path}');
+          List<
+              CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary
+              .uploadFiles([
+            for (var data in files)
+              CloudinaryFile.fromFile(data.path ?? '',
+                  resourceType: CloudinaryResourceType.Auto,
+                  folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+          ]);
+          for (var data in attachmentResultCloudinaryResponse) {
+            attachmentResultCloudinary.add(
+                UpdateAttachment(url: data.secureUrl.toString()));
+          }
         }
       }
 
@@ -809,24 +856,48 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   );
                 },
               ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: attachmentFiles.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    var data = attachmentFiles[index];
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0.h),
-                      child: custom_text(
-                        margin: EdgeInsets.zero,
-                        text: data.name ?? '',
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold14,
-                        maxLines: 1,
-                        topValue: 0,
-                      ),
-                    );
-                  }),
+              Visibility(
+                visible: !kIsWeb,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: attachmentFiles.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      var data = attachmentFiles[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 3.0.h),
+                        child: custom_text(
+                          margin: EdgeInsets.zero,
+                          text: data.name ?? '',
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold14,
+                          maxLines: 1,
+                          topValue: 0,
+                        ),
+                      );
+                    }),
+              ),
+              Visibility(
+                visible: kIsWeb,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: files.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      var data = files[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 3.0.h),
+                        child: custom_text(
+                          margin: EdgeInsets.zero,
+                          text: data.name ?? '',
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold14,
+                          maxLines: 1,
+                          topValue: 0,
+                        ),
+                      );
+                    }),
+              ),
               SizedBox(
                 height: 20.h,
               ),

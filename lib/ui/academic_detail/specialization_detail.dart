@@ -162,9 +162,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                 child: Column(
                   children: [
                     custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
-
                     custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
-
                     custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
 
                     Visibility(

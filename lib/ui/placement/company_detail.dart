@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
@@ -49,6 +50,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
   String typeofValue = "1";
   String path = "", title = "";
+  var logoData,loiData;
   String loiPath = "", loiTitle = "";
   List<Map<String, CreateCompanyDetailRequest>> list = [];
   final companyDetailRepository = getIt.get<ApiRepository>();
@@ -484,16 +486,45 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           });
                           var updatedPath = "", loiFilePath = "";
                           if (path.isNotEmpty) {
-                            CloudinaryResponse response = await cloudinary.uploadFile(
-                              CloudinaryFile.fromFile(path, resourceType: CloudinaryResourceType.Image, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOGO),
-                            );
-                            updatedPath = response.secureUrl;
+                            if(kIsWeb){
+                              CloudinaryResponse response = await cloudinary.uploadFile(
+                                CloudinaryFile.fromByteData(Utils.uint8ListToByteData(logoData.bytes!),
+                                    resourceType: CloudinaryResourceType.Image,
+                                    folder: TableNames
+                                        .CLOUDARY_FOLDER_COMPANY_LOGO, identifier: logoData.name),
+                              );
+                              updatedPath = response.secureUrl;
+                            }else {
+                              CloudinaryResponse response = await cloudinary
+                                  .uploadFile(
+                                CloudinaryFile.fromFile(path,
+                                    resourceType: CloudinaryResourceType.Image,
+                                    folder: TableNames
+                                        .CLOUDARY_FOLDER_COMPANY_LOGO),
+                              );
+                              updatedPath = response.secureUrl;
+                            }
                           }
                           if (loiPath.isNotEmpty && !loiPath.contains("https")) {
-                            CloudinaryResponse response = await cloudinary.uploadFile(
-                              CloudinaryFile.fromFile(loiPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI),
-                            );
-                            loiFilePath = response.secureUrl;
+                            if(kIsWeb) {
+                              CloudinaryResponse response = await cloudinary
+                                  .uploadFile(
+                                CloudinaryFile.fromByteData(Utils.uint8ListToByteData(loiData.bytes!),
+                                    resourceType: CloudinaryResourceType.Auto,
+                                    folder: TableNames
+                                        .CLOUDARY_FOLDER_COMPANY_LOI, identifier: loiData.name),
+                              );
+                              loiFilePath = response.secureUrl;
+                            }else{
+                              CloudinaryResponse response = await cloudinary
+                                  .uploadFile(
+                                CloudinaryFile.fromFile(loiPath,
+                                    resourceType: CloudinaryResourceType.Auto,
+                                    folder: TableNames
+                                        .CLOUDARY_FOLDER_COMPANY_LOI),
+                              );
+                              loiFilePath = response.secureUrl;
+                            }
                           }
                           CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
                           response.company_name = nameofCompanyController.text.trim().toString();
@@ -600,20 +631,34 @@ class _CompanyDetailState extends State<CompanyDetail> {
   picImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      setState(() {
-        title = result.files.single.name;
-        path = result.files.single.path!;
-      });
+      title = result.files.single.name;
+      if(kIsWeb){
+        setState(() {
+          path = result.files.single.bytes.toString();
+          logoData = result.files.single;
+        });
+      }else {
+        setState(() {
+          path = result.files.single.path!;
+        });
+      }
     }
   }
 
   picLOIFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
-      setState(() {
-        loiTitle = result.files.single.name;
-        loiPath = result.files.single.path!;
-      });
+      loiTitle = result.files.single.name;
+      if(kIsWeb){
+        setState(() {
+          loiData = result.files.single;
+          loiPath = result.files.single.bytes.toString();
+        });
+      }else {
+        setState(() {
+          loiPath = result.files.single.path!;
+        });
+      }
     }
   }
 }

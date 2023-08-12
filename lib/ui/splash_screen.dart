@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
@@ -64,11 +65,22 @@ class StartState extends State<SplashScreen> {
   //isLogin=2 employee login
   //isLogin=3 organization login
   void initialization() async {
-    await checkAppUpdate();
-    if (updateType == 1) {
-      showAlertDialog(context, "New update available.", false);
-    } else if (updateType == 2) {
-      showAlertDialog(context, "Please update app to latest version.", true);
+    if(!kIsWeb) {
+      await checkAppUpdate();
+      if (updateType == 1) {
+        showAlertDialog(context, "New update available.", false);
+      } else if (updateType == 2) {
+        showAlertDialog(context, "Please update app to latest version.", true);
+      } else {
+        await getRecords();
+        Future.delayed(const Duration(seconds: 2), () async {
+          if (isLogin == 1 || isLogin == 2) {
+            doLogin();
+          } else {
+            Get.to(const Welcome());
+          }
+        });
+      }
     } else {
       await getRecords();
       Future.delayed(const Duration(seconds: 2), () async {
