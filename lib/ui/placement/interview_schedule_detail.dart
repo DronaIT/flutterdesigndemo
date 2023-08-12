@@ -98,7 +98,7 @@ class _InterViewScheduleDetailState extends State<InterViewScheduleDetail> {
                                   text: "${jobOpportunityData.records?.first.fields!.interviewPlaceUrl}",
                                   style: blackTextSemiBold15,
                                   onOpen: (link) async {
-                                    await launchUrl(Uri.parse(link.url));
+                                    await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication);
                                   },
                                 ),
                               ),

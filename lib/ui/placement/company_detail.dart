@@ -378,6 +378,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   ),
                   custom_edittext(
                     type: TextInputType.text,
+                    maxLength: 5000,
                     textInputAction: TextInputAction.next,
                     controller: reportAddressController,
                     topValue: 5,

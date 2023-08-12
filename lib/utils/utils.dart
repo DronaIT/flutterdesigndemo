@@ -136,6 +136,7 @@ class Utils {
       message: message,
       messageText: Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
       duration: const Duration(seconds: 2),
+      messageSize: 500
     ).show(context);
   }
 

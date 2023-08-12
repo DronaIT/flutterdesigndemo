@@ -47,7 +47,8 @@ class JobOpportunityResponse {
   List<String>? applied_students_email;
   List<String>? applied_students_enrollment_number;
   List<String>? applied_students_name;
-  List<String>? applied_students_mobile;
+  List<String>? applied_students_number;
+  List<String>? applied_students_specialization;
   List<AppliedResume>? applied_students_resume;
 
   List<String>? shortlisted_students_email;
@@ -106,7 +107,8 @@ class JobOpportunityResponse {
       this.applied_students_email,
       this.applied_students_enrollment_number,
       this.applied_students_name,
-      this.applied_students_mobile,
+      this.applied_students_number,
+      this.applied_students_specialization,
       this.shortlisted_students_email,
       this.shortlisted_students_enrollment_number,
       this.shortlisted_students_name,
@@ -161,7 +163,8 @@ class JobOpportunityResponse {
     applied_students_email = json['applied_students_email']?.cast<String>();
     applied_students_enrollment_number = json['applied_students_enrollment_number']?.cast<String>();
     applied_students_name = json['applied_students_name']?.cast<String>();
-    applied_students_mobile = json['applied_students_mobile']?.cast<String>();
+    applied_students_number = json['applied_students_number']?.cast<String>();
+    applied_students_specialization = json['applied_students_specialization']?.cast<String>();
 
     shortlisted_students_email = json['shortlisted_students_email']?.cast<String>();
     shortlisted_students_enrollment_number = json['shortlisted_students_enrollment_number']?.cast<String>();
@@ -234,7 +237,8 @@ class JobOpportunityResponse {
     data['applied_students_email'] = this.applied_students_email;
     data['applied_students_enrollment_number'] = this.applied_students_enrollment_number;
     data['applied_students_name'] = this.applied_students_name;
-    data['applied_students_mobile'] = this.applied_students_mobile;
+    data['applied_students_number'] = this.applied_students_number;
+    data['applied_students_specialization'] = this.applied_students_specialization;
     data['shortlisted_students_email'] = this.shortlisted_students_email;
     data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
     data['shortlisted_students_name'] = this.shortlisted_students_name;

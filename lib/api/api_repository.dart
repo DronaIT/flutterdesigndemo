@@ -42,10 +42,15 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:get/get.dart';
 
 import '../models/App_data_response.dart';
+import '../models/add_announcement_response.dart';
+import '../models/add_time_table_response.dart';
+import '../models/add_timetable_model.dart';
+import '../models/announcement_response.dart';
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
 import '../models/help_desk_response.dart';
 import '../models/help_desk_type_response.dart';
+import '../models/request/add_time_table_response.dart';
 import '../models/request/create_company_appr_req.dart';
 import '../models/request/create_company_det_req.dart';
 import '../models/request/help_desk_req.dart';
@@ -201,14 +206,6 @@ class ApiRepository {
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
-      // Get.showSnackbar(
-      //   GetSnackBar(
-      //     message: errorMessage,
-      //     isDismissible: true,
-      //     backgroundColor: colors_name.errorColor,
-      //     duration: const Duration(seconds: 2),
-      //   ),
-      // );
       rethrow;
     }
   }
@@ -513,6 +510,26 @@ class ApiRepository {
     }
   }
 
+  Future<AddAnnouncementResponse> updateAnnouncementDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.updateAnnouncementApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<AddTimeTableResponse> updateTimeTableDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.updateTimeTableApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
   Future<UpdateJobOpportunity> getJobOpportunityWithRecordIdApi(String recordId) async {
     try {
       final response = await userApi.getJobOpportunityWithRecordIdApi(recordId);
@@ -556,6 +573,26 @@ class ApiRepository {
   Future<BaseLoginResponse<App_data_response>> addAppDataApi(Map<String, dynamic> data) async {
     try {
       final response = await userApi.addAppDataApi(data);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<AddAnnouncementResponse>> addAnnouncementDataApi(Map<String, dynamic> data) async {
+    try {
+      final response = await userApi.addAnnouncementDataApi(data);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<AddTimeTableResponse>> addTimeTableDataApi(Map<String, dynamic> data) async {
+    try {
+      final response = await userApi.addTimeTableDataApi(data);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -642,4 +679,26 @@ class ApiRepository {
       rethrow;
     }
   }
+
+  Future<BaseResponse<AnnouncementResponse>> fetchAnnouncementListApi(String viewEmpFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.fetchAnnouncementApi(viewEmpFormula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<TimeTableResponseClass>> fetchTimeTablesListApi(String viewEmpFormula, [String offset = "",int? pageSize]) async {
+    try {
+      final response = await userApi.fetchTimeTablesApi(viewEmpFormula, offset,pageSize);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+
 }

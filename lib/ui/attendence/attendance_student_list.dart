@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
+import 'package:flutterdesigndemo/ui/time_table/add_edit_time_table.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -19,9 +22,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/dio_exception.dart';
+import '../../models/add_time_table_response.dart';
+import '../../models/request/update_time_table_request.dart';
 
 class AttendanceStudentList extends StatefulWidget {
-  const AttendanceStudentList({Key? key}) : super(key: key);
+  BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
+  DateTime? date;
+  String? time;
+  AttendanceStudentList({Key? key,this.timeTableData,this.date,this.time}) : super(key: key);
 
   @override
   State<AttendanceStudentList> createState() => _AttendanceStudentListState();
@@ -30,6 +38,7 @@ class AttendanceStudentList extends StatefulWidget {
 class _AttendanceStudentListState extends State<AttendanceStudentList> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> mainData = [];
+  BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
 
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
@@ -53,6 +62,15 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
       lectureId = Get.arguments[0]["lectureId"];
       fromEdit = true;
       getAttendanceData(lectureId);
+    }
+    // debugPrint('../ time ${Get.arguments[0]["timeTableData"] == null}');
+    // if(Get.arguments[0]["timeTableData"] != null){
+    //   debugPrint('../ timeTableData attendance list screen $timeTableData');
+    //   timeTableData = Get.arguments[0]["timeTableData"];
+    // }
+    // debugPrint('../ time table data ${widget.timeTableData == null}');
+    if(widget.timeTableData!=null){
+      timeTableData = widget.timeTableData;
     }
   }
 
@@ -104,8 +122,17 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     }
   }
 
+  String convertTo12HourFormat(String timeString) {
+    final parsedTime = TimeOfDay.fromDateTime(DateTime.parse("2023-07-22 $timeString"));
+    return DateFormat('hh:mm a').format(parsedTime.toDateTime());
+  }
+
+
   void checkCurrentData() {
     var now = DateTime.now();
+    if(widget.date!=null){
+      now = widget.date??DateTime.now();
+    }
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
     print(formattedDate);
@@ -113,6 +140,13 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     var timeFormatter = DateFormat('hh:mm aa');
     var dateTime = DateTime.now();
     formattedTime = timeFormatter.format(dateTime);
+
+
+    if(widget.time!=null){
+      print('../ time ${widget.time}');
+      formattedTime = convertTo12HourFormat(widget.time!);
+    }
+
     print(formattedTime);
   }
 
@@ -398,12 +432,17 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
 
         var resp = await apiRepository.addStudentAttendanceApi(request);
         if (resp.id!.isNotEmpty) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_attendance_recorded);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(closeOverlays: true, result: true);
+          if(widget.timeTableData == null){
+            setState(() {
+              isVisible = false;
+            });
+            Utils.showSnackBar(context, strings_name.str_attendance_recorded);
+            await Future.delayed(const Duration(milliseconds: 2000));
+            Get.back(closeOverlays: true, result: true);
+          }else{
+            updateTimeTableRecord();
+          }
+
         } else {
           setState(() {
             isVisible = false;
@@ -415,6 +454,68 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  updateTimeTableRecord() async {
+    try {
+      UpdateTimeTableRequest? updateTimeTableModel;
+      var data = timeTableData?.fields;
+        updateTimeTableModel = UpdateTimeTableRequest(
+          records: [
+            UpdateRecord(
+              id: timeTableData?.id??'',
+              fields: UpdateFields(
+                  date: timeTableData?.fields?.date??'',
+                  isHoliday: data?.isHoliday,
+                  startTime: data?.startTime,
+                  endTime: data?.endTime,
+                  holidayTitle: data?.holidayTitle,
+                  hubId: data?.hubId??[],
+                  specializationId: data?.specializationId,
+                  semester: data?.semester,
+                  division: data?.division,
+                  lectureId: data?.lectureId??[],
+                  subjectId: data?.subjectId??[],
+                  createdBy: data?.createdBy??[],
+                  updatedBy: data?.updatedBy,
+                  mode: data?.mode,
+                  modeTitle: data?.modeTitle,
+                  isAttendanceTaken : true
+              ),
+            )
+          ],
+        );
+
+      debugPrint('../ updateTimeTableModel ${jsonEncode(updateTimeTableModel.toJson())}');
+
+      var resp = await apiRepository.updateTimeTableDataApi(updateTimeTableModel.toJson(),timeTableData?.id??'');
+
+      if (resp.records?.isNotEmpty ?? false) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_attendance_recorded);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+    catch(e){
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = e.toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
   }

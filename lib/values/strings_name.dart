@@ -84,8 +84,15 @@ class strings_name {
   static const String str_empty_gender = "Please select gender";
   static const String str_empty_role = "Please select role";
   static const String str_empty_hub = "Please select hub";
-  static const String str_empty_file = "Please select file";
+  static const String str_empty_campus = "Please select campus";
 
+  static const String str_empty_specializations = "Please select specializations";
+  static const String str_empty_semester = "Please select semester";
+  static const String str_empty_class = "Please select class";
+  static const String str_empty_file = "Please select file";
+  static const String str_empty_image = "Please select image";
+  static const String str_empty_attachment = "Please select attachment";
+  static const String str_empty_see_announcement = "Please select who can see announcement";
   static const String str_employee_added = "New employee added successfully.";
   static const String str_employee_exists = "An employee with this mobile number already exists.";
   static const String str_student_exists = "There are already students with provided mobile numbers.";
@@ -227,10 +234,10 @@ class strings_name {
 
   static const String str_select_type = "Select Placed-Unplaced type";
 
-
-  static const String str_empty_semester = "Please select semester";
   static const String str_empty_division = "Please select division";
   static const String str_empty_subject = "Please select subject";
+  static const String str_empty_faculty = "Please select faculty";
+  // static const String str_empty_date_range = "Please select date range";
 
   static const String str_empty_eligibilty = "Please select Ineligible criteria";
 
@@ -372,6 +379,10 @@ class strings_name {
   static const String str_empty_min_range = "Please enter minimum stipend range";
   static const String str_empty_start_time = "Please select start time of internship";
   static const String str_empty_end_time = "Please select end time of internship";
+  static const String str_empty_start_time_tt = "Please select start time";
+  static const String str_empty_end_time_tt = "Please select end time";
+  static const String str_empty_meeting_link = "Please enter online meeting link";
+  static const String str_empty_class_number = "Please enter classroom Number";
 
   static const String str_job_added = "New job opportunity added successfully";
   static const String str_job_updated = "Job opportunity updated successfully";
@@ -525,7 +536,8 @@ class strings_name {
 
   static const String str_task = "Task";
   static const String str_my_task = "My task";
-  static const String str_others_task = "Task assigned to other";
+  static const String str_task_assigned_byme = "Task assigned by me";
+  static const String str_others_task = "Task of my subordinates";
 
   static const String str_task_id = "Task No:";
   static const String str_add_task = "Add task";
@@ -540,6 +552,7 @@ class strings_name {
   static const String str_empty_duration = "Please select duration";
   static const String str_set_deadline = "Set deadline";
   static const String str_empty_deadline = "Please set deadline";
+  static const String str_empty_task_importance = "Please selet task importance";
   static const String str_actual_duration = "Actual duration";
   static const String str_empty_actual_duration = "Please select actual duration";
   static const String str_actual_date = "Actual finished on";
@@ -554,10 +567,90 @@ class strings_name {
   static const String str_select_employee = "Select employee";
   static const String str_provided_duration = "Provided duration: ";
   static const String str_deadline = "Deadline: ";
+  static const String str_task_importance = "Task importance: ";
 
   static const String str_materials = "Materials";
   static const String str_ticket_status = "Status";
   static const String str_ticket_category = "Ticket category";
   static const String str_type_remarks = "Provide remarks...";
   static const String str_remarks = "Remarks";
+  static const String str_updated_by = "Updated by";
+  static const String str_only_task = "Show only tasks";
+
+  static const String announcements_ex = "Announcements!";
+  static const String view_all = "View All";
+  static const String no_new_announcements = "No new announcements!";
+  static const String tap_here = "Tap here";
+  static const String to_see_all_announcements = "to see all announcements.";
+  static const String announcements = "Announcements";
+  static const String add_announcements_icon = "+ Add Announcement";
+  static const String add_announcements = "Add Announcement";
+  static const String edit_announcements = "Edit Announcement";
+  static const String update_announcements = "Update Announcement";
+  static const String announcement_title_asterisk = "Announcement Title*";
+  static const String announcement_des_asterisk = "Announcement Description**";
+  static const String attach_files = "Attach Files";
+  static const String everyone = "Everyone";
+  static const String add_image = "Add Image";
+  static const String who_can_see = "Who can see?*";
+  static const String faculties = "Faculties";
+  static const String team_members = "Team Members";
+  static const String change_image = "Change Image";
+  static const String all_students = "All Students";
+  static const String all_employee = "All Employee";
+  static const String campus = "Campus";
+  static const String str_class = "Class";
+
+  static const String str_empty_announcement_title = "Please enter Announcement title";
+  static const String str_empty_announcement_desc = "Please enter Announcement description";
+
+  static const String str_announcement_added = "Announcement add successfully.";
+  static const String str_announcement_updated = "Announcement updated successfully.";
+
+  /// Time Table Mobule String
+  static const String str_time_table = "Time Table";
+  static const String str_subject_name = "Subject Name";
+  static const String str_new_time_table_icon = "+ New Time Table";
+  static const String str_or = "OR";
+
+  static const String str_campus_r = "Campus*";
+  static const String str_specialization_r = "Specialization*";
+  static const String str_semester_r = "Semester*";
+  static const String str_division_r = "Division*";
+  static const String str_subject_r = "Subject*";
+  static const String str_range_r = "Date Range*";
+  static const String str_done = "Done";
+  static const String str_data_range = "Select Date Range";
+  static const String str_online = "Online";
+  static const String str_offline = "Offline";
+  static const String str_faculty = "Faculty";
+  static const String str_timings = "Timings";
+  static const String str_to = "to";
+  static const String str_link = "Link";
+  static const String str_class_room = "Class Room";
+  static const String str_add_new_time_table = "Add New Time Table";
+  static const String str_date_r = "Date*";
+  static const String str_holiday = "Holiday";
+  static const String str_holiday_title = "Holiday title";
+  static const String str_faculty_name = "Select Faculty Name*";
+  static const String str_mode = "Mode:";
+  static const String str_meeting_link_r = "Online Meeting Link*";
+  static const String str_class_room_number = "Classroom number*";
+  static const String str_add_timetable = "Add Timetable";
+  static const String str_edit_timetable = "Edit Timetable";
+  static const String str_timetable = "Timetable";
+  static const String str_empty_date = "Please select date";
+  static const String str_empty_holiday_title = "Please enter holiday title";
+
+  static const String str_time_table_added = "Time Table add successfully.";
+  static const String str_time_table_updated = "Time Table updated successfully.";
+  static const String str_you_do_not_have_permission_time_table = "You do not have permission to access time table";
+  static const String str_no_time_table_found = "No time tables found";
+  static const String str_attendance_for = "Attendance for";
+  static const String str_predefined_lectures = "Predefined Lectures";
+  static const String str_new_lectures = "New Lectures";
+  static const String str_select_unit_and_topic = "Select Unit and Topic";
+
+  static const String str_attendance_already_taken = "Attendance already taken";
+  static const String str_not_per_atek_attedndance = "You do not have permission to take attendance in this lecture";
 }

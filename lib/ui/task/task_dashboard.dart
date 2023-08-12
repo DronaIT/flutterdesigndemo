@@ -30,7 +30,7 @@ class TaskDashboard extends StatefulWidget {
 
 class _TaskDashboardState extends State<TaskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
-  bool isVisible = false, fromFilter = false, toggleTaskAssigned = true, toggleMyTask = true;
+  bool isVisible = false, fromFilter = false, toggleTaskAssigned = true, toggleMyTask = true, toggleTaskAssignedByMe = true;
 
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
@@ -38,6 +38,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? myTaskList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskAssignedList = [];
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskAssignedByMeList = [];
   String offset = "";
   var loginId = "";
   var isLogin = 0;
@@ -45,6 +46,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
   var controllerSearch = TextEditingController();
   var filterHubName = "", filterSpecialization = "", filterSemester = "", filterDivision = "", filterTicketValue = "";
   var filterTicketTypeId = 0;
+  var filterOnlyTask = false;
 
   @override
   void initState() {
@@ -125,6 +127,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
       if (filterDivision.isNotEmpty) query += ", FIND('$filterDivision', ${TableNames.CLM_STUDENT_DIVISION}, 0)";
       if (filterTicketTypeId != 0) query += ", FIND('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID}, 0)";
       if (filterTicketValue.isNotEmpty) query += ", FIND('$filterTicketValue', ${TableNames.CLM_TICKET_STATUS}, 0)";
+      if (filterOnlyTask) query += ", FIND('${TableNames.HELPDESK_TYPE_TASK}', ${TableNames.CLM_FIELD_TYPE}, 0)";
     }
 
     query += ")";
@@ -187,6 +190,8 @@ class _TaskDashboardState extends State<TaskDashboard> {
         if (isChecked) {
           if (taskList![i].fields!.assignedTo?.contains(PreferenceUtils.getLoginRecordId()) == true) {
             myTaskList?.add(taskList![i]);
+          } else if (taskList![i].fields!.createdByEmployee?.contains(PreferenceUtils.getLoginRecordId()) == true) {
+            taskAssignedByMeList?.add(taskList![i]);
           } else {
             taskAssignedList?.add(taskList![i]);
           }
@@ -247,6 +252,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                               taskList?.clear();
                               myTaskList?.clear();
                               taskAssignedList?.clear();
+                              taskAssignedByMeList?.clear();
 
                               fromFilter = true;
                               filterHubName = value[0]["hubName"];
@@ -255,6 +261,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                               filterDivision = value[3]["division"];
                               filterTicketTypeId = value[4]["helpdeskTypeId"];
                               filterTicketValue = value[5]["ticketValue"];
+                              filterOnlyTask = value[6]["onlyTask"];
 
                               getRecords();
                             }
@@ -299,11 +306,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"canUpdateTask": true},
                                       {"recordId": myTaskList?[index].id}
                                     ])?.then((value) {
-                                      taskList?.clear();
-                                      myTaskList?.clear();
-                                      taskAssignedList?.clear();
+                                      if (value != null && value) {
+                                        taskList?.clear();
+                                        myTaskList?.clear();
+                                        taskAssignedList?.clear();
+                                        taskAssignedByMeList?.clear();
 
-                                      getRecords();
+                                        getRecords();
+                                      }
                                     });
                                   } else {
                                     Get.to(const HelpdeskDetail(), arguments: [
@@ -313,11 +323,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"recordId": myTaskList?[index].id},
                                       {"title": strings_name.str_task_detail},
                                     ])?.then((value) {
-                                      taskList?.clear();
-                                      myTaskList?.clear();
-                                      taskAssignedList?.clear();
+                                      if (value != null && value) {
+                                        taskList?.clear();
+                                        myTaskList?.clear();
+                                        taskAssignedList?.clear();
+                                        taskAssignedByMeList?.clear();
 
-                                      getRecords();
+                                        getRecords();
+                                      }
                                     });
                                   }
                                 },
@@ -400,6 +413,129 @@ class _TaskDashboardState extends State<TaskDashboard> {
                             }),
                       )
                     : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
+                taskAssignedByMeList?.isNotEmpty == true
+                    ? Column(
+                        children: [
+                          SizedBox(height: 3.h),
+                          GestureDetector(
+                            child: Card(
+                              elevation: 5,
+                              child: Container(
+                                color: colors_name.lightGrayColor,
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("${strings_name.str_task_assigned_byme}(${taskAssignedByMeList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                    Icon(toggleTaskAssignedByMe ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              if (taskAssignedByMeList?.isNotEmpty == true) {
+                                toggleTaskAssignedByMe = !toggleTaskAssignedByMe;
+                                setState(() {});
+                              }
+                            },
+                          ),
+                          taskAssignedByMeList?.isNotEmpty == true
+                              ? Visibility(
+                                  visible: toggleTaskAssignedByMe,
+                                  child: ListView.builder(
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: taskAssignedByMeList!.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(const TaskDetail(), arguments: [
+                                              {"fields": taskAssignedByMeList?[index].fields},
+                                              {"canUpdateTask": true},
+                                              {"recordId": taskAssignedByMeList?[index].id}
+                                            ])?.then((value) {
+                                              if (value != null && value) {
+                                                taskList?.clear();
+                                                myTaskList?.clear();
+                                                taskAssignedList?.clear();
+                                                taskAssignedByMeList?.clear();
+
+                                                getRecords();
+                                              }
+                                            });
+                                          },
+                                          child: Column(children: [
+                                            Container(
+                                              color: colors_name.colorWhite,
+                                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          children: [
+                                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                            custom_text(text: taskAssignedByMeList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          child: custom_text(
+                                                            text: taskAssignedByMeList![index].fields!.ticketTitle != null && taskAssignedByMeList![index].fields!.ticketTitle?.isNotEmpty == true ? taskAssignedByMeList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
+                                                            textStyles: whiteTextSemiBold16,
+                                                            alignment: Alignment.centerRight,
+                                                            topValue: 1,
+                                                            bottomValue: 1,
+                                                            leftValue: 3,
+                                                            rightValue: 3,
+                                                          )),
+                                                    ],
+                                                  ),
+                                                  custom_text(text: taskAssignedByMeList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 10, leftValue: 5, maxLines: 2),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                      Expanded(
+                                                        child: custom_text(text: taskAssignedByMeList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, maxLines: 5000, topValue: 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      custom_text(
+                                                        text: strings_name.str_status,
+                                                        textStyles: primaryTextSemiBold16,
+                                                        topValue: 5,
+                                                        bottomValue: 5,
+                                                        leftValue: 5,
+                                                        alignment: Alignment.center,
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          margin: const EdgeInsets.only(right: 5),
+                                                          child: custom_text(text: taskAssignedByMeList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
+                                          ]),
+                                        );
+                                      }),
+                                )
+                              : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
+                        ],
+                      )
+                    : Container(),
                 taskAssignedList?.isNotEmpty == true
                     ? Column(
                         children: [
@@ -436,17 +572,39 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       itemBuilder: (BuildContext context, int index) {
                                         return GestureDetector(
                                           onTap: () {
-                                            Get.to(const TaskDetail(), arguments: [
-                                              {"fields": taskAssignedList?[index].fields},
-                                              {"canUpdateTask": true},
-                                              {"recordId": taskAssignedList?[index].id}
-                                            ])?.then((value) {
-                                              taskList?.clear();
-                                              myTaskList?.clear();
-                                              taskAssignedList?.clear();
+                                            if (taskAssignedList![index].fields!.fieldType == TableNames.HELPDESK_TYPE_TASK) {
+                                              Get.to(const TaskDetail(), arguments: [
+                                                {"fields": taskAssignedList?[index].fields},
+                                                {"canUpdateTask": true},
+                                                {"recordId": taskAssignedList?[index].id}
+                                              ])?.then((value) {
+                                                if (value != null && value) {
+                                                  taskList?.clear();
+                                                  myTaskList?.clear();
+                                                  taskAssignedList?.clear();
+                                                  taskAssignedByMeList?.clear();
 
-                                              getRecords();
-                                            });
+                                                  getRecords();
+                                                }
+                                              });
+                                            } else {
+                                              Get.to(const HelpdeskDetail(), arguments: [
+                                                {"fields": taskAssignedList?[index].fields},
+                                                {"canUpdateTicketStatus": true},
+                                                {"canUpdateTicketCategory": true},
+                                                {"recordId": taskAssignedList?[index].id},
+                                                {"title": strings_name.str_task_detail},
+                                              ])?.then((value) {
+                                                if (value != null && value) {
+                                                  taskList?.clear();
+                                                  myTaskList?.clear();
+                                                  taskAssignedList?.clear();
+                                                  taskAssignedByMeList?.clear();
+
+                                                  getRecords();
+                                                }
+                                              });
+                                            }
                                           },
                                           child: Column(children: [
                                             Container(
@@ -519,7 +677,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                               : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
                         ],
                       )
-                    : Container()
+                    : Container(),
               ],
             ),
           ),
@@ -533,11 +691,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const AddTask())?.then((value) {
-              taskList?.clear();
-              myTaskList?.clear();
-              taskAssignedList?.clear();
+              if (value != null && value) {
+                taskList?.clear();
+                myTaskList?.clear();
+                taskAssignedList?.clear();
+                taskAssignedByMeList?.clear();
 
-              getRecords();
+                getRecords();
+              }
             });
           },
           child: const Icon(

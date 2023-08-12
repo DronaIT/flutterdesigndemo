@@ -8,7 +8,6 @@ import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/company_list.dart';
 import 'package:flutterdesigndemo/ui/placement/completed_internship_list.dart';
-import 'package:flutterdesigndemo/ui/placement/placed_unplaced_list.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';

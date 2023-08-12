@@ -491,11 +491,13 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const HelpDesk())?.then((value) {
-              ticketList?.clear();
-              myTicketList?.clear();
-              othersTicketList?.clear();
+              if (value != null && value) {
+                ticketList?.clear();
+                myTicketList?.clear();
+                othersTicketList?.clear();
 
-              getRecords();
+                getRecords();
+              }
             });
           },
           child: const Icon(
