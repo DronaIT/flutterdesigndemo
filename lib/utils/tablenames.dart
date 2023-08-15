@@ -1,7 +1,7 @@
 class TableNames {
-  static const APIENDPOINTS = "https://api.airtable.com/v0/appwU8yBYoG1yhBXx/";
-  static const APIKEY = "keyszHTHXMxxKKs9b";
-  static const PROJECTBASE = "appwU8yBYoG1yhBXx";
+  static const APIENDPOINTS = "https://api.airtable.com/v0/appv5323SIrE230U9/";
+  static const APIKEY = "key5iHhi8YUs0mRRJ";
+  static const PROJECTBASE = "appv5323SIrE230U9";
 
   // Kaleyra keys
   static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
