@@ -13,8 +13,6 @@ import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
-import '../../models/App_data_response.dart';
-import '../../models/base_api_response.dart';
 import '../../models/login_fields_response.dart';
 import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
@@ -55,7 +53,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
     try {
       var query = "(${TableNames.TB_USERS_PHONE}='${PreferenceUtils.getLoginData().mobileNumber}')";
       var data = await createStudentRepository.registerApi(query);
-      if (data != null) {
+      if (data.records != null) {
         appData = data.records!.first.fields!;
       }
       setState(() {
@@ -238,7 +236,7 @@ class _UploadDocumentsPlacementState extends State<UploadDocumentsPlacement> {
         map["url"] = path;
         listData.add(map);
         Map<String, dynamic> query = {"resume": listData};
-        var resp = await createStudentRepository.addToken(query, PreferenceUtils.getLoginRecordId());
+        var resp = await createStudentRepository.updateStudentDataApi(query, PreferenceUtils.getLoginRecordId());
         if (resp != null) {
           setState(() {
             isVisible = false;

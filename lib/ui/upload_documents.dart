@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -38,6 +39,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
 
   String docPath = "";
   String docName = "";
+  var docFileData;
   bool canupload = false, canView = false;
 
   @override
@@ -258,11 +260,18 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                             onTap: () async {
                               FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
                               if (result != null) {
-                                setState(() {
-                                  docPath = result.files.single.path!;
-                                  docName = result.files.single.name;
-
-                                });
+                                // docFileData
+                                docName = result.files.single.name;
+                                if(kIsWeb){
+                                  setState(() {
+                                    docPath = result.files.single.bytes.toString();
+                                    docFileData = result.files.single;
+                                  });
+                                }else {
+                                  setState(() {
+                                    docPath = result.files.single.path!;
+                                  });
+                                }
                               }
                               // documentfile();
                             },
@@ -294,10 +303,25 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                         } else {
                           var docMainPath = " ";
                           if (docPath.isNotEmpty) {
-                            CloudinaryResponse response = await cloudinary.uploadFile(
-                              CloudinaryFile.fromFile(docPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_APP_ASSETS),
-                            );
-                            docMainPath = response.secureUrl;
+                            if(kIsWeb) {
+                              CloudinaryResponse response = await cloudinary
+                                  .uploadFile(
+                                CloudinaryFile.fromByteData(
+                                    Utils.uint8ListToByteData(docFileData.bytes!),
+                                    resourceType: CloudinaryResourceType.Auto,
+                                    folder: TableNames.CLOUDARY_FOLDER_APP_ASSETS, identifier: docFileData.name),
+                              );
+                              docMainPath = response.secureUrl;
+                            }else{
+                              CloudinaryResponse response = await cloudinary
+                                  .uploadFile(
+                                CloudinaryFile.fromFile(docPath,
+                                    resourceType: CloudinaryResourceType.Auto,
+                                    folder: TableNames
+                                        .CLOUDARY_FOLDER_APP_ASSETS),
+                              );
+                              docMainPath = response.secureUrl;
+                            }
                           }
                           addRecord(docMainPath);
                           Get.back();

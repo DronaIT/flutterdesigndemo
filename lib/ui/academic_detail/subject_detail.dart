@@ -14,6 +14,7 @@ import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/add_units.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/unit_detail.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/upload_documents_acdemic.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -95,6 +96,16 @@ class _SubjectDetailState extends State<SubjectDetail> {
                   custom_text(text: subjectData.fields?.subjectTitle ?? "", maxLines: 5, textStyles: centerTextStyle24),
                   Visibility(visible: subjectData.fields?.subjectCode?.isNotEmpty ?? false, child: custom_text(text: "Code : ${subjectData.fields?.subjectCode ?? ""}", textStyles: blackTextSemiBold14, bottomValue: 2)),
                   Visibility(visible: subjectData.fields?.subjectCredit?.isNotEmpty ?? false, child: custom_text(text: "Credit : ${subjectData.fields?.subjectCredit ?? ""}", textStyles: blackTextSemiBold14)),
+                  // Container(
+                  //   alignment: Alignment.centerRight,
+                  //   margin: const EdgeInsets.only(left: 10, right: 20),
+                  //   child: CustomButton(
+                  //       text: strings_name.str_materials,
+                  //       bWidth: 130,
+                  //       click: () async {
+                  //         Get.to(const UploadDocumentsAcademic(),arguments: subjectData.fields?.subjectId);
+                  //       }),
+                  // ),
                   Visibility(visible: unitsData?.isNotEmpty ?? false, child: custom_text(text: strings_name.str_units, textStyles: blackTextSemiBold16)),
                   unitsData?.isNotEmpty == true
                       ? Expanded(
@@ -132,8 +143,8 @@ class _SubjectDetailState extends State<SubjectDetail> {
                                     ),
                                     onTap: () {
                                       Get.to(const UnitDetail(), arguments: [
-                                          {"unitId": unitsData![mainIndex]},
-                                          {"addSubjectPermission": canAddSubject}
+                                        {"unitId": unitsData![mainIndex]},
+                                        {"addSubjectPermission": canAddSubject}
                                       ]);
                                     },
                                   ),

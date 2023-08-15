@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -293,7 +294,15 @@ class _AddStudent extends State<CreateStudent> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['xlsx']);
 
     if (result != null) {
-      var bytes = File(result.files.single.path!).readAsBytesSync();
+
+      var bytes;
+
+      if(kIsWeb){
+        bytes = result.files.single.bytes;
+      }else{
+        bytes = File(result.files.single.path!).readAsBytesSync();
+      }
+
       var excel = Excel.decodeBytes(bytes);
 
       setState(() {

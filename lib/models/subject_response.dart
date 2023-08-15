@@ -1,3 +1,5 @@
+import 'attachment_response.dart';
+
 class SubjectResponse {
   String? subjectTitle;
   List<String>? specializationIds;
@@ -8,8 +10,9 @@ class SubjectResponse {
   String? subjectCredit;
   String? semester;
   bool selected = false;
+  List<Attachment_response>? material;
 
-  SubjectResponse({this.subjectTitle, this.specializationIds, this.ids, this.specializationIdFromSpecializationIds, this.subjectId, this.subjectCode, this.subjectCredit, this.semester});
+  SubjectResponse({this.subjectTitle, this.specializationIds, this.ids, this.material, this.specializationIdFromSpecializationIds, this.subjectId, this.subjectCode, this.subjectCredit, this.semester});
 
   SubjectResponse.fromJson(Map<String, dynamic> json) {
     subjectTitle = json['subject_title'];
@@ -20,18 +23,28 @@ class SubjectResponse {
     subjectCode = json['subject_code'] ?? "";
     subjectCredit = json['subject_credit'] ?? "";
     semester = json['semester'];
+    if (json['material'] != null) {
+      material = <Attachment_response>[];
+      json['material'].forEach((v) {
+        material!.add(Attachment_response.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['subject_title'] = this.subjectTitle;
-    data['specialization_ids'] = this.specializationIds;
-    data['ids'] = this.ids;
-    data['specialization_id (from specialization_ids)'] = this.specializationIdFromSpecializationIds;
-    data['subject_id'] = this.subjectId;
-    data['subject_code'] = this.subjectCode;
-    data['subject_credit'] = this.subjectCredit;
-    data['semester'] = this.semester;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['subject_title'] = subjectTitle;
+    data['specialization_ids'] = specializationIds;
+    data['ids'] = ids;
+    data['specialization_id (from specialization_ids)'] = specializationIdFromSpecializationIds;
+    data['subject_id'] = subjectId;
+    data['subject_code'] = subjectCode;
+    data['subject_credit'] = subjectCredit;
+    data['semester'] = semester;
+    if (material != null) {
+      data['material'] = material!.map((v) => v.toJson()).toList();
+    }
+
     return data;
   }
 }

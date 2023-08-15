@@ -100,38 +100,43 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
         children: [
           SingleChildScrollView(
               child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 height: 8,
               ),
-              CustomEditTextSearch(
-                type: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                controller: controllerSearch,
-                onChanges: (value) {
-                  if (value.isEmpty) {
-                    jobOpportunityList = [];
-                    jobOpportunityList = jobOpportunityListMain;
-                    setState(() {});
-                  } else {
-                    jobOpportunityList = [];
-                    for (var i = 0; i < jobOpportunityListMain!.length; i++) {
-                      if (jobOpportunityListMain![i].fields!.companyName!.first.toLowerCase().contains(value.toLowerCase())) {
-                        jobOpportunityList?.add(jobOpportunityListMain![i]);
+              Visibility(
+                visible: jobOpportunityList != null && jobOpportunityList!.isNotEmpty,
+                child: CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      jobOpportunityList = [];
+                      jobOpportunityList = jobOpportunityListMain;
+                      setState(() {});
+                    } else {
+                      jobOpportunityList = [];
+                      for (var i = 0; i < jobOpportunityListMain!.length; i++) {
+                        if (jobOpportunityListMain![i].fields!.companyName!.first.toLowerCase().contains(value.toLowerCase())) {
+                          jobOpportunityList?.add(jobOpportunityListMain![i]);
+                        }
                       }
+                      setState(() {});
                     }
-                    setState(() {});
-                  }
-                },
+                  },
+                ),
               ),
               SizedBox(height: 5),
               Container(
                 margin: const EdgeInsets.all(10),
                 child: jobOpportunityList != null && jobOpportunityList!.isNotEmpty
                     ? ListView.builder(
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: jobOpportunityList?.length,
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: jobOpportunityList?.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 5,
@@ -171,7 +176,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                     text: jobOpportunityList?[index].fields?.reportingAddress?.first != null ? "Location: ${jobOpportunityList?[index].fields?.reportingAddress?.first.toString().trim()} ${jobOpportunityList?[index].fields!.city?.first}" : "Location:N/A",
                                     textStyles: blackTextSemiBold12,
                                     topValue: 5,
-                                    maxLines: 3,
+                                    maxLines: 5,
                                     bottomValue: 5,
                                     leftValue: 5,
                                   ),
@@ -201,7 +206,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                         },
                                         style: ElevatedButton.styleFrom(
                                           primary: colors_name.presentColor,
-                                          padding: const EdgeInsets.only(top: 5, bottom: 10, left: 20, right: 20),
+                                          padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
@@ -243,10 +248,12 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
           custom_text(
             text: 'Company Name : ${jobData.fields?.companyName?.first.toString()}',
             textStyles: blackTextSemiBold14,
+            maxLines: 2,
           ),
           custom_text(
             text: 'Position : ${jobData.fields?.jobTitle}',
             textStyles: blackTextSemiBold14,
+            maxLines: 2,
           ),
           SizedBox(height: 5.h),
           custom_text(

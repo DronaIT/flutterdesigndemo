@@ -30,7 +30,7 @@ class HelpdeskDashboard extends StatefulWidget {
 
 class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
-  bool isVisible = false, fromFilter = false;
+  bool isVisible = false, fromFilter = false, toggleMyTicket = true, toggleOthersTicket = true;
 
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
@@ -43,7 +43,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   var isLogin = 0;
 
   var controllerSearch = TextEditingController();
-  var filterHubName = "", filterSpecialization = "", filterSemester = "", filterDivision = "";
+  var filterHubName = "", filterSpecialization = "", filterSemester = "", filterDivision = "", filterTicketValue = "";
   var filterTicketTypeId = 0;
 
   @override
@@ -102,19 +102,19 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
 
   getRecords() async {
     setState(() {
-      isVisible = true;
+      if (!isVisible) isVisible = true;
     });
     var query = "AND(${TableNames.CLM_FIELD_TYPE}='${TableNames.HELPDESK_TYPE_TICKET}', OR(";
     if (isLogin == 1) {
       query += "${TableNames.CLM_CREATED_BY_STUDENT}='${PreferenceUtils.getLoginData().mobileNumber}'";
     } else if (isLogin == 2) {
-      query += "${TableNames.CLM_CREATED_BY_EMPLOYEE}='$loginId'";
+      query += "${TableNames.CLM_CREATED_BY_EMPLOYEE_NUMBER}='${PreferenceUtils.getLoginDataEmployee().mobileNumber}'";
     } else if (isLogin == 3) {
       query += "${TableNames.CLM_CREATED_BY_ORGANIZATION}='$loginId'";
     }
 
     if (canViewOther) {
-      query += ", FIND('$loginId', ${TableNames.CLM_AUTHORITY_OF}, 0)";
+      query += ", SEARCH('${PreferenceUtils.getLoginDataEmployee().mobileNumber}', ARRAYJOIN(${TableNames.CLM_AUTHORITY_OF_NUMBER}))";
     }
 
     query += ")";
@@ -125,6 +125,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
       if (filterSemester.isNotEmpty) query += ", FIND('$filterSemester', ${TableNames.CLM_STUDENT_SEMESTER}, 0)";
       if (filterDivision.isNotEmpty) query += ", FIND('$filterDivision', ${TableNames.CLM_STUDENT_DIVISION}, 0)";
       if (filterTicketTypeId != 0) query += ", FIND('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID}, 0)";
+      if (filterTicketValue.isNotEmpty) query += ", FIND('$filterTicketValue', ${TableNames.CLM_TICKET_STATUS}, 0)";
     }
     query += ")";
     print(query);
@@ -178,14 +179,22 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     });
     if (ticketList?.isNotEmpty == true) {
       for (int i = 0; i < ticketList!.length; i++) {
-        if (isLogin == 1 && ticketList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
-          myTicketList?.add(ticketList![i]);
-        } else if (isLogin == 2 && ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
-          myTicketList?.add(ticketList![i]);
-        } else if (isLogin == 3 && ticketList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
-          myTicketList?.add(ticketList![i]);
-        } else {
-          othersTicketList?.add(ticketList![i]);
+        bool isChecked = true;
+        if (filterTicketValue.isEmpty) {
+          if (ticketList![i].fields!.status == TableNames.TICKET_STATUS_COMPLETED || ticketList![i].fields!.status == TableNames.TICKET_STATUS_RESOLVED || ticketList![i].fields!.status == TableNames.TICKET_STATUS_SUGGESTION) {
+            isChecked = false;
+          }
+        }
+        if (isChecked) {
+          if (isLogin == 1 && ticketList![i].fields!.createdByStudent?[0] == PreferenceUtils.getLoginRecordId()) {
+            myTicketList?.add(ticketList![i]);
+          } else if (isLogin == 2 && ticketList![i].fields!.createdByEmployee?[0] == PreferenceUtils.getLoginRecordId()) {
+            myTicketList?.add(ticketList![i]);
+          } else if (isLogin == 3 && ticketList![i].fields!.createdByOrganization?[0] == PreferenceUtils.getLoginRecordId()) {
+            myTicketList?.add(ticketList![i]);
+          } else {
+            othersTicketList?.add(ticketList![i]);
+          }
         }
       }
     }
@@ -229,207 +238,242 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                       },
                     ),
                   ),
-                  IconButton(
-                      iconSize: 28,
-                      onPressed: () {
-                        Get.to(const FilterScreenHelpdesk())?.then((value) {
-                          ticketList?.clear();
-                          myTicketList?.clear();
-                          othersTicketList?.clear();
+                  Visibility(
+                    visible: isLogin == 2,
+                    child: IconButton(
+                        iconSize: 28,
+                        onPressed: () {
+                          Get.to(const FilterScreenHelpdesk(), arguments: false)?.then((value) {
+                            if (value != null) {
+                              ticketList?.clear();
+                              myTicketList?.clear();
+                              othersTicketList?.clear();
 
-                          fromFilter = true;
-                          filterHubName = value[0]["hubName"];
-                          filterSpecialization = value[1]["specializationName"];
-                          filterSemester = value[2]["semester"];
-                          filterDivision = value[3]["division"];
-                          filterTicketTypeId = value[4]["helpdeskTypeId"];
+                              fromFilter = true;
+                              filterHubName = value[0]["hubName"];
+                              filterSpecialization = value[1]["specializationName"];
+                              filterSemester = value[2]["semester"];
+                              filterDivision = value[3]["division"];
+                              filterTicketTypeId = value[4]["helpdeskTypeId"];
+                              filterTicketValue = value[5]["ticketValue"];
 
-                          getRecords();
-                        });
-                      },
-                      icon: const Icon(Icons.filter_alt, color: colors_name.colorPrimary))
+                              getRecords();
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.filter_alt, color: colors_name.colorPrimary)),
+                  )
                 ]),
                 SizedBox(height: 5.h),
-                Card(
-                  elevation: 5,
-                  child: Container(
-                    color: colors_name.lightGrayColor,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text("${strings_name.str_my_tickets}(${myTicketList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                GestureDetector(
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      color: colors_name.lightGrayColor,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text("${strings_name.str_my_tickets}(${myTicketList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(toggleMyTicket ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
                     ),
                   ),
+                  onTap: () {
+                    if (myTicketList?.isNotEmpty == true) {
+                      toggleMyTicket = !toggleMyTicket;
+                      setState(() {});
+                    }
+                  },
                 ),
                 myTicketList?.isNotEmpty == true
-                    ? ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: myTicketList!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Get.to(const HelpdeskDetail(), arguments: [
-                                {"fields": myTicketList?[index].fields},
-                                {"canUpdateTicketStatus": false},
-                                {"canUpdateTicketCategory": false},
-                                {"recordId": myTicketList?[index].id},
-                                {"title": strings_name.str_help_desk_detail},
-                              ]);
-                            },
-                            child: Column(children: [
-                              Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ? Visibility(
+                        visible: toggleMyTicket,
+                        child: ListView.builder(
+                            primary: false,
+                            shrinkWrap: true,
+                            itemCount: myTicketList!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(const HelpdeskDetail(), arguments: [
+                                    {"fields": myTicketList?[index].fields},
+                                    {"canUpdateTicketStatus": false},
+                                    {"canUpdateTicketCategory": false},
+                                    {"recordId": myTicketList?[index].id},
+                                    {"title": strings_name.str_help_desk_detail},
+                                  ]);
+                                },
+                                child: Column(children: [
+                                  Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                    child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                            custom_text(text: myTicketList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                  custom_text(text: myTicketList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                                decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                padding: const EdgeInsets.all(1),
+                                                child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                           ],
                                         ),
-                                        Container(
-                                            decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            padding: const EdgeInsets.all(1),
-                                            child: custom_text(text: myTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
-                                      ],
-                                    ),
-                                    custom_text(text: myTicketList![index].fields!.notes.toString().trim(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
-                                    Row(
-                                      children: [
-                                        custom_text(
-                                          text: strings_name.str_status,
-                                          textStyles: primaryTextSemiBold16,
-                                          topValue: 5,
-                                          bottomValue: 5,
-                                          leftValue: 5,
-                                          alignment: Alignment.center,
+                                        custom_text(text: myTicketList![index].fields!.notes.toString().trim(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                        Row(
+                                          children: [
+                                            custom_text(
+                                              text: strings_name.str_status,
+                                              textStyles: primaryTextSemiBold16,
+                                              topValue: 5,
+                                              bottomValue: 5,
+                                              leftValue: 5,
+                                              alignment: Alignment.center,
+                                            ),
+                                            Container(
+                                                decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                padding: const EdgeInsets.all(1),
+                                                margin: const EdgeInsets.only(right: 5),
+                                                child: custom_text(text: myTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                          ],
                                         ),
-                                        Container(
-                                            decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            padding: const EdgeInsets.all(1),
-                                            margin: const EdgeInsets.only(right: 5),
-                                            child: custom_text(text: myTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
-                            ]),
-                          );
-                        })
+                                  ),
+                                  Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
+                                ]),
+                              );
+                            }),
+                      )
                     : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
                 canViewOther
                     ? Column(
                         children: [
-                          SizedBox(height: 15.h),
-                          Card(
-                            elevation: 5,
-                            child: Container(
-                              color: colors_name.lightGrayColor,
-                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text("${strings_name.str_others_tickets}(${othersTicketList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          SizedBox(height: 3.h),
+                          GestureDetector(
+                            child: Card(
+                              elevation: 5,
+                              child: Container(
+                                color: colors_name.lightGrayColor,
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(child: custom_text(text: "${strings_name.str_others_tickets}(${othersTicketList?.length ?? 0})", textAlign: TextAlign.start, textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 0, maxLines: 2, topValue: 0, bottomValue: 0)),
+                                    Icon(toggleOthersTicket ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                  ],
+                                ),
                               ),
                             ),
+                            onTap: () {
+                              if (othersTicketList?.isNotEmpty == true) {
+                                toggleOthersTicket = !toggleOthersTicket;
+                                setState(() {});
+                              }
+                            },
                           ),
                           othersTicketList?.isNotEmpty == true
-                              ? ListView.builder(
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  itemCount: othersTicketList!.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Get.to(const HelpdeskDetail(), arguments: [
-                                          {"fields": othersTicketList?[index].fields},
-                                          {"canUpdateTicketStatus": canUpdateTicketStatus},
-                                          {"canUpdateTicketCategory": canUpdateTicketCategory},
-                                          {"recordId": othersTicketList?[index].id},
-                                          {"title": strings_name.str_help_desk_detail},
-                                        ]);
-                                      },
-                                      child: Column(children: [
-                                        Container(
-                                          color: colors_name.colorWhite,
-                                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              ? Visibility(
+                                  visible: toggleOthersTicket,
+                                  child: ListView.builder(
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: othersTicketList!.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(const HelpdeskDetail(), arguments: [
+                                              {"fields": othersTicketList?[index].fields},
+                                              {"canUpdateTicketStatus": canUpdateTicketStatus},
+                                              {"canUpdateTicketCategory": canUpdateTicketCategory},
+                                              {"recordId": othersTicketList?[index].id},
+                                              {"title": strings_name.str_help_desk_detail},
+                                            ]);
+                                          },
+                                          child: Column(children: [
+                                            Container(
+                                              color: colors_name.colorWhite,
+                                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                              child: Column(
                                                 children: [
                                                   Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                      custom_text(text: othersTicketList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          children: [
+                                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                            custom_text(text: othersTicketList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          child: custom_text(text: othersTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
                                                     ],
                                                   ),
-                                                  Container(
-                                                      decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                      padding: const EdgeInsets.all(1),
-                                                      child: custom_text(text: othersTicketList![index].fields!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
-                                                ],
-                                              ),
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                                                  Expanded(
-                                                    child: custom_text(
-                                                        text: othersTicketList![index].fields!.studentName?.isNotEmpty == true
-                                                            ? othersTicketList![index].fields!.studentName![0].toString()
-                                                            : (othersTicketList![index].fields!.employeeName?.isNotEmpty == true
-                                                                ? othersTicketList![index].fields!.employeeName![0].toString()
-                                                                : (othersTicketList![index].fields!.companyName?.isNotEmpty == true ? othersTicketList![index].fields!.companyName![0].toString() : "")),
-                                                        textStyles: blackTextSemiBold16,
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                      Expanded(
+                                                        child: custom_text(
+                                                            text: othersTicketList![index].fields!.studentName?.isNotEmpty == true
+                                                                ? othersTicketList![index].fields!.studentName![0].toString()
+                                                                : (othersTicketList![index].fields!.employeeName?.isNotEmpty == true
+                                                                    ? othersTicketList![index].fields!.employeeName![0].toString()
+                                                                    : (othersTicketList![index].fields!.companyName?.isNotEmpty == true ? othersTicketList![index].fields!.companyName![0].toString() : "")),
+                                                            textStyles: blackTextSemiBold16,
+                                                            leftValue: 5,
+                                                            maxLines: 2,
+                                                            topValue: 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  custom_text(text: othersTicketList![index].fields!.notes.toString().trim(), textStyles: blackText16, topValue: 5, bottomValue: 10, leftValue: 5, maxLines: 2),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                      Expanded(child: custom_text(text: othersTicketList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ").trim() ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0, rightValue: 5, maxLines: 5000)),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      custom_text(
+                                                        text: strings_name.str_status,
+                                                        textStyles: primaryTextSemiBold16,
+                                                        topValue: 5,
+                                                        bottomValue: 5,
                                                         leftValue: 5,
-                                                        maxLines: 2,
-                                                        topValue: 0),
+                                                        alignment: Alignment.center,
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          margin: const EdgeInsets.only(right: 5),
+                                                          child: custom_text(text: othersTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                              custom_text(text: othersTicketList![index].fields!.notes.toString().trim(), textStyles: blackText16, topValue: 5, bottomValue: 10, leftValue: 5, maxLines: 2),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                                                  Expanded(child: custom_text(text: othersTicketList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ").trim() ?? "", textStyles: blackTextSemiBold16, leftValue: 5, topValue: 0, rightValue: 5, maxLines: 5000)),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  custom_text(
-                                                    text: strings_name.str_status,
-                                                    textStyles: primaryTextSemiBold16,
-                                                    topValue: 5,
-                                                    bottomValue: 5,
-                                                    leftValue: 5,
-                                                    alignment: Alignment.center,
-                                                  ),
-                                                  Container(
-                                                      decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                      padding: const EdgeInsets.all(1),
-                                                      margin: const EdgeInsets.only(right: 5),
-                                                      child: custom_text(text: othersTicketList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
-                                      ]),
-                                    );
-                                  })
+                                            ),
+                                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
+                                          ]),
+                                        );
+                                      }),
+                                )
                               : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
                         ],
                       )
@@ -447,11 +491,13 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const HelpDesk())?.then((value) {
-              ticketList?.clear();
-              myTicketList?.clear();
-              othersTicketList?.clear();
+              if (value != null && value) {
+                ticketList?.clear();
+                myTicketList?.clear();
+                othersTicketList?.clear();
 
-              getRecords();
+                getRecords();
+              }
             });
           },
           child: const Icon(

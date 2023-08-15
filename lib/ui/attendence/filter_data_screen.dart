@@ -85,7 +85,7 @@ class _FilterDataState extends State<FilterData> {
         }
       }
       var totalPresentPercentage = ((total_present * 100) / total_lecture);
-      if(totalPresentPercentage < int.parse(eligiblePersentage)){
+      if(totalPresentPercentage < (int.tryParse(eligiblePersentage) ?? 75)){
         test.add(studentEligibiltyList[j]);
       }
       studentEligibiltyList[j].fields!.percentage = totalPresentPercentage.toStringAsFixed(2);

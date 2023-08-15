@@ -74,8 +74,26 @@ const centerTextStylePrimary18 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const blackText14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+
+const whiteText14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.white,
+);
+
 const blackText16 = TextStyle(
   fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+
+const blackText18 = TextStyle(
+  fontSize: 18,
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
@@ -85,7 +103,6 @@ const blackTextbold14 = TextStyle(
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );
-
 
 const whiteText16 = TextStyle(
   fontSize: 16,
@@ -99,13 +116,57 @@ const whiteText13 = TextStyle(
   color: Colors.white,
 );
 
+const blackTextBold14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+  color: Colors.black,
+);
+
 const blackTextSemiBold16 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w600,
   color: Colors.black,
 );
+
+const coffeeTextSemiBold16 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: colors_name.coffee,
+);
+
+const lightBlackText16 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: colors_name.textColorBlack,
+  height: 1.4
+);
+
+const greenText14 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: colors_name.green,
+);
+
+const greenText16 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: colors_name.green,
+);
+
 const whiteTextSemiBold16 = TextStyle(
   fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.white,
+);
+
+const whiteTextSemiBold18 = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w600,
+  color: Colors.white,
+);
+
+const whiteTextSemiBold20 = TextStyle(
+  fontSize: 20,
   fontWeight: FontWeight.w600,
   color: Colors.white,
 );
@@ -151,6 +212,8 @@ const primryTextSemiBold14 = TextStyle(
   fontWeight: FontWeight.w400,
   color: colors_name.colorPrimary,
 );
+
+
 const primryTextSemiBold13 = TextStyle(
   fontSize: 13,
   fontWeight: FontWeight.w400,
@@ -174,7 +237,7 @@ const primaryTextSemiBold16 = TextStyle(
 
 
 const primaryTextSemiBold14 = TextStyle(
-  fontSize: 16,
+  fontSize: 14,
   fontWeight: FontWeight.w500,
   color: colors_name.colorPrimary,
 );
@@ -186,6 +249,9 @@ const errorTextStyle = TextStyle(
 );
 
 const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
+const greyDarkTextStyle12 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
+
+const greyDarkTextStyle12WH = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark,);
 
 const primaryColorSubtitleStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorPrimary, height: 1.45);
 
@@ -271,7 +337,15 @@ const settingsItemStyle = TextStyle(
 
 final cardTagStyle = titleStyle.copyWith(color: colors_name.textColorGreyDark);
 
+final lightGrey14 = titleStyle.copyWith(color: colors_name.darkGrayColor,fontSize: 14, fontWeight: FontWeight.w600,);
+
+final blueSemiBold14 = titleStyle.copyWith(color: colors_name.blue,fontSize: 14, fontWeight: FontWeight.w600,);
+
+final dartGreen14 = titleStyle.copyWith(color: colors_name.presentColor,fontSize: 14, fontWeight: FontWeight.w600,);
+
 const titleStyleWhite = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: colors_name.colorWhite);
+
+var textStyleLightWhite = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorWhite.withOpacity(0.6));
 
 const inputFieldLabelStyle = TextStyle(
   fontSize: 18,

@@ -47,6 +47,10 @@ class JobOpportunityResponse {
   List<String>? applied_students_email;
   List<String>? applied_students_enrollment_number;
   List<String>? applied_students_name;
+  List<String>? applied_students_number;
+  List<String>? applied_students_specialization;
+  List<String>? applied_students_semester;
+  List<AppliedResume>? applied_students_resume;
 
   List<String>? shortlisted_students_email;
   List<String>? shortlisted_students_enrollment_number;
@@ -104,6 +108,9 @@ class JobOpportunityResponse {
       this.applied_students_email,
       this.applied_students_enrollment_number,
       this.applied_students_name,
+      this.applied_students_number,
+      this.applied_students_specialization,
+      this.applied_students_semester,
       this.shortlisted_students_email,
       this.shortlisted_students_enrollment_number,
       this.shortlisted_students_name,
@@ -158,6 +165,9 @@ class JobOpportunityResponse {
     applied_students_email = json['applied_students_email']?.cast<String>();
     applied_students_enrollment_number = json['applied_students_enrollment_number']?.cast<String>();
     applied_students_name = json['applied_students_name']?.cast<String>();
+    applied_students_number = json['applied_students_number']?.cast<String>();
+    applied_students_specialization = json['applied_students_specialization']?.cast<String>();
+    applied_students_semester = json['applied_students_semester']?.cast<String>();
 
     shortlisted_students_email = json['shortlisted_students_email']?.cast<String>();
     shortlisted_students_enrollment_number = json['shortlisted_students_enrollment_number']?.cast<String>();
@@ -173,6 +183,13 @@ class JobOpportunityResponse {
       company_loi = <DocumentResponse>[];
       json['company_loi'].forEach((v) {
         company_loi!.add(new DocumentResponse.fromJson(v));
+      });
+    }
+
+    if (json['applied_students_resume'] != null) {
+      applied_students_resume = <AppliedResume>[];
+      json['applied_students_resume'].forEach((v) {
+        applied_students_resume?.add(new AppliedResume.fromJson(v));
       });
     }
   }
@@ -223,6 +240,10 @@ class JobOpportunityResponse {
     data['applied_students_email'] = this.applied_students_email;
     data['applied_students_enrollment_number'] = this.applied_students_enrollment_number;
     data['applied_students_name'] = this.applied_students_name;
+    data['applied_students_number'] = this.applied_students_number;
+    data['applied_students_specialization'] = this.applied_students_specialization;
+    data['applied_students_semester'] = this.applied_students_semester;
+
     data['shortlisted_students_email'] = this.shortlisted_students_email;
     data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
     data['shortlisted_students_name'] = this.shortlisted_students_name;
@@ -235,6 +256,35 @@ class JobOpportunityResponse {
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
     }
+    if (this.applied_students_resume != null) {
+      data['applied_students_resume'] = this.applied_students_resume?.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class AppliedResume {
+  String? id;
+  String? url;
+  String? filename;
+
+  AppliedResume(
+      {this.id,
+        this.url,
+        this.filename,
+      });
+
+  AppliedResume.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    url = json['url'];
+    filename = json['filename'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['url'] = this.url;
+    data['filename'] = this.filename;
     return data;
   }
 }

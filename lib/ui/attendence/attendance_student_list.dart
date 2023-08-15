@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
+import 'package:flutterdesigndemo/ui/time_table/add_edit_time_table.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -19,9 +22,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/dio_exception.dart';
+import '../../models/add_time_table_response.dart';
+import '../../models/request/update_time_table_request.dart';
 
 class AttendanceStudentList extends StatefulWidget {
-  const AttendanceStudentList({Key? key}) : super(key: key);
+  BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
+  DateTime? date;
+  String? time;
+  AttendanceStudentList({Key? key,this.timeTableData,this.date,this.time}) : super(key: key);
 
   @override
   State<AttendanceStudentList> createState() => _AttendanceStudentListState();
@@ -29,7 +37,8 @@ class AttendanceStudentList extends StatefulWidget {
 
 class _AttendanceStudentListState extends State<AttendanceStudentList> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
-  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> test = [];
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>> mainData = [];
+  BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
 
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
@@ -47,12 +56,21 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     super.initState();
     checkCurrentData();
     if (Get.arguments[0]["studentList"] != null) {
-      test = Get.arguments[0]["studentList"];
+      mainData = Get.arguments[0]["studentList"];
       studentList = Get.arguments[0]["studentList"];
     } else if (Get.arguments[0]["lectureId"] != null) {
       lectureId = Get.arguments[0]["lectureId"];
       fromEdit = true;
       getAttendanceData(lectureId);
+    }
+    // debugPrint('../ time ${Get.arguments[0]["timeTableData"] == null}');
+    // if(Get.arguments[0]["timeTableData"] != null){
+    //   debugPrint('../ timeTableData attendance list screen $timeTableData');
+    //   timeTableData = Get.arguments[0]["timeTableData"];
+    // }
+    // debugPrint('../ time table data ${widget.timeTableData == null}');
+    if(widget.timeTableData!=null){
+      timeTableData = widget.timeTableData;
     }
   }
 
@@ -82,11 +100,12 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
               var studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
               studentData.id = data.fields?.studentIds![i];
               studentData.fields = loginFieldResponse;
-              test.add(studentData);
-              studentList = List.from(test);
+              mainData.add(studentData);
             }
+            mainData.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+
+            studentList = List.from(mainData);
             studentList.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
-            test.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
           }
         });
       } else {
@@ -103,8 +122,17 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     }
   }
 
+  String convertTo12HourFormat(String timeString) {
+    final parsedTime = TimeOfDay.fromDateTime(DateTime.parse("2023-07-22 $timeString"));
+    return DateFormat('hh:mm a').format(parsedTime.toDateTime());
+  }
+
+
   void checkCurrentData() {
     var now = DateTime.now();
+    if(widget.date!=null){
+      now = widget.date??DateTime.now();
+    }
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
     print(formattedDate);
@@ -112,8 +140,17 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     var timeFormatter = DateFormat('hh:mm aa');
     var dateTime = DateTime.now();
     formattedTime = timeFormatter.format(dateTime);
+
+
+    if(widget.time!=null){
+      print('../ time ${widget.time}');
+      formattedTime = convertTo12HourFormat(widget.time!);
+    }
+
     print(formattedTime);
   }
+
+  List<GlobalKey<CustomRadioButtonState<String>>> key = [];
 
   @override
   Widget build(BuildContext context) {
@@ -180,23 +217,60 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     custom_text(text: "${studentList[index].fields?.name}", textStyles: blackTextSemiBold16),
-                                    custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
-                                    CustomRadioButton(
+                                    custom_text(topValue: 0, bottomValue: 10, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              studentList[index].fields?.attendanceStatus = 1;
+                                              for (int i = 0; i < mainData.length; i++) {
+                                                if (studentList[index].fields!.enrollmentNumber == mainData[i].fields!.enrollmentNumber) {
+                                                  mainData[i].fields!.attendanceStatus = studentList[index].fields!.attendanceStatus;
+                                                }
+                                              }
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(color: studentList[index].fields?.attendanceStatus == 1 ? colors_name.colorPrimary : Theme.of(context).cardColor, border: Border.all(color: colors_name.colorDark)),
+                                                child: custom_text(text: strings_name.str_present, textStyles: studentList[index].fields?.attendanceStatus == 1 ? whiteText14 : blackText14, topValue: 5, bottomValue: 5, leftValue: 15, rightValue: 15))),
+                                        SizedBox(width: 8.h),
+                                        GestureDetector(
+                                            onTap: () {
+                                              studentList[index].fields?.attendanceStatus = 0;
+                                              for (int i = 0; i < mainData.length; i++) {
+                                                if (studentList[index].fields!.enrollmentNumber == mainData[i].fields!.enrollmentNumber) {
+                                                  mainData[i].fields!.attendanceStatus = studentList[index].fields!.attendanceStatus;
+                                                }
+                                              }
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(color: studentList[index].fields?.attendanceStatus == 0 ? colors_name.colorPrimary : Theme.of(context).cardColor, border: Border.all(color: colors_name.colorDark)),
+                                                child: custom_text(text: strings_name.str_absent, textStyles: studentList[index].fields?.attendanceStatus == 0 ? whiteText14 : blackText14, topValue: 5, bottomValue: 5, leftValue: 15, rightValue: 15)))
+                                      ],
+                                    ),
+/*                                    CustomRadioButton(
                                       unSelectedColor: Theme.of(context).cardColor,
                                       buttonLables: [strings_name.str_present, strings_name.str_absent],
                                       buttonValues: [strings_name.str_present, strings_name.str_absent],
                                       radioButtonValue: (value) {
-                                        setState(() {
-                                          if (value == strings_name.str_present) {
-                                            studentList[index].fields?.attendanceStatus = 1;
-                                          } else if (value == strings_name.str_absent) {
-                                            studentList[index].fields?.attendanceStatus = 0;
+                                        if (value == strings_name.str_present) {
+                                          studentList[index].fields?.attendanceStatus = 1;
+                                        } else if (value == strings_name.str_absent) {
+                                          studentList[index].fields?.attendanceStatus = 0;
+                                        }
+                                        key[index].currentState?.selectButton(value);
+                                        for (int i = 0; i < mainData.length; i++) {
+                                          if (studentList[index].fields!.mobileNumber == mainData[i].fields!.mobileNumber) {
+                                            mainData[i].fields!.attendanceStatus = studentList[index].fields!.attendanceStatus;
                                           }
-                                        });
+                                        }
+                                        setState(() {});
                                       },
                                       selectedColor: colors_name.colorPrimary,
                                       defaultSelected: studentList[index].fields?.attendanceStatus == 1 ? strings_name.str_present : strings_name.str_absent,
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),
@@ -358,12 +432,17 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
 
         var resp = await apiRepository.addStudentAttendanceApi(request);
         if (resp.id!.isNotEmpty) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_attendance_recorded);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(closeOverlays: true, result: true);
+          if(widget.timeTableData == null){
+            setState(() {
+              isVisible = false;
+            });
+            Utils.showSnackBar(context, strings_name.str_attendance_recorded);
+            await Future.delayed(const Duration(milliseconds: 2000));
+            Get.back(closeOverlays: true, result: true);
+          }else{
+            updateTimeTableRecord();
+          }
+
         } else {
           setState(() {
             isVisible = false;
@@ -379,16 +458,79 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     }
   }
 
+  updateTimeTableRecord() async {
+    try {
+      UpdateTimeTableRequest? updateTimeTableModel;
+      var data = timeTableData?.fields;
+        updateTimeTableModel = UpdateTimeTableRequest(
+          records: [
+            UpdateRecord(
+              id: timeTableData?.id??'',
+              fields: UpdateFields(
+                  date: timeTableData?.fields?.date??'',
+                  isHoliday: data?.isHoliday,
+                  startTime: data?.startTime,
+                  endTime: data?.endTime,
+                  holidayTitle: data?.holidayTitle,
+                  hubId: data?.hubId??[],
+                  specializationId: data?.specializationId,
+                  semester: data?.semester,
+                  division: data?.division,
+                  lectureId: data?.lectureId??[],
+                  subjectId: data?.subjectId??[],
+                  createdBy: data?.createdBy??[],
+                  updatedBy: data?.updatedBy,
+                  mode: data?.mode,
+                  modeTitle: data?.modeTitle,
+                  isAttendanceTaken : true
+              ),
+            )
+          ],
+        );
+
+      debugPrint('../ updateTimeTableModel ${jsonEncode(updateTimeTableModel.toJson())}');
+
+      var resp = await apiRepository.updateTimeTableDataApi(updateTimeTableModel.toJson(),timeTableData?.id??'');
+
+      if (resp.records?.isNotEmpty ?? false) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_attendance_recorded);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+    catch(e){
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = e.toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
   void filterResult(String value) {
     if (value.isEmpty) {
       studentList = [];
-      studentList = List.from(test);
+      studentList = List.from(mainData);
       setState(() {});
     } else {
       studentList = [];
-      for (var i = 0; i < test.length; i++) {
-        if (test[i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
-          studentList.add(test[i]);
+      setState(() {});
+      for (var i = 0; i < mainData.length; i++) {
+        if (mainData[i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
+          studentList.add(mainData[i]);
         }
       }
       setState(() {});

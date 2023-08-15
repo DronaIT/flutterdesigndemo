@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
+import 'package:flutterdesigndemo/ui/helpdesk/filter_screen_helpdesk.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_details.dart';
 import 'package:flutterdesigndemo/ui/task/add_task.dart';
 import 'package:flutterdesigndemo/ui/task/task_details.dart';
@@ -29,7 +30,7 @@ class TaskDashboard extends StatefulWidget {
 
 class _TaskDashboardState extends State<TaskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
-  bool isVisible = false;
+  bool isVisible = false, fromFilter = false, toggleTaskAssigned = true, toggleMyTask = true, toggleTaskAssignedByMe = true;
 
   bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
 
@@ -37,11 +38,15 @@ class _TaskDashboardState extends State<TaskDashboard> {
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? myTaskList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskAssignedList = [];
+  List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskAssignedByMeList = [];
   String offset = "";
   var loginId = "";
   var isLogin = 0;
 
   var controllerSearch = TextEditingController();
+  var filterHubName = "", filterSpecialization = "", filterSemester = "", filterDivision = "", filterTicketValue = "";
+  var filterTicketTypeId = 0;
+  var filterOnlyTask = false;
 
   @override
   void initState() {
@@ -101,16 +106,29 @@ class _TaskDashboardState extends State<TaskDashboard> {
     setState(() {
       if (!isVisible) isVisible = true;
     });
-    var query = "OR(";
+    var query = "AND(OR(";
     if (isLogin == 1) {
       query += "${TableNames.CLM_CREATED_BY_STUDENT}='${PreferenceUtils.getLoginData().mobileNumber}'";
     } else if (isLogin == 2) {
-      query += "${TableNames.CLM_CREATED_BY_EMPLOYEE}='$loginId'";
+      query += "${TableNames.CLM_CREATED_BY_EMPLOYEE_NUMBER}='${PreferenceUtils.getLoginDataEmployee().mobileNumber}'";
     } else if (isLogin == 3) {
       query += "${TableNames.CLM_CREATED_BY_ORGANIZATION}='$loginId'";
     }
 
-    query += ", FIND('$loginId', ${TableNames.CLM_ASSIGNED_TO}, 0)";
+    query += ", SEARCH('${PreferenceUtils.getLoginDataEmployee().mobileNumber}', ARRAYJOIN(${TableNames.CLM_ASSIGNED_NUMBER}))";
+    query += ", SEARCH('${PreferenceUtils.getLoginDataEmployee().mobileNumber}', ARRAYJOIN(${TableNames.CLM_AUTHORITY_OF_NUMBER}))";
+
+    query += ")";
+
+    if (fromFilter) {
+      if (filterHubName.isNotEmpty) query += ", FIND('$filterHubName', ${TableNames.CLM_STUDENT_HUBNAME}, 0)";
+      if (filterSpecialization.isNotEmpty) query += ", FIND('$filterSpecialization', ${TableNames.CLM_STUDENT_SPENAME}, 0)";
+      if (filterSemester.isNotEmpty) query += ", FIND('$filterSemester', ${TableNames.CLM_STUDENT_SEMESTER}, 0)";
+      if (filterDivision.isNotEmpty) query += ", FIND('$filterDivision', ${TableNames.CLM_STUDENT_DIVISION}, 0)";
+      if (filterTicketTypeId != 0) query += ", FIND('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID}, 0)";
+      if (filterTicketValue.isNotEmpty) query += ", FIND('$filterTicketValue', ${TableNames.CLM_TICKET_STATUS}, 0)";
+      if (filterOnlyTask) query += ", FIND('${TableNames.HELPDESK_TYPE_TASK}', ${TableNames.CLM_FIELD_TYPE}, 0)";
+    }
 
     query += ")";
     print(query);
@@ -163,10 +181,20 @@ class _TaskDashboardState extends State<TaskDashboard> {
     });
     if (taskList?.isNotEmpty == true) {
       for (int i = 0; i < taskList!.length; i++) {
-        if (taskList![i].fields!.assignedTo?.contains(PreferenceUtils.getLoginRecordId()) == true) {
-          myTaskList?.add(taskList![i]);
-        } else {
-          taskAssignedList?.add(taskList![i]);
+        bool isChecked = true;
+        if (filterTicketValue.isEmpty) {
+          if (taskList![i].fields!.status == TableNames.TICKET_STATUS_COMPLETED || taskList![i].fields!.status == TableNames.TICKET_STATUS_RESOLVED || taskList![i].fields!.status == TableNames.TICKET_STATUS_SUGGESTION) {
+            isChecked = false;
+          }
+        }
+        if (isChecked) {
+          if (taskList![i].fields!.assignedTo?.contains(PreferenceUtils.getLoginRecordId()) == true) {
+            myTaskList?.add(taskList![i]);
+          } else if (taskList![i].fields!.createdByEmployee?.contains(PreferenceUtils.getLoginRecordId()) == true) {
+            taskAssignedByMeList?.add(taskList![i]);
+          } else {
+            taskAssignedList?.add(taskList![i]);
+          }
         }
       }
     }
@@ -184,263 +212,472 @@ class _TaskDashboardState extends State<TaskDashboard> {
             child: Column(
               children: [
                 SizedBox(height: 5.h),
-                CustomEditTextSearch(
-                  type: TextInputType.text,
-                  hintText: "Search by name..",
-                  textInputAction: TextInputAction.done,
-                  controller: controllerSearch,
-                  onChanges: (value) {
-                    if (value.isEmpty) {
-                      taskList = [];
-                      taskList = List.from(mainList!);
-                      setState(() {});
-                    } else {
-                      taskList = [];
-                      for (var i = 0; i < mainList!.length; i++) {
-                        if(mainList![i].fields!.assignedEmployeeName?.isNotEmpty == true) {
-                          for (var j = 0; j < mainList![i].fields!.assignedEmployeeName!.length; j++) {
-                            if (mainList![i].fields!.assignedEmployeeName![j].toLowerCase().contains(value.toLowerCase())) {
-                              taskList?.add(mainList![i]);
+                Row(children: [
+                  Flexible(
+                    flex: 1,
+                    child: CustomEditTextSearch(
+                      type: TextInputType.text,
+                      hintText: "Search by name..",
+                      textInputAction: TextInputAction.done,
+                      controller: controllerSearch,
+                      onChanges: (value) {
+                        if (value.isEmpty) {
+                          taskList = [];
+                          taskList = List.from(mainList!);
+                          setState(() {});
+                        } else {
+                          taskList = [];
+                          for (var i = 0; i < mainList!.length; i++) {
+                            if (mainList![i].fields!.assignedEmployeeName?.isNotEmpty == true) {
+                              for (var j = 0; j < mainList![i].fields!.assignedEmployeeName!.length; j++) {
+                                if (mainList![i].fields!.assignedEmployeeName![j].toLowerCase().contains(value.toLowerCase())) {
+                                  taskList?.add(mainList![i]);
+                                }
+                              }
                             }
                           }
+                          differentiateTasks();
+                          setState(() {});
                         }
-                      }
-                      differentiateTasks();
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: isLogin == 2,
+                    child: IconButton(
+                        iconSize: 28,
+                        onPressed: () {
+                          Get.to(const FilterScreenHelpdesk(), arguments: true)?.then((value) {
+                            if (value != null) {
+                              taskList?.clear();
+                              myTaskList?.clear();
+                              taskAssignedList?.clear();
+                              taskAssignedByMeList?.clear();
+
+                              fromFilter = true;
+                              filterHubName = value[0]["hubName"];
+                              filterSpecialization = value[1]["specializationName"];
+                              filterSemester = value[2]["semester"];
+                              filterDivision = value[3]["division"];
+                              filterTicketTypeId = value[4]["helpdeskTypeId"];
+                              filterTicketValue = value[5]["ticketValue"];
+                              filterOnlyTask = value[6]["onlyTask"];
+
+                              getRecords();
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.filter_alt, color: colors_name.colorPrimary)),
+                  )
+                ]),
+                SizedBox(height: 5.h),
+                GestureDetector(
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      color: colors_name.lightGrayColor,
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text("${strings_name.str_my_task}(${myTaskList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(toggleMyTask ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    if (myTaskList?.isNotEmpty == true) {
+                      toggleMyTask = !toggleMyTask;
                       setState(() {});
                     }
                   },
                 ),
-                SizedBox(height: 5.h),
-                Card(
-                  elevation: 5,
-                  child: Container(
-                    color: colors_name.lightGrayColor,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child:  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text("${strings_name.str_my_task}(${myTaskList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                    ),
-                  ),
-                ),
                 myTaskList?.isNotEmpty == true
-                    ? ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: myTaskList!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              if(myTaskList![index].fields!.fieldType == TableNames.HELPDESK_TYPE_TASK){
-                                Get.to(const TaskDetail(), arguments: [
-                                  {"fields": myTaskList?[index].fields},
-                                  {"canUpdateTask": true},
-                                  {"recordId": myTaskList?[index].id}
-                                ])?.then((value) {
-                                  taskList?.clear();
-                                  myTaskList?.clear();
-                                  taskAssignedList?.clear();
+                    ? Visibility(
+                        visible: toggleMyTask,
+                        child: ListView.builder(
+                            primary: false,
+                            shrinkWrap: true,
+                            itemCount: myTaskList!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (myTaskList![index].fields!.fieldType == TableNames.HELPDESK_TYPE_TASK) {
+                                    Get.to(const TaskDetail(), arguments: [
+                                      {"fields": myTaskList?[index].fields},
+                                      {"canUpdateTask": true},
+                                      {"recordId": myTaskList?[index].id}
+                                    ])?.then((value) {
+                                      if (value != null && value) {
+                                        taskList?.clear();
+                                        myTaskList?.clear();
+                                        taskAssignedList?.clear();
+                                        taskAssignedByMeList?.clear();
 
-                                  getRecords();
-                                });
-                              } else {
-                                Get.to(const HelpdeskDetail(), arguments: [
-                                  {"fields": myTaskList?[index].fields},
-                                  {"canUpdateTicketStatus": true},
-                                  {"canUpdateTicketCategory": false},
-                                  {"recordId": myTaskList?[index].id},
-                                  {"title": strings_name.str_task_detail},
-                                ])?.then((value) {
-                                  taskList?.clear();
-                                  myTaskList?.clear();
-                                  taskAssignedList?.clear();
+                                        getRecords();
+                                      }
+                                    });
+                                  } else {
+                                    Get.to(const HelpdeskDetail(), arguments: [
+                                      {"fields": myTaskList?[index].fields},
+                                      {"canUpdateTicketStatus": true},
+                                      {"canUpdateTicketCategory": false},
+                                      {"recordId": myTaskList?[index].id},
+                                      {"title": strings_name.str_task_detail},
+                                    ])?.then((value) {
+                                      if (value != null && value) {
+                                        taskList?.clear();
+                                        myTaskList?.clear();
+                                        taskAssignedList?.clear();
+                                        taskAssignedByMeList?.clear();
 
-                                  getRecords();
-                                });
-                              }
-                            },
-                            child: Column(children: [
-                              Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        getRecords();
+                                      }
+                                    });
+                                  }
+                                },
+                                child: Column(children: [
+                                  Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                    child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            custom_text(text: strings_name.str_task_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                            custom_text(text: myTaskList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
-                                          ],
-                                        ),
-                                        Container(
-                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                          padding: const EdgeInsets.all(1),
-                                          child: custom_text(
-                                              text: myTaskList![index].fields!.ticketTitle != null && myTaskList![index].fields!.ticketTitle?.isNotEmpty == true ? myTaskList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
-                                              textStyles: whiteTextSemiBold16,
-                                              alignment: Alignment.centerRight,
-                                              topValue: 1,
-                                              bottomValue: 1,
-                                              leftValue: 3,
-                                              rightValue: 3),
-                                        ),
-                                      ],
-                                    ),
-                                    isLogin == 2 && myTaskList![index].fields!.employeeName?.isNotEmpty == true && myTaskList![index].fields!.employeeMobileNumber![0] != PreferenceUtils.getLoginDataEmployee().mobileNumber
-                                        ? Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              custom_text(text: strings_name.str_assigned_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
-                                              Expanded(
-                                                child: custom_text(
-                                                    text: myTaskList![index].fields!.studentName?.isNotEmpty == true
-                                                        ? myTaskList![index].fields!.studentName![0].toString()
-                                                        : (myTaskList![index].fields!.employeeName?.isNotEmpty == true ? myTaskList![index].fields!.employeeName![0].toString() : (myTaskList![index].fields!.companyName?.isNotEmpty == true ? myTaskList![index].fields!.companyName![0].toString() : "")),
-                                                    textStyles: blackTextSemiBold16,
-                                                    leftValue: 5,
-                                                    maxLines: 2,
-                                                    topValue: 0),
-                                              ),
-                                            ],
-                                          )
-                                        : Container(),
-                                    custom_text(text: myTaskList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
-                                    Row(
-                                      children: [
-                                        custom_text(
-                                          text: strings_name.str_status,
-                                          textStyles: primaryTextSemiBold16,
-                                          topValue: 5,
-                                          bottomValue: 5,
-                                          leftValue: 5,
-                                          alignment: Alignment.center,
-                                        ),
-                                        Container(
-                                            decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            padding: const EdgeInsets.all(1),
-                                            margin: const EdgeInsets.only(right: 5),
-                                            child: custom_text(text: myTaskList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
-                            ]),
-                          );
-                        })
-                    : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
-                taskAssignedList?.isNotEmpty == true
-                    ? Column(
-                        children: [
-                          SizedBox(height: 15.h),
-                          Card(
-                            elevation: 5,
-                            child: Container(
-                              color: colors_name.lightGrayColor,
-                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                              child:  Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text("${strings_name.str_others_task}(${taskAssignedList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                              ),
-                            ),
-                          ),
-                          taskAssignedList?.isNotEmpty == true
-                              ? ListView.builder(
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  itemCount: taskAssignedList!.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Get.to(const TaskDetail(), arguments: [
-                                          {"fields": taskAssignedList?[index].fields},
-                                          {"canUpdateTask": true},
-                                          {"recordId": taskAssignedList?[index].id}
-                                        ])?.then((value) {
-                                          taskList?.clear();
-                                          myTaskList?.clear();
-                                          taskAssignedList?.clear();
-
-                                          getRecords();
-                                        });
-                                      },
-                                      child: Column(children: [
-                                        Container(
-                                          color: colors_name.colorWhite,
-                                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                      custom_text(text: taskAssignedList![index].fields!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                      decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                      padding: const EdgeInsets.all(1),
-                                                      child: custom_text(
-                                                        text: taskAssignedList![index].fields!.ticketTitle != null && taskAssignedList![index].fields!.ticketTitle?.isNotEmpty == true ? taskAssignedList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
-                                                        textStyles: whiteTextSemiBold16,
-                                                        alignment: Alignment.centerRight,
-                                                        topValue: 1,
-                                                        bottomValue: 1,
-                                                        leftValue: 3,
-                                                        rightValue: 3,
-                                                      )),
+                                                  custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                  custom_text(text: myTaskList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
                                                 ],
                                               ),
-                                              custom_text(text: taskAssignedList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 10, leftValue: 5, maxLines: 2),
-                                              Row(
+                                            ),
+                                            Container(
+                                              decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                              padding: const EdgeInsets.all(1),
+                                              child: custom_text(
+                                                  text: myTaskList![index].fields!.ticketTitle != null && myTaskList![index].fields!.ticketTitle?.isNotEmpty == true ? myTaskList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
+                                                  textStyles: whiteTextSemiBold16,
+                                                  alignment: Alignment.centerRight,
+                                                  topValue: 1,
+                                                  bottomValue: 1,
+                                                  leftValue: 3,
+                                                  rightValue: 3),
+                                            ),
+                                          ],
+                                        ),
+                                        isLogin == 2 && myTaskList![index].fields!.employeeName?.isNotEmpty == true && myTaskList![index].fields!.employeeMobileNumber![0] != PreferenceUtils.getLoginDataEmployee().mobileNumber
+                                            ? Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                  custom_text(text: strings_name.str_assigned_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                                                   Expanded(
                                                     child: custom_text(
-                                                        text: taskAssignedList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "",
+                                                        text: myTaskList![index].fields!.studentName?.isNotEmpty == true
+                                                            ? myTaskList![index].fields!.studentName![0].toString()
+                                                            : (myTaskList![index].fields!.employeeName?.isNotEmpty == true
+                                                                ? myTaskList![index].fields!.employeeName![0].toString()
+                                                                : (myTaskList![index].fields!.companyName?.isNotEmpty == true ? myTaskList![index].fields!.companyName![0].toString() : "")),
                                                         textStyles: blackTextSemiBold16,
                                                         leftValue: 5,
-                                                        maxLines: 5000,
+                                                        maxLines: 2,
                                                         topValue: 0),
                                                   ),
                                                 ],
-                                              ),
-                                              Row(
+                                              )
+                                            : Container(),
+                                        custom_text(text: myTaskList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 5, leftValue: 5, maxLines: 2),
+                                        Row(
+                                          children: [
+                                            custom_text(
+                                              text: strings_name.str_status,
+                                              textStyles: primaryTextSemiBold16,
+                                              topValue: 5,
+                                              bottomValue: 5,
+                                              leftValue: 5,
+                                              alignment: Alignment.center,
+                                            ),
+                                            Container(
+                                                decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                padding: const EdgeInsets.all(1),
+                                                margin: const EdgeInsets.only(right: 5),
+                                                child: custom_text(text: myTaskList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
+                                ]),
+                              );
+                            }),
+                      )
+                    : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
+                taskAssignedByMeList?.isNotEmpty == true
+                    ? Column(
+                        children: [
+                          SizedBox(height: 3.h),
+                          GestureDetector(
+                            child: Card(
+                              elevation: 5,
+                              child: Container(
+                                color: colors_name.lightGrayColor,
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("${strings_name.str_task_assigned_byme}(${taskAssignedByMeList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                    Icon(toggleTaskAssignedByMe ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              if (taskAssignedByMeList?.isNotEmpty == true) {
+                                toggleTaskAssignedByMe = !toggleTaskAssignedByMe;
+                                setState(() {});
+                              }
+                            },
+                          ),
+                          taskAssignedByMeList?.isNotEmpty == true
+                              ? Visibility(
+                                  visible: toggleTaskAssignedByMe,
+                                  child: ListView.builder(
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: taskAssignedByMeList!.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(const TaskDetail(), arguments: [
+                                              {"fields": taskAssignedByMeList?[index].fields},
+                                              {"canUpdateTask": true},
+                                              {"recordId": taskAssignedByMeList?[index].id}
+                                            ])?.then((value) {
+                                              if (value != null && value) {
+                                                taskList?.clear();
+                                                myTaskList?.clear();
+                                                taskAssignedList?.clear();
+                                                taskAssignedByMeList?.clear();
+
+                                                getRecords();
+                                              }
+                                            });
+                                          },
+                                          child: Column(children: [
+                                            Container(
+                                              color: colors_name.colorWhite,
+                                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                              child: Column(
                                                 children: [
-                                                  custom_text(
-                                                    text: strings_name.str_status,
-                                                    textStyles: primaryTextSemiBold16,
-                                                    topValue: 5,
-                                                    bottomValue: 5,
-                                                    leftValue: 5,
-                                                    alignment: Alignment.center,
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          children: [
+                                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                            custom_text(text: taskAssignedByMeList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          child: custom_text(
+                                                            text: taskAssignedByMeList![index].fields!.ticketTitle != null && taskAssignedByMeList![index].fields!.ticketTitle?.isNotEmpty == true ? taskAssignedByMeList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
+                                                            textStyles: whiteTextSemiBold16,
+                                                            alignment: Alignment.centerRight,
+                                                            topValue: 1,
+                                                            bottomValue: 1,
+                                                            leftValue: 3,
+                                                            rightValue: 3,
+                                                          )),
+                                                    ],
                                                   ),
-                                                  Container(
-                                                      decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                      padding: const EdgeInsets.all(1),
-                                                      margin: const EdgeInsets.only(right: 5),
-                                                      child: custom_text(text: taskAssignedList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                  custom_text(text: taskAssignedByMeList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 10, leftValue: 5, maxLines: 2),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                      Expanded(
+                                                        child: custom_text(text: taskAssignedByMeList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, maxLines: 5000, topValue: 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      custom_text(
+                                                        text: strings_name.str_status,
+                                                        textStyles: primaryTextSemiBold16,
+                                                        topValue: 5,
+                                                        bottomValue: 5,
+                                                        leftValue: 5,
+                                                        alignment: Alignment.center,
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          margin: const EdgeInsets.only(right: 5),
+                                                          child: custom_text(text: taskAssignedByMeList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                    ],
+                                                  ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
-                                      ]),
-                                    );
-                                  })
+                                            ),
+                                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
+                                          ]),
+                                        );
+                                      }),
+                                )
                               : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
                         ],
                       )
-                    : Container()
+                    : Container(),
+                taskAssignedList?.isNotEmpty == true
+                    ? Column(
+                        children: [
+                          SizedBox(height: 3.h),
+                          GestureDetector(
+                            child: Card(
+                              elevation: 5,
+                              child: Container(
+                                color: colors_name.lightGrayColor,
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("${strings_name.str_others_task}(${taskAssignedList?.length ?? 0})", textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                    Icon(toggleTaskAssigned ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              if (taskAssignedList?.isNotEmpty == true) {
+                                toggleTaskAssigned = !toggleTaskAssigned;
+                                setState(() {});
+                              }
+                            },
+                          ),
+                          taskAssignedList?.isNotEmpty == true
+                              ? Visibility(
+                                  visible: toggleTaskAssigned,
+                                  child: ListView.builder(
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: taskAssignedList!.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            if (taskAssignedList![index].fields!.fieldType == TableNames.HELPDESK_TYPE_TASK) {
+                                              Get.to(const TaskDetail(), arguments: [
+                                                {"fields": taskAssignedList?[index].fields},
+                                                {"canUpdateTask": true},
+                                                {"recordId": taskAssignedList?[index].id}
+                                              ])?.then((value) {
+                                                if (value != null && value) {
+                                                  taskList?.clear();
+                                                  myTaskList?.clear();
+                                                  taskAssignedList?.clear();
+                                                  taskAssignedByMeList?.clear();
+
+                                                  getRecords();
+                                                }
+                                              });
+                                            } else {
+                                              Get.to(const HelpdeskDetail(), arguments: [
+                                                {"fields": taskAssignedList?[index].fields},
+                                                {"canUpdateTicketStatus": true},
+                                                {"canUpdateTicketCategory": true},
+                                                {"recordId": taskAssignedList?[index].id},
+                                                {"title": strings_name.str_task_detail},
+                                              ])?.then((value) {
+                                                if (value != null && value) {
+                                                  taskList?.clear();
+                                                  myTaskList?.clear();
+                                                  taskAssignedList?.clear();
+                                                  taskAssignedByMeList?.clear();
+
+                                                  getRecords();
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: Column(children: [
+                                            Container(
+                                              color: colors_name.colorWhite,
+                                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          children: [
+                                                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                                                            custom_text(text: taskAssignedList![index].fields!.ticketId.toString(), rightValue: 0, textStyles: blackTextSemiBold16, leftValue: 5),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          child: custom_text(
+                                                            text: taskAssignedList![index].fields!.ticketTitle != null && taskAssignedList![index].fields!.ticketTitle?.isNotEmpty == true ? taskAssignedList![index].fields!.ticketTitle![0].toString() : strings_name.str_task,
+                                                            textStyles: whiteTextSemiBold16,
+                                                            alignment: Alignment.centerRight,
+                                                            topValue: 1,
+                                                            bottomValue: 1,
+                                                            leftValue: 3,
+                                                            rightValue: 3,
+                                                          )),
+                                                    ],
+                                                  ),
+                                                  custom_text(text: taskAssignedList![index].fields!.notes.toString(), textStyles: blackText16, topValue: 0, bottomValue: 10, leftValue: 5, maxLines: 2),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                                                      Expanded(
+                                                        child: custom_text(text: taskAssignedList![index].fields!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, maxLines: 5000, topValue: 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      custom_text(
+                                                        text: strings_name.str_status,
+                                                        textStyles: primaryTextSemiBold16,
+                                                        topValue: 5,
+                                                        bottomValue: 5,
+                                                        leftValue: 5,
+                                                        alignment: Alignment.center,
+                                                      ),
+                                                      Container(
+                                                          decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                          padding: const EdgeInsets.all(1),
+                                                          margin: const EdgeInsets.only(right: 5),
+                                                          child: custom_text(text: taskAssignedList![index].fields!.status!.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 0), color: colors_name.lightGreyColor, padding: const EdgeInsets.all(0.5)),
+                                          ]),
+                                        );
+                                      }),
+                                )
+                              : custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center),
+                        ],
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -454,11 +691,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
           backgroundColor: colors_name.colorPrimary,
           onPressed: () {
             Get.to(const AddTask())?.then((value) {
-              taskList?.clear();
-              myTaskList?.clear();
-              taskAssignedList?.clear();
+              if (value != null && value) {
+                taskList?.clear();
+                myTaskList?.clear();
+                taskAssignedList?.clear();
+                taskAssignedByMeList?.clear();
 
-              getRecords();
+                getRecords();
+              }
             });
           },
           child: const Icon(

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,13 +12,28 @@ import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:get/get.dart';
 
 void main() async {
-  await ScreenUtil.ensureScreenSize();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+
+  if(!kIsWeb) {
+    await ScreenUtil.ensureScreenSize();
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+      apiKey: 'AIzaSyCD4tKcvsOm2Axz6YQCgaLlbt0Eu9iOVD4',
+      appId: '1:694081930115:web:5016bfc419949837716cb6',
+      messagingSenderId: '694081930115',
+      projectId: 'dronaapp-36d3c',
+    ));
+  } else {
+    await Firebase.initializeApp();
+  }
   await PreferenceUtils.init();
   setup();
   runApp(const MyApp());
@@ -31,17 +49,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      scrollBehavior: MyCustomScrollBehavior(),
-      debugShowCheckedModeBanner: false,
-      title: 'Drona foundation',
-      home: SplashScreen(),
-      theme: ThemeData(
-          primarySwatch: primaryColor,
-          buttonTheme: ButtonTheme.of(context).copyWith(
-            textTheme: ButtonTextTheme.primary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-          )),
+    return ScreenUtilInit(
+      // designSize: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+      builder: (context,child) {
+        return GetMaterialApp(
+          scrollBehavior: MyCustomScrollBehavior(),
+          debugShowCheckedModeBanner: false,
+          title: 'Drona foundation',
+          home: SplashScreen(),
+          theme: ThemeData(
+              primarySwatch: primaryColor,
+              buttonTheme: ButtonTheme.of(context).copyWith(
+                textTheme: ButtonTextTheme.primary,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
+              )),
+        );
+      }
     );
   }
 

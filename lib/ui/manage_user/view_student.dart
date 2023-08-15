@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -10,16 +9,13 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
-import 'package:flutterdesigndemo/ui/manage_user/addsinglestudent.dart';
+import 'package:flutterdesigndemo/ui/manage_user/view_student_list.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
-import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
-
-import '../../api/dio_exception.dart';
 
 class ViewStudent extends StatefulWidget {
   const ViewStudent({Key? key}) : super(key: key);
@@ -41,7 +37,7 @@ class _ViewStudentState extends State<ViewStudent> {
   int semesterValue = 1;
 
   final apiRepository = getIt.get<ApiRepository>();
-  bool isVisible = false;
+  //bool isVisible = false;
 
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
 
@@ -87,44 +83,44 @@ class _ViewStudentState extends State<ViewStudent> {
     }
   }
 
-  Future<void> fetchRecords() async {
-    var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue',${TableNames.CLM_SEMESTER}='${semesterValue.toString()}')";
-    setState(() {
-      isVisible = true;
-    });
-    try {
-      var data = await apiRepository.loginApi(query, offset);
-      if (data.records!.isNotEmpty) {
-        if (offset.isEmpty) {
-          viewStudent?.clear();
-        }
-        viewStudent?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
-          fetchRecords();
-        } else {
-          setState(() {
-            viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
-            isVisible = false;
-          });
-        }
-      } else {
-        setState(() {
-          isVisible = false;
-          if (offset.isEmpty) {
-            viewStudent = [];
-          }
-        });
-        offset = "";
-      }
-    } on DioError catch (e) {
-      setState(() {
-        isVisible = false;
-      });
-      final errorMessage = DioExceptions.fromDioError(e).toString();
-      Utils.showSnackBarUsingGet(errorMessage);
-    }
-  }
+  // Future<void> fetchRecords() async {
+  //   var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue',${TableNames.CLM_SEMESTER}='${semesterValue.toString()}')";
+  //   setState(() {
+  //     isVisible = true;
+  //   });
+  //   try {
+  //     var data = await apiRepository.loginApi(query, offset);
+  //     if (data.records!.isNotEmpty) {
+  //       if (offset.isEmpty) {
+  //         viewStudent?.clear();
+  //       }
+  //       viewStudent?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
+  //       offset = data.offset;
+  //       if (offset.isNotEmpty) {
+  //         fetchRecords();
+  //       } else {
+  //         setState(() {
+  //           viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+  //           isVisible = false;
+  //         });
+  //       }
+  //     } else {
+  //       setState(() {
+  //         isVisible = false;
+  //         if (offset.isEmpty) {
+  //           viewStudent = [];
+  //         }
+  //       });
+  //       offset = "";
+  //     }
+  //   } on DioError catch (e) {
+  //     setState(() {
+  //       isVisible = false;
+  //     });
+  //     final errorMessage = DioExceptions.fromDioError(e).toString();
+  //     Utils.showSnackBarUsingGet(errorMessage);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -233,85 +229,25 @@ class _ViewStudentState extends State<ViewStudent> {
                       } else if (semesterValue == -1) {
                         Utils.showSnackBar(context, strings_name.str_empty_semester);
                       } else {
-                        fetchRecords();
+                        Get.to(const ViewStudentList(), arguments: [
+                          {"canUpdate": canUpdateStudent},
+                          {"hubValue": hubValue},
+                          {"semValue": semesterValue},
+                          {"speValue": speValue},
+                        ]);
+                        //fetchRecords();
                       }
                     },
                     text: strings_name.str_submit,
                   ),
-                  SizedBox(height: 3.h),
-                  Visibility(
-                      visible: viewStudent?.isNotEmpty == true,
-                      child: custom_text(
-                        text: "Total Students : ${viewStudent!.length}",
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
-                        topValue: 0,
-                      )),
-                  viewStudent!.isNotEmpty
-                      ? ListView.builder(
-                          primary: false,
-                          shrinkWrap: true,
-                          itemCount: viewStudent?.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 5,
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                    child: Column(
-                                      children: [
-                                        custom_text(text: "${viewStudent![index].fields!.name!} (${viewStudent![index].fields!.enrollmentNumber!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                        Visibility(visible: viewStudent![index].fields!.email != null, child: custom_text(text: viewStudent![index].fields!.email != null ? viewStudent![index].fields!.email! : "", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
-                                        custom_text(text: viewStudent![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
-                                      ],
-                                    ),
-                                  ),
-                                  canUpdateStudent
-                                      ? GestureDetector(
-                                          onTap: () async {
-                                            var response = await Get.to(const AddSingleStudent(), arguments: viewStudent![index].fields?.mobileNumber);
-                                            if (response) {
-                                              fetchRecords();
-                                            //  var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue')";
-                                            //   setState(() {
-                                            //     isVisible = true;
-                                            //   });
-                                              // try {
-                                              //   var data = await apiRepository.loginApi(query);
-                                              //   if (data.records!.isNotEmpty) {
-                                              //     setState(() {
-                                              //       isVisible = false;
-                                              //       viewStudent = data.records;
-                                              //     });
-                                              //   } else {
-                                              //     setState(() {
-                                              //       isVisible = false;
-                                              //       viewStudent = [];
-                                              //     });
-                                              //   }
-                                              // } on DioError catch (e) {
-                                              //   setState(() {
-                                              //     isVisible = false;
-                                              //   });
-                                              //   final errorMessage = DioExceptions.fromDioError(e).toString();
-                                              //   Utils.showSnackBarUsingGet(errorMessage);
-                                              // }
-                                            }
-                                          },
-                                          child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
-                                      : Container()
-                                ],
-                              ),
-                            );
-                          })
-                      : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+
                 ],
               ),
             ),
           ),
-          Center(
-            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
-          )
+          // Center(
+          //   child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          // )
         ],
       ),
     ));

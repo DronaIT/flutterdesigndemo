@@ -3,6 +3,7 @@ class HelpdeskResponses {
   String? notes;
   List<String>? ticketTypeId;
   String? status;
+  String? task_importance;
   List<String>? ticketTitle;
   List<String>? assignedTo;
   List<String>? assignedEmployeeName;
@@ -31,11 +32,15 @@ class HelpdeskResponses {
   String? actual_time_taken;
   String? actual_finished_on;
 
+  List<String>? status_updated_by;
+  List<String>? status_updated_by_employee_name;
+
   HelpdeskResponses(
       {this.ticketId,
         this.notes,
         this.ticketTypeId,
         this.status,
+        this.task_importance,
         this.ticketTitle,
         this.assignedTo,
         this.assignedEmployeeName,
@@ -58,6 +63,8 @@ class HelpdeskResponses {
         this.required_time,
         this.actual_time_taken,
         this.actual_finished_on,
+        this.status_updated_by,
+        this.status_updated_by_employee_name,
       });
 
   HelpdeskResponses.fromJson(Map<String, dynamic> json) {
@@ -65,6 +72,7 @@ class HelpdeskResponses {
     notes = json['Notes'];
     ticketTypeId = json['ticket_type_id']?.cast<String>();
     status = json['Status'];
+    task_importance = json['task_importance'];
     ticketTitle = json['ticket_title']?.cast<String>();
     assignedTo = json['assigned_to']?.cast<String>();
     assignedEmployeeName = json['assigned_employee_name']?.cast<String>();
@@ -91,6 +99,9 @@ class HelpdeskResponses {
     required_time = json['required_time'];
     actual_time_taken = json['actual_time_taken'];
     actual_finished_on = json['actual_finished_on'];
+
+    status_updated_by = json['status_updated_by']?.cast<String>();
+    status_updated_by_employee_name = json['status_updated_by_employee_name']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +110,7 @@ class HelpdeskResponses {
     data['Notes'] = this.notes;
     data['ticket_type_id'] = this.ticketTypeId;
     data['Status'] = this.status;
+    data['task_importance'] = this.task_importance;
     data['ticket_title'] = this.ticketTitle;
     data['assigned_to'] = this.assignedTo;
     data['assigned_employee_name'] = this.assignedEmployeeName;
@@ -126,6 +138,9 @@ class HelpdeskResponses {
     data['required_time'] = this.required_time;
     data['actual_time_taken'] = this.actual_time_taken;
     data['actual_finished_on'] = this.actual_finished_on;
+
+    data['status_updated_by'] = this.status_updated_by;
+    data['status_updated_by_employee_name'] = this.status_updated_by_employee_name;
     return data;
   }
 }

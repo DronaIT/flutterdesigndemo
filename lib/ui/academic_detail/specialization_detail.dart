@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/add_subject.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/subject_detail.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/upload_documents_acdemic.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -19,6 +20,7 @@ import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
 import '../../utils/preference.dart';
+import '../placement/upload_documents_placement.dart';
 
 class SpecializationDetail extends StatefulWidget {
   const SpecializationDetail({Key? key}) : super(key: key);
@@ -208,7 +210,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                     Visibility(visible: subjectData?.isNotEmpty == true, child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16)),
                     subjectData?.isNotEmpty == true
                         ? Container(
-                            margin: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 30),
                             child: ListView.builder(
                                 primary: false,
                                 shrinkWrap: true,
@@ -220,29 +222,27 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                       child: Container(
                                         color: colors_name.colorWhite,
                                         padding: const EdgeInsets.all(10),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)),
-                                            Visibility(
-                                                visible: canAddSubject,
-                                                child: GestureDetector(
-                                                  child: const Icon(Icons.edit, size: 22, color: Colors.black),
-                                                  onTap: () {
-                                                    Get.to(const AddSubject(), arguments: [
-                                                      {"subjectId": subjectData![index].fields?.ids}
-                                                    ])?.then((result) {
-                                                      if (result != null && result) {
-                                                        getPermission();
-                                                        initialization();
-                                                      }
-                                                    });
-                                                  },
-                                                ))
-                                          ]),
+                                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                          Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackTextSemiBold14)),
+                                          Visibility(
+                                              visible: canAddSubject,
+                                              child: GestureDetector(
+                                                child: const Icon(Icons.edit, size: 22, color: Colors.black),
+                                                onTap: () {
+                                                  Get.to(const AddSubject(), arguments: [
+                                                    {"subjectId": subjectData![index].fields?.ids}
+                                                  ])?.then((result) {
+                                                    if (result != null && result) {
+                                                      getPermission();
+                                                      initialization();
+                                                    }
+                                                  });
+                                                },
+                                              ))
+                                        ]),
                                       ),
                                       onTap: () {
-                                        Get.to(const SubjectDetail(), arguments:[
+                                        Get.to(const SubjectDetail(), arguments: [
                                           {"subjectId": subjectData![index]},
                                           {"addSubjectPermission": canAddSubject}
                                         ]);

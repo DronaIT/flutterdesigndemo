@@ -109,10 +109,10 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                 custom_text(text: "Timings: ${jobpportunityData.records?[index].fields!.timingStart} - ${jobpportunityData.records?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(text: "Vacancies: ${jobpportunityData.records?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(
-                                  text: "Location: ${jobpportunityData.records?[index].fields!.city?.first}",
+                                  text: "Location: ${jobpportunityData.records?[index].fields!.reportingAddress?.first}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
-                                  maxLines: 2,
+                                  maxLines: 5,
                                   bottomValue: 5,
                                   leftValue: 5,
                                 ),

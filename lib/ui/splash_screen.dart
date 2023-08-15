@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
@@ -64,11 +65,22 @@ class StartState extends State<SplashScreen> {
   //isLogin=2 employee login
   //isLogin=3 organization login
   void initialization() async {
-    await checkAppUpdate();
-    if (updateType == 1) {
-      showAlertDialog(context, "New update available.", false);
-    } else if (updateType == 2) {
-      showAlertDialog(context, "Please update app to latest version.", true);
+    if(!kIsWeb) {
+      await checkAppUpdate();
+      if (updateType == 1) {
+        showAlertDialog(context, "New update available.", false);
+      } else if (updateType == 2) {
+        showAlertDialog(context, "Please update app to latest version.", true);
+      } else {
+        await getRecords();
+        Future.delayed(const Duration(seconds: 2), () async {
+          if (isLogin == 1 || isLogin == 2) {
+            doLogin();
+          } else {
+            Get.to(const Welcome());
+          }
+        });
+      }
     } else {
       await getRecords();
       Future.delayed(const Duration(seconds: 2), () async {
@@ -90,6 +102,8 @@ class StartState extends State<SplashScreen> {
         if (data.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
           if(data.records!.first.fields!.token == null){
+            redirectToLogin();
+/*
             Map<String, dynamic> query = {
               "token":deviceId
             };
@@ -97,16 +111,16 @@ class StartState extends State<SplashScreen> {
             await PreferenceUtils.setLoginData(data.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
             Get.offAll(const Home());
-          } else if( data.records!.first.fields!.token == deviceId){
+*/
+          } else if(data.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginData(data.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
             Get.offAll(const Home());
           }else{
-            PreferenceUtils.clearPreference();
-            Get.offAll(const Login());
+            redirectToLogin();
           }
         } else {
-          Get.offAll(const Login());
+          redirectToLogin();
         }
       } on DioError catch (e) {
         final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -120,6 +134,8 @@ class StartState extends State<SplashScreen> {
         if (dataEmployee.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
           if(dataEmployee.records!.first.fields!.token == null){
+            redirectToLogin();
+/*
             Map<String, dynamic> query = {
               "token":deviceId
             };
@@ -127,16 +143,16 @@ class StartState extends State<SplashScreen> {
             await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
             Get.offAll(const Home());
+*/
           } else if( dataEmployee.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
             Get.offAll(const Home());
           }else{
-            PreferenceUtils.clearPreference();
-            Get.offAll(const Login());
+            redirectToLogin();
           }
         } else {
-          Get.offAll(const Login());
+          redirectToLogin();
         }
       } on DioError catch (e) {
         final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -150,29 +166,27 @@ class StartState extends State<SplashScreen> {
         if (dataOrganization.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
           if(dataOrganization.records!.first.fields!.token == null){
-            Map<String, dynamic> query = {
-              "token":deviceId
-            };
-            await apiRepository.addTokenOrganization(query,dataOrganization.records!.first.id!);
-            await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
-            await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
-            Get.offAll(const Home());
+            redirectToLogin();
           } else if( dataOrganization.records!.first.fields!.token == deviceId){
             await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
             Get.offAll(const Home());
           }else{
-            PreferenceUtils.clearPreference();
-            Get.offAll(const Login());
+            redirectToLogin();
           }
         } else {
-          Get.offAll(const Login());
+          redirectToLogin();
         }
       } on DioError catch (e) {
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
     }
+  }
+
+  redirectToLogin() {
+    PreferenceUtils.clearPreference();
+    Get.offAll(const Login());
   }
 
   initScreen(BuildContext context) {

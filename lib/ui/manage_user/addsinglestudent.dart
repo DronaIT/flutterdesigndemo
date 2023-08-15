@@ -357,6 +357,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     textInputAction: TextInputAction.next,
                     controller: addressController,
                     topValue: 2,
+                    maxLines: 3,
                   ),
                   SizedBox(height: 3.h),
                   Row(

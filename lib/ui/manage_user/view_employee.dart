@@ -19,6 +19,7 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
+import '../../customwidget/custom_edittext_search.dart';
 
 class ViewEmployee extends StatefulWidget {
   const ViewEmployee({Key? key}) : super(key: key);
@@ -34,7 +35,8 @@ class _ViewEmployeeState extends State<ViewEmployee> {
   final apiRepository = getIt.get<ApiRepository>();
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? viewEmployee = [];
-
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mainData = [];
+  var controllerSearch = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -128,14 +130,17 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                               if (i > 0) i--;
                             }
                           }
+                          mainData = data.records;
                           viewEmployee = data.records;
                           setState(() {
                             isVisible = false;
+                            mainData?.sort((a, b) => a.fields!.employeeName!.trim().compareTo(b.fields!.employeeName!.trim()));
                             viewEmployee?.sort((a, b) => a.fields!.employeeName!.trim().compareTo(b.fields!.employeeName!.trim()));
                           });
                         } else {
                           setState(() {
                             isVisible = false;
+                            mainData = [];
                             viewEmployee = [];
                           });
                         }
@@ -150,7 +155,34 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                   },
                   text: strings_name.str_submit,
                 ),
-                viewEmployee!.length > 0
+                Visibility(
+                  visible:  mainData!.isNotEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 5,bottom: 10),
+                    child: CustomEditTextSearch(
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: controllerSearch,
+                      onChanges: (value) {
+                        if (value.isEmpty) {
+                          viewEmployee = [];
+                          viewEmployee = List.from(mainData!);
+                          setState(() {});
+                        } else {
+                          viewEmployee = [];
+                          for (var i = 0; i < mainData!.length; i++) {
+                            if (mainData![i].fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
+                              viewEmployee?.add(mainData![i]);
+                            }
+                          }
+                          setState(() {});
+                        }
+                      },
+                    ),
+                  ),
+                ),
+
+                viewEmployee!.isNotEmpty
                     ? Expanded(
                         child: ListView.builder(
                             itemCount: viewEmployee?.length,
@@ -162,7 +194,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                     Flexible(
                                       child: Column(
                                         children: [
-                                          custom_text(text: viewEmployee![index].fields!.employeeName! + " (" + viewEmployee![index].fields!.employeeCode! + ")", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
+                                          custom_text(text: "${viewEmployee![index].fields!.employeeName!} (${viewEmployee![index].fields!.employeeCode!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
                                           Visibility(visible: viewEmployee![index].fields!.email != null, child: custom_text(text: viewEmployee![index].fields!.email != null ? viewEmployee![index].fields!.email! : "", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
                                           custom_text(text: viewEmployee![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                         ],
@@ -207,7 +239,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                                 }
                                               }
                                             },
-                                            child: Container(margin: EdgeInsets.all(10), child: Icon(Icons.edit)))
+                                            child: Container(margin: const EdgeInsets.all(10), child: const Icon(Icons.edit)))
                                         : Container(),
                                   ],
                                 ),

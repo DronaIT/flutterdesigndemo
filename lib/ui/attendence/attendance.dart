@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance_history.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendence_report_day.dart';
 import 'package:flutterdesigndemo/ui/attendence/myattendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/take_attendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/filter_screen.dart';
+import 'package:flutterdesigndemo/ui/attendence/take_attendance_for_predefined_lec.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -90,7 +92,7 @@ class _AttendanceState extends State<Attendance> {
       } else {
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -100,6 +102,30 @@ class _AttendanceState extends State<Attendance> {
     setState(() {
       isVisible = false;
     });
+  }
+
+  selectAttendanceTypeDialog() {
+    return Get.defaultDialog(
+      title: strings_name.str_attendance_for,
+      titlePadding: EdgeInsets.symmetric(vertical: 12.h),
+      contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
+      content: Column(
+        children: [
+          CustomButton(
+            text: strings_name.str_predefined_lectures,
+            click: () {
+              Get.off(() => const TakeAttendanceForPredefinedLec());
+            },
+          ),
+          CustomButtonOutline(
+            text: strings_name.str_new_lectures,
+            click: () {
+              Get.off(() => const TakeAttendance());
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -128,7 +154,8 @@ class _AttendanceState extends State<Attendance> {
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const TakeAttendance());
+                      selectAttendanceTypeDialog();
+                      // Get.to(() => const TakeAttendance());
                     },
                   ),
                 ),

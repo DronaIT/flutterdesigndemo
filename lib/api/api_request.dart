@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/App_data_response.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
@@ -42,10 +44,15 @@ import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
+import '../models/add_announcement_response.dart';
+import '../models/add_time_table_response.dart';
+import '../models/add_timetable_model.dart';
+import '../models/announcement_response.dart';
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
 import '../models/help_desk_response.dart';
 import '../models/help_desk_type_response.dart';
+import '../models/request/add_time_table_response.dart';
 import '../models/request/create_company_appr_req.dart';
 import '../models/request/create_company_det_req.dart';
 import '../models/request/help_desk_req.dart';
@@ -62,6 +69,30 @@ class ApiRequest {
 
       final Response response = await dioClient.get(TableNames.TB_STUDENT, queryParameters: someMap, options: Options(headers: header));
       return BaseLoginResponse<LoginFieldsResponse>.fromJson(response.data, (response) => LoginFieldsResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<AnnouncementResponse>> fetchAnnouncementApi(String formula, [String offset = ""]) async {
+    try {
+
+      Map<dynamic, dynamic> someMap = {"filterByFormula": formula,"sort": [{'field': 'id', 'direction': 'desc'}], if (offset.isNotEmpty) "offset": offset};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post('${TableNames.TBL_ANNOUNCEMENT}/listRecords', data: jsonEncode(someMap), options: Options(headers: header));
+      return BaseResponse<AnnouncementResponse>.fromJson(response.data, (response) => AnnouncementResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<TimeTableResponseClass>> fetchTimeTablesApi(String formula, [String offset = "", int? pageSize]) async {
+    try {
+      // Map<dynamic, dynamic> someMap = {"filterByFormula": formula,"sort": [{'field': 'id', 'direction': 'asc'}], if (offset.isNotEmpty) "offset": offset,if (pageSize!=null) "pageSize": pageSize};
+      Map<dynamic, dynamic> someMap = {"filterByFormula": formula,"sort": [{'field': 'date', 'direction': 'asc'}], if (offset.isNotEmpty) "offset": offset,if (pageSize!=null) "pageSize": pageSize};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post('${TableNames.TBL_TIMETABLE}/listRecords', data: jsonEncode(someMap), options: Options(headers: header));
+      return BaseResponse<TimeTableResponseClass>.fromJson(response.data, (response) => TimeTableResponseClass.fromJson(response));
     } catch (e) {
       rethrow;
     }
@@ -387,6 +418,7 @@ class ApiRequest {
     }
   }
 
+
   Future<UpdateSubject> updateCompanyDetailApi(Map<String, dynamic> updateFormula, String recordId) async {
     try {
       Map<String, dynamic> someMap = {"fields": updateFormula};
@@ -563,6 +595,26 @@ class ApiRequest {
     }
   }
 
+  Future<AddAnnouncementResponse> updateAnnouncementApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_ANNOUNCEMENT, options: Options(headers: header), data: jsonEncode(updateFormula));
+      return AddAnnouncementResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<AddTimeTableResponse> updateTimeTableApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_TIMETABLE, options: Options(headers: header), data: jsonEncode(updateFormula));
+      return AddTimeTableResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<UpdateJobOpportunity> getJobOpportunityWithRecordIdApi(String recordId) async {
     try {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
@@ -613,6 +665,28 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.post(TableNames.TBL_APP_DATA, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseLoginResponse<App_data_response>.fromJson(response.data, (response) => App_data_response.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<AddAnnouncementResponse>> addAnnouncementDataApi(Map<String, dynamic> data) async {
+    try {
+      Map<String, dynamic> someMap = data;
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_ANNOUNCEMENT, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseResponse<AddAnnouncementResponse>.fromJson(response.data, (response) => AddAnnouncementResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseResponse<AddTimeTableResponse>> addTimeTableDataApi(Map<String, dynamic> data) async {
+    try {
+      Map<String, dynamic> someMap = data;
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_TIMETABLE, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseResponse<AddTimeTableResponse>.fromJson(response.data, (response) => AddTimeTableResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

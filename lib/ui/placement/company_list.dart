@@ -229,26 +229,29 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                 SizedBox(
                   height: 4,
                 ),
-                CustomEditTextSearch(
-                  type: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  controller: controllerSearch,
-                  onChanges: (value) {
-                    if (value.isEmpty) {
-                      companyList = [];
-                      companyList = companyListMain;
-                      setState(() {});
-                    } else {
-                      companyList = [];
-                      for (var i = 0; i < companyListMain!.length; i++) {
-                        if (companyListMain![i].fields!.companyName!.toLowerCase().contains(value.toLowerCase())) {
-                          companyList?.add(companyListMain![i]);
-                          //data.add(test[i]);
+                Visibility(
+                  visible: companyList != null && companyList!.isNotEmpty,
+                  child: CustomEditTextSearch(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    controller: controllerSearch,
+                    onChanges: (value) {
+                      if (value.isEmpty) {
+                        companyList = [];
+                        companyList = companyListMain;
+                        setState(() {});
+                      } else {
+                        companyList = [];
+                        for (var i = 0; i < companyListMain!.length; i++) {
+                          if (companyListMain![i].fields!.companyName!.toLowerCase().contains(value.toLowerCase())) {
+                            companyList?.add(companyListMain![i]);
+                            //data.add(test[i]);
+                          }
                         }
+                        setState(() {});
                       }
-                      setState(() {});
-                    }
-                  },
+                    },
+                  ),
                 ),
                 SizedBox(height: 5),
                 Container(

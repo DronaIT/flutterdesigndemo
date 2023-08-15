@@ -96,10 +96,10 @@ class _ShortListedForInternshipState extends State<ShortListedForInternship> {
                                 custom_text(text: "Timings: ${jobOpportunityData.records?[index].fields!.timingStart} - ${jobOpportunityData.records?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(text: "Vacancies: ${jobOpportunityData.records?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(
-                                  text: "Location: ${jobOpportunityData.records?[index].fields!.city?.first}",
+                                  text: "Location: ${jobOpportunityData.records?[index].fields!.reportingAddress?.first}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
-                                  maxLines: 2,
+                                  maxLines: 5,
                                   bottomValue: 5,
                                   leftValue: 5,
                                 ),

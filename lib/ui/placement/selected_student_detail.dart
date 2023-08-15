@@ -62,7 +62,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
                 applied_students_email: jobpportunityData.records![i].fields!.shortlisted_students_email![j],
                 applied_students_enrollment_number: jobpportunityData.records![i].fields!.shortlisted_students_enrollment_number![j],
                 applied_students_name: jobpportunityData.records![i].fields!.shortlisted_students_name![j],
-                applied_students_number: jobpportunityData.records![i].fields!.shortlistedStudents![j]);
+                applied_students: jobpportunityData.records![i].fields!.shortlistedStudents![j]);
             studentResponse.add(jobModuleResponse);
           }
         }
@@ -70,7 +70,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
       for (var j = 0; j < studentResponse.length; j++) {
         if (jobpportunityData.records!.first.fields?.selectedStudents != null) {
           for (var k = 0; k < jobpportunityData.records!.first.fields!.selectedStudents!.length; k++) {
-            if (studentResponse[j].applied_students_number == jobpportunityData.records!.first.fields!.selectedStudents![k]) {
+            if (studentResponse[j].applied_students == jobpportunityData.records!.first.fields!.selectedStudents![k]) {
               studentResponse[j].selected = true;
               break;
             }
@@ -234,7 +234,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
     List<String> selectedStudentsData = [];
     for (var i = 0; i < studentResponse.length; i++) {
       if (studentResponse[i].selected) {
-        selectedStudentsData.add(studentResponse[i].applied_students_number!);
+        selectedStudentsData.add(studentResponse[i].applied_students!);
       }
     }
     request.selected = selectedStudentsData;
