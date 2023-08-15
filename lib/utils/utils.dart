@@ -160,9 +160,8 @@ class Utils {
       messaging.requestPermission();
       deviceId = await messaging.getAPNSToken();
       print('APNs token: $deviceId');
-    } else {
-      return deviceId ?? '';
     }
+    return deviceId ?? '';
   }
 
   static void showSnackBarDuration(BuildContext context, String message, int second) {

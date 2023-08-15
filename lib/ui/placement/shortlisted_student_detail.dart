@@ -77,7 +77,9 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                 applied_students: jobpportunityData.records![i].fields!.appliedStudents![j],
                 applied_students_number: jobpportunityData.records![i].fields!.applied_students_number![j],
                 applied_students_resume: jobpportunityData.records![i].fields!.applied_students_resume![j].url,
-                applied_students_specialization: jobpportunityData.records![i].fields!.applied_students_specialization![j]);
+                applied_students_specialization: jobpportunityData.records![i].fields!.applied_students_specialization![j],
+                applied_students_semester: jobpportunityData.records![i].fields!.applied_students_semester![j]
+            );
             studentResponse.add(jobModuleResponse);
           }
         }
@@ -155,6 +157,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                                               custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
                                               custom_text(text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                               custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_semester}: ${studentResponse[index].applied_students_semester}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
                                             ],
                                           ),
                                         ),
@@ -237,7 +240,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'EnrollmentNumber', 'MobileNumber', 'Resume']);
+    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester' 'EnrollmentNumber', 'MobileNumber', 'Resume']);
 
     List<JobModuleResponse> myData = [];
     for (var i = 0; i < studentResponse.length; i++) {
@@ -247,7 +250,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     }
 
     myData.forEach((row) {
-      sheet.appendRow([row.applied_students_name, row.applied_students_email, row.applied_students_enrollment_number, row.applied_students_number, row.applied_students_resume]);
+      sheet.appendRow([row.applied_students_name, row.applied_students_email, row.applied_students_specialization, row.applied_students_semester, row.applied_students_enrollment_number, row.applied_students_number, row.applied_students_resume]);
     });
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();

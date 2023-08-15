@@ -49,6 +49,7 @@ class JobOpportunityResponse {
   List<String>? applied_students_name;
   List<String>? applied_students_number;
   List<String>? applied_students_specialization;
+  List<String>? applied_students_semester;
   List<AppliedResume>? applied_students_resume;
 
   List<String>? shortlisted_students_email;
@@ -109,6 +110,7 @@ class JobOpportunityResponse {
       this.applied_students_name,
       this.applied_students_number,
       this.applied_students_specialization,
+      this.applied_students_semester,
       this.shortlisted_students_email,
       this.shortlisted_students_enrollment_number,
       this.shortlisted_students_name,
@@ -165,6 +167,7 @@ class JobOpportunityResponse {
     applied_students_name = json['applied_students_name']?.cast<String>();
     applied_students_number = json['applied_students_number']?.cast<String>();
     applied_students_specialization = json['applied_students_specialization']?.cast<String>();
+    applied_students_semester = json['applied_students_semester']?.cast<String>();
 
     shortlisted_students_email = json['shortlisted_students_email']?.cast<String>();
     shortlisted_students_enrollment_number = json['shortlisted_students_enrollment_number']?.cast<String>();
@@ -239,6 +242,8 @@ class JobOpportunityResponse {
     data['applied_students_name'] = this.applied_students_name;
     data['applied_students_number'] = this.applied_students_number;
     data['applied_students_specialization'] = this.applied_students_specialization;
+    data['applied_students_semester'] = this.applied_students_semester;
+
     data['shortlisted_students_email'] = this.shortlisted_students_email;
     data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
     data['shortlisted_students_name'] = this.shortlisted_students_name;

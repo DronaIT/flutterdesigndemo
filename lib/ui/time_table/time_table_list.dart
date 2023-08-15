@@ -308,7 +308,7 @@ class _TimeTableListState extends State<TimeTableList> {
       var isLogin = PreferenceUtils.getIsLogin();
       if (isLogin == 1) {
         query =
-            "OR(AND( FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {specialization_id (from specialization_id)} = '${loginData.specialization_name[0]}', {semester} = '${loginData.semester}', {division} = '${loginData.division}', {date} = TODAY()), AND(FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {is_holiday} = 1, {date} = TODAY()))";
+            "OR(AND( FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {specialization_id (from specialization_id)} = '${loginData.specializationIdFromSpecializationIds[0]}', {semester} = '${loginData.semester}', {division} = '${loginData.division}', {date} = TODAY()), AND(FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {is_holiday} = 1, {date} = TODAY()))";
       } else if (isLogin == 2) {
         if (isFilterTimeTable) {
           // query = "AND( OR({created_by} = $loginId,{lecture_id} = $loginId),FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";

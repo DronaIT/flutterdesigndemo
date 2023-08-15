@@ -138,8 +138,8 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
               .hubIdFromHubIds[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
         }
       }
-      if(loginData.specialization_name!=null) {
-        for (var data in loginData.specialization_name) {
+      if(loginData.specializationIdFromSpecializationIds!=null) {
+        for (var data in loginData.specializationIdFromSpecializationIds) {
           query +=
           ",FIND(\"$data\", ARRAYJOIN({specialization_id (from specialization_ids)}))";
         }
@@ -159,6 +159,12 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
               .hubIdFromHubIds[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
         }
       }
+      if (loginData.accessible_hub_ids != null) {
+        for (int i = 0; i < loginData.accessible_hub_ids.length; i++) {
+          query += ",FIND(\"${loginData.accessible_hub_ids[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
+        }
+      }
+/*
       if (loginData.semester != null) {
         for (int i = 0; i < loginData.semester.length; i++) {
           query +=
@@ -177,6 +183,7 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
               ",FIND(\"${loginData.division[i]}\", ARRAYJOIN({divisions}))";
         }
       }
+*/
     }
 
     query += '))))';
