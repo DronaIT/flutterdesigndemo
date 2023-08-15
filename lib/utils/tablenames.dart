@@ -4,7 +4,7 @@ class TableNames {
   static const PROJECTBASE = "appv5323SIrE230U9";
 
   // Kaleyra keys
-  static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
+  static const KALEYRA_APIKEY = "";
   static const KALEYRA_SENDER = "DFBVOC";
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
   static const TEMPLATE_ID_FORGOT_PASSWORD = "1007956316471143887";
