@@ -10,7 +10,6 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/add_subject.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/subject_detail.dart';
-import 'package:flutterdesigndemo/ui/academic_detail/upload_documents_acdemic.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -20,7 +19,6 @@ import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
 import '../../utils/preference.dart';
-import '../placement/upload_documents_placement.dart';
 
 class SpecializationDetail extends StatefulWidget {
   const SpecializationDetail({Key? key}) : super(key: key);
