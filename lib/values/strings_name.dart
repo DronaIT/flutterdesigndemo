@@ -618,6 +618,7 @@ class strings_name {
   static const String str_semester_r = "Semester*";
   static const String str_division_r = "Division*";
   static const String str_subject_r = "Subject*";
+  static const String str_range = "Date Range";
   static const String str_range_r = "Date Range*";
   static const String str_done = "Done";
   static const String str_data_range = "Select Date Range";

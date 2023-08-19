@@ -93,7 +93,7 @@ class _TimeTableListState extends State<TimeTableList> {
 
   String _selectedDate = '';
   String _dateCount = '';
-  String _range = '';
+  String _range = '', _rangeToSend = '';
   String _rangeCount = '';
 
   String offset = "";
@@ -200,18 +200,6 @@ class _TimeTableListState extends State<TimeTableList> {
       Utils.showSnackBar(context, strings_name.str_empty_campus);
       return;
     }
-    // else if (specializationValue.trim().isEmpty) {
-    //   Utils.showSnackBar(context, strings_name.str_empty_spe);
-    //   return;
-    // } else if (semesterValue == -1) {
-    //   Utils.showSnackBar(context, strings_name.str_empty_semester);
-    // } else if (divisionValue.trim().isEmpty) {
-    //   Utils.showSnackBar(context, strings_name.str_empty_division);
-    //   return;
-    // } else if (_tcDateRange.text.isEmpty) {
-    //   Utils.showSnackBar(context, strings_name.str_empty_date_range);
-    //   return;
-    // }
     isFilterTimeTable = true;
     clearAndFetchTimeTable();
   }
@@ -228,62 +216,6 @@ class _TimeTableListState extends State<TimeTableList> {
     String endDateFormatted = formatDate(dates[1]);
     return [startDateFormatted, endDateFormatted];
   }
-
-  // fetchTimeTableList() async {
-  //   try {
-  //     var query = "";
-  //     var isLogin = PreferenceUtils.getIsLogin();
-  //
-  //     if (isLogin == 1) {
-  //       query = "OR(AND( FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {specialization_id (from specialization_id)} = '${loginData.specialization_name[0]}', {semester} = '${loginData.semester}', {division} = '${loginData.division}', {date} = TODAY()), AND(FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {is_holiday} = 1, {date} = TODAY()))";
-  //     }else if(isLogin == 2){
-  //       if (isFilterTimeTable) {
-  //         List<String> dates = splitAndReFormatDate(_range);
-  //         query = "AND( FIND(\"$hubValue\", ARRAYJOIN({hub_id})), {specialization_id} = '$specializationValue', {semester} = '$semesterValue', {division} = '$divisionValue', {date} >= '${dates[0]}', {date} <= '${dates[1]}')";
-  //       } else {
-  //         loginData = PreferenceUtils.getLoginDataEmployee();
-  //         loginId = loginData.employeeId.toString();
-  //         query = "AND({created_by} = $loginId,{date} = TODAY())";
-  //         debugPrint('query $query');
-  //       }
-  //     }else {
-  //       return;
-  //     }
-  //
-  //     debugPrint('../ query is $query');
-  //
-  //     var data = await apiRepository.fetchTimeTablesListApi(query, offset);
-  //     if (data.records!.isNotEmpty) {
-  //       if (offset.isEmpty) {
-  //         timeTables.clear();
-  //       }
-  //       timeTables.addAll(data.records as Iterable<BaseApiResponseWithSerializable<TimeTableResponseClass>>);
-  //       offset = data.offset;
-  //       if (offset.isNotEmpty) {
-  //         fetchTimeTableList();
-  //       }
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     }
-  //   } on DioError catch (e) {
-  //     final errorMessage = DioExceptions.fromDioError(e).toString();
-  //     Utils.showSnackBarUsingGet(errorMessage);
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     Utils.showSnackBar(context, e.toString());
-  //     debugPrint('error is $e');
-  //   }
-  // }
 
   final ScrollController _scrollController = ScrollController();
 
@@ -311,22 +243,6 @@ class _TimeTableListState extends State<TimeTableList> {
             "OR(AND( FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {specialization_id (from specialization_id)} = '${loginData.specializationIdFromSpecializationIds[0]}', {semester} = '${loginData.semester}', {division} = '${loginData.division}', {date} = TODAY()), AND(FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {is_holiday} = 1, {date} = TODAY()))";
       } else if (isLogin == 2) {
         if (isFilterTimeTable) {
-          // query = "AND( OR({created_by} = $loginId,{lecture_id} = $loginId),FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";
-          // if(specializationValue.trim().isNotEmpty){
-          //   query += ", {specialization_id} = '$specializationValue'";
-          // }
-          // if(semesterValue != -1){
-          //   query += ", {semester} = '$semesterValue'";
-          // }
-          // if(divisionValue.trim().isNotEmpty){
-          //   query += ", {division} = '$divisionValue'";
-          // }
-          // if (_tcDateRange.text.isNotEmpty) {
-          //   List<String> dates = splitAndReFormatDate(_range);
-          //   query += ", {date} >= '${dates[0]}', {date} <= '${dates[1]}'";
-          // }
-          // query += ")";
-
           query = "OR( AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id})),{is_holiday} = 1),AND( ${canShowAllTimeTable ? '' : 'OR({created_by} = $loginId,{lecture_id} = $loginId),'}FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";
           if (specializationValue.trim().isNotEmpty) {
             query += ", {specialization_id} = '$specializationValue'";
@@ -338,7 +254,7 @@ class _TimeTableListState extends State<TimeTableList> {
             query += ", {division} = '$divisionValue'";
           }
           if (_tcDateRange.text.isNotEmpty) {
-            List<String> dates = splitAndReFormatDate(_range);
+            List<String> dates = splitAndReFormatDate(_rangeToSend);
             query += ", {date} >= '${dates[0]}', {date} <= '${dates[1]}'";
           }
           query += "))";
@@ -364,17 +280,8 @@ class _TimeTableListState extends State<TimeTableList> {
 
       var data = await apiRepository.fetchTimeTablesListApi(query, offset, 25);
       if (data.records!.isNotEmpty) {
-        // if (offset.isEmpty) {
-        //   timeTables.clear();
-        // }
         timeTables.addAll(data.records as Iterable<BaseApiResponseWithSerializable<TimeTableResponseClass>>);
         offset = data.offset;
-        // if (offset.isNotEmpty) {
-        //   fetchTimeTableList();
-        // }
-        // debugPrint('../ offset $offset');
-        // debugPrint('../ offset runtimeType ${offset.runtimeType}');
-        // debugPrint('../ offset runtimeType ${offset.isEmpty}');
         setState(() {
           isLoading = false;
         });
@@ -531,9 +438,9 @@ class _TimeTableListState extends State<TimeTableList> {
                     height: 10.h,
                   ),
                 ),
-                Visibility(visible: canAddTimeTable, child: renderDropDown()),
+                Visibility(visible: canShowTimeTable || canShowAllTimeTable, child: renderDropDown()),
                 Visibility(
-                    visible: canAddTimeTable,
+                    visible: canShowTimeTable || canShowAllTimeTable,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: CustomButton(
@@ -563,7 +470,7 @@ class _TimeTableListState extends State<TimeTableList> {
                 ),
 
                 // timeTables
-                !canShowTimeTable
+                !canShowTimeTable && !canShowAllTimeTable
                     ? Padding(
                         padding: EdgeInsets.symmetric(vertical: 40.0.h),
                         child: const Center(
@@ -595,7 +502,7 @@ class _TimeTableListState extends State<TimeTableList> {
                                       : const SizedBox()
                                   : TimeTableCard(
                                       data: timeTables[index],
-                                      canUpdateTimeTable: canUpdateTimeTable,
+                                      canUpdateTimeTable: canUpdateTimeTable && !(timeTables[index].fields?.isAttendanceTaken ?? false),
                                       onEdit: () async {
                                         var data = await Get.to(
                                           AddEditTimeTable(
@@ -978,7 +885,7 @@ class _TimeTableListState extends State<TimeTableList> {
         ),
         SizedBox(height: 10.h),
         custom_text(
-          text: strings_name.str_specialization_r,
+          text: strings_name.str_specializations,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
         ),
@@ -1018,7 +925,7 @@ class _TimeTableListState extends State<TimeTableList> {
               ),
         SizedBox(height: 10.h),
         custom_text(
-          text: strings_name.str_semester_r,
+          text: strings_name.str_semester,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
         ),
@@ -1055,7 +962,7 @@ class _TimeTableListState extends State<TimeTableList> {
         SizedBox(height: 10.h),
         Visibility(
           child: custom_text(
-            text: strings_name.str_division_r,
+            text: strings_name.str_division,
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
           ),
@@ -1093,7 +1000,7 @@ class _TimeTableListState extends State<TimeTableList> {
         ),
         SizedBox(height: 10.h),
         custom_text(
-          text: strings_name.str_range_r,
+          text: strings_name.str_range,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
         ),
@@ -1122,13 +1029,11 @@ class _TimeTableListState extends State<TimeTableList> {
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       if (args.value is PickerDateRange) {
-        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
-            // ignore: lines_longer_than_80_chars
-            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        DateTime endD = args.value.endDate ?? args.value.startDate;
+        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        _rangeToSend = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(endD.add(const Duration(days: 1)))}';
         startDate = args.value.startDate;
-        endDate = args.value.endDate;
-        // debugPrint('../ start date type ${args.value.startDate.runtimeType}');
-        // debugPrint('../ end date type ${args.value.endDate.runtimeType}');
+        endDate = args.value.endDate ?? args.value.startDate;
       } else if (args.value is DateTime) {
         _selectedDate = args.value.toString();
       } else if (args.value is List<DateTime>) {
@@ -1147,8 +1052,7 @@ class _TimeTableListState extends State<TimeTableList> {
 
   Future<void> _showDatePicker() async {
     return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
+      context: context, barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text(strings_name.str_data_range),
@@ -1156,9 +1060,7 @@ class _TimeTableListState extends State<TimeTableList> {
             height: 350,
             width: 095.w,
             child: SfDateRangePicker(
-              onSelectionChanged: _onSelectionChanged,
-              selectionMode: DateRangePickerSelectionMode.range,
-              // initialSelectedRange: PickerDateRange(DateTime.now().subtract(const Duration(days: 4)), DateTime.now().add(const Duration(days: 3))),
+              onSelectionChanged: _onSelectionChanged, selectionMode: DateRangePickerSelectionMode.range, // initialSelectedRange: PickerDateRange(DateTime.now().subtract(const Duration(days: 4)), DateTime.now().add(const Duration(days: 3))),
               initialSelectedRange: startDate == null && endDate == null ? null : PickerDateRange(startDate, endDate),
             ),
           ),
@@ -1457,12 +1359,10 @@ class TimeTableCard extends StatelessWidget {
                               SizedBox(
                                 width: 8.w,
                               ),
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 2.h),
-                                  decoration: BoxDecoration(border: Border.all(color: colors_name.colorBlack), borderRadius: BorderRadius.circular(20.w)),
-                                  child: Text(timeTable?.modeTitle ?? ''),
-                                ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 2.h),
+                                decoration: BoxDecoration(border: Border.all(color: colors_name.colorBlack), borderRadius: BorderRadius.circular(20.w)),
+                                child: Text(timeTable?.modeTitle ?? ''),
                               )
                             ],
                           ),

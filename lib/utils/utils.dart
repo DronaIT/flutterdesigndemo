@@ -152,14 +152,14 @@ class Utils {
     if (kIsWeb || Platform.isAndroid) {
       try {
         deviceId = await messaging.getToken();
-        print('FCM token: $deviceId');
+        debugPrint('FCM token: $deviceId');
       } catch (E) {
         debugPrint('../ token error $E');
       }
     } else if (Platform.isIOS) {
       messaging.requestPermission();
       deviceId = await messaging.getAPNSToken();
-      print('APNs token: $deviceId');
+      debugPrint('APNs token: $deviceId');
     }
     return deviceId ?? '';
   }
