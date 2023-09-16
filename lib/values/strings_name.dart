@@ -318,6 +318,7 @@ class strings_name {
   static const String str_reporting_address = "Reporting address";
   static const String str_logo_of_company = "Logo of company";
   static const String str_letter_of_intent = "Letter of intent (LOI)";
+  static const String str_file_size_limit = "File size should not be more than 2 MB.";
   static const String str_empty_letter_of_intent = "Please upload letter of intent (LOI)";
   static const String str_company_detail = "Company details";
   static const String str_empty_company_name = "Please enter company name";
@@ -407,10 +408,11 @@ class strings_name {
   static const String str_please_select_one_student = "Please shortlist one student";
   static const String str_schadule_interview = "Schedule interview";
   static const String str_export_selected_student = "Export selected student details";
+  static const String str_export_student_data = "Export student details";
 
   static const String str_job_interview_job_timing = "Interview job timing";
   static const String str_enter_time = "Enter date time";
-  static const String str_special_instrcutor = "Special instruction (if any)";
+  static const String str_special_instruction = "Special instruction (if any)";
   static const String str_interview_address = "Interview address";
   static const String str_google_map_link = "Google map link";
   static const String str_empty_job_date_time = "Please select interview date & time";
@@ -427,8 +429,8 @@ class strings_name {
   static const String str_selected_student = "Select student";
   static const String str_selected_students = "Student selected successfully";
 
-  static const String str_no_company = "No company added yet";
-  static const String str_no_jobs_created = "No jobs created yet";
+  static const String str_no_company = "No company found";
+  static const String str_no_jobs_created = "No jobs found";
   static const String str_no_jobs_approval_pending = "No jobs available to approve";
   static const String str_no_jobs_publish = "No jobs available for students to apply";
   static const String str_no_jobs = "No jobs available";
@@ -499,9 +501,9 @@ class strings_name {
   static const String str_3_days = "Continuous 3 days absents";
   static const String str_5_days = "Continuous 5 days absents";
   static const String str_10_days = "Continuous 10 days absents";
-  static const String str_today_days = "Today's absents ";
+  static const String str_today_days = "Today's absents";
   static const String str_eligiblity_report = "Ineligible report";
-  static const String str_past_data = "Past report";
+  static const String str_past_data = "Past semester report";
 
   static const String str_export_data = "Export data";
 

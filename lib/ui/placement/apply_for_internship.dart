@@ -39,7 +39,7 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
 
   getRecords() async {
     if (PreferenceUtils.getIsLogin() == 1) {
-      if(!isVisible) {
+      if (!isVisible) {
         setState(() {
           isVisible = true;
         });
@@ -49,40 +49,9 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
       query += "FIND('${strings_name.str_job_status_published}',${TableNames.CLM_STATUS}, 0)";
       query += ",FIND('1',${TableNames.CLM_DISPLAY_INTERNSHIP})";
       query += ")";
-      try{
+      try {
         var data = await apiRepository.getJoboppoApi(query, offset);
-/*
-        if (jobOpportunityData.records?.isNotEmpty == true) {
-          for (int i = 0; i < jobOpportunityData.records!.length; i++) {
-            bool canAddBasedOnHub = true, canAddBasedOnSpecialization = true, canAddBasedOnSemester = true, canAddBasedOnGender = true, isAlreadyApplied = false;
-            if (jobOpportunityData.records![i].fields?.hubIds?.isNotEmpty == true) {
-              canAddBasedOnHub = (jobOpportunityData.records![i].fields?.hubIds!.contains(loginData.hubIds?.first) == true);
-            }
-            if (jobOpportunityData.records![i].fields?.specializationIds?.isNotEmpty == true) {
-              canAddBasedOnSpecialization = (jobOpportunityData.records![i].fields?.specializationIds!.contains(loginData.specializationIds?.first) == true);
-            }
-            if (jobOpportunityData.records![i].fields?.semester?.isNotEmpty == true) {
-              canAddBasedOnSemester = (jobOpportunityData.records![i].fields?.semester!.contains(loginData.semester) == true);
-            }
-            if (jobOpportunityData.records![i].fields?.gender?.isNotEmpty == true) {
-              if (jobOpportunityData.records![i].fields?.gender == strings_name.str_both) {
-                canAddBasedOnGender = true;
-              } else if (jobOpportunityData.records![i].fields?.gender?.toLowerCase() == loginData.gender?.toLowerCase()) {
-                canAddBasedOnGender = true;
-              } else {
-                canAddBasedOnGender = false;
-              }
-            }
-            if (jobOpportunityData.records![i].fields?.appliedStudents?.isNotEmpty == true) {
-              isAlreadyApplied = jobOpportunityData.records![i].fields?.appliedStudents!.contains(PreferenceUtils.getLoginRecordId()) == true;
-            }
-            if (!canAddBasedOnHub || !canAddBasedOnSpecialization || !canAddBasedOnSemester || !canAddBasedOnGender || isAlreadyApplied) {
-              jobOpportunityData.records?.removeAt(i);
-              i--;
-            }
-          }
-        }
-*/
+
         if (data.records!.isNotEmpty) {
           if (offset.isEmpty) {
             jobOpportunityList?.clear();
@@ -120,8 +89,8 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
           if (offset.isNotEmpty) {
             getRecords();
           } else {
+            jobOpportunityList?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
             setState(() {
-              jobOpportunityList?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
               isVisible = false;
             });
           }
@@ -134,7 +103,7 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
           });
           offset = "";
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
@@ -154,7 +123,7 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
     });
     var loginData = PreferenceUtils.getLoginData();
     var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-    try{
+    try {
       var data = await apiRepository.loginApi(query);
       if (data.records!.isNotEmpty) {
         await PreferenceUtils.setLoginData(data.records!.first.fields!);
@@ -182,14 +151,13 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
           });
         }
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -241,6 +209,14 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
                                   leftValue: 5,
                                 ),
                                 custom_text(
+                                  text: "City: ${jobOpportunityList?[index].fields!.city?.first.toString().trim()}",
+                                  textStyles: blackTextSemiBold12,
+                                  topValue: 5,
+                                  maxLines: 5,
+                                  bottomValue: 5,
+                                  leftValue: 5,
+                                ),
+                                custom_text(
                                   text: "Internship : ${jobOpportunityList?[index].fields!.internshipModes} - ${jobOpportunityList?[index].fields!.internshipDuration}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
@@ -256,6 +232,16 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
                                   leftValue: 5,
                                   maxLines: 1000,
                                 ),
+                                jobOpportunityList![index].fields!.specificRequirements != null
+                                    ? custom_text(
+                                        text: "Specific Requirement: ${jobOpportunityList![index].fields!.specificRequirements?.trim()}",
+                                        textStyles: blackTextSemiBold12,
+                                        topValue: 5,
+                                        maxLines: 1000,
+                                        bottomValue: 5,
+                                        leftValue: 5,
+                                      )
+                                    : Container(),
                                 Container(
                                   alignment: Alignment.centerRight,
                                   margin: const EdgeInsets.only(right: 10),

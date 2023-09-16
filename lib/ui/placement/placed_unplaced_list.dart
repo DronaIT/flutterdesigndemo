@@ -1,15 +1,20 @@
+import 'dart:io';
+
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../values/text_styles.dart';
 
@@ -49,7 +54,7 @@ class _Placed_unplaced_SListState extends State<Placed_unplaced_SList> {
         Column(
           children: [
             SizedBox(height: 5.h),
-            custom_text(text: "Total Students: $totalStudents", textStyles: primaryTextSemiBold16),
+            custom_text(text: "Total Students: $totalStudents", textStyles: primaryTextSemiBold16, bottomValue: 5),
             custom_text(text: "Total $title Students: ${test.length}", textStyles: primaryTextSemiBold16),
             SizedBox(height: 10.h),
             CustomEditTextSearch(
@@ -102,7 +107,9 @@ class _Placed_unplaced_SListState extends State<Placed_unplaced_SList> {
                                       ),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].enrollmentNumber}", textStyles: blackTextSemiBold14),
                                       custom_text(topValue: 0, bottomValue: 5, maxLines: 2, text: "Specialization: ${Utils.getSpecializationName(studentList[index].specializationIds![0])}", textStyles: blackTextSemiBold14),
+                                      custom_text(topValue: 0, bottomValue: 5, text: "Semester: ${studentList[index].semester}", textStyles: blackTextSemiBold14),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Mobile No: ${studentList[index].mobileNumber}", textStyles: blackTextSemiBold14),
+                                      custom_text(topValue: 0, bottomValue: 5, text: "Email: ${studentList[index].email}", textStyles: blackTextSemiBold14),
                                     ],
                                   ),
                                 ),
@@ -112,6 +119,18 @@ class _Placed_unplaced_SListState extends State<Placed_unplaced_SList> {
                     ),
                   )
                 : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            Visibility(
+              visible: studentList.isNotEmpty,
+              child: CustomButton(
+                fontSize: 15,
+                text: strings_name.str_export_student_data,
+                click: () async {
+                  if (studentList.isNotEmpty) {
+                    exportStudentData();
+                  }
+                },
+              ),
+            ),
           ],
         ),
         Center(
@@ -119,5 +138,33 @@ class _Placed_unplaced_SListState extends State<Placed_unplaced_SList> {
         )
       ]),
     ));
+  }
+
+  Future<void> exportStudentData() async {
+    setState(() {
+      isVisible = true;
+    });
+    var excel = Excel.createExcel();
+    var sheet = excel['Sheet1'];
+    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'EnrollmentNumber', 'MobileNumber', 'Company Name']);
+
+    studentList.forEach((row) {
+      sheet.appendRow([row.name, row.email, Utils.getSpecializationName(row.specializationIds![0]), row.semester, row.enrollmentNumber, row.mobileNumber, row.company_name_from_placed_job?.last ?? ""]);
+    });
+
+    var appDocumentsDirectory = await getApplicationDocumentsDirectory();
+    var file = File("${appDocumentsDirectory.path}/PlacedUnPlacedData.xlsx");
+    await file.writeAsBytes(excel.encode()!);
+    try {
+      await OpenFilex.open(file.path);
+      setState(() {
+        isVisible = false;
+      });
+    } catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      Utils.showSnackBarUsingGet("No Application found to open this file");
+    }
   }
 }

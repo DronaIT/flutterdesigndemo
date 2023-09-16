@@ -502,7 +502,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       });
       specializationValue = "";
 
-      var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+      // var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+      var query = "SEARCH('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS})";
       try {
         var speData = await apiRepository.getSpecializationDetailApi(query);
         setState(() {
@@ -618,7 +619,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       isVisible = true;
     });
     var query = "AND(";
-    query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+    // query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+    query += "${TableNames.CLM_HUB_IDS}='${Utils.getHubIds(hubValue)}'";
     query += ",FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0)";
     query += ",FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0)";
     query += ",FIND('$divisionValue', ${TableNames.CLM_DIVISION}, 0)";

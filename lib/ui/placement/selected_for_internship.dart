@@ -43,20 +43,18 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
       isVisible = true;
     });
     var query = "FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_SELECTED_STUDENTS}, 0)";
-    try{
+    try {
       jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
       setState(() {
         isVisible = false;
       });
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
-
   }
 
   @override
@@ -122,6 +120,16 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
                                   leftValue: 5,
                                   maxLines: 1000,
                                 ),
+                                jobOpportunityData.records?[index].fields!.specificRequirements != null
+                                    ? custom_text(
+                                        text: "Specific Requirement: ${jobOpportunityData.records?[index].fields!.specificRequirements?.trim()}",
+                                        textStyles: blackTextSemiBold12,
+                                        topValue: 5,
+                                        maxLines: 1000,
+                                        bottomValue: 5,
+                                        leftValue: 5,
+                                      )
+                                    : Container(),
                                 Row(children: [
                                   Container(
                                     alignment: Alignment.centerRight,
@@ -235,7 +243,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
     });
     var loginData = PreferenceUtils.getLoginData();
     var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
-    try{
+    try {
       var data = await apiRepository.loginApi(query);
       if (data.records!.isNotEmpty) {
         await PreferenceUtils.setLoginData(data.records!.first.fields!);
@@ -271,7 +279,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
           });
         }
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });

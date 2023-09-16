@@ -215,7 +215,7 @@ class _AttendanceState extends State<Attendance> {
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const AttendenceReportDay());
+                      Get.to(() => const AttendanceReportDay());
                     },
                   ),
                 ),

@@ -17,6 +17,7 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
   static const CLOUDARY_FOLDER_APP_ASSETS = "AppAssets";
   static const CLOUDARY_FOLDER_STUDENT_RESUME = "student_resume";
+  static const CLOUDARY_FOLDER_ACADEMIC_MATERIAL = "academic_material";
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
   static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";

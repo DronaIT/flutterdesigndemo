@@ -302,7 +302,7 @@ class _HomeState extends State<Home> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_home),
       drawer: Drawer(
-        width: 250,
+        width: 300,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -321,6 +321,8 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       bottomValue: 0,
+                      leftValue: 5,
+                      rightValue: 5,
                     ),
                     custom_text(
                       text: phone,
@@ -328,6 +330,8 @@ class _HomeState extends State<Home> {
                       textStyles: blackTextSemiBold16,
                       topValue: 5,
                       bottomValue: 0,
+                      leftValue: 5,
+                      rightValue: 5,
                     ),
                   ],
                 ),

@@ -240,7 +240,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester' 'EnrollmentNumber', 'MobileNumber', 'Resume']);
+    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'EnrollmentNumber', 'MobileNumber', 'Resume']);
 
     List<JobModuleResponse> myData = [];
     for (var i = 0; i < studentResponse.length; i++) {
@@ -375,7 +375,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
               type: TextInputType.multiline,
               textInputAction: TextInputAction.newline,
               controller: specialinstrcutController,
-              hintText: strings_name.str_special_instrcutor,
+              hintText: strings_name.str_special_instruction,
               maxLines: 2,
               minLines: 2,
               maxLength: 50000,
@@ -420,9 +420,12 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             CustomButton(
                 text: strings_name.str_submit,
                 click: () {
+/*
                   if (startTimeController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_job_date_time);
-                  } else if (postalAddressController.text.trim().isEmpty) {
+                  }
+*/
+                  if (postalAddressController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_postal_Address);
                   } else if (cordinatorNameController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_coori_name);

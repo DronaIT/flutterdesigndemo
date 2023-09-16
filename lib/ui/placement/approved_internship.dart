@@ -107,7 +107,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                 height: 8,
               ),
               Visibility(
-                visible: jobOpportunityList != null && jobOpportunityList!.isNotEmpty,
+                visible: jobOpportunityListMain != null && jobOpportunityListMain!.isNotEmpty,
                 child: CustomEditTextSearch(
                   type: TextInputType.text,
                   textInputAction: TextInputAction.done,
@@ -196,6 +196,16 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                     leftValue: 5,
                                     maxLines: 1000,
                                   ),
+                                  jobOpportunityList![index].fields!.specificRequirements != null
+                                      ? custom_text(
+                                    text: "Specific Requirement: ${jobOpportunityList![index].fields!.specificRequirements?.trim()}",
+                                    textStyles: blackTextSemiBold12,
+                                    topValue: 5,
+                                    maxLines: 1000,
+                                    bottomValue: 5,
+                                    leftValue: 5,
+                                  )
+                                      : Container(),
                                   Container(
                                     alignment: Alignment.centerRight,
                                     margin: const EdgeInsets.only(right: 10),

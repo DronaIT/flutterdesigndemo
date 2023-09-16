@@ -451,6 +451,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       ],
                     ),
                   ),
+                  custom_text(
+                    text: strings_name.str_file_size_limit,
+                    alignment: Alignment.topLeft,
+                    maxLines: 3,
+                    textStyles: primaryTextSemiBold14,
+                    leftValue: 10,
+                  ),
                   SizedBox(height: 20.h),
                   CustomButton(
                       text: strings_name.str_submit,
@@ -619,8 +626,16 @@ class _CompanyDetailState extends State<CompanyDetail> {
                 ],
               ),
             ),
-            Center(
-              child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+            Visibility(
+              visible: isVisible,
+              child: Container(
+                color: colors_name.colorWhite,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+                ),
+              ),
             )
           ],
         ),
@@ -648,16 +663,20 @@ class _CompanyDetailState extends State<CompanyDetail> {
   picLOIFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
-      loiTitle = result.files.single.name;
-      if(kIsWeb){
-        setState(() {
-          loiData = result.files.single;
-          loiPath = result.files.single.bytes.toString();
-        });
-      }else {
-        setState(() {
-          loiPath = result.files.single.path!;
-        });
+      if(result.files.single.size / (1024 * 1024) < 2) {
+        loiTitle = result.files.single.name;
+        if (kIsWeb) {
+          setState(() {
+            loiData = result.files.single;
+            loiPath = result.files.single.bytes.toString();
+          });
+        } else {
+          setState(() {
+            loiPath = result.files.single.path!;
+          });
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_file_size_limit);
       }
     }
   }

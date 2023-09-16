@@ -99,17 +99,13 @@ class _FilterState extends State<Filter> {
       isFromEligible = Get.arguments[2]["isFromEligible"];
     }
 
-    if(continuousCount > 0){
+    if (continuousCount > 0) {
       int day = continuousCount - 1;
       startDate = DateTime.now().add(Duration(days: -day));
     }
 
-    hubResponseArray = PreferenceUtils
-        .getHubList()
-        .records;
-    speResponseArray = PreferenceUtils
-        .getSpecializationList()
-        .records;
+    hubResponseArray = PreferenceUtils.getHubList().records;
+    speResponseArray = PreferenceUtils.getSpecializationList().records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -145,10 +141,7 @@ class _FilterState extends State<Filter> {
 
   @override
   Widget build(BuildContext context) {
-    var viewWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
             appBar: AppWidgets.appBarWithoutBack(title),
@@ -171,22 +164,16 @@ class _FilterState extends State<Filter> {
                           visible: !todays,
                           child: startDate != null && endDate != null
                               ? GestureDetector(
-                            child: custom_text(
-                              text: "${startDate
-                                  .toString()
-                                  .split(" ")
-                                  .first} - ${endDate
-                                  .toString()
-                                  .split(" ")
-                                  .first}",
-                              alignment: Alignment.topLeft,
-                              textStyles: primaryTextSemiBold16,
-                              topValue: 0,
-                            ),
-                            onTap: () {
-                              _show();
-                            },
-                          )
+                                  child: custom_text(
+                                    text: "${startDate.toString().split(" ").first} - ${endDate.toString().split(" ").first}",
+                                    alignment: Alignment.topLeft,
+                                    textStyles: primaryTextSemiBold16,
+                                    topValue: 0,
+                                  ),
+                                  onTap: () {
+                                    _show();
+                                  },
+                                )
                               : Container()),
                       SizedBox(height: 5.h),
                       custom_text(
@@ -313,57 +300,60 @@ class _FilterState extends State<Filter> {
                       ),
                       subjectResponseArray!.isNotEmpty
                           ? Column(
-                        children: [
-                          SizedBox(height: 5.h),
-                          custom_text(
-                            text: strings_name.str_view_subject,
-                            alignment: Alignment.topLeft,
-                            textStyles: blackTextSemiBold16,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: Container(
-                                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                                  width: viewWidth,
-                                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
-                                    value: subjectResponse,
-                                    elevation: 16,
-                                    isExpanded: true,
-                                    style: blackText16,
-                                    focusColor: Colors.white,
-                                    onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
-                                      setState(() {
-                                        subjectValue = newValue!.fields!.ids!.toString();
-                                        subjectResponse = newValue;
-                                        subjectRecordId = newValue.id!;
-                                        // getUnits();
-                                      });
-                                    },
-                                    items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
-                                      return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
-                                        value: value,
-                                        child: Text(value.fields!.subjectTitle!.toString(), overflow: TextOverflow.visible,),
-                                      );
-                                    }).toList(),
-                                  ),
+                              children: [
+                                SizedBox(height: 5.h),
+                                custom_text(
+                                  text: strings_name.str_view_subject,
+                                  alignment: Alignment.topLeft,
+                                  textStyles: blackTextSemiBold16,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Flexible(
+                                      fit: FlexFit.loose,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                        width: viewWidth,
+                                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
+                                          value: subjectResponse,
+                                          elevation: 16,
+                                          isExpanded: true,
+                                          style: blackText16,
+                                          focusColor: Colors.white,
+                                          onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
+                                            setState(() {
+                                              subjectValue = newValue!.fields!.ids!.toString();
+                                              subjectResponse = newValue;
+                                              subjectRecordId = newValue.id!;
+                                              // getUnits();
+                                            });
+                                          },
+                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                            return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
+                                              value: value,
+                                              child: Text(
+                                                value.fields!.subjectTitle!.toString(),
+                                                overflow: TextOverflow.visible,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
                           : Container(),
-
                       Visibility(
                         visible: isFromEligible && subjectValue.isNotEmpty,
-                        child:  custom_text(
-                        text: strings_name.str_eligibiltyC,
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
-                      ),),
+                        child: custom_text(
+                          text: strings_name.str_eligibiltyC,
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
+                        ),
+                      ),
                       Visibility(
                           visible: isFromEligible && subjectValue.isNotEmpty,
                           child: custom_edittext(
@@ -383,10 +373,9 @@ class _FilterState extends State<Filter> {
                             Utils.showSnackBar(context, strings_name.str_empty_division);
                           } else if (isFromEligible && subjectValue.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_subject);
-                          }else if (isFromEligible && eligibilityR.text.isEmpty) {
+                          } else if (isFromEligible && eligibilityR.text.isEmpty) {
                             Utils.showSnackBar(context, strings_name.str_empty_eligibilty);
-                          }
-                          else {
+                          } else {
                             viewStudent = [];
                             studentList = [];
 
@@ -611,7 +600,6 @@ class _FilterState extends State<Filter> {
         }
       }
 
-
       if (studentList?.isNotEmpty == true) {
         studentList?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
         Get.to(const FilterData(), arguments: [
@@ -622,7 +610,6 @@ class _FilterState extends State<Filter> {
           {"subjectid": subjectResponse?.id},
           {"eligible": isFromEligible},
           {"eligible_percentage": eligibilityR.text.toString()},
-
         ])?.then((result) {
           if (result != null && result) {
             // Get.back(closeOverlays: true);

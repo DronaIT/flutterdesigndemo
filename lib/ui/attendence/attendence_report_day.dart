@@ -4,16 +4,17 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+
 import '../../customwidget/app_widgets.dart';
 
-class AttendenceReportDay extends StatefulWidget {
-  const AttendenceReportDay({Key? key}) : super(key: key);
+class AttendanceReportDay extends StatefulWidget {
+  const AttendanceReportDay({Key? key}) : super(key: key);
 
   @override
-  State<AttendenceReportDay> createState() => _AttendenceReportDayState();
+  State<AttendanceReportDay> createState() => _AttendanceReportDayState();
 }
 
-class _AttendenceReportDayState extends State<AttendenceReportDay> {
+class _AttendanceReportDayState extends State<AttendanceReportDay> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,8 +96,6 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       });
                     },
                   ),
-
-
                   GestureDetector(
                     child: Card(
                       elevation: 5,
@@ -121,7 +120,6 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       });
                     },
                   ),
-
                   GestureDetector(
                     child: Card(
                       elevation: 5,
@@ -146,7 +144,6 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       });
                     },
                   ),
-
                   GestureDetector(
                     child: Card(
                       elevation: 5,
@@ -171,8 +168,6 @@ class _AttendenceReportDayState extends State<AttendenceReportDay> {
                       });
                     },
                   ),
-
-
                 ],
               ),
             )));

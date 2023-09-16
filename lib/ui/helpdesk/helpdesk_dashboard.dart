@@ -120,11 +120,11 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     query += ")";
 
     if (fromFilter) {
-      if (filterHubName.isNotEmpty) query += ", FIND('$filterHubName', ${TableNames.CLM_STUDENT_HUBNAME}, 0)";
-      if (filterSpecialization.isNotEmpty) query += ", FIND('$filterSpecialization', ${TableNames.CLM_STUDENT_SPENAME}, 0)";
+      if (filterHubName.isNotEmpty) query += ", SEARCH('$filterHubName', ${TableNames.CLM_STUDENT_HUBNAME})";
+      if (filterSpecialization.isNotEmpty) query += ", SEARCH('$filterSpecialization', ${TableNames.CLM_STUDENT_SPENAME})";
       if (filterSemester.isNotEmpty) query += ", FIND('$filterSemester', ${TableNames.CLM_STUDENT_SEMESTER}, 0)";
       if (filterDivision.isNotEmpty) query += ", FIND('$filterDivision', ${TableNames.CLM_STUDENT_DIVISION}, 0)";
-      if (filterTicketTypeId != 0) query += ", FIND('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID}, 0)";
+      if (filterTicketTypeId != 0) query += ", SEARCH('$filterTicketTypeId', ${TableNames.CLM_TICKET_TYPEID})";
       if (filterTicketValue.isNotEmpty) query += ", FIND('$filterTicketValue', ${TableNames.CLM_TICKET_STATUS}, 0)";
     }
     query += ")";

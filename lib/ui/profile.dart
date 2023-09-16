@@ -20,7 +20,7 @@ class _ProfileState extends State<Profile> {
   String roleName = "";
   String hubName = "";
   String employeeCode = "";
-  String city = "";
+  String? city;
   String email = "";
   String address = "";
   var isLogin = 0;
@@ -37,7 +37,7 @@ class _ProfileState extends State<Profile> {
       roleName = strings_name.str_student;
       hubName = Utils.getHubName(loginData.hubIdFromHubIds![0]) ?? "";
       employeeCode = loginData.enrollmentNumber.toString();
-      city = loginData.city.toString();
+      city = loginData.city;
       address = loginData.address.toString();
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
@@ -48,8 +48,8 @@ class _ProfileState extends State<Profile> {
       hubName = Utils.getHubName(loginData.hubIdFromHubIds![0]) ?? "";
       employeeCode = loginData.employeeCode.toString();
       address = loginData.address.toString();
-      city = loginData.city.toString();
-    } else if (isLogin == 3){
+      city = loginData.city;
+    } else if (isLogin == 3) {
       var loginData = PreferenceUtils.getLoginDataOrganization();
       name = loginData.companyName.toString();
       phone = loginData.contactNumber.toString();
@@ -58,7 +58,7 @@ class _ProfileState extends State<Profile> {
       hubName = loginData.reporting_branch.toString();
       employeeCode = loginData.company_code.toString();
       address = loginData.reporting_address.toString();
-      city = loginData.city.toString();
+      city = loginData.city;
     }
   }
 
@@ -78,22 +78,14 @@ class _ProfileState extends State<Profile> {
           const SizedBox(height: 20),
           //  AppWidgets.spannableText(strings_name.str_name+ ": ", name, primaryTextSemiBold16),
           custom_text(
-            text: strings_name.str_name + ": " + name,
+            text: "${strings_name.str_name}: $name",
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             bottomValue: 0,
             leftValue: 20,
           ),
           custom_text(
-            text: strings_name.str_phone + ": " + phone,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-            topValue: 10,
-            bottomValue: 0,
-            leftValue: 20,
-          ),
-          custom_text(
-            text: strings_name.str_email + ": " + email,
+            text: "${strings_name.str_phone}: $phone",
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             topValue: 10,
@@ -101,7 +93,15 @@ class _ProfileState extends State<Profile> {
             leftValue: 20,
           ),
           custom_text(
-            text: strings_name.str_code + ": " + employeeCode,
+            text: "${strings_name.str_email}: $email",
+            alignment: Alignment.topLeft,
+            textStyles: blackTextSemiBold16,
+            topValue: 10,
+            bottomValue: 0,
+            leftValue: 20,
+          ),
+          custom_text(
+            text: "${strings_name.str_code}: $employeeCode",
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             topValue: 10,
@@ -119,7 +119,7 @@ class _ProfileState extends State<Profile> {
           Visibility(
             visible: isLogin != 3,
             child: custom_text(
-              text: strings_name.str_role + ": " + roleName,
+              text: "${strings_name.str_role}: $roleName",
               alignment: Alignment.topLeft,
               textStyles: blackTextSemiBold16,
               topValue: 10,
@@ -128,21 +128,24 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           custom_text(
-            text: strings_name.str_address + ": " + address,
+            text: "${strings_name.str_address}: $address",
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             topValue: 10,
             bottomValue: 0,
             leftValue: 20,
+            maxLines: 3,
           ),
-          custom_text(
-            text: strings_name.str_city + ": " + city,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-            topValue: 10,
-            bottomValue: 0,
-            leftValue: 20,
-          ),
+          city != null
+              ? custom_text(
+                  text: "${strings_name.str_city}: ${city!}",
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                  topValue: 10,
+                  bottomValue: 0,
+                  leftValue: 20,
+                )
+              : Container(),
         ],
       ),
     ));
