@@ -15,6 +15,7 @@ import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
+import 'package:flutterdesigndemo/ui/manage_user/student_extra_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
@@ -429,6 +430,8 @@ class _HomeState extends State<Home> {
                                               Get.to(const AllAnnouncements());
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TIME_TABLE) {
                                               Get.to(const TimeTableList());
+                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_NSDC_SKILL_INDIA) {
+                                              Get.to(const StudentExtraDetail());
                                             }
                                           },
                                         ),

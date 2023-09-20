@@ -346,7 +346,7 @@ class _StudentHistoryState extends State<StudentHistory> {
   }
   _launchCaller(String mobile) async {
     try {
-      await launchUrl(Uri.parse("tel:$mobile"));
+      await launchUrl(Uri.parse("tel:$mobile"), mode: LaunchMode.externalApplication);
     } catch (e) {
       Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
     }

@@ -141,31 +141,6 @@ class _FilterDataState extends State<FilterData> {
       ]);
     });
 
-    // var data1 = [];
-    // for(var row in data){
-    //   print("test=>${row}");
-    //
-    // }
-    // sheet.appendRow(data1);
-    // int colIndex = 0;
-    // data.forEach((colValue) {
-    //   sheet.cell(CellIndex.indexByColumnRow(
-    //     rowIndex: sheet.maxRows,
-    //     columnIndex: colIndex,
-    //   ))
-    //     ..value = colValue.fields;
-    // });
-
-    // List<List<String>> newData = [];
-    // List<String> newData1 = [];
-
-    // for( var i =0 ; i< data.length ; i++){
-    //   newData1.add(data[i].fields!.name!);
-    //   newData.add(newData1);
-    // }
-    // for (var row in newData) {
-    //   sheet.appendRow(row);
-    // }
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
     var file = File("${appDocumentsDirectory.path}/Student_Report.xlsx");
     await file.writeAsBytes(excel.encode()!);
@@ -281,7 +256,7 @@ class _FilterDataState extends State<FilterData> {
 
   _launchCaller(String mobile) async {
     try {
-      await launchUrl(Uri.parse("tel:$mobile"));
+      await launchUrl(Uri.parse("tel:$mobile"), mode: LaunchMode.externalApplication);
     } catch (e) {
       Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
     }

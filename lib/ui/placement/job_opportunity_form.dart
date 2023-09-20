@@ -876,6 +876,8 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                       Utils.showSnackBar(context, strings_name.str_empty_start_time);
                     } else if (endTimeController.text.toString().trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_end_time);
+                    } else if (hubsData?.isEmpty == true) {
+                      Utils.showSnackBar(context, strings_name.str_empty_hub_data);
                     } else {
                       submitData();
                     }

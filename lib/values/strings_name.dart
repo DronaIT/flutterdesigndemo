@@ -47,6 +47,8 @@ class strings_name {
   static const String str_add_students = "Add students";
   static const String str_add_student = "Add student";
   static const String str_update_student_details = "Update student details";
+  static const String str_update_details = "Update details";
+  static const String str_update_details_successfully = "Details updated successfully";
 
   static const String str_view_students = "View students";
   static const String str_add_employee = "Add employee";
@@ -115,6 +117,7 @@ class strings_name {
   static const String str_no_students = "No students";
   static const String str_employee_update = "Employee details updated successfully";
   static const String str_select_spelization = "Select specialization";
+  static const String str_select_spelization_r = "Select specialization*";
   static const String str_empty_spe = "Please select specialization";
 
   static const String str_specializations = "Specializations";
@@ -384,6 +387,7 @@ class strings_name {
   static const String str_empty_end_time_tt = "Please select end time";
   static const String str_empty_meeting_link = "Please enter online meeting link";
   static const String str_empty_class_number = "Please enter classroom Number";
+  static const String str_empty_hub_data = "Please select at least one hub";
 
   static const String str_job_added = "New job opportunity added successfully";
   static const String str_job_updated = "Job opportunity updated successfully";
@@ -504,6 +508,7 @@ class strings_name {
   static const String str_today_days = "Today's absents";
   static const String str_eligiblity_report = "Ineligible report";
   static const String str_past_data = "Past semester report";
+  static const String str_custom_days_report = "Full report";
 
   static const String str_export_data = "Export data";
 
@@ -656,4 +661,11 @@ class strings_name {
 
   static const String str_attendance_already_taken = "Attendance already taken";
   static const String str_not_per_atek_attedndance = "You do not have permission to take attendance in this lecture";
+
+  static const String str_nsdc_changes_warning = "These details are collected for students registration on NSDC & Skill India Portal for B.Voc, So please fill it strictly as per your School Leaving Certificate (LC) because same details will reflect in your NSDC and Skill India Certificate.";
+  static const String str_father_name = "Father's full name";
+  static const String str_profile_pic = "Professional profile pic";
+  static const String str_empty_father_name = "Please add father's Full Name";
+  static const String str_empty_profile_pic = "Please select profile pic";
+  static const String str_details_updated = "Details are already uploaded";
 }

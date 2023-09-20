@@ -22,6 +22,7 @@ class TableNames {
   static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
   static const CLOUDARY_FOLDER_ANNOUNCEMENT = "Announcement";
+  static const CLOUDARY_FOLDER_PROFILE_PIC = "ProfilePic";
 
   static const STUDENT_ROLE_ID = "DR09";
   static const ORGANIZATION_ROLE_ID = "DR24";
@@ -38,6 +39,7 @@ class TableNames {
   static const MODULE_TASK = "DM09";
   static const MODULE_ANNOUNCEMENT = "DM10";
   static const MODULE_TIME_TABLE = "DM11";
+  static const MODULE_NSDC_SKILL_INDIA = "DM12";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";

@@ -33,6 +33,8 @@ class LoginFieldsResponse {
   List<String>? presentSubjectTitle;
   List<String>? presentSubjectId;
   List<String>? lecture_date;
+  List<String>? lecture_time;
+  List<String>? employee_name;
   List<String>? lectureSubjectId;
   List<String>? lecture_subject_title;
   int attendanceStatus = 1;
@@ -82,6 +84,8 @@ class LoginFieldsResponse {
   List<dynamic>? absentSemesterByStudent;
   int? Total_lectures;
   List<Attachment_response>? resume;
+  List<Attachment_response>? profile_pic;
+  String? father_full_name;
 
   LoginFieldsResponse({
     this.city,
@@ -112,6 +116,8 @@ class LoginFieldsResponse {
     this.presentSubjectTitle,
     this.presentSubjectId,
     this.lecture_date,
+    this.lecture_time,
+    this.employee_name,
     this.lectureSubjectId,
     this.lecture_subject_title,
     this.sr_number,
@@ -159,7 +165,9 @@ class LoginFieldsResponse {
     this.semesterByStudent,
     this.presentSemesterByStudent,
     this.absentSemesterByStudent,
-    this.resume
+    this.resume,
+    this.profile_pic,
+    this.father_full_name,
   });
 
 
@@ -226,6 +234,8 @@ class LoginFieldsResponse {
     presentSubjectTitle = json['present_subject_title']?.cast<String>();
     presentSubjectId = json['present_subject_id']?.cast<String>();
     lecture_date = json['lecture_date']?.cast<String>();
+    lecture_time = json['lecture_time']?.cast<String>();
+    employee_name = json['employee_name']?.cast<String>();
     lectureSubjectId = json['lecture_subject_id']?.cast<String>();
 
     sr_number = json['sr_number'];
@@ -248,11 +258,18 @@ class LoginFieldsResponse {
     placedJob = json['placed_job']?.cast<String>();
     rejectedJob = json['rejected_job']?.cast<String>();
     token = json['token'];
+    father_full_name = json['father_full_name'];
     percentage = json['percentage'];
     if (json['resume'] != null) {
       resume = <Attachment_response>[];
       json['resume'].forEach((v) {
         resume!.add(new Attachment_response.fromJson(v));
+      });
+    }
+    if (json['profile_pic'] != null) {
+      profile_pic = <Attachment_response>[];
+      json['profile_pic'].forEach((v) {
+        profile_pic!.add(new Attachment_response.fromJson(v));
       });
     }
   }
@@ -312,6 +329,8 @@ class LoginFieldsResponse {
     data['present_subject_id'] = this.presentSubjectId;
     data['present_lecture_ids'] = this.presentLectureIds;
     data['lecture_date'] = this.lecture_date;
+    data['lecture_time'] = this.lecture_time;
+    data['employee_name'] = this.employee_name;
     data['lecture_subject_id'] = this.lectureSubjectId;
     data['percentage'] = this.percentage;
     data['sr_number'] = this.sr_number;
@@ -333,8 +352,12 @@ class LoginFieldsResponse {
     data['placed_job'] = this.placedJob;
     data['rejected_job'] = this.rejectedJob;
     data['token'] = this.token;
+    data['father_full_name'] = this.father_full_name;
     if (this.resume != null) {
       data['resume'] = this.resume!.map((v) => v.toJson()).toList();
+    }
+    if (this.profile_pic != null) {
+      data['profile_pic'] = this.profile_pic!.map((v) => v.toJson()).toList();
     }
     return data;
   }

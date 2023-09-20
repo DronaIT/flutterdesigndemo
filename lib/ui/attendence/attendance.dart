@@ -3,7 +3,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/ui/attendence/attendance_history.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendence_report_day.dart';
+import 'package:flutterdesigndemo/ui/attendence/attendance_report_day.dart';
 import 'package:flutterdesigndemo/ui/attendence/myattendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/take_attendance.dart';
 import 'package:flutterdesigndemo/ui/attendence/filter_screen.dart';
