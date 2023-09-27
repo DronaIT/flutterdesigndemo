@@ -85,7 +85,7 @@ class _LeaveInternShipState extends State<LeaveInternShip> {
                           leftValue: 5,
                         ),
                         const SizedBox(height: 5),
-                        custom_text(text: strings_name.str_joing_date, textStyles: blackTextSemiBold14, topValue: 5, bottomValue: 5, leftValue: 5),
+                        custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.records?.first.fields!.joiningDate ?? ""}", textStyles: blackTextSemiBold14, topValue: 5, bottomValue: 5, leftValue: 5),
                         const SizedBox(height: 5),
                         custom_edittext(
                           type: TextInputType.multiline,

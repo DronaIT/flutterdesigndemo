@@ -101,7 +101,7 @@ class _FilterDataState extends State<FilterData> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'EnrollmentNumber', 'Mobile Number', 'Address', 'City', 'Division', 'Gender', 'joining year', 'Semester',
+    sheet.appendRow(['Name', 'Email', 'Enrollment Number', 'Mobile Number', 'Address', 'City', 'Division', 'Gender', 'joining year', 'Semester',
         'Hub Name', 'Specialization', 'Subject',
     ]);
     List<LoginFieldsReportResponse> myData = [];

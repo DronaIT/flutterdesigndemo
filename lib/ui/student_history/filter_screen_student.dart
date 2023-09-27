@@ -41,8 +41,8 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   String speValue = "";
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? speResponseArray = [];
 
-  List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
-  int semesterValue = 1;
+  List<int> semesterResponseArray = <int>[-1, 1, 2, 3, 4, 5, 6];
+  int semesterValue = -1;
 
   List<String> divisionResponseArray = <String>[TableNames.DIVISION_A, TableNames.DIVISION_B, TableNames.DIVISION_C, TableNames.DIVISION_D];
   String divisionValue = "";
@@ -141,7 +141,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                       ),
                       SizedBox(height: 5.h),
                       custom_text(
-                        text: strings_name.str_select_spelization,
+                        text: strings_name.str_select_specialization,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                         topValue: 0,
@@ -193,7 +193,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                           items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
                             return DropdownMenuItem<int>(
                               value: value,
-                              child: Text("Semester $value"),
+                              child: Text(value == -1 ? "Select semester" : "Semester $value"),
                             );
                           }).toList(),
                         ),
@@ -338,7 +338,9 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
     if (speValue.isNotEmpty) {
       query += ",${TableNames.CLM_SPE_IDS}='$speValue'";
     }
-    query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+    if (semesterValue != -1) {
+      query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+    }
     if (divisionValue.isNotEmpty) {
       query += ",${TableNames.CLM_DIVISION}='${divisionValue.toString()}'";
     }
@@ -360,21 +362,21 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
         if (offset.isNotEmpty) {
           fetchRecords();
         } else {
-          setState(() {
-            viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
-            isVisible = false;
+          viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
+          filterData();
 
-            filterData();
+          setState(() {
+            isVisible = false;
           });
         }
       } else {
+        if (offset.isEmpty) {
+          viewStudent = [];
+        }
+        offset = "";
         setState(() {
           isVisible = false;
-          if (offset.isEmpty) {
-            viewStudent = [];
-          }
         });
-        offset = "";
         Utils.showSnackBarUsingGet(strings_name.str_no_students);
       }
     } on DioError catch (e) {
@@ -387,8 +389,6 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   }
 
   void filterData() {
-    print(viewStudent?.length);
-
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
       studentList?.addAll(viewStudent!);
 

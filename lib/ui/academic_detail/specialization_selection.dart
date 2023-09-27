@@ -120,7 +120,7 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
                     if (selectedSpecializationData.isNotEmpty) {
                       Get.back(result: selectedSpecializationData);
                     } else {
-                      Utils.showSnackBar(context, strings_name.str_select_spelization);
+                      Utils.showSnackBar(context, strings_name.str_select_specialization);
                     }
                   },
                 )

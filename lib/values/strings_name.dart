@@ -116,8 +116,8 @@ class strings_name {
   static const String str_no_hub = "No hubs";
   static const String str_no_students = "No students";
   static const String str_employee_update = "Employee details updated successfully";
-  static const String str_select_spelization = "Select specialization";
-  static const String str_select_spelization_r = "Select specialization*";
+  static const String str_select_specialization = "Select specialization";
+  static const String str_select_specialization_r = "Select specialization*";
   static const String str_empty_spe = "Please select specialization";
 
   static const String str_specializations = "Specializations";
@@ -459,6 +459,7 @@ class strings_name {
   static const String str_congratulation_for_internship = "Congratulations for\ngetting selected at";
   static const String str_internship_tnc = "I hereby accept the Placement SOP & Terms.";
   static const String str_empty_internship_tnc = "Please accept Placement SOP & Terms";
+  static const String str_placement_info_upload_warning = "Please note that you need to upload below documents each month.";
 
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";

@@ -165,7 +165,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             children: [
                               SizedBox(height: 10.h),
                               custom_text(
-                                text: strings_name.str_select_spelization,
+                                text: strings_name.str_select_specialization,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
                               ),

@@ -201,7 +201,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
                       ),
                       SizedBox(height: 5.h),
                       custom_text(
-                        text: strings_name.str_select_spelization_r,
+                        text: strings_name.str_select_specialization_r,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                         topValue: 0,
@@ -569,7 +569,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
           });
 
           List<String> titleList = [];
-          titleList.add("EnrollmentNumber");
+          titleList.add("Enrollment Number");
           titleList.add("Name");
           titleList.add("Mobile Number");
           titleList.add("Total");

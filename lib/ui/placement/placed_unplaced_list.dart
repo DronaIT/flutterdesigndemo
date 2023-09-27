@@ -146,7 +146,7 @@ class _Placed_unplaced_SListState extends State<Placed_unplaced_SList> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'EnrollmentNumber', 'MobileNumber', 'Company Name']);
+    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'Enrollment Number', 'Mobile Number', 'Company Name']);
 
     studentList.forEach((row) {
       sheet.appendRow([row.name, row.email, Utils.getSpecializationName(row.specializationIds![0]), row.semester, row.enrollmentNumber, row.mobileNumber, row.company_name_from_placed_job?.last ?? ""]);

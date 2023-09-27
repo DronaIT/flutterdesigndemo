@@ -260,7 +260,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
           rejectedJobData.add(jobId);
 
           requestParams[TableNames.CLM_REJECTED_JOB] = rejectedJobData;
-          requestParams[TableNames.CLM_BANNED_FROM_PLACEMENT] = 1;
+          requestParams[TableNames. CLM_BANNED_FROM_PLACEMENT] = 1;
         }
 
         var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);

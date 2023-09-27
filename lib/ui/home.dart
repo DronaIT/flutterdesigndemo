@@ -412,7 +412,7 @@ class _HomeState extends State<Home> {
                                               Get.to(const Attendance());
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
                                               if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
-                                                Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
+                                                Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
                                               } else if (PreferenceUtils.getIsLogin() == 3) {
                                                 Get.to(const PlacementDashboard());
                                               } else {

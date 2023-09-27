@@ -165,7 +165,7 @@ class _ViewStudentState extends State<ViewStudent> {
                   ),
                   SizedBox(height: 3.h),
                   custom_text(
-                    text: strings_name.str_select_spelization,
+                    text: strings_name.str_select_specialization,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                     topValue: 0,

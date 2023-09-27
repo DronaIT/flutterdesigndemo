@@ -1,34 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
-
 import '../../models/announcement_response.dart';
 import '../../models/base_api_response.dart';
 import '../../models/request/update_announcement_request.dart';
 import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
-import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 import 'add_announcement.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
 
 class AnnouncementDetail extends StatefulWidget {
   final BaseApiResponseWithSerializable<AnnouncementResponse> announcement;
   final bool isEdit;
-  const AnnouncementDetail(
-      {super.key, required this.announcement, required this.isEdit});
+
+  const AnnouncementDetail({super.key, required this.announcement, required this.isEdit});
 
   @override
   State<AnnouncementDetail> createState() => _AnnouncementDetailState();
@@ -78,15 +74,13 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
       loginType = TableNames.ANNOUNCEMENT_ROLE_ORGANIZATION;
     }
 
-    var query =
-        "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_ANNOUNCEMENT}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_ANNOUNCEMENT}')";
 
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
-          if (data.records![i].fields!.permissionId ==
-              TableNames.PERMISSION_ID_ADD_ANNOUNCEMENT) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_ANNOUNCEMENT) {
             canAddAnnouncements = true;
           }
         }
@@ -131,15 +125,12 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         updateAttachments.add(UpdateAttachment(url: data.url));
       }
 
-      List<String>? seenByEmployees =
-          announcementData.fields?.seenByEmployees ?? [];
-      List<String>? seenByStudents =
-          announcementData.fields?.seenByStudents ?? [];
+      List<String>? seenByEmployees = announcementData.fields?.seenByEmployees ?? [];
+      List<String>? seenByStudents = announcementData.fields?.seenByStudents ?? [];
 
       String createdBy = PreferenceUtils.getLoginRecordId();
 
-      if (seenByEmployees.contains(createdBy) ||
-          seenByStudents.contains(createdBy)) {
+      if (seenByEmployees.contains(createdBy) || seenByStudents.contains(createdBy)) {
         return;
       }
 
@@ -153,10 +144,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         }
       }
 
-
       // return;
-      UpdateAnnouncementRequest updateAnnouncementRequest =
-          UpdateAnnouncementRequest(records: [
+      UpdateAnnouncementRequest updateAnnouncementRequest = UpdateAnnouncementRequest(records: [
         UpdateRecord(
           id: announcementData.id ?? '',
           fields: UpdateFields(
@@ -178,10 +167,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         )
       ]);
 
-      var dataUpdate = await apiRepository.updateAnnouncementDataApi(
-          updateAnnouncementRequest.toJson(), announcementData.id ?? '');
-    } catch (e) {
-    }
+      var dataUpdate = await apiRepository.updateAnnouncementDataApi(updateAnnouncementRequest.toJson(), announcementData.id ?? '');
+    } catch (e) {}
   }
 
   @override
@@ -193,7 +180,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
             visible: canAddAnnouncements,
             child: GestureDetector(
               onTap: () async {
-                var result = await Get.to(const AddAnnouncement(isFromDetailScreen:true));
+                var result = await Get.to(const AddAnnouncement(isFromDetailScreen: true));
                 if (result == 'updateAnnouncement') {
                   Get.back(result: 'addAnnouncement');
                 }
@@ -262,8 +249,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                           fit: BoxFit.fill,
                           width: 1.sw,
                           height: 190.h,
-                          errorWidget: (context, url, error) =>
-                              const Center(child: Icon(Icons.error)),
+                          errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -273,8 +259,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 10.0, bottom: 16.0, right: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 16.0, right: 10.0),
                             child: Text(
                               widget.announcement.fields?.title ?? '',
                               style: whiteTextSemiBold20,
@@ -285,17 +270,17 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 10.0.w, vertical: 10.h),
-                    child: Text(
-                      widget.announcement.fields?.description ?? '',
-                      style: lightBlackText16,
+                    padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 10.h),
+                    child: SelectableLinkify(
+                      text: widget.announcement.fields?.description ?? '',
+                      style: blackText16,
+                      onOpen: (link) async {
+                        await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication);
+                      },
                     ),
                   ),
                   Visibility(
-                    visible:
-                        widget.announcement.fields?.attachments?.isNotEmpty ??
-                            false,
+                    visible: widget.announcement.fields?.attachments?.isNotEmpty ?? false,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0.w),
                       child: Column(
@@ -315,37 +300,23 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                           ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: widget.announcement.fields?.attachments
-                                      ?.length ??
-                                  0,
+                              itemCount: widget.announcement.fields?.attachments?.length ?? 0,
                               itemBuilder: (context, index) {
-                                var data = widget
-                                    .announcement.fields?.attachments?[index];
+                                var data = widget.announcement.fields?.attachments?[index];
                                 return Card(
                                   elevation: 5,
                                   child: Container(
                                     color: colors_name.colorWhite,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Expanded(
-                                            child: Text("${data?.filename}",
-                                                textAlign: TextAlign.start,
-                                                style: blackTextSemiBold16)),
+                                        Expanded(child: Text("${data?.filename}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
                                         GestureDetector(
                                             onTap: () async {
-                                              await launchUrl(
-                                                  Uri.parse(data?.url??''),
-                                                  mode: LaunchMode.externalApplication
-                                              );
+                                              await launchUrl(Uri.parse(data?.url ?? ''), mode: LaunchMode.externalApplication);
                                             },
-                                            child: const Icon(Icons.download,
-                                                size: 30,
-                                                color:
-                                                    colors_name.colorPrimary))
+                                            child: const Icon(Icons.download, size: 30, color: colors_name.colorPrimary))
                                       ],
                                     ),
                                   ),

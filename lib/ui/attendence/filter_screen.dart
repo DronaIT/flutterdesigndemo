@@ -206,7 +206,7 @@ class _FilterState extends State<Filter> {
                       ),
                       SizedBox(height: 5.h),
                       custom_text(
-                        text: strings_name.str_select_spelization,
+                        text: strings_name.str_select_specialization,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                         topValue: 0,
