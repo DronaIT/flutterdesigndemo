@@ -196,7 +196,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
                         children: [
                           custom_text(
                             leftValue: 5,
-                            text: strings_name.str_attendence,
+                            text: strings_name.str_attendance,
                             alignment: Alignment.topLeft,
                             textStyles: blackTextSemiBold16,
                           ),

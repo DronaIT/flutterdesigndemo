@@ -8,8 +8,8 @@ import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/view_lecture_attendance.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_history_detail.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_student_list.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_history_detail.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_student_list.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -187,7 +187,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
             bottom: Radius.circular(14),
           ),
         ),
-        title: const Text(strings_name.str_viewothers_attendence),
+        title: const Text(strings_name.str_viewothers_attendance),
         actions: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10),

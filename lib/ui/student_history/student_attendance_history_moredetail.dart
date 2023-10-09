@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
+import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/values/strings_name.dart';
-
-import 'package:flutterdesigndemo/values/colors_name.dart';
-
-import '../../customwidget/custom_edittext_search.dart';
 import '../../customwidget/custom_text.dart';
-import '../../models/base_api_response.dart';
 import '../../models/login_fields_response.dart';
 import '../../models/view_student_attendance.dart';
 import '../../values/text_styles.dart';
@@ -30,7 +26,7 @@ class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHi
 
   var total_lecture = 0, present_lecture = 0, absent_lecture = 0;
   int totalLectures = 0, totalPresentLectures = 0, totalAbsentLectures = 0;
-   var totalPresentPercentage;
+  var totalPresentPercentage;
 
   @override
   void initState() {
@@ -42,16 +38,14 @@ class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHi
   void checkPresentAbsentDetailBySubject() {
     if (fields != null && fields?.lectureIds != null) {
       for (int i = 0; i < fields!.lectureIds!.length; i++) {
-        if(fields!.semesterByStudent![i] == fields?.semester) {
+        if (fields!.semesterByStudent![i] == fields?.semester) {
           if (fields!.presentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
-            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
-                subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
+            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i], subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
             viewAttendance.present_lectures = 1;
             viewAttendance.total_lectures += 1;
             studentList.add(viewAttendance);
           } else if (fields!.absentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
-            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
-                subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
+            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i], subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
             viewAttendance.absent_lectures = 1;
             viewAttendance.total_lectures += 1;
             studentList.add(viewAttendance);
@@ -69,7 +63,7 @@ class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHi
       totalLectures = total_lecture;
       totalPresentLectures = present_lecture;
       totalAbsentLectures = absent_lecture;
-    //  totalPresentPercentage = ((present_lecture * 100) / total_lecture);
+      //  totalPresentPercentage = ((present_lecture * 100) / total_lecture);
     });
   }
 
@@ -77,7 +71,7 @@ class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHi
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_viewothers_attendence),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_viewothers_attendance),
       body: Stack(children: [
         Column(
           children: [
@@ -101,7 +95,13 @@ class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHi
                                   padding: const EdgeInsets.all(10),
                                   child: Column(
                                     children: [
-                                      custom_text(text: "${studentList[index].subject_title}", textStyles: primaryTextSemiBold16,maxLines: 3,topValue: 0,bottomValue: 0,),
+                                      custom_text(
+                                        text: "${studentList[index].subject_title}",
+                                        textStyles: primaryTextSemiBold16,
+                                        maxLines: 3,
+                                        topValue: 0,
+                                        bottomValue: 0,
+                                      ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -125,7 +125,6 @@ class _StudentAttendanceHistoryMoreDetailState extends State<StudentAttendanceHi
                                               ),
                                             ),
                                           )
-
                                         ],
                                       ),
                                     ],

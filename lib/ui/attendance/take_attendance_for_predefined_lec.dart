@@ -562,7 +562,7 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppWidgets.appBarWithoutBack(strings_name.str_take_attendence),
+          appBar: AppWidgets.appBarWithoutBack(strings_name.str_take_attendance),
           body: isLoading
               ? const Center(
                   child: CircularProgressIndicator(

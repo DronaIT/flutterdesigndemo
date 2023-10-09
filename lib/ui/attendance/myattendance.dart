@@ -332,7 +332,7 @@ class _MyAttendanceState extends State<MyAttendance> {
               bottom: Radius.circular(14),
             ),
           ),
-          title: Text(enrollmentNo.isNotEmpty ? strings_name.str_attendence : strings_name.str_viewself_attendence),
+          title: Text(enrollmentNo.isNotEmpty ? strings_name.str_attendance : strings_name.str_viewself_attendance),
           actions: <Widget>[
             Container(
               margin: const EdgeInsets.only(right: 10),

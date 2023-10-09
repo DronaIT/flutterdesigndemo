@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
-import 'package:flutterdesigndemo/ui/student_history/student_attendece_past_history.dart';
-import 'package:flutterdesigndemo/ui/student_history/student_attendence_history.dart';
-import 'package:flutterdesigndemo/ui/student_history/student_attendence_history_moredetail.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_attendance_past_history.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_attendance_history.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_attendance_history_moredetail.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_placement_history.dart';
 import 'package:flutterdesigndemo/ui/student_history/view_resume_placement.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -214,7 +214,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       leftValue: 10,
                     ),
                     custom_text(
-                      text: "${"${strings_name.str_total_attendence}: " + totalPresentPercentage}%",
+                      text: "${"${strings_name.str_total_attendance}: " + totalPresentPercentage}%",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       topValue: 10,
@@ -234,7 +234,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
                           child: custom_text(
-                            text: strings_name.str_attendence,
+                            text: strings_name.str_attendance,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,
                             topValue: 0,
@@ -257,7 +257,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
                           child: custom_text(
-                            text: strings_name.str_viewothers_attendence,
+                            text: strings_name.str_viewothers_attendance,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,
                             topValue: 0,

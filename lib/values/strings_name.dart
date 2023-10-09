@@ -215,13 +215,13 @@ class strings_name {
   static const String str_subject_detail = "Subject detail";
   static const String str_spe_detail = "Specialization detail";
 
-  static const String str_attendence = "Attendance Summary";
+  static const String str_attendance = "Attendance Summary";
 
-  static const String str_take_attendence = "Take Attendance";
-  static const String str_viewothers_attendence = "Attendance History";
-  static const String str_viewself_attendence = "My Attendance";
-  static const String str_attendence_reports = "Attendance Reports";
-  static const String str_attendence_report = "Attendance Report";
+  static const String str_take_attendance = "Take Attendance";
+  static const String str_viewothers_attendance = "Attendance History";
+  static const String str_viewself_attendance = "My Attendance";
+  static const String str_attendance_reports = "Attendance Reports";
+  static const String str_attendance_report = "Attendance Report";
 
   static const String str_semester = "Semester";
   static const String str_division = "Division";
@@ -230,7 +230,7 @@ class strings_name {
   static const String str_total_lectures = "Total lectures";
   static const String str_total_p_lectures = "Total present lectures";
   static const String str_total_a_lectures = "Total absent lectures";
-  static const String str_total_attendence = "Total Attendence";
+  static const String str_total_attendance = "Total Attendance";
 
   static const String str_get_students = "Get Students";
   static const String str_students = "Students";
@@ -257,7 +257,7 @@ class strings_name {
   static const String str_taken_by = "Taken by";
   static const String str_by_semester = "Semester";
   static const String str_by_subject = "Subject";
-  static const String str_attendence_his_detail = "Attendance history detail";
+  static const String str_attendance_his_detail = "Attendance history detail";
 
   static const String str_submit_attendance = "Submit Attendance";
   static const String str_err_submit_attendance = "Please select attendance for all the students";

@@ -28,7 +28,7 @@ import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
-import '../attendence/attendance_student_list.dart';
+import '../attendance/attendance_student_list.dart';
 import 'add_edit_time_table.dart';
 
 class TimeTableList extends StatefulWidget {

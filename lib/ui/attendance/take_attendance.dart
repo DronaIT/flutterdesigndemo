@@ -14,7 +14,7 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_student_list.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_student_list.dart';
 
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -113,7 +113,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_take_attendence),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_take_attendance),
       body: Stack(children: [
         SingleChildScrollView(
           child: Container(

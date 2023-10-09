@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -25,7 +26,6 @@ import '../utils/utils.dart';
 import 'authentication/login.dart';
 import 'home.dart';
 import 'welcome.dart';
-import 'dart:io' show Platform;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -65,7 +65,7 @@ class StartState extends State<SplashScreen> {
   //isLogin=2 employee login
   //isLogin=3 organization login
   void initialization() async {
-    if(!kIsWeb) {
+    if (!kIsWeb) {
       await checkAppUpdate();
       if (updateType == 1) {
         showAlertDialog(context, "New update available.", false);
@@ -101,22 +101,13 @@ class StartState extends State<SplashScreen> {
         var data = await apiRepository.loginApi(query);
         if (data.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
-          if(data.records!.first.fields!.token == null){
+          if (data.records!.first.fields!.token == null) {
             redirectToLogin();
-/*
-            Map<String, dynamic> query = {
-              "token":deviceId
-            };
-            await apiRepository.addToken(query,data.records!.first.id!);
+          } else if (data.records!.first.fields!.token == deviceId) {
             await PreferenceUtils.setLoginData(data.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
             Get.offAll(const Home());
-*/
-          } else if(data.records!.first.fields!.token == deviceId){
-            await PreferenceUtils.setLoginData(data.records!.first.fields!);
-            await PreferenceUtils.setLoginRecordId(data.records!.first.id!);
-            Get.offAll(const Home());
-          }else{
+          } else {
             redirectToLogin();
           }
         } else {
@@ -133,22 +124,13 @@ class StartState extends State<SplashScreen> {
         var dataEmployee = await apiRepository.loginEmployeeApi(query);
         if (dataEmployee.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
-          if(dataEmployee.records!.first.fields!.token == null){
+          if (dataEmployee.records!.first.fields!.token == null) {
             redirectToLogin();
-/*
-            Map<String, dynamic> query = {
-              "token":deviceId
-            };
-            await apiRepository.addTokenEmployee(query,dataEmployee.records!.first.id!);
+          } else if (dataEmployee.records!.first.fields!.token == deviceId) {
             await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
             Get.offAll(const Home());
-*/
-          } else if( dataEmployee.records!.first.fields!.token == deviceId){
-            await PreferenceUtils.setLoginDataEmployee(dataEmployee.records!.first.fields!);
-            await PreferenceUtils.setLoginRecordId(dataEmployee.records!.first.id!);
-            Get.offAll(const Home());
-          }else{
+          } else {
             redirectToLogin();
           }
         } else {
@@ -165,13 +147,13 @@ class StartState extends State<SplashScreen> {
         var dataOrganization = await apiRepository.getCompanyDetailApi(query);
         if (dataOrganization.records!.isNotEmpty) {
           String? deviceId = await Utils.getId();
-          if(dataOrganization.records!.first.fields!.token == null){
+          if (dataOrganization.records!.first.fields!.token == null) {
             redirectToLogin();
-          } else if( dataOrganization.records!.first.fields!.token == deviceId){
+          } else if (dataOrganization.records!.first.fields!.token == deviceId) {
             await PreferenceUtils.setLoginDataOrganization(dataOrganization.records!.first.fields!);
             await PreferenceUtils.setLoginRecordId(dataOrganization.records!.first.id!);
             Get.offAll(const Home());
-          }else{
+          } else {
             redirectToLogin();
           }
         } else {
@@ -190,20 +172,17 @@ class StartState extends State<SplashScreen> {
   }
 
   initScreen(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
-        child: Container(
-          color: Colors.white,
-          alignment: Alignment.center,
-          child: AppImage.load(AppImage.ic_launcher, width: 220.w, height: 220.h),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Container(
+            color: Colors.white,
+            alignment: Alignment.center,
+            child: AppImage.load(AppImage.ic_launcher, width: 220.w, height: 220.h),
+          ),
         ),
       ),
     );
@@ -214,26 +193,17 @@ class StartState extends State<SplashScreen> {
       roleResponse = await apiRepository.getRolesApi();
       if (roleResponse.records!.isNotEmpty) {
         PreferenceUtils.setRoleList(roleResponse);
-        print("Role ${PreferenceUtils
-            .getRoleList()
-            .records!
-            .length}");
+        print("Role ${PreferenceUtils.getRoleList().records!.length}");
       }
       hubResponse = await apiRepository.getHubApi();
       if (hubResponse.records!.isNotEmpty) {
         PreferenceUtils.setHubList(hubResponse);
-        print("Hub ${PreferenceUtils
-            .getHubList()
-            .records!
-            .length}");
+        print("Hub ${PreferenceUtils.getHubList().records!.length}");
       }
       specializationResponse = await apiRepository.getSpecializationApi();
       if (specializationResponse.records!.isNotEmpty) {
         PreferenceUtils.setSpecializationList(specializationResponse);
-        print("Specialization ${PreferenceUtils
-            .getSpecializationList()
-            .records!
-            .length}");
+        print("Specialization ${PreferenceUtils.getSpecializationList().records!.length}");
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -275,36 +245,42 @@ class StartState extends State<SplashScreen> {
   void showAlertDialog(BuildContext context, String message, bool isForced) {
     showDialog(
       context: context,
+      barrierDismissible: false,
+      barrierLabel: "",
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text(message, style: const TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.normal, fontFamily: 'Roboto')),
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          actions: <Widget>[
-            Visibility(
-              visible: !isForced,
-              child: TextButton(
-                child: const Text(strings_name.str_cancle, style: blackTextSemiBold14),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  await getRecords();
-                  if (isLogin == 1 || isLogin == 2) {
-                    doLogin();
-                  } else {
-                    Get.to(const Welcome());
-                  }
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            content: Text(message, style: const TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.normal, fontFamily: 'Roboto')),
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            actions: <Widget>[
+              Visibility(
+                  visible: !isForced,
+                  child: TextButton(
+                    child: const Text(strings_name.str_cancle, style: blackTextSemiBold14),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await getRecords();
+                      if (isLogin == 1 || isLogin == 2) {
+                        doLogin();
+                      } else {
+                        Get.to(const Welcome());
+                      }
+                    },
+                  )),
+              TextButton(
+                child: const Text(
+                  strings_name.str_update,
+                  style: primryTextSemiBold14,
+                ),
+                onPressed: () {
+                  // Navigator.pop(context);
+                  StoreRedirect.redirect(androidAppId: "com.dronafoundations", iOSAppId: "6446907709");
                 },
               )
-            ),
-            TextButton(
-              child: const Text(
-                strings_name.str_update,
-                style: primryTextSemiBold14,
-              ),
-              onPressed: () {
-                // Navigator.pop(context);
-                StoreRedirect.redirect(androidAppId: "com.dronafoundations", iOSAppId: "6446907709");},)
-          ],
+            ],
+          ),
         );
       },
     );

@@ -10,7 +10,7 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
