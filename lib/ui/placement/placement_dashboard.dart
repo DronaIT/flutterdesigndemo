@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
@@ -13,11 +14,10 @@ import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/upload_documents_placement.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
-import 'package:flutterdesigndemo/utils/utils.dart';
-import 'package:flutterdesigndemo/values/strings_name.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
+import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
+import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
@@ -55,7 +55,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     super.initState();
     if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned.toString() == "1") {
       isBanned = true;
-    } else if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
+    } else if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 && PreferenceUtils.getLoginData().is_placed_now == "1") {
       Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
     } else {
       getPermission();

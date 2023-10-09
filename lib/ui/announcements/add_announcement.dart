@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -14,7 +15,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_edittext.dart';
 import '../../customwidget/custom_text.dart';
@@ -33,15 +33,14 @@ import '../../values/text_styles.dart';
 class AddAnnouncement extends StatefulWidget {
   final BaseApiResponseWithSerializable<AnnouncementResponse>? announcementData;
   final bool isFromDetailScreen;
+
   const AddAnnouncement({super.key, this.announcementData, this.isFromDetailScreen = false});
 
   @override
   State<AddAnnouncement> createState() => _AddAnnouncementState();
 }
 
-class _AddAnnouncementState extends State<AddAnnouncement>
-    with SingleTickerProviderStateMixin {
-
+class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProviderStateMixin {
   bool isLoading = false;
   bool isForEveryOne = false;
   bool isForAllStudent = false;
@@ -64,7 +63,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
 
   BaseApiResponseWithSerializable<SpecializationResponse>? speResponse;
   String speValue = "";
-  List<BaseApiResponseWithSerializable<SpecializationResponse>>?speResponseArray = [];
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? speResponseArray = [];
 
   List<String> selectedHubIds = [];
   List<String> selectedSpecializationIds = [];
@@ -108,7 +107,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
     super.dispose();
   }
 
-  init(){
+  init() {
     hubResponseArray = PreferenceUtils.getHubList().records;
     speResponseArray = PreferenceUtils.getSpecializationList().records;
     var isLogin = PreferenceUtils.getIsLogin();
@@ -122,8 +121,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
               isAccessible = true;
               break;
             }
-            if (loginData.hubIdFromHubIds?.first ==
-                hubResponseArray![i].fields?.hubId) {
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
               isAccessible = true;
               break;
             }
@@ -135,8 +133,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
         }
       } else {
         for (var i = 0; i < hubResponseArray!.length; i++) {
-          if (loginData.hubIdFromHubIds?.first !=
-              hubResponseArray![i].fields?.hubId) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
             hubResponseArray?.removeAt(i);
             i--;
           }
@@ -147,11 +144,8 @@ class _AddAnnouncementState extends State<AddAnnouncement>
     if (announcementData != null) {
       setData();
     }
-    tabController = TabController(
-        length: 2, vsync: this, initialIndex: isForEmployee ? 1 : 0);
-    cloudinary = CloudinaryPublic(
-        TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET,
-        cache: false);
+    tabController = TabController(length: 2, vsync: this, initialIndex: isForEmployee ? 1 : 0);
+    cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
   }
 
   setData() {
@@ -240,34 +234,34 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       selectedDivisions = [];
       isForAllEmployee = false;
       isForAllStudent = false;
-      for(var data in hubResponseArray??[]){
+      for (var data in hubResponseArray ?? []) {
         data.fields?.selected = false;
       }
-      for(var data in speResponseArray??[]){
+      for (var data in speResponseArray ?? []) {
         data.fields?.selected = false;
       }
-      for(var data in semesterResponseArray){
+      for (var data in semesterResponseArray) {
         data.isSelected = false;
       }
-      for(var data in divisionResponseArray){
+      for (var data in divisionResponseArray) {
         data.isSelected = false;
       }
     });
   }
 
   _pickAttachment() async {
-    if(kIsWeb){
+    if (kIsWeb) {
       final List<XFile> tmpFiles = await openFiles();
-      if(tmpFiles.isNotEmpty){
+      if (tmpFiles.isNotEmpty) {
         setState(() {
           files.addAll(tmpFiles);
         });
       }
       debugPrint('../ files ${files[0].path}');
-    }else {
+    } else {
       FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: true);
       setState(() {
-        attachmentFiles.addAll(result?.files??[]);
+        attachmentFiles.addAll(result?.files ?? []);
       });
     }
   }
@@ -283,8 +277,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       Utils.showSnackBar(context, strings_name.str_empty_announcement_title);
     } else if (announcementDesController.text.trim().isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_announcement_desc);
-    }
-    else if (isForEveryOne || isForAllStudent || isForAllEmployee) {
+    } else if (isForEveryOne || isForAllStudent || isForAllEmployee) {
       addAnnouncementApiCall();
     } else {
       for (var data in hubResponseArray!) {
@@ -307,21 +300,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
           selectedDivisions.add(data.name.toString());
         }
       }
-      // if (selectedHubIds.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_campus);
-      // } else if (selectedSpecializationIds.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_specializations);
-      // } else if (selectedSemesters.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_semester);
-      // } else if (selectedDivisions.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_class);
-      // } else {
-      //   addAnnouncementApiCall();
-      // }
-      if (selectedHubIds.isEmpty &&
-          selectedSpecializationIds.isEmpty &&
-          selectedSemesters.isEmpty &&
-          selectedDivisions.isEmpty) {
+      if (selectedHubIds.isEmpty && selectedSpecializationIds.isEmpty && selectedSemesters.isEmpty && selectedDivisions.isEmpty) {
         Utils.showSnackBar(context, strings_name.str_empty_see_announcement);
       } else {
         addAnnouncementApiCall();
@@ -330,7 +309,6 @@ class _AddAnnouncementState extends State<AddAnnouncement>
   }
 
   addAnnouncementApiCall() async {
-
     setState(() {
       isLoading = true;
     });
@@ -345,42 +323,31 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       }
 
       CloudinaryResponse imageCloudinaryResponse = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_image!.path,
-            resourceType: CloudinaryResourceType.Auto,
-            folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT),
+        CloudinaryFile.fromFile(_image!.path, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT),
       );
 
       List<CloudinaryResponse> attachmentResultCloudinaryResponse = [];
       List<Attachment>? attachmentResultCloudinary = [];
 
-      if(!kIsWeb) {
+      if (!kIsWeb) {
         if (attachmentFiles.isNotEmpty ?? false) {
           attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
             for (var data in attachmentFiles)
-            // CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
-              CloudinaryFile.fromFile(
-                  data.path ?? '', resourceType: CloudinaryResourceType.Auto,
-                  folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+              // CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+              CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
           ]);
 
           for (var data in attachmentResultCloudinaryResponse) {
-            attachmentResultCloudinary
-                .add(Attachment(url: data.secureUrl.toString()));
+            attachmentResultCloudinary.add(Attachment(url: data.secureUrl.toString()));
           }
         }
-      }else {
+      } else {
         if (files.isNotEmpty ?? false) {
           debugPrint('../ files ${files[0].path}');
-          attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
-            for (var data in files)
-              CloudinaryFile.fromFile(
-                  data.path ?? '', resourceType: CloudinaryResourceType.Auto,
-                  folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
-          ]);
+          attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([for (var data in files) CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)]);
 
           for (var data in attachmentResultCloudinaryResponse) {
-            attachmentResultCloudinary
-                .add(Attachment(url: data.secureUrl.toString()));
+            attachmentResultCloudinary.add(Attachment(url: data.secureUrl.toString()));
           }
         }
       }
@@ -443,8 +410,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       Utils.showSnackBar(context, strings_name.str_empty_announcement_title);
     } else if (announcementDesController.text.trim().isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_announcement_desc);
-    }
-    else if (isForEveryOne || isForAllStudent || isForAllEmployee) {
+    } else if (isForEveryOne || isForAllStudent || isForAllEmployee) {
       updateAnnouncementApiCall();
     } else {
       for (var data in hubResponseArray!) {
@@ -467,21 +433,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
           selectedDivisions.add(data.name.toString());
         }
       }
-      // if (selectedHubIds.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_campus);
-      // } else if (selectedSpecializationIds.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_specializations);
-      // } else if (selectedSemesters.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_semester);
-      // } else if (selectedDivisions.isEmpty) {
-      //   Utils.showSnackBar(context, strings_name.str_empty_class);
-      // } else {
-      //   updateAnnouncementApiCall();
-      // }
-      if (selectedHubIds.isEmpty &&
-          selectedSpecializationIds.isEmpty &&
-          selectedSemesters.isEmpty &&
-          selectedDivisions.isEmpty) {
+      if (selectedHubIds.isEmpty && selectedSpecializationIds.isEmpty && selectedSemesters.isEmpty && selectedDivisions.isEmpty) {
         Utils.showSnackBar(context, strings_name.str_empty_see_announcement);
       } else {
         updateAnnouncementApiCall();
@@ -504,11 +456,8 @@ class _AddAnnouncementState extends State<AddAnnouncement>
 
       String image = announcementData?.fields?.image ?? '';
       if (_image?.path != null) {
-        CloudinaryResponse imageCloudinaryResponse =
-            await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(_image!.path,
-              resourceType: CloudinaryResourceType.Auto,
-              folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT),
+        CloudinaryResponse imageCloudinaryResponse = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(_image!.path, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT),
         );
         image = imageCloudinaryResponse.secureUrl;
       }
@@ -519,38 +468,25 @@ class _AddAnnouncementState extends State<AddAnnouncement>
         attachmentResultCloudinary.add(UpdateAttachment(url: data.url));
       }
 
-      if(!kIsWeb){
-      if (attachmentFiles.isNotEmpty ?? false) {
-        List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
-          for (var data in attachmentFiles)
-            CloudinaryFile.fromFile(data.path ?? '',
-                resourceType: CloudinaryResourceType.Auto,
-                folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
-        ]);
-        for (var data in attachmentResultCloudinaryResponse) {
-          attachmentResultCloudinary.add(UpdateAttachment(url: data.secureUrl.toString()));
+      if (!kIsWeb) {
+        if (attachmentFiles.isNotEmpty ?? false) {
+          List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([for (var data in attachmentFiles) CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)]);
+          for (var data in attachmentResultCloudinaryResponse) {
+            attachmentResultCloudinary.add(UpdateAttachment(url: data.secureUrl.toString()));
+          }
         }
-      }}else {
+      } else {
         if (files.isNotEmpty ?? false) {
           debugPrint('../ files ${files[0].path}');
-          List<
-              CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary
-              .uploadFiles([
-            for (var data in files)
-              CloudinaryFile.fromFile(data.path ?? '',
-                  resourceType: CloudinaryResourceType.Auto,
-                  folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
-          ]);
+          List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([for (var data in files) CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)]);
           for (var data in attachmentResultCloudinaryResponse) {
-            attachmentResultCloudinary.add(
-                UpdateAttachment(url: data.secureUrl.toString()));
+            attachmentResultCloudinary.add(UpdateAttachment(url: data.secureUrl.toString()));
           }
         }
       }
 
       String updatedBy = PreferenceUtils.getLoginRecordId();
-      UpdateAnnouncementRequest updateAnnouncementRequest =
-          UpdateAnnouncementRequest(records: [
+      UpdateAnnouncementRequest updateAnnouncementRequest = UpdateAnnouncementRequest(records: [
         UpdateRecord(
             id: announcementData?.id ?? '',
             fields: UpdateFields(
@@ -624,9 +560,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: AppWidgets.appBarWithoutBack(widget.announcementData != null
-              ? strings_name.edit_announcements
-              : strings_name.add_announcements),
+          appBar: AppWidgets.appBarWithoutBack(widget.announcementData != null ? strings_name.edit_announcements : strings_name.add_announcements),
           floatingActionButton: isLoading
               ? const Padding(
                   padding: EdgeInsets.only(bottom: 12.0),
@@ -642,9 +576,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                       addAnnouncement();
                     }
                   },
-                  text: widget.announcementData != null
-                      ? strings_name.update_announcements
-                      : strings_name.add_announcements,
+                  text: widget.announcementData != null ? strings_name.update_announcements : strings_name.add_announcements,
                 ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           body: ListView(
@@ -696,8 +628,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   : announcementData?.fields?.image != null
                       ? GestureDetector(
                           onTap: () {
-                            ImagePickerDialog().openDialog(context,
-                                (file) async {
+                            ImagePickerDialog().openDialog(context, (file) async {
                               if (file != null) {
                                 setState(() {
                                   _image = file;
@@ -712,8 +643,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                               borderRadius: BorderRadius.circular(10.w),
                               image: DecorationImage(
                                   image: NetworkImage(
-                                    widget.announcementData?.fields?.image ??
-                                        '',
+                                    widget.announcementData?.fields?.image ?? '',
                                   ),
                                   fit: BoxFit.cover,
                                   opacity: 0.5),
@@ -739,8 +669,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                         )
                       : GestureDetector(
                           onTap: () {
-                            ImagePickerDialog().openDialog(context,
-                                (file) async {
+                            ImagePickerDialog().openDialog(context, (file) async {
                               if (file != null) {
                                 setState(() {
                                   _image = file;
@@ -750,10 +679,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 40.h),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: colors_name.textColorGreyLight),
-                                borderRadius: BorderRadius.circular(15.w)),
+                            decoration: BoxDecoration(border: Border.all(color: colors_name.textColorGreyLight), borderRadius: BorderRadius.circular(15.w)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -805,9 +731,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 20.h),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: colors_name.textColorGreyLight),
-                      borderRadius: BorderRadius.circular(15.w)),
+                  decoration: BoxDecoration(border: Border.all(color: colors_name.textColorGreyLight), borderRadius: BorderRadius.circular(15.w)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -845,11 +769,9 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                         ),
                         InkWell(
                           onTap: () async {
-                            await launchUrl(Uri.parse(data?.url ?? ''),
-                                mode: LaunchMode.externalApplication);
+                            await launchUrl(Uri.parse(data?.url ?? ''), mode: LaunchMode.externalApplication);
                           },
-                          child: const Icon(Icons.download,
-                              color: colors_name.colorPrimary),
+                          child: const Icon(Icons.download, color: colors_name.colorPrimary),
                         )
                       ],
                     ),
@@ -901,13 +823,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
               SizedBox(
                 height: 20.h,
               ),
-              custom_text(
-                  text: strings_name.who_can_see,
-                  textStyles: greyDarkTextStyle12,
-                  topValue: 5,
-                  maxLines: 1000,
-                  bottomValue: 5,
-                  leftValue: 5), //Text
+              custom_text(text: strings_name.who_can_see, textStyles: greyDarkTextStyle12, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5), //Text
               Row(
                 children: <Widget>[
                   Checkbox(
@@ -925,19 +841,15 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                         isForEveryOne = !isForEveryOne;
                       });
                     },
-                    child: custom_text(
-                        text: strings_name.everyone,
-                        textStyles: blackTextSemiBold14,
-                        topValue: 5,
-                        maxLines: 1000,
-                        bottomValue: 5,
-                        leftValue: 5),
+                    child: custom_text(text: strings_name.everyone, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
                   ), //Text
                 ],
               ),
               Visibility(
                   visible: isForEveryOne,
-                  child: SizedBox(height: 70.h,)),
+                  child: SizedBox(
+                    height: 70.h,
+                  )),
               Visibility(
                 visible: !isForEveryOne,
                 child: TabBar(
@@ -997,13 +909,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   isForAllEmployee = !isForAllEmployee;
                 });
               },
-              child: custom_text(
-                  text: strings_name.all_employee,
-                  textStyles: blackTextSemiBold14,
-                  topValue: 5,
-                  maxLines: 1000,
-                  bottomValue: 5,
-                  leftValue: 5),
+              child: custom_text(text: strings_name.all_employee, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
             ), //Text
           ],
         ),
@@ -1012,8 +918,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 2.h),
             child: ExpansionTileGroup(
-              onExpansionItemChanged: (int index, bool isOpen) {
-              },
+              onExpansionItemChanged: (int index, bool isOpen) {},
               spaceBetweenItem: 10,
               toggleType: ToggleType.expandOnlyCurrent,
               children: [
@@ -1021,76 +926,21 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   title: strings_name.campus,
                   widget: ListView.builder(
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: hubResponseArray?.length ?? 0,
                       itemBuilder: (context, index) {
                         var data = hubResponseArray![index];
-                        return
-                          CustomCheckListTile(
-                            title: data.fields?.hubName ?? "",
-                            onChanged: (bool? value) {
-                              setState(() {
-                                data.fields?.selected = value!;
-                              });
-                            },
-                            isSelected: data.fields!.selected,
-                          );
+                        return CustomCheckListTile(
+                          title: data.fields?.hubName ?? "",
+                          onChanged: (bool? value) {
+                            setState(() {
+                              data.fields?.selected = value!;
+                            });
+                          },
+                          isSelected: data.fields!.selected,
+                        );
                       }),
                 ),
-                // customExpansionTileItem(
-                //   title: strings_name.str_specializations,
-                //   widget: ListView.builder(
-                //       shrinkWrap: true,
-                //       itemCount: speResponseArray?.length ?? 0,
-                //       itemBuilder: (context, index) {
-                //         var data = speResponseArray![index];
-                //         return CheckboxListTile(
-                //           controlAffinity: ListTileControlAffinity.leading,
-                //           title: Text(data.fields?.specializationName ?? ''),
-                //           value: data.fields?.selected ?? false,
-                //           onChanged: (bool? value) {
-                //             setState(() {
-                //               data.fields?.selected = value!;
-                //             });
-                //           },
-                //         );
-                //       }),
-                // ),
-                // customExpansionTileItem(
-                //     title: strings_name.str_semester,
-                //     widget: ListView.builder(
-                //         shrinkWrap: true,
-                //         itemCount: semesterResponseArray.length,
-                //         itemBuilder: (context, index) {
-                //           var data = semesterResponseArray[index];
-                //           return CheckboxListTile(
-                //             controlAffinity: ListTileControlAffinity.leading,
-                //             title: Text('Semester ${data.name.toString()}'),
-                //             value: data.isSelected,
-                //             onChanged: (bool? value) {
-                //               setState(() {
-                //                 data.isSelected = value!;
-                //               });
-                //             },
-                //           );
-                //         })),
-                // customExpansionTileItem(
-                //     title: strings_name.str_class,
-                //     widget: ListView.builder(
-                //         shrinkWrap: true,
-                //         itemCount: divisionResponseArray.length,
-                //         itemBuilder: (context, index) {
-                //           var data = divisionResponseArray[index];
-                //           return CheckboxListTile(
-                //             controlAffinity: ListTileControlAffinity.leading,
-                //             title: Text(data.name.toString()),
-                //             value: data.isSelected,
-                //             onChanged: (bool? value) {
-                //               setState(() {
-                //                 data.isSelected = value!;
-                //               });
-                //             },
-                //           );
-                //         })),
               ],
             ),
           ),
@@ -1120,13 +970,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   isForAllStudent = !isForAllStudent;
                 });
               },
-              child: custom_text(
-                  text: strings_name.all_students,
-                  textStyles: blackTextSemiBold14,
-                  topValue: 5,
-                  maxLines: 1000,
-                  bottomValue: 5,
-                  leftValue: 5),
+              child: custom_text(text: strings_name.all_students, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
             ), //Text
           ],
         ),
@@ -1143,6 +987,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   title: strings_name.campus,
                   widget: ListView.builder(
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: hubResponseArray?.length ?? 0,
                       itemBuilder: (context, index) {
                         var data = hubResponseArray![index];
@@ -1161,6 +1006,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                   title: strings_name.str_specializations,
                   widget: ListView.builder(
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: speResponseArray?.length ?? 0,
                       itemBuilder: (context, index) {
                         var data = speResponseArray![index];
@@ -1179,6 +1025,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                     title: strings_name.str_semester,
                     widget: ListView.builder(
                         shrinkWrap: true,
+                        primary: false,
                         itemCount: semesterResponseArray.length,
                         itemBuilder: (context, index) {
                           var data = semesterResponseArray[index];
@@ -1197,6 +1044,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
                     listHeight: 160.h,
                     widget: ListView.builder(
                         shrinkWrap: true,
+                        primary: false,
                         itemCount: divisionResponseArray.length,
                         itemBuilder: (context, index) {
                           var data = divisionResponseArray[index];
@@ -1218,8 +1066,7 @@ class _AddAnnouncementState extends State<AddAnnouncement>
     );
   }
 
-  ExpansionTileItem customExpansionTileItem(
-      {required String title, required Widget widget, double? listHeight}) {
+  ExpansionTileItem customExpansionTileItem({required String title, required Widget widget, double? listHeight}) {
     return ExpansionTileItem(
       childrenPadding: EdgeInsets.zero,
       onExpansionChanged: (bool isExpanded) {
@@ -1243,27 +1090,20 @@ class _AddAnnouncementState extends State<AddAnnouncement>
       ],
     );
   }
-
 }
 
 class CustomCheckListTile extends StatelessWidget {
   final String title;
   final bool isSelected;
   final void Function(bool?)? onChanged;
-  const CustomCheckListTile(
-      {super.key,
-      required this.title,
-      required this.onChanged,
-      required this.isSelected});
+
+  const CustomCheckListTile({super.key, required this.title, required this.onChanged, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Checkbox(
-            visualDensity: VisualDensity.compact,
-            value: isSelected,
-            onChanged: onChanged),
+        Checkbox(visualDensity: VisualDensity.compact, value: isSelected, onChanged: onChanged),
         Expanded(
             child: GestureDetector(
           onTap: () {

@@ -20,6 +20,8 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
+    var lWidth = MediaQuery.of(context).size.width - 20.h;
+    var lHeight = MediaQuery.of(context).size.height * 0.30;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -41,7 +43,7 @@ class _WelcomeState extends State<Welcome> {
                   child: AppWidgets.spannableText(strings_name.str_welcome_detail, strings_name.str_drona, primaryTextSemiBold16),
                 ),
                 SizedBox(height: 40.h),
-                Lottie.asset(AppImage.ic_welcome),
+                Lottie.asset(AppImage.ic_welcome, width: lWidth, height: lHeight),
                 SizedBox(height: 40.h),
                 CustomButton(
                     text: strings_name.str_get_started,

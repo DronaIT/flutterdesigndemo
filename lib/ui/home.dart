@@ -411,8 +411,12 @@ class _HomeState extends State<Home> {
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
                                               Get.to(const Attendance());
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
-                                              if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
-                                                Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
+                                              if (PreferenceUtils.getIsLogin() == 1) {
+                                                if (PreferenceUtils.getLoginData().is_banned != 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 && PreferenceUtils.getLoginData().is_placed_now == "1") {
+                                                  Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
+                                                } else {
+                                                  Get.to(const PlacementDashboard());
+                                                }
                                               } else if (PreferenceUtils.getIsLogin() == 3) {
                                                 Get.to(const PlacementDashboard());
                                               } else {

@@ -128,6 +128,13 @@ const blackTextSemiBold16 = TextStyle(
   color: Colors.black,
 );
 
+const linkTextSemiBold16 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.blue,
+  decoration: TextDecoration.underline,
+);
+
 const coffeeTextSemiBold16 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w600,

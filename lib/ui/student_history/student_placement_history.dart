@@ -73,7 +73,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                         custom_text(
                                           text: "Job description: ${fields!.job_description_from_applied_job?[index] ?? " "}",
                                           textStyles: primryTextSemiBold13,
-                                          maxLines: 2,
+                                          maxLines: 5,
                                           topValue: 5,
                                           bottomValue: 0,
                                           leftValue: 5,
@@ -129,7 +129,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                         custom_text(
                                           text: "Job description: ${fields!.job_description_from_selected_job?[index] ?? " "}",
                                           textStyles: primryTextSemiBold13,
-                                          maxLines: 2,
+                                          maxLines: 5,
                                           topValue: 5,
                                           bottomValue: 0,
                                           leftValue: 5,
@@ -199,7 +199,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                         custom_text(
                                           text: "Placed job description: ${fields!.job_description_from_placed_job?[index] ?? " "}",
                                           textStyles: primryTextSemiBold13,
-                                          maxLines: 2,
+                                          maxLines: 5,
                                           topValue: 5,
                                           bottomValue: 0,
                                           leftValue: 5,
@@ -253,7 +253,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                         custom_text(
                                           text: "Placed job description: ${fields!.job_description_from_rejected_job?[index] ?? " "}",
                                           textStyles: primryTextSemiBold13,
-                                          maxLines: 2,
+                                          maxLines: 5,
                                           topValue: 5,
                                           bottomValue: 0,
                                           leftValue: 5,

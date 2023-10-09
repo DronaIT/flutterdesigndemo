@@ -147,7 +147,7 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
                         );
                       }),
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_placed, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

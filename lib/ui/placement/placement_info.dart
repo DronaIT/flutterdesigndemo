@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
 import 'package:flutterdesigndemo/models/update_job_opportunity.dart';
+import 'package:flutterdesigndemo/ui/placement/leave_internship.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -38,6 +39,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
   String attendanceFileName = "", consentFileName = "";
 
   var cloudinary;
+  bool canEnableResignationPermission = false;
 
   @override
   void initState() {
@@ -47,6 +49,41 @@ class _PlacementInfoState extends State<PlacementInfo> {
       jobRecordId = Get.arguments;
     }
     getRecords();
+    getPermission();
+  }
+
+  Future<void> getPermission() async {
+    setState(() {
+      isVisible = true;
+    });
+    var query = "";
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      query = "AND(FIND('${TableNames.STUDENT_ROLE_ID}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
+    }
+    try {
+      if(isLogin == 1) {
+        var data = await apiRepository.getPermissionsApi(query);
+        if (data.records!.isNotEmpty) {
+          for (var i = 0; i < data.records!.length; i++) {
+            if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ENABLE_RESIGNATION) {
+              canEnableResignationPermission = true;
+            }
+          }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
+        }
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   getRecords() async {
@@ -90,18 +127,29 @@ class _PlacementInfoState extends State<PlacementInfo> {
                               leftValue: 5,
                             ),
                           ),
-                          GestureDetector(
-                            child: Image.asset(
-                              AppImage.ic_resignation,
-                              height: 24,
-                              width: 24,
+                          Visibility(
+                            visible: canEnableResignationPermission,
+                            child: GestureDetector(
+                              child: Image.asset(
+                                AppImage.ic_resignation,
+                                height: 24,
+                                width: 24,
+                              ),
+                              onTap: () {
+                                Get.to(const LeaveInternShip(), arguments: jobOpportunityData.fields?.jobCode)?.then((result) {
+                                  if (result != null && result) {
+                                    Get.back(closeOverlays: true);
+                                  }
+                                });
+                              },
                             ),
-                            onTap: () {},
                           ),
                         ],
                       ),
                       SizedBox(height: 5.h),
                       custom_text(text: "${strings_name.str_company_name} : ${jobOpportunityData.fields?.companyName?.first}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
+                      SizedBox(height: 5.h),
+                      custom_text(text: "${strings_name.str_designation} : ${jobOpportunityData.fields?.jobTitle ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 3, bottomValue: 5, leftValue: 5),
                       SizedBox(height: 5.h),
                       custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.fields?.joiningDate ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
                       SizedBox(height: 5.h),

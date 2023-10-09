@@ -1,3 +1,5 @@
+import 'package:flutterdesigndemo/models/document_response.dart';
+
 class HelpdeskResponses {
   String? ticketId;
   String? notes;
@@ -18,6 +20,7 @@ class HelpdeskResponses {
   List<String>? studentName;
   List<String>? studentHubName;
   List<String>? studentSpecializationName;
+  List<String>? studentMobileNumber;
 
   List<String>? createdByOrganization;
   List<String>? companyName;
@@ -34,38 +37,7 @@ class HelpdeskResponses {
 
   List<String>? status_updated_by;
   List<String>? status_updated_by_employee_name;
-
-  HelpdeskResponses(
-      {this.ticketId,
-        this.notes,
-        this.ticketTypeId,
-        this.status,
-        this.task_importance,
-        this.ticketTitle,
-        this.assignedTo,
-        this.assignedEmployeeName,
-        this.assignedMobileNumber,
-        this.createdByEmployee,
-        this.employeeRoleTitle,
-        this.employeeName,
-        this.employeeMobileNumber,
-        this.createdByStudent,
-        this.studentName,
-        this.studentHubName,
-        this.studentSpecializationName,
-        this.createdByOrganization,
-        this.companyName,
-        this.companyContactNumber,
-        this.createdOn,
-        this.resolutionRemark,
-        this.fieldType,
-        this.deadline,
-        this.required_time,
-        this.actual_time_taken,
-        this.actual_finished_on,
-        this.status_updated_by,
-        this.status_updated_by_employee_name,
-      });
+  List<DocumentResponse>? attachments;
 
   HelpdeskResponses.fromJson(Map<String, dynamic> json) {
     ticketId = json['ticket_id'];
@@ -87,6 +59,7 @@ class HelpdeskResponses {
     studentName = json['student_name']?.cast<String>();
     studentHubName = json['student_hub_name']?.cast<String>();
     studentSpecializationName = json['student_specialization_name']?.cast<String>();
+    studentMobileNumber = json['student_mobile_number']?.cast<String>();
 
     createdByOrganization = json['created_by_organization']?.cast<String>();
     companyName = json['company_name']?.cast<String>();
@@ -102,7 +75,48 @@ class HelpdeskResponses {
 
     status_updated_by = json['status_updated_by']?.cast<String>();
     status_updated_by_employee_name = json['status_updated_by_employee_name']?.cast<String>();
+
+    if (json['attachments'] != null) {
+      attachments = <DocumentResponse>[];
+      json['attachments'].forEach((v) {
+        attachments!.add(new DocumentResponse.fromJson(v));
+      });
+    }
   }
+
+  HelpdeskResponses(
+      {this.ticketId,
+        this.notes,
+        this.ticketTypeId,
+        this.status,
+        this.task_importance,
+        this.ticketTitle,
+        this.assignedTo,
+        this.assignedEmployeeName,
+        this.assignedMobileNumber,
+        this.createdByEmployee,
+        this.employeeRoleTitle,
+        this.employeeName,
+        this.employeeMobileNumber,
+        this.createdByStudent,
+        this.studentName,
+        this.studentHubName,
+        this.studentMobileNumber,
+        this.studentSpecializationName,
+        this.createdByOrganization,
+        this.companyName,
+        this.companyContactNumber,
+        this.createdOn,
+        this.resolutionRemark,
+        this.fieldType,
+        this.deadline,
+        this.required_time,
+        this.actual_time_taken,
+        this.actual_finished_on,
+        this.status_updated_by,
+        this.status_updated_by_employee_name,
+        this.attachments,
+      });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -125,6 +139,7 @@ class HelpdeskResponses {
     data['student_name'] = this.studentName;
     data['student_hub_name'] = this.studentHubName;
     data['student_specialization_name'] = this.studentSpecializationName;
+    data['student_mobile_number'] = this.studentMobileNumber;
 
     data['created_by_organization'] = this.createdByOrganization;
     data['company_name'] = this.companyName;
@@ -141,6 +156,11 @@ class HelpdeskResponses {
 
     data['status_updated_by'] = this.status_updated_by;
     data['status_updated_by_employee_name'] = this.status_updated_by_employee_name;
+
+    if (this.attachments != null) {
+      data['attachments'] = this.attachments!.map((v) => v.toJson()).toList();
+    }
+
     return data;
   }
 }

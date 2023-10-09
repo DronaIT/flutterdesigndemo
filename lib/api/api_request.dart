@@ -67,7 +67,7 @@ class ApiRequest {
       Map<String, String> someMap = {"filterByFormula": loginFormula, if (offset.isNotEmpty) "offset": offset};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
-      final Response response = await dioClient.get(TableNames.TB_STUDENT, queryParameters: someMap, options: Options(headers: header));
+      final Response response = await dioClient.get(TableNames.TBL_STUDENT, queryParameters: someMap, options: Options(headers: header));
       return BaseLoginResponse<LoginFieldsResponse>.fromJson(response.data, (response) => LoginFieldsResponse.fromJson(response));
     } catch (e) {
       rethrow;
@@ -116,7 +116,7 @@ class ApiRequest {
       Map<String, dynamic> someMap = {"fields": loginFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
-      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
       return CreatePasswordResponse.fromJson(response);
     } catch (e) {
       rethrow;
@@ -154,7 +154,7 @@ class ApiRequest {
       Map<String, dynamic> someMap = {"records": createStudentFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
-      final Response response = await dioClient.post(TableNames.TB_STUDENT, options: Options(headers: header), data: jsonEncode(someMap));
+      final Response response = await dioClient.post(TableNames.TBL_STUDENT, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseLoginResponse<CreatePasswordResponse>.fromJson(response.data, (response) => CreatePasswordResponse.fromJson(response));
     } catch (e) {
       rethrow;
@@ -190,7 +190,7 @@ class ApiRequest {
       // Map<String, dynamic> someMap = {"fields": updateFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
-      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(updateFormula));
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(updateFormula));
       return CreatePasswordResponse.fromJson(response);
     } catch (e) {
       rethrow;
@@ -588,7 +588,7 @@ class ApiRequest {
       Map<String, dynamic> someMap = {"fields": loginFormula};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
-      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_STUDENT + "/" + recordId, options: Options(headers: header), data: jsonEncode(someMap));
       return CreatePasswordResponse.fromJson(response);
     } catch (e) {
       rethrow;
@@ -696,7 +696,7 @@ class ApiRequest {
     try {
       Map<String, dynamic> someMap = {"fields": data};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
-      Map<String, dynamic> response = await dioClient.patch(TableNames.TB_STUDENT + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
+      Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_STUDENT + "/" + recordId, data: jsonEncode(someMap), options: Options(headers: header));
       return BaseLoginResponse<LoginFieldsResponse>.fromJson(response, (response) => LoginFieldsResponse.fromJson(response));
     } catch (e) {
       rethrow;

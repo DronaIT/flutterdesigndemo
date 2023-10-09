@@ -1,9 +1,5 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterdesigndemo/values/strings_name.dart';
-
-import '../values/text_styles.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 
 class CustomButton extends StatefulWidget {
   final String text;
@@ -14,14 +10,15 @@ class CustomButton extends StatefulWidget {
   final TextAlign textAlign;
   final Function() click;
 
-  const CustomButton(
-      {required this.text,
-      required this.click,
-      this.fontSize = 20,
-        this.bWidth = 0,
-      this.color = Colors.white,
-      this.textAlign = TextAlign.center,
-      this.fontWeight = FontWeight.w700});
+  const CustomButton({
+    required this.text,
+    required this.click,
+    this.fontSize = 20,
+    this.bWidth = 0,
+    this.color = Colors.white,
+    this.textAlign = TextAlign.center,
+    this.fontWeight = FontWeight.w700,
+  });
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -37,7 +34,7 @@ class _CustomButtonState extends State<CustomButton> {
       child: ElevatedButton(
         onPressed: widget.click,
         style: ElevatedButton.styleFrom(
-          primary:colors_name.colorPrimary,
+          primary: colors_name.colorPrimary,
           padding: const EdgeInsets.all(10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -54,7 +51,6 @@ class _CustomButtonState extends State<CustomButton> {
   }
 }
 
-
 class CustomButtonOutline extends StatefulWidget {
   final String text;
   final double fontSize;
@@ -64,14 +60,7 @@ class CustomButtonOutline extends StatefulWidget {
   final TextAlign textAlign;
   final Function() click;
 
-  const CustomButtonOutline(
-      {super.key, required this.text,
-        required this.click,
-        this.fontSize = 20,
-        this.bWidth = 0,
-        this.color = colors_name.colorPrimary,
-        this.textAlign = TextAlign.center,
-        this.fontWeight = FontWeight.w700});
+  const CustomButtonOutline({super.key, required this.text, required this.click, this.fontSize = 20, this.bWidth = 0, this.color = colors_name.colorPrimary, this.textAlign = TextAlign.center, this.fontWeight = FontWeight.w700});
 
   @override
   State<CustomButtonOutline> createState() => _CustomButtonOutlineState();
@@ -87,7 +76,7 @@ class _CustomButtonOutlineState extends State<CustomButtonOutline> {
       child: ElevatedButton(
         onPressed: widget.click,
         style: ElevatedButton.styleFrom(
-          primary:colors_name.colorWhite,
+          primary: colors_name.colorWhite,
           padding: const EdgeInsets.all(10),
           side: BorderSide(color: colors_name.colorPrimary, width: 2.0),
           shape: RoundedRectangleBorder(
@@ -104,10 +93,3 @@ class _CustomButtonOutlineState extends State<CustomButtonOutline> {
     );
   }
 }
-
-
-
-
-
-
-

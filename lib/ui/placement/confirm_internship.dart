@@ -209,6 +209,7 @@ class _ConfirmInternShipState extends State<ConfirmInternShip> {
         acceptedJobData.add(jobId!);
 
         requestParams[TableNames.CLM_PLACED_JOB] = acceptedJobData;
+        requestParams[TableNames.CLM_IS_PLACED_NOW] = "1";
 
         var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records!.first.id!);
         if (dataUpdate.fields != null) {

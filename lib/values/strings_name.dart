@@ -454,8 +454,9 @@ class strings_name {
   static const String str_not_selected_for_jobs = "Not selected for any internship yet";
   static const String str_accept_offer = "Accept offer";
   static const String str_reject_offer = "Reject offer";
-  static const String str_reject_offer_disclaimer = "Please note that by not accepting this opportunity, you will not get placement support from Drona Foundation for next one semester.";
-  static const String str_banned_from_placement = "You are not allowed to access placement module and you will not get placement support from Drona Foundation for next one semester. Because you have rejected one of the offer.";
+  static const String str_reject_offer_disclaimer = "Please note that by not accepting this opportunity, you will not get placement support from Drona Foundation.";
+  static const String str_banned_from_placement = "You are not allowed to access placement module and you will not get placement support from Drona Foundation. Because you have rejected one of the offer.";
+  static const String str_resignation_disclaimer = "Please note that if you have resigned from the company without informing Drona Foundation Placement Head / Center Head or You have left the company abruptly without service Notice Period / Bond Period then you will be blacklisted from Drona Foundation Placement Module and You are not allowed to access placement module and you will not get placement support from Drona Foundation. Because you are resigning from current position.";
   static const String str_congratulation_for_internship = "Congratulations for\ngetting selected at";
   static const String str_internship_tnc = "I hereby accept the Placement SOP & Terms.";
   static const String str_empty_internship_tnc = "Please accept Placement SOP & Terms";
@@ -477,12 +478,17 @@ class strings_name {
   static const String str_empty_placement_attendance_data = "Please select company consent letter and monthly attendance file.";
 
   static const String str_placement_info_updated = "Placement info updated successfully";
+  static const String str_resignation_sent = "Resignation sent";
   static const String str_joing_date = "Joining date";
-  static const String str_apply_for_leave = "Apply for leave";
+  static const String str_apply_for_leave = "Apply to leave internship";
   static const String str_notice_period_date = "Notice period end date";
+  static const String str_empty_notice_period_date = "Please provide notice period end date";
   static const String str_reason_for_leaving = "Reason for leaving company";
+  static const String str_empty_reason_for_leaving = "Please specify reason for leaving company";
   static const String str_leave_internship = "Leave internship";
   static const String str_resignation_letter = "Resignation letter";
+  static const String str_empty_resignation_letter = "Please provide resignation letter";
+  static const String str_designation = "Designation";
 
   static const String str_terms_privacy_policy = "I hereby accept the Terms & condition and Privacy policy.";
   static const String str_accept_terms = "Please accept Terms & Condition and Privacy Policy";
@@ -669,4 +675,5 @@ class strings_name {
   static const String str_empty_father_name = "Please add father's Full Name";
   static const String str_empty_profile_pic = "Please select profile pic";
   static const String str_details_updated = "Details are already uploaded";
+  static const String str_no_placed = "No one placed here";
 }

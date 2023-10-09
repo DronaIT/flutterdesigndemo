@@ -56,7 +56,7 @@ class TableNames {
   static const ONE_HOUR = "1 Hour";
   static const TWO_HOUR = "2 Hour";
 
-  static const TB_STUDENT = "TBL_STUDENT";
+  static const TBL_STUDENT = "TBL_STUDENT";
   static const TBL_MODULE = "TBL_MODULE";
   static const TBL_ROLE = "TBL_ROLE";
   static const TBL_HUB = "TBL_HUB_CENTER";
@@ -119,6 +119,8 @@ class TableNames {
   static const CLM_PLACED_JOB = "placed_job";
   static const CLM_REJECTED_JOB = "rejected_job";
   static const CLM_BANNED_FROM_PLACEMENT = "is_banned_from_placement";
+  static const CLM_IS_PLACED_NOW = "is_placed_now";
+  static const CLM_HAS_RESIGNED = "has_resigned";
 
   static const CLM_PRESENT_SUBJECT_IDS = "present_subject_id";
   static const CLM_ABSENT_SUBJECT_IDS = "absent_subject_id";
@@ -185,7 +187,8 @@ class TableNames {
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
   static const PERMISSION_ID_COMPLETED_INTERNSHIP = "DP0419";
   static const PERMISSION_ID_UPLOAD_RESUME = "DP0420";
-  static const PERMISSION_ID_PLACED_UNPLACED_STUDENT_LIST = "DP0421";
+  static const PERMISSION_ID_PLACED_UNPLACED_STUDENT_LIST = "DP0422";
+  static const PERMISSION_ID_ENABLE_RESIGNATION = "DP0423";
 
   static const PERMISSION_ID_VIEW_RESUME = "DP0421";
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";

@@ -1,17 +1,20 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_edittext.dart';
@@ -19,7 +22,6 @@ import '../../customwidget/custom_text.dart';
 import '../../models/help_desk_type_response.dart';
 import '../../models/helpdesk_responses.dart';
 import '../../values/text_styles.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 
 class HelpdeskDetail extends StatefulWidget {
   const HelpdeskDetail({Key? key}) : super(key: key);
@@ -120,14 +122,21 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                     children: [
                       custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                       Expanded(
-                        child: custom_text(
-                            text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
-                                ? helpDeskTypeResponse!.studentName![0].toString()
-                                : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
-                            textStyles: blackTextSemiBold16,
-                            leftValue: 5,
-                            maxLines: 2,
-                            topValue: 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (helpDeskTypeResponse!.studentName?.isNotEmpty == true) {
+                              Get.to(const StudentHistory(), arguments: helpDeskTypeResponse!.studentMobileNumber![0]);
+                            }
+                          },
+                          child: custom_text(
+                              text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
+                                  ? helpDeskTypeResponse!.studentName![0].toString()
+                                  : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                              textStyles: helpDeskTypeResponse!.studentName?.isNotEmpty == true ? linkTextSemiBold16 : blackTextSemiBold16,
+                              leftValue: 5,
+                              maxLines: 2,
+                              topValue: 0),
+                        ),
                       ),
                     ],
                   ),
@@ -173,6 +182,16 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                       )
                     ],
                   ),
+                  helpDeskTypeResponse!.attachments != null
+                      ? Row(children: [
+                          custom_text(text: "${strings_name.str_attachments} : ", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 5),
+                          GestureDetector(
+                              onTap: () async {
+                                await launchUrl(Uri.parse(helpDeskTypeResponse!.attachments?.first.url ?? ""), mode: LaunchMode.externalApplication);
+                              },
+                              child: custom_text(text: "Show", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 0)),
+                        ])
+                      : Container(),
                   SizedBox(height: 5.h),
                   Row(
                     children: [

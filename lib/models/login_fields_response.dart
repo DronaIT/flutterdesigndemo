@@ -86,6 +86,8 @@ class LoginFieldsResponse {
   List<Attachment_response>? resume;
   List<Attachment_response>? profile_pic;
   String? father_full_name;
+  String? is_placed_now;
+  int? has_resigned;
 
   LoginFieldsResponse({
     this.city,
@@ -148,7 +150,6 @@ class LoginFieldsResponse {
     this.contact_name_from_applied_job,
     this.job_description_from_applied_job,
 
-
     this.job_title_selected_job,
     this.company_name_from_selected_job,
     this.contact_name_from_selected_job,
@@ -168,6 +169,8 @@ class LoginFieldsResponse {
     this.resume,
     this.profile_pic,
     this.father_full_name,
+    this.is_placed_now,
+    this.has_resigned,
   });
 
 
@@ -260,6 +263,8 @@ class LoginFieldsResponse {
     token = json['token'];
     father_full_name = json['father_full_name'];
     percentage = json['percentage'];
+    is_placed_now = json['is_placed_now'];
+    has_resigned = json['has_resigned'];
     if (json['resume'] != null) {
       resume = <Attachment_response>[];
       json['resume'].forEach((v) {
@@ -353,6 +358,8 @@ class LoginFieldsResponse {
     data['rejected_job'] = this.rejectedJob;
     data['token'] = this.token;
     data['father_full_name'] = this.father_full_name;
+    data['is_placed_now'] = this.is_placed_now;
+    data['has_resigned'] = this.has_resigned;
     if (this.resume != null) {
       data['resume'] = this.resume!.map((v) => v.toJson()).toList();
     }
