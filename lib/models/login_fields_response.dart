@@ -37,6 +37,7 @@ class LoginFieldsResponse {
   List<String>? employee_name;
   List<String>? lectureSubjectId;
   List<String>? lecture_subject_title;
+  List<String>? lecture_specialization_id;
   int attendanceStatus = 1;
 
   String? sr_number;
@@ -122,6 +123,7 @@ class LoginFieldsResponse {
     this.employee_name,
     this.lectureSubjectId,
     this.lecture_subject_title,
+    this.lecture_specialization_id,
     this.sr_number,
     this.birthdate,
     this.aadhar_card_number,
@@ -240,6 +242,7 @@ class LoginFieldsResponse {
     lecture_time = json['lecture_time']?.cast<String>();
     employee_name = json['employee_name']?.cast<String>();
     lectureSubjectId = json['lecture_subject_id']?.cast<String>();
+    lecture_specialization_id = json['lecture_specialization_id']?.cast<String>();
 
     sr_number = json['sr_number'];
     birthdate = json['birthdate'];
@@ -337,6 +340,7 @@ class LoginFieldsResponse {
     data['lecture_time'] = this.lecture_time;
     data['employee_name'] = this.employee_name;
     data['lecture_subject_id'] = this.lectureSubjectId;
+    data['lecture_specialization_id'] = this.lecture_specialization_id;
     data['percentage'] = this.percentage;
     data['sr_number'] = this.sr_number;
     data['birthdate'] = this.birthdate;

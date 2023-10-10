@@ -595,12 +595,21 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
             }
             strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
             if (viewStudent![0].fields!.lecture_date?.contains(strCheck) == true) {
-              var pos = viewStudent![0].fields!.lecture_date?.indexOf(strCheck) ?? -1;
-              if (pos != -1) {
-                var lectureDate = DateFormat("dd MMM yyyy").format(strDate);
-                totalSub++;
-                titleList.add("$lectureDate ${viewStudent![0].fields?.lecture_time![pos]} - ${viewStudent![0].fields?.employee_name![pos]} - (${viewStudent![0].fields?.lecture_subject_title![pos]})");
-              }
+              int? pos = 0;
+              do {
+                pos = viewStudent![0].fields!.lecture_date?.indexOf(strCheck, pos!);
+                if (pos != -1) {
+                  if (viewStudent![0].fields!.lecture_specialization_id![pos!] == viewStudent![0].fields!.specializationIds!.first) {
+                    var lectureDate = DateFormat("dd MMM yyyy").format(strDate);
+                    totalSub++;
+                    titleList.add("$lectureDate ${viewStudent![0].fields?.lecture_time![pos]} - ${viewStudent![0].fields?.employee_name![pos]} - (${viewStudent![0].fields?.lecture_subject_title![pos]})");
+                  }
+                  pos = pos + 1;
+                  if (pos >= viewStudent![0].fields!.lecture_date!.length) {
+                    break;
+                  }
+                }
+              } while (viewStudent![0].fields!.lecture_date?.indexOf(strCheck, pos!) != -1);
             }
           } while (strCheck != enCheck);
           sheet.appendRow(titleList);
@@ -619,14 +628,24 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
               }
               strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
               if (viewStudent![i].fields!.lecture_date?.contains(strCheck) == true) {
-                if (viewStudent![i].fields!.absentLectureDate?.isNotEmpty == true) {
-                  if (viewStudent![i].fields!.absentLectureDate?.contains(strCheck) == true) {
-                    attendanceData.add("A");
-                  } else {
-                    presentSub++;
-                    attendanceData.add("P");
+                int? pos = 0;
+                do {
+                  pos = viewStudent![i].fields!.lecture_date?.indexOf(strCheck, pos!);
+                  if (pos != -1) {
+                    if (viewStudent![i].fields!.lecture_specialization_id![pos!] == viewStudent![i].fields!.specializationIds!.first) {
+                      if (viewStudent![i].fields!.absentLectureIds?.contains(viewStudent![i].fields!.lectureIds![pos]) == true) {
+                        attendanceData.add("A");
+                      } else {
+                        presentSub++;
+                        attendanceData.add("P");
+                      }
+                    }
+                    pos = pos + 1;
+                    if (pos >= viewStudent![i].fields!.lecture_date!.length) {
+                      break;
+                    }
                   }
-                }
+                } while (viewStudent![i].fields!.lecture_date?.indexOf(strCheck, pos!) != -1);
               }
             } while (strCheck != enCheck);
 
