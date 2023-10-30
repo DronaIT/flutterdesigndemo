@@ -32,7 +32,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
   bool isVisible = false, fromFilter = false, toggleMyTicket = true, toggleOthersTicket = true;
 
-  bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
+  bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false, canUpdateTicketAssignee = false;
 
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? ticketList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? mainList = [];
@@ -81,13 +81,14 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
             canUpdateTicketStatus = true;
           } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_TICKET_CATEGORY) {
             canUpdateTicketCategory = true;
+          } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_TICKET_ASSIGNEE) {
+            canUpdateTicketAssignee = true;
           }
         }
       } else {
         setState(() {
           isVisible = false;
         });
-        // Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
     } on DioError catch (e) {
       setState(() {
@@ -180,7 +181,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
     if (ticketList?.isNotEmpty == true) {
       for (int i = 0; i < ticketList!.length; i++) {
         bool isChecked = true;
-        if (filterTicketValue.isEmpty) {
+        if (filterTicketValue.isEmpty && PreferenceUtils.getIsLogin() == 2) {
           if (ticketList![i].fields!.status == TableNames.TICKET_STATUS_COMPLETED || ticketList![i].fields!.status == TableNames.TICKET_STATUS_RESOLVED || ticketList![i].fields!.status == TableNames.TICKET_STATUS_SUGGESTION) {
             isChecked = false;
           }
@@ -395,6 +396,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                               {"canUpdateTicketCategory": canUpdateTicketCategory},
                                               {"recordId": othersTicketList?[index].id},
                                               {"title": strings_name.str_help_desk_detail},
+                                              {"canUpdateTicketAssignee": canUpdateTicketAssignee},
                                             ]);
                                           },
                                           child: Column(children: [

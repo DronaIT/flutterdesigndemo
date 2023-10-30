@@ -46,7 +46,7 @@ class _ConfirmInternShipState extends State<ConfirmInternShip> {
     });
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
     try{
-      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+      jobOpportunityData = await apiRepository.getJobOppoApi(query);
       setState(() {
         isVisible = false;
       });
@@ -196,7 +196,8 @@ class _ConfirmInternShipState extends State<ConfirmInternShip> {
       isVisible = true;
     });
     var loginData = PreferenceUtils.getLoginData();
-    var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+    // var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+    var query = "SEARCH('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE})";
     try{
       var data = await apiRepository.loginApi(query);
       if (data.records!.isNotEmpty) {

@@ -62,7 +62,7 @@ class LoginFieldsResponse {
   List<String>? job_title_selected_job;
   List<String>? company_name_from_selected_job;
   List<String>? contact_name_from_selected_job;
-  List<String>?  city_from_selected_job;
+  List<String>? city_from_selected_job;
   List<String>? job_description_from_selected_job;
 
   List<String>? company_name_from_placed_job;
@@ -73,22 +73,33 @@ class LoginFieldsResponse {
   List<String>? company_name_from_rejected_job;
   List<String>? job_description_from_rejected_job;
 
-
   List<String>? job_title_from_applied_job;
   List<String>? company_name_from_applied_job;
   List<String>? contact_name_from_applied_job;
   List<String>? job_description_from_applied_job;
 
+  List<String>? self_place_company;
+  List<String>? self_place_company_code;
+  List<String>? self_place_company_name;
+  List<String>? applied_self_place_job;
+  List<String>? applied_self_place_job_title;
+  List<String>? placed_self_place_job;
+  List<String>? placed_self_place_job_title;
+
   String? token;
   List<dynamic>? semesterByStudent;
   List<dynamic>? presentSemesterByStudent;
   List<dynamic>? absentSemesterByStudent;
+  List<dynamic>? present_specialization_id;
+  List<dynamic>? absent_specialization_id;
   int? Total_lectures;
+
   List<Attachment_response>? resume;
   List<Attachment_response>? profile_pic;
   String? father_full_name;
   String? is_placed_now;
   int? has_resigned;
+  bool selected = false;
 
   LoginFieldsResponse({
     this.city,
@@ -144,30 +155,35 @@ class LoginFieldsResponse {
     this.token,
     this.percentage,
     this.Total_lectures,
-
     this.batch,
     this.passed_out_year,
     this.job_title_from_applied_job,
     this.company_name_from_applied_job,
     this.contact_name_from_applied_job,
     this.job_description_from_applied_job,
-
+    this.self_place_company,
+    this.self_place_company_code,
+    this.self_place_company_name,
+    this.applied_self_place_job,
+    this.applied_self_place_job_title,
+    this.placed_self_place_job,
+    this.placed_self_place_job_title,
     this.job_title_selected_job,
     this.company_name_from_selected_job,
     this.contact_name_from_selected_job,
     this.city_from_selected_job,
     this.job_description_from_selected_job,
-
     this.company_name_from_placed_job,
     this.job_title_from_placed_job,
     this.job_description_from_placed_job,
-
     this.company_name_from_rejected_job,
     this.job_title_from_rejected_job,
     this.job_description_from_rejected_job,
     this.semesterByStudent,
     this.presentSemesterByStudent,
     this.absentSemesterByStudent,
+    this.present_specialization_id,
+    this.absent_specialization_id,
     this.resume,
     this.profile_pic,
     this.father_full_name,
@@ -175,18 +191,16 @@ class LoginFieldsResponse {
     this.has_resigned,
   });
 
-
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
-
     semesterByStudent = json['semester_by_student'];
     presentSemesterByStudent = json['present_semester_by_student'];
     absentSemesterByStudent = json['absent_semester_by_student'];
+    present_specialization_id = json['present_specialization_id'];
+    absent_specialization_id = json['absent_specialization_id'];
 
     job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
     contact_name_from_applied_job = json['contact_name_from_applied_job']?.cast<String>();
-
-    job_description_from_applied_job = json['job_description_from_applied_job']?.cast<String>();
 
     company_name_from_rejected_job = json['company_name_from_rejected_job']?.cast<String>();
     job_title_from_rejected_job = json['job_title_from_rejected_job']?.cast<String>();
@@ -206,6 +220,14 @@ class LoginFieldsResponse {
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
     contact_name_from_applied_job = json['contact_name_from_applied_job']?.cast<String>();
     job_description_from_applied_job = json['job_description_from_applied_job']?.cast<String>();
+
+    self_place_company = json['self_place_company']?.cast<String>();
+    self_place_company_code = json['self_place_company_code']?.cast<String>();
+    self_place_company_name = json['self_place_company_name']?.cast<String>();
+    applied_self_place_job = json['applied_self_place_job']?.cast<String>();
+    applied_self_place_job_title = json['applied_self_place_job_title']?.cast<String>();
+    placed_self_place_job = json['placed_self_place_job']?.cast<String>();
+    placed_self_place_job_title = json['placed_self_place_job_title']?.cast<String>();
 
     lecture_subject_title = json['lecture_subject_title']?.cast<String>();
     city = json['city'];
@@ -301,10 +323,21 @@ class LoginFieldsResponse {
     data['contact_name_from_selected_job'] = this.contact_name_from_selected_job;
     data['city_from_selected_job'] = this.city_from_selected_job;
     data['job_description_from_selected_job'] = this.job_description_from_selected_job;
+    data['job_description_from_applied_job'] = this.job_description_from_applied_job;
+
+    data['self_place_company'] = this.self_place_company;
+    data['self_place_company_code'] = this.self_place_company_code;
+    data['self_place_company_name'] = this.self_place_company_name;
+    data['applied_self_place_job'] = this.applied_self_place_job;
+    data['applied_self_place_job_title'] = this.applied_self_place_job_title;
+    data['placed_self_place_job'] = this.placed_self_place_job;
+    data['placed_self_place_job_title'] = this.placed_self_place_job_title;
 
     data['semester_by_student'] = this.semesterByStudent;
     data['present_semester_by_student'] = this.presentSemesterByStudent;
     data['absent_semester_by_student'] = this.absentSemesterByStudent;
+    data['present_specialization_id'] = this.present_specialization_id;
+    data['absent_specialization_id'] = this.absent_specialization_id;
 
     data['city'] = this.city;
     data['joining_year'] = this.joiningYear;

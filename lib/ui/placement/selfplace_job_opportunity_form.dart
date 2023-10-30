@@ -1,5 +1,4 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,9 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/document_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
-import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
+import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/semester_data.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/semester_selection.dart';
@@ -25,18 +25,17 @@ import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../api/dio_exception.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../utils/utils.dart';
 
-class JobOpportunityForm extends StatefulWidget {
-  const JobOpportunityForm({Key? key}) : super(key: key);
+class SelfPlaceJobOpportunityForm extends StatefulWidget {
+  const SelfPlaceJobOpportunityForm({Key? key}) : super(key: key);
 
   @override
-  State<JobOpportunityForm> createState() => _JobOpportunityFormState();
+  State<SelfPlaceJobOpportunityForm> createState() => _SelfPlaceJobOpportunityFormState();
 }
 
-class _JobOpportunityFormState extends State<JobOpportunityForm> {
+class _SelfPlaceJobOpportunityFormState extends State<SelfPlaceJobOpportunityForm> {
   TextEditingController jobTitleController = TextEditingController();
   TextEditingController jobDescController = TextEditingController();
   TextEditingController jobSpecificReqController = TextEditingController();
@@ -47,13 +46,14 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
 
-  String stipendType = "";
+  String stipendType = strings_name.str_amount_type_interview;
 
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
   List<BaseApiResponseWithSerializable<HubResponse>>? hubsData = [];
   List<SemesterData>? semesterData = [];
 
   String bondFilePath = "", incentiveStructureFilePath = "";
+  String bondFileName = "", incentiveStructureFileName = "";
   var bondFileData, incentiveStructureData;
 
   List<String> preferredGenderArr = <String>[strings_name.str_both, strings_name.str_male, strings_name.str_female];
@@ -69,100 +69,116 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   var cloudinary;
   final apiRepository = getIt.get<ApiRepository>();
 
-  String companyId = "", jobCode = "", jobRecordId = "";
+  String companyId = "", jobRecordId = "";
   bool fromEdit = false;
+
+  BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo;
 
   @override
   void initState() {
     super.initState();
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
-    if (Get.arguments[0]["company_id"] != null) {
-      companyId = Get.arguments[0]["company_id"];
-    }
-    if (Get.arguments[1]["job_code"] != null) {
-      jobCode = Get.arguments[1]["job_code"];
-      if (jobCode.isNotEmpty) {
-        getJobData();
-      }
-    }
+    initData();
   }
 
-  void getJobData() async {
-    setState(() {
-      isVisible = true;
-    });
-
-    var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    try {
-      var data = await apiRepository.getJobOpportunityApi(query);
-
-      setState(() {
-        isVisible = false;
-        if (data.records?.first != null) {
-          fromEdit = true;
-          jobRecordId = data.records?.first.id ?? "";
-          var jobData = data.records?.first.fields;
-
-          jobTitleController.text = jobData?.jobTitle ?? "";
-          jobDescController.text = jobData?.jobDescription ?? "";
-          jobSpecificReqController.text = jobData?.specificRequirements ?? "";
-          vacancyController.text = "${jobData?.vacancies ?? ''}";
-          minRangeController.text = "${jobData?.stipendRangeMin ?? ''}";
-          maxRangeController.text = "${jobData?.stipendRangeMax ?? ''}";
-          minAgeLimitController.text = "${jobData?.minimumAge ?? ''}";
-          startTimeController.text = jobData?.timingStart ?? "";
-          endTimeController.text = jobData?.timingEnd ?? "";
-
-          stipendType = jobData?.stipendType ?? "";
-          preferredGenderValue = jobData?.gender ?? strings_name.str_both;
-          internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
-          internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
-
-          companyId = jobData?.companyId?.first ?? "";
-
-          if (jobData?.specializationIds?.isNotEmpty == true) {
-            var specializationArr = PreferenceUtils.getSpecializationList().records;
-            for (int i = 0; i < jobData!.specializationIds!.length; i++) {
-              for (int j = 0; j < specializationArr!.length; j++) {
-                if (jobData.specializationIds![i] == specializationArr[j].id) {
-                  specializationData?.add(specializationArr[j]);
-                  break;
-                }
-              }
-            }
-          }
-
-          if (jobData?.hubIds?.isNotEmpty == true) {
-            var hubArr = PreferenceUtils.getHubList().records;
-            for (int i = 0; i < jobData!.hubIds!.length; i++) {
-              for (int j = 0; j < hubArr!.length; j++) {
-                if (jobData.hubIds![i] == hubArr[j].id) {
-                  hubsData?.add(hubArr[j]);
-                  break;
-                }
-              }
-            }
-          }
-
-          if (jobData?.semester?.isNotEmpty == true) {
-            for (int i = 0; i < jobData!.semester!.length; i++) {
-              SemesterData semData = SemesterData(semester: int.parse(jobData.semester![i]));
-              semData.selected = true;
-
-              semesterData?.add(semData);
-            }
-          }
-        } else {
-          Utils.showSnackBar(context, strings_name.str_something_wrong);
-        }
-      });
-    } on DioError catch (e) {
-      setState(() {
-        isVisible = false;
-      });
-      final errorMessage = DioExceptions.fromDioError(e).toString();
-      Utils.showSnackBarUsingGet(errorMessage);
+  void initData() async {
+    if (Get.arguments != null) {
+      jobInfo = Get.arguments;
     }
+    if (PreferenceUtils.getIsLogin() == 1) {
+      vacancyController.text = "1";
+
+      var specializationArr = PreferenceUtils.getSpecializationList().records;
+      for (int j = 0; j < specializationArr!.length; j++) {
+        if (PreferenceUtils.getLoginData().specializationIds?.last == specializationArr[j].id) {
+          specializationData?.add(specializationArr[j]);
+          break;
+        }
+      }
+
+      var hubArr = PreferenceUtils.getHubList().records;
+      for (int j = 0; j < hubArr!.length; j++) {
+        if (PreferenceUtils.getLoginData().hubIds?.last == hubArr[j].id) {
+          hubsData?.add(hubArr[j]);
+          break;
+        }
+      }
+
+      SemesterData semData = SemesterData(semester: int.parse(PreferenceUtils.getLoginData().semester!));
+      semData.selected = true;
+      semesterData?.add(semData);
+    }
+
+    if (jobInfo != null) {
+      fromEdit = true;
+      jobRecordId = jobInfo?.id ?? "";
+      var jobData = jobInfo?.fields;
+
+      jobTitleController.text = jobData?.jobTitle ?? "";
+      jobDescController.text = jobData?.jobDescription ?? "";
+      jobSpecificReqController.text = jobData?.specificRequirements ?? "";
+      vacancyController.text = "${jobData?.vacancies ?? ''}";
+      minAgeLimitController.text = "${jobData?.minimumAge ?? ''}";
+      startTimeController.text = jobData?.timingStart ?? "";
+      endTimeController.text = jobData?.timingEnd ?? "";
+
+      stipendType = jobData?.stipendType ?? "";
+      minRangeController.text = "${jobData?.stipendRangeMin ?? ''}";
+      maxRangeController.text = "${jobData?.stipendRangeMax ?? ''}";
+
+      preferredGenderValue = jobData?.gender ?? strings_name.str_both;
+      internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
+      internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
+
+      companyId = jobData?.companyId?.first ?? "";
+
+      if (jobData?.specializationIds?.isNotEmpty == true) {
+        specializationData?.clear();
+        var specializationArr = PreferenceUtils.getSpecializationList().records;
+        for (int i = 0; i < jobData!.specializationIds!.length; i++) {
+          for (int j = 0; j < specializationArr!.length; j++) {
+            if (jobData.specializationIds![i] == specializationArr[j].id) {
+              specializationData?.add(specializationArr[j]);
+              break;
+            }
+          }
+        }
+      }
+
+      if (jobData?.hubIds?.isNotEmpty == true) {
+        hubsData?.clear();
+        var hubArr = PreferenceUtils.getHubList().records;
+        for (int i = 0; i < jobData!.hubIds!.length; i++) {
+          for (int j = 0; j < hubArr!.length; j++) {
+            if (jobData.hubIds![i] == hubArr[j].id) {
+              hubsData?.add(hubArr[j]);
+              break;
+            }
+          }
+        }
+      }
+
+      if (jobData?.semester?.isNotEmpty == true) {
+        semesterData?.clear();
+        for (int i = 0; i < jobData!.semester!.length; i++) {
+          SemesterData semData = SemesterData(semester: int.parse(jobData.semester![i]));
+          semData.selected = true;
+
+          semesterData?.add(semData);
+        }
+      }
+
+      if (jobData?.bond_structure != null && (jobData?.bond_structure?.length ?? 0) > 0) {
+        bondFilePath = jobData!.bond_structure!.first.url!;
+        bondFileName = jobData.bond_structure!.first.filename!;
+      }
+      if (jobData?.incentive_structure != null && (jobData?.incentive_structure?.length ?? 0) > 0) {
+        bondFilePath = jobData!.incentive_structure!.first.url!;
+        bondFileName = jobData.incentive_structure!.first.filename!;
+      }
+    }
+
+    setState(() {});
   }
 
   void submitData() async {
@@ -199,108 +215,77 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
       }
     }
 
-    CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
-    request.companyId = companyId.trim().split("  ");
-    request.jobTitle = jobTitleController.text.trim().toString();
-    request.jobDescription = jobDescController.text.trim().toString();
-    request.specificRequirements = jobSpecificReqController.text.trim().toString();
-    request.stipendType = stipendType.trim().toString();
+    BaseApiResponseWithSerializable<JobOpportunityResponse>? data = BaseApiResponseWithSerializable<JobOpportunityResponse>();
+    if (fromEdit) {
+      data = jobInfo;
+    }
+    JobOpportunityResponse response = JobOpportunityResponse();
+    response.jobTitle = jobTitleController.text.trim().toString();
+    response.jobDescription = jobDescController.text.trim().toString();
+    response.specificRequirements = jobSpecificReqController.text.trim().toString();
+    response.stipendType = stipendType.trim().toString();
     if (stipendType == strings_name.str_amount_type_range) {
       if (minRangeController.text.toString().trim().isNotEmpty) {
-        request.stipendRangeMin = int.parse(minRangeController.text.trim().toString());
+        response.stipendRangeMin = int.parse(minRangeController.text.trim().toString());
       }
       if (maxRangeController.text.toString().trim().isNotEmpty) {
-        request.stipendRangeMax = int.parse(maxRangeController.text.trim().toString());
+        response.stipendRangeMax = int.parse(maxRangeController.text.trim().toString());
       }
     }
-    request.vacancies = int.tryParse(vacancyController.text.trim().toString()) ?? 1;
-    request.gender = preferredGenderValue.trim().toString();
+    response.vacancies = int.tryParse(vacancyController.text.trim().toString()) ?? 1;
+    response.gender = preferredGenderValue.trim().toString();
     if (minAgeLimitController.text.toString().trim().isNotEmpty) {
       if (int.tryParse(minAgeLimitController.text.trim().toString()) != null) {
-        request.minimumAge = int.tryParse(minAgeLimitController.text.trim().toString());
+        response.minimumAge = int.tryParse(minAgeLimitController.text.trim().toString());
       }
     }
-    request.timingStart = startTimeController.text.trim().toString();
-    request.timingEnd = endTimeController.text.trim().toString();
-    request.internshipModes = internshipModeValue.trim().toString();
-    request.internshipDuration = internshipDurationValue.trim().toString();
-    request.status = strings_name.str_job_status_pending;
+    response.timingStart = startTimeController.text.trim().toString();
+    response.timingEnd = endTimeController.text.trim().toString();
+    response.internshipModes = internshipModeValue.trim().toString();
+    response.internshipDuration = internshipDurationValue.trim().toString();
+    response.status = strings_name.str_job_status_pending;
 
     if (bondPath.isNotEmpty) {
-      Map<String, dynamic> map = Map();
-      map["url"] = bondPath;
-      List<Map<String, dynamic>> listData = [];
-      listData.add(map);
-
-      request.bondStructure = listData;
+      DocumentResponse attachment = DocumentResponse();
+      attachment.url = bondPath;
+      attachment.filename = bondFileName;
+      List<DocumentResponse> listData = [];
+      listData.add(attachment);
+      response.bond_structure = listData;
     }
     if (incentivePath.isNotEmpty) {
-      Map<String, dynamic> map = Map();
-      map["url"] = incentivePath;
-      List<Map<String, dynamic>> listData = [];
-      listData.add(map);
-
-      request.incentiveStructure = listData;
+      DocumentResponse attachment = DocumentResponse();
+      attachment.url = incentivePath;
+      attachment.filename = incentiveStructureFileName;
+      List<DocumentResponse> listData = [];
+      listData.add(attachment);
+      response.incentive_structure = listData;
     }
 
     List<String> selectedHubData = [];
     for (var i = 0; i < hubsData!.length; i++) {
       selectedHubData.add(hubsData![i].id.toString());
     }
-    request.hubIds = selectedHubData;
+    response.hubIds = selectedHubData;
 
     List<String> selectedSpecializationData = [];
     for (var i = 0; i < specializationData!.length; i++) {
       selectedSpecializationData.add(specializationData![i].id.toString());
     }
-    request.specializationIds = selectedSpecializationData;
+    response.specializationIds = selectedSpecializationData;
 
     List<String> selectedSemesterData = [];
     for (var i = 0; i < semesterData!.length; i++) {
       selectedSemesterData.add(semesterData![i].semester.toString());
     }
-    request.semester = selectedSemesterData;
+    response.semester = selectedSemesterData;
 
-    var json = request.toJson();
-    json.removeWhere((key, value) => value == null);
+    setState(() {
+      isVisible = false;
+    });
 
-    try {
-      if (fromEdit && jobRecordId.isNotEmpty) {
-        var resp = await apiRepository.updateJobOpportunityApi(json, jobRecordId);
-        if (resp.id!.isNotEmpty) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_job_updated);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(closeOverlays: true, result: true);
-        } else {
-          setState(() {
-            isVisible = false;
-          });
-        }
-      } else {
-        var resp = await apiRepository.createJobOpportunityApi(request);
-        if (resp.id!.isNotEmpty) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_job_added);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(closeOverlays: true, result: true);
-        } else {
-          setState(() {
-            isVisible = false;
-          });
-        }
-      }
-    } on DioError catch (e) {
-      setState(() {
-        isVisible = false;
-      });
-      final errorMessage = DioExceptions.fromDioError(e).toString();
-      Utils.showSnackBarUsingGet(errorMessage);
-    }
+    data?.fields = response;
+    Get.back(closeOverlays: true, result: data);
   }
 
   @override
@@ -341,21 +326,27 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                   maxLength: 50000,
                   topValue: 0,
                 ),
-                SizedBox(height: 5.h),
-                custom_text(
-                  text: strings_name.str_job_specific_req,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                custom_edittext(
-                  type: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  controller: jobSpecificReqController,
-                  maxLines: 3,
-                  minLines: 3,
-                  maxLength: 50000,
-                  topValue: 0,
-                ),
+                PreferenceUtils.getIsLogin() == 2
+                    ? Column(
+                        children: [
+                          SizedBox(height: 5.h),
+                          custom_text(
+                            text: strings_name.str_job_specific_req,
+                            alignment: Alignment.topLeft,
+                            textStyles: blackTextSemiBold16,
+                          ),
+                          custom_edittext(
+                            type: TextInputType.multiline,
+                            textInputAction: TextInputAction.newline,
+                            controller: jobSpecificReqController,
+                            maxLines: 3,
+                            minLines: 3,
+                            maxLength: 50000,
+                            topValue: 0,
+                          ),
+                        ],
+                      )
+                    : Container(),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: "${strings_name.str_stipend_amount}*",
@@ -432,161 +423,169 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                         ),
                       ],
                     )),
-                SizedBox(height: 5.h),
-                custom_text(
-                  text: "${strings_name.str_vacancy}*",
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                custom_edittext(
-                  type: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  controller: vacancyController,
-                  maxLines: 3,
-                  topValue: 5,
-                ),
-                SizedBox(height: 5.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    custom_text(
-                      text: strings_name.str_specializations,
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextSemiBold16,
-                    ),
-                    GestureDetector(
-                      child: custom_text(
-                        text: specializationData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                        alignment: Alignment.topLeft,
-                        textStyles: primaryTextSemiBold16,
-                      ),
-                      onTap: () {
-                        Get.to(const SpecializationSelection(), arguments: specializationData)?.then((result) {
-                          if (result != null) {
-                            setState(() {
-                              specializationData = result;
-                            });
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                specializationData!.isNotEmpty
-                    ? ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: specializationData?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                              ),
-                            ),
-                          );
-                        })
+                PreferenceUtils.getIsLogin() == 2
+                    ? Column(children: [
+                        SizedBox(height: 5.h),
+                        custom_text(
+                          text: "${strings_name.str_vacancy}*",
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
+                        ),
+                        custom_edittext(
+                          type: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          controller: vacancyController,
+                          maxLines: 3,
+                          topValue: 5,
+                        ),
+                      ])
                     : Container(),
-                SizedBox(height: 5.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    custom_text(
-                      text: strings_name.str_semester,
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextSemiBold16,
-                    ),
-                    GestureDetector(
-                      child: custom_text(
-                        text: semesterData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                        alignment: Alignment.topLeft,
-                        textStyles: primaryTextSemiBold16,
-                      ),
-                      onTap: () {
-                        Get.to(const SemesterSelection(), arguments: semesterData)?.then((result) {
-                          if (result != null) {
-                            setState(() {
-                              semesterData = result;
-                            });
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                semesterData!.isNotEmpty
-                    ? ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: semesterData?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Expanded(child: Text("Semester ${semesterData![index].semester}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                              ),
+                PreferenceUtils.getIsLogin() == 2
+                    ? Column(children: [
+                        SizedBox(height: 5.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            custom_text(
+                              text: strings_name.str_specializations,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
                             ),
-                          );
-                        })
-                    : Container(),
-                SizedBox(height: 5.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    custom_text(
-                      text: strings_name.str_select_hub,
-                      alignment: Alignment.topLeft,
-                      textStyles: blackTextSemiBold16,
-                    ),
-                    GestureDetector(
-                      child: custom_text(
-                        text: hubsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                        alignment: Alignment.topLeft,
-                        textStyles: primaryTextSemiBold16,
-                      ),
-                      onTap: () {
-                        Get.to(const HubSelection(), arguments: hubsData)?.then((result) {
-                          if (result != null) {
-                            setState(() {
-                              hubsData = result;
-                            });
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                hubsData!.isNotEmpty
-                    ? ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: hubsData?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 5,
-                            child: GestureDetector(
-                              child: Container(
-                                color: colors_name.colorWhite,
-                                padding: const EdgeInsets.all(15),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Expanded(child: Text("${hubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
-                                ),
+                            GestureDetector(
+                              child: custom_text(
+                                text: specializationData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                                alignment: Alignment.topLeft,
+                                textStyles: primaryTextSemiBold16,
                               ),
                               onTap: () {
-                                // Get.to(const (), arguments: unitsData![index].fields?.ids);
+                                Get.to(const SpecializationSelection(), arguments: specializationData)?.then((result) {
+                                  if (result != null) {
+                                    setState(() {
+                                      specializationData = result;
+                                    });
+                                  }
+                                });
                               },
                             ),
-                          );
-                        })
+                          ],
+                        ),
+                        specializationData!.isNotEmpty
+                            ? ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                itemCount: specializationData?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Card(
+                                    elevation: 5,
+                                    child: Container(
+                                      color: colors_name.colorWhite,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                      ),
+                                    ),
+                                  );
+                                })
+                            : Container(),
+                        SizedBox(height: 5.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            custom_text(
+                              text: strings_name.str_semester,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                            ),
+                            GestureDetector(
+                              child: custom_text(
+                                text: semesterData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                                alignment: Alignment.topLeft,
+                                textStyles: primaryTextSemiBold16,
+                              ),
+                              onTap: () {
+                                Get.to(const SemesterSelection(), arguments: semesterData)?.then((result) {
+                                  if (result != null) {
+                                    setState(() {
+                                      semesterData = result;
+                                    });
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        semesterData!.isNotEmpty
+                            ? ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                itemCount: semesterData?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Card(
+                                    elevation: 5,
+                                    child: Container(
+                                      color: colors_name.colorWhite,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [Expanded(child: Text("Semester ${semesterData![index].semester}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                      ),
+                                    ),
+                                  );
+                                })
+                            : Container(),
+                        SizedBox(height: 5.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            custom_text(
+                              text: "${strings_name.str_select_hub}*",
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                            ),
+                            GestureDetector(
+                              child: custom_text(
+                                text: hubsData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                                alignment: Alignment.topLeft,
+                                textStyles: primaryTextSemiBold16,
+                              ),
+                              onTap: () {
+                                Get.to(const HubSelection(), arguments: hubsData)?.then((result) {
+                                  if (result != null) {
+                                    setState(() {
+                                      hubsData = result;
+                                    });
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        hubsData!.isNotEmpty
+                            ? ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                itemCount: hubsData?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Card(
+                                    elevation: 5,
+                                    child: GestureDetector(
+                                      child: Container(
+                                        color: colors_name.colorWhite,
+                                        padding: const EdgeInsets.all(15),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [Expanded(child: Text("${hubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        // Get.to(const (), arguments: unitsData![index].fields?.ids);
+                                      },
+                                    ),
+                                  );
+                                })
+                            : Container(),
+                      ])
                     : Container(),
                 SizedBox(height: 5.h),
                 Row(
@@ -617,54 +616,58 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                   ],
                 ),
                 Visibility(visible: bondFilePath.isNotEmpty, child: custom_text(text: bondFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
-                SizedBox(height: 5.h),
-                custom_text(
-                  text: strings_name.str_preferred_gender,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                        width: viewWidth,
-                        child: DropdownButtonFormField<String>(
-                          elevation: 16,
-                          value: preferredGenderValue,
-                          style: blackText16,
-                          focusColor: Colors.white,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              preferredGenderValue = newValue!;
-                            });
-                          },
-                          items: preferredGenderArr.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                PreferenceUtils.getIsLogin() == 2
+                    ? Column(children: [
+                        SizedBox(height: 5.h),
+                        custom_text(
+                          text: strings_name.str_preferred_gender,
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5.h),
-                custom_text(
-                  text: strings_name.str_min_age_limit,
-                  alignment: Alignment.topLeft,
-                  textStyles: blackTextSemiBold16,
-                ),
-                custom_edittext(
-                  type: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  controller: minAgeLimitController,
-                  maxLines: 3,
-                  topValue: 5,
-                ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                width: viewWidth,
+                                child: DropdownButtonFormField<String>(
+                                  elevation: 16,
+                                  value: preferredGenderValue,
+                                  style: blackText16,
+                                  focusColor: Colors.white,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      preferredGenderValue = newValue!;
+                                    });
+                                  },
+                                  items: preferredGenderArr.map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5.h),
+                        custom_text(
+                          text: strings_name.str_min_age_limit,
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
+                        ),
+                        custom_edittext(
+                          type: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          controller: minAgeLimitController,
+                          maxLines: 3,
+                          topValue: 5,
+                        ),
+                      ])
+                    : Container(),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: "${strings_name.str_internship_timing}*",
@@ -869,9 +872,17 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
               ],
             ),
           ),
-          Center(
-            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
-          )
+          Visibility(
+            visible: isVisible,
+            child: Container(
+              color: colors_name.colorWhite,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: const Center(
+                child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+              ),
+            ),
+          ),
         ],
       ),
     ));
@@ -884,8 +895,10 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
         if (kIsWeb) {
           bondFileData = result.files.single;
           bondFilePath = result.files.single.bytes.toString();
+          bondFileName = result.files.single.name;
         } else {
           bondFilePath = result.files.single.path!;
+          bondFileName = result.files.single.name;
         }
       });
     }
@@ -898,8 +911,10 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
         if (kIsWeb) {
           incentiveStructureData = result.files.single;
           incentiveStructureFilePath = result.files.single.bytes.toString();
+          incentiveStructureFileName = result.files.single.name;
         } else {
           incentiveStructureFilePath = result.files.single.path!;
+          incentiveStructureFileName = result.files.single.name;
         }
       });
     }

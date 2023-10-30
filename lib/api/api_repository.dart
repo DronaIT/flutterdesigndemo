@@ -37,14 +37,10 @@ import 'package:flutterdesigndemo/models/update_topics.dart';
 import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
-import 'package:flutterdesigndemo/ui/manage_user/addemployee.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
-import 'package:get/get.dart';
 
 import '../models/App_data_response.dart';
 import '../models/add_announcement_response.dart';
 import '../models/add_time_table_response.dart';
-import '../models/add_timetable_model.dart';
 import '../models/announcement_response.dart';
 import '../models/company_approch_response.dart';
 import '../models/company_detail_response.dart';
@@ -142,7 +138,7 @@ class ApiRepository {
 
   Future<BaseLoginResponse<CompanyApprochResponse>> creCompanyApprochApi(List<Map<String, CreateCompanyaRequest>> createCompFormula) async {
     try {
-      final response = await userApi.createCopmanyApprochApi(createCompFormula);
+      final response = await userApi.createCompanyApproachApi(createCompFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -150,9 +146,9 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<CompanyDetailResponse>> createCopmanyDetailApi(List<Map<String, CreateCompanyDetailRequest>> createCompFormula) async {
+  Future<BaseLoginResponse<CompanyDetailResponse>> createCompanyDetailApi(List<Map<String, CreateCompanyDetailRequest>> createCompFormula) async {
     try {
-      final response = await userApi.createCopmanyDetailApi(createCompFormula);
+      final response = await userApi.createCompanyDetailApi(createCompFormula);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -460,9 +456,9 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<JobOpportunityResponse>> getJoboppoApi(String jobFormula, [String offset = ""]) async {
+  Future<BaseLoginResponse<JobOpportunityResponse>> getJobOppoApi(String jobFormula, [String offset = ""]) async {
     try {
-      final response = await userApi.getJoboppoApi(jobFormula, offset);
+      final response = await userApi.getJobOppoApi(jobFormula, offset);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -513,6 +509,16 @@ class ApiRepository {
   Future<AddAnnouncementResponse> updateAnnouncementDataApi(Map<String, dynamic> loginFormula, String recordId) async {
     try {
       final response = await userApi.updateAnnouncementApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<AddAnnouncementResponse> removeAnnouncementDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.removeAnnouncementApi(loginFormula, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -700,5 +706,63 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<CompanyDetailResponse>> getSelfPlaceCompanyDetailApi(String formula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getSelfPlaceCompanyDetailApi(formula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
 
+  Future<BaseLoginResponse<JobOpportunityResponse>> getSelfPlaceJobDetailApi(String formula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getSelfPlaceJobDetailApi(formula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<CompanyDetailResponse>> createSelfPlaceCompanyApi(List<Map<String, CreateCompanyDetailRequest>> createCompFormula) async {
+    try {
+      final response = await userApi.createSelfPlaceCompanyApi(createCompFormula);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<UpdateSubject> updateSelfPlaceCompanyApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateSelfPlaceCompanyApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<JobOpportunityResponse>> createSelfPlaceJobApi(Map<String, dynamic> request) async {
+    try {
+      final response = await userApi.createSelfPlaceJobApi(request);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<UpdateJobOpportunity> updateSelfPlaceJobApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateSelfPlaceJobApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
 }

@@ -41,7 +41,7 @@ class _PublishInternshipState extends State<PublishInternship> {
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}',${TableNames.CLM_DISPLAY_INTERNSHIP}='1')";
     try{
-      var data = await apiRepository.getJoboppoApi(query, offset);
+      var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           jobOpportunityList?.clear();

@@ -825,8 +825,11 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                               });
                             }
                           } else {
-                            Map<String, CreateStudentRequest> map = Map();
-                            map["fields"] = response;
+                            var json = response.toJson();
+                            json.removeWhere((key, value) => value == null);
+
+                            Map<String, dynamic> map = Map();
+                            map["fields"] = json;
                             var updateStudent = await apiRepository.updateStudentApi(map, addStudentId);
                             if (updateStudent != null) {
                               setState(() {

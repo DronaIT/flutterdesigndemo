@@ -157,7 +157,7 @@ class Utils {
         debugPrint('../ token error $E');
       }
     } else if (Platform.isIOS) {
-      messaging.requestPermission();
+      await messaging.requestPermission();
       deviceId = await messaging.getAPNSToken();
       debugPrint('APNs token: $deviceId');
     }

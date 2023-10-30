@@ -13,8 +13,8 @@ import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../api/dio_exception.dart';
 import '../../utils/utils.dart';
@@ -166,13 +166,10 @@ class _MyAttendanceState extends State<MyAttendance> {
     if (dataByDate.records!.isNotEmpty) {
       if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.presentLectureDate != null) {
         for (int i = 0; i < dataByDate.records!.first.fields!.presentLectureDate!.length; i++) {
-          // DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-          // DateTime dateTime = dateFormat.parse(dataByDate.records!.first.fields!.presentLectureDate![i]);
-          // DateTime dateTime1 = dateFormat.parse(formattedDate);
           DateTime fudgeThis = DateTime.parse(formattedDate);
-          if ( DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]) {
+          if (DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.presentSubjectId![i], subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.presentLectureDate![i], status: 1));
-          }else if(DateFormat("yyyy-MM-dd").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]){
+          } else if (DateFormat("yyyy-MM-dd").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.presentSubjectId![i], subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.presentLectureDate![i], status: 1));
           }
         }
@@ -182,7 +179,7 @@ class _MyAttendanceState extends State<MyAttendance> {
           DateTime fudgeThis = DateTime.parse(formattedDate);
           if (DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.absentSubjectId![i], subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.absentLectureDate![i], status: 0));
-          } else  if (DateFormat("yyyy-MM-dd").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
+          } else if (DateFormat("yyyy-MM-dd").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(subject_id: dataByDate.records!.first.fields!.absentSubjectId![i], subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i], lecture_date: dataByDate.records!.first.fields!.absentLectureDate![i], status: 0));
           }
         }
@@ -196,7 +193,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       var records = dataByDate.records?.first.fields;
       if (records != null && records.presentSubjectId != null) {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
-          if(records.presentSemesterByStudent![i] == records.semester) {
+          if (records.presentSemesterByStudent![i] == records.semester && records.present_specialization_id![i] == records.specializationIds!.last) {
             var isAdded = false;
             for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
               if (studentAttendanceBySubjectArray![j].subject_id == records.presentSubjectId![i]) {
@@ -217,7 +214,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       }
       if (records != null && records.absentSubjectId != null) {
         for (int i = 0; i < records.absentSubjectId!.length; i++) {
-          if(records.absentSemesterByStudent![i] == records.semester) {
+          if (records.absentSemesterByStudent![i] == records.semester && records.absent_specialization_id![i] == records.specializationIds!.last) {
             var isAdded = false;
             for (int j = 0; j < studentAttendanceBySubjectArray!.length; j++) {
               if (studentAttendanceBySubjectArray![j].subject_id == records.absentSubjectId![i]) {
@@ -258,7 +255,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       var records = dataByDate.records?.first.fields;
       if (records != null && records.presentSubjectId != null) {
         for (int i = 0; i < records.presentSubjectId!.length; i++) {
-          if(records.presentSemesterByStudent![i] == records.semester) {
+          if (records.presentSemesterByStudent![i] == records.semester && records.present_specialization_id![i] == records.specializationIds!.last) {
             var isAdded = false;
             for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
               if (studentAttendanceBySubjectArray[j].subject_id == records.presentSubjectId![i]) {
@@ -279,7 +276,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       }
       if (records != null && records.absentSubjectId != null) {
         for (int i = 0; i < records.absentSubjectId!.length; i++) {
-          if(records.absentSemesterByStudent![i] == records.semester) {
+          if (records.absentSemesterByStudent![i] == records.semester && records.absent_specialization_id![i] == records.specializationIds!.last) {
             var isAdded = false;
             for (int j = 0; j < studentAttendanceBySubjectArray.length; j++) {
               if (studentAttendanceBySubjectArray[j].subject_id == records.absentSubjectId![i]) {
@@ -341,7 +338,6 @@ class _MyAttendanceState extends State<MyAttendance> {
                   color: Colors.white,
                   iconSize: 30,
                   onPressed: () {
-
                     createBottomFilterNew();
                   }),
             ),

@@ -172,11 +172,11 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
                         CustomButton(
                           text: strings_name.str_submit,
                           click: () async {
-                            if (helpPath.isEmpty) {
+                            if (canUpdateProfilePic && helpPath.isEmpty) {
                               Utils.showSnackBar(context, strings_name.str_empty_profile_pic);
-                            } else if (birthdateController.text.trim().toString().isEmpty) {
+                            } else if (canUpdateDetails && birthdateController.text.trim().toString().isEmpty) {
                               Utils.showSnackBar(context, strings_name.str_empty_brithdate);
-                            } else if (fathernameController.text.trim().toString().isEmpty) {
+                            } else if (canUpdateDetails && fathernameController.text.trim().toString().isEmpty) {
                               Utils.showSnackBar(context, strings_name.str_empty_father_name);
                             } else {
                               uploadData();

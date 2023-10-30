@@ -32,7 +32,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
   bool isVisible = false, fromFilter = false, toggleTaskAssigned = true, toggleMyTask = true, toggleTaskAssignedByMe = true;
 
-  bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false;
+  bool canViewOther = false, canUpdateTicketStatus = false, canUpdateTicketCategory = false, canUpdateTicketAssignee = false;
 
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? mainList = [];
   List<BaseApiResponseWithSerializable<HelpdeskResponses>>? taskList = [];
@@ -83,6 +83,8 @@ class _TaskDashboardState extends State<TaskDashboard> {
             canUpdateTicketStatus = true;
           } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_TICKET_CATEGORY) {
             canUpdateTicketCategory = true;
+          } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_TICKET_ASSIGNEE) {
+            canUpdateTicketAssignee = true;
           }
         }
       } else {

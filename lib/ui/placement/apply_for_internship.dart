@@ -50,7 +50,7 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
       query += ",FIND('1',${TableNames.CLM_DISPLAY_INTERNSHIP})";
       query += ")";
       try {
-        var data = await apiRepository.getJoboppoApi(query, offset);
+        var data = await apiRepository.getJobOppoApi(query, offset);
 
         if (data.records!.isNotEmpty) {
           if (offset.isEmpty) {

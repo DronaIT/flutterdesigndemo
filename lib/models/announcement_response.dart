@@ -8,6 +8,7 @@ class AnnouncementResponse {
   List<String> createdBy;
   List<int> employeeIdFromCreatedBy;
   bool? isAll;
+  int? isActive;
   List<String>? hubIds;
   List<String>? hubIdFromHubIds;
   List<String>? specializationIds;
@@ -31,6 +32,7 @@ class AnnouncementResponse {
     required this.createdBy,
     required this.employeeIdFromCreatedBy,
     this.isAll,
+    this.isActive,
     this.hubIds,
     this.hubIdFromHubIds,
     this.specializationIds,
@@ -53,6 +55,7 @@ class AnnouncementResponse {
     createdBy: json["created_by"] == null ? [] : List<String>.from(json["created_by"].map((x) => x)),
     employeeIdFromCreatedBy:json["employee_id (from created_by)"] == null? [] : List<int>.from(json["employee_id (from created_by)"].map((x) => x)),
     isAll: json["is_all"],
+    isActive: json["is_active"],
     hubIds: json["hub_ids"] == null ? [] : List<String>.from(json["hub_ids"]!.map((x) => x)),
     hubIdFromHubIds: json["hub_id (from hub_ids)"] == null ? [] : List<String>.from(json["hub_id (from hub_ids)"]!.map((x) => x)),
     specializationIds: json["specialization_ids"] == null ? [] : List<String>.from(json["specialization_ids"]!.map((x) => x)),
@@ -75,6 +78,7 @@ class AnnouncementResponse {
     "created_by": List<dynamic>.from(createdBy.map((x) => x)),
     "employee_id (from created_by)": List<dynamic>.from(employeeIdFromCreatedBy.map((x) => x)),
     "is_all": isAll,
+    "is_active": isActive,
     "hub_ids": hubIds == null ? [] : List<dynamic>.from(hubIds!.map((x) => x)),
     "hub_id (from hub_ids)": hubIdFromHubIds == null ? [] : List<dynamic>.from(hubIdFromHubIds!.map((x) => x)),
     "specialization_ids": specializationIds == null ? [] : List<dynamic>.from(specializationIds!.map((x) => x)),
@@ -188,6 +192,7 @@ class Fields {
   String fieldsFor;
   List<Attachment>? attachments;
   bool? isAll;
+  int? isActive;
   List<String>? hubIds;
   List<String>? specializationIds;
   List<String>? semesters;
@@ -203,6 +208,7 @@ class Fields {
     required this.fieldsFor,
     this.attachments,
     this.isAll,
+    this.isActive,
     this.hubIds,
     this.specializationIds,
     this.semesters,
@@ -219,6 +225,7 @@ class Fields {
     fieldsFor: json["for"],
     attachments: json["attachments"] == null ? [] : List<Attachment>.from(json["attachments"]!.map((x) => Attachment.fromJson(x))),
     isAll: json["is_all"],
+    isActive: json["is_active"],
     hubIds: json["hub_ids"] == null ? [] : List<String>.from(json["hub_ids"]!.map((x) => x)),
     specializationIds: json["specialization_ids"] == null ? [] : List<String>.from(json["specialization_ids"]!.map((x) => x)),
     semesters: json["semesters"] == null ? [] : List<String>.from(json["semesters"]!.map((x) => x)),
@@ -235,6 +242,7 @@ class Fields {
     "for": fieldsFor,
     "attachments": attachments == null ? [] : List<dynamic>.from(attachments!.map((x) => x.toJson())),
     "is_all": isAll,
+    "is_active": isActive,
     "hub_ids": hubIds == null ? [] : List<dynamic>.from(hubIds!.map((x) => x)),
     "specialization_ids": specializationIds == null ? [] : List<dynamic>.from(specializationIds!.map((x) => x)),
     "semesters": semesters == null ? [] : List<dynamic>.from(semesters!.map((x) => x)),

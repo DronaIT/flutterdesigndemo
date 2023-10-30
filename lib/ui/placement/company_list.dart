@@ -21,14 +21,14 @@ import '../../models/company_detail_response.dart';
 import '../../models/hub_response.dart';
 import '../../values/text_styles.dart';
 
-class GetCompanyDetail extends StatefulWidget {
-  const GetCompanyDetail({Key? key}) : super(key: key);
+class CompanyList extends StatefulWidget {
+  const CompanyList({Key? key}) : super(key: key);
 
   @override
-  State<GetCompanyDetail> createState() => _GetCompanyDetailState();
+  State<CompanyList> createState() => _CompanyListState();
 }
 
-class _GetCompanyDetailState extends State<GetCompanyDetail> {
+class _CompanyListState extends State<CompanyList> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? companyList = [];
@@ -92,7 +92,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
       });
     }
     try {
-      var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_ID},0)";
+      var query = "SEARCH('$hubValue',${TableNames.CLM_HUB_ID},0)";
       var data = await apiRepository.getCompanyDetailApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {

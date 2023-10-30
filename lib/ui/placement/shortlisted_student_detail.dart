@@ -66,7 +66,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
     try {
-      jobpportunityData = await apiRepository.getJoboppoApi(query);
+      jobpportunityData = await apiRepository.getJobOppoApi(query);
       for (var i = 0; i < jobpportunityData.records!.length; i++) {
         if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.appliedStudents != null) {
           for (var j = 0; j < jobpportunityData.records![i].fields!.appliedStudents!.length; j++) {

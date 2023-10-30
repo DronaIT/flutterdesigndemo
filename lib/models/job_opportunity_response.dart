@@ -62,6 +62,8 @@ class JobOpportunityResponse {
 
   List<String>? rejected_students;
   List<DocumentResponse>? company_loi;
+  List<DocumentResponse>? bond_structure;
+  List<DocumentResponse>? incentive_structure;
 
   JobOpportunityResponse({
       this.jobDescription,
@@ -118,7 +120,10 @@ class JobOpportunityResponse {
       this.selected_students_enrollment_number,
       this.selected_students_name,
       this.rejected_students,
-      this.company_loi});
+      this.company_loi,
+      this.bond_structure,
+      this.incentive_structure,
+  });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -183,6 +188,18 @@ class JobOpportunityResponse {
       company_loi = <DocumentResponse>[];
       json['company_loi'].forEach((v) {
         company_loi!.add(new DocumentResponse.fromJson(v));
+      });
+    }
+  if (json['bond_structure'] != null) {
+      bond_structure = <DocumentResponse>[];
+      json['bond_structure'].forEach((v) {
+        bond_structure!.add(new DocumentResponse.fromJson(v));
+      });
+    }
+  if (json['incentive_structure'] != null) {
+    incentive_structure = <DocumentResponse>[];
+      json['incentive_structure'].forEach((v) {
+        incentive_structure!.add(new DocumentResponse.fromJson(v));
       });
     }
 
@@ -255,6 +272,12 @@ class JobOpportunityResponse {
 
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
+    }
+    if (this.bond_structure != null) {
+      data['bond_structure'] = this.bond_structure!.map((v) => v.toJson()).toList();
+    }
+    if (this.incentive_structure != null) {
+      data['incentive_structure'] = this.incentive_structure!.map((v) => v.toJson()).toList();
     }
     if (this.applied_students_resume != null) {
       data['applied_students_resume'] = this.applied_students_resume?.map((v) => v.toJson()).toList();

@@ -3,6 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
@@ -36,7 +39,6 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   @override
   void initState() {
     isEdit = widget.isEdit;
-    // TODO: implement initState
     super.initState();
     getPermission();
     addViewBy();
@@ -45,6 +47,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   var isLogin = 0;
   bool isVisible = false;
   bool canAddAnnouncements = false;
+  bool canRemoveAnnouncements = false;
   var loginData;
   String loginType = "";
   var loginId = "";
@@ -82,6 +85,9 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         for (var i = 0; i < data.records!.length; i++) {
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_ANNOUNCEMENT) {
             canAddAnnouncements = true;
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_REMOVE_ANNOUNCEMENT) {
+            canRemoveAnnouncements = true;
           }
         }
         setState(() {
@@ -154,6 +160,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
             image: announcementData.fields?.image ?? '',
             fieldsFor: announcementData.fields?.announcementResponseFor ?? '',
             isAll: announcementData.fields?.isAll ?? false,
+            isActive: 1,
             attachments: updateAttachments,
             createdBy: [announcementData.fields?.createdBy.first ?? ''],
             updatedBy: [announcementData.fields?.createdBy.first ?? ''],
@@ -328,10 +335,85 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  Visibility(
+                      visible: canRemoveAnnouncements,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
+                        child: CustomButton(
+                          text: strings_name.str_remove_announcement,
+                          click: () {
+                            confirmationDialog();
+                          },
+                        ),
+                      )),
                 ],
               ),
       ),
     );
+  }
+
+  Future<void> confirmationDialog() async {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          custom_text(
+            text: 'Are you sure you want to remove this announcement?',
+            textStyles: primaryTextSemiBold16,
+            maxLines: 3,
+          ),
+          Row(
+            children: [
+              SizedBox(width: 5.h),
+              Expanded(
+                  child: CustomButton(
+                      text: strings_name.str_yes,
+                      click: () {
+                        Get.back(closeOverlays: true);
+                        removeAnnouncement();
+                      })),
+              SizedBox(width: 10.h),
+              Expanded(
+                  child: CustomButton(
+                      text: strings_name.str_cancle,
+                      click: () {
+                        Get.back(closeOverlays: true);
+                      })),
+              SizedBox(width: 5.h),
+            ],
+          )
+        ],
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+  removeAnnouncement() async {
+    try {
+      Map<String, dynamic> request = {"is_active": 0};
+
+      var dataUpdate = await apiRepository.removeAnnouncementDataApi(request, widget.announcement.id ?? '');
+
+      if (dataUpdate.records != null) {
+        setState(() {
+          isVisible = false;
+        });
+        // Utils.showSnackBar(context, strings_name.str_announcement_removed);
+        // await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(result: 'updateAnnouncement');
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 }

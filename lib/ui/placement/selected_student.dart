@@ -43,7 +43,7 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_interview_scheduled}')";
     try{
-      var data = await apiRepository.getJoboppoApi(query, offset);
+      var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           jobOpportunityList?.clear();

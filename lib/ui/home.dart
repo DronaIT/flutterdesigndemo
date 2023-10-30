@@ -209,23 +209,6 @@ class _HomeState extends State<Home> {
             query += ",FIND(\"${loginData.accessible_hub_ids[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
           }
         }
-/*
-        if (loginData.semester != null) {
-          for (int i = 0; i < loginData.semester.length; i++) {
-            query += "${i == 0 ? ',' : ''}FIND(\"${loginData.semester[i]}\", ARRAYJOIN({semesters}))";
-          }
-        }
-        if (loginData.specialization_name != null) {
-          for (var data in loginData.specialization_name ?? []) {
-            query += ",FIND(\"$data\", ARRAYJOIN({specialization_id (from specialization_ids)}))";
-          }
-        }
-        if (loginData.division != null) {
-          for (int i = 0; i < loginData.division.length; i++) {
-            query += ",FIND(\"${loginData.division[i]}\", ARRAYJOIN({divisions}))";
-          }
-        }
-*/
       }
       query += '))))';
       isNoNewAnnouncements = true;
@@ -236,12 +219,13 @@ class _HomeState extends State<Home> {
           announcement.clear();
         }
         announcement.addAll(data.records as Iterable<BaseApiResponseWithSerializable<AnnouncementResponse>>);
+        await filterData();
         offset = data.offset;
         if (_timer == null) {
           _startTimer();
         }
         setState(() {
-          isNoNewAnnouncements = false;
+          isNoNewAnnouncements = announcement.isEmpty;
           isAnnouncementLoading = false;
         });
       } else {
@@ -266,6 +250,78 @@ class _HomeState extends State<Home> {
       });
     }
     debugPrint('../ fetchAnnouncement ');
+  }
+
+  filterData() {
+    if (announcement.isNotEmpty) {
+      if (PreferenceUtils.getIsLogin() == 1) {
+        var loginData = PreferenceUtils.getLoginData();
+        for (int i = 0; i < announcement.length; i++) {
+          if (announcement[i].fields?.isActive == 1) {
+            if (announcement[i].fields?.isAll != true) {
+              if (announcement[i].fields?.announcementResponseFor == TableNames.ANNOUNCEMENT_ROLE_STUDENT) {
+                if (announcement[i].fields?.hubIdFromHubIds?.isNotEmpty == true) {
+                  if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.hubIdFromHubIds?.last) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                  }
+                } else if (announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
+                  if (announcement[i].fields?.specializationIdFromSpecializationIds?.contains(loginData.specializationIdFromSpecializationIds?.last) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                  }
+                } else if (announcement[i].fields?.semesters?.isNotEmpty == true) {
+                  if (announcement[i].fields?.semesters?.contains(loginData.semester) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                  }
+                } else if (announcement[i].fields?.divisions?.isNotEmpty == true) {
+                  if (announcement[i].fields?.divisions?.contains(loginData.division) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                  }
+                }
+              }
+            }
+          } else {
+            announcement.removeAt(i);
+            i--;
+          }
+        }
+      } else if (PreferenceUtils.getIsLogin() == 2) {
+        var loginData = PreferenceUtils.getLoginDataEmployee();
+        for (int i = 0; i < announcement.length; i++) {
+          if (announcement[i].fields?.isActive == 1) {
+            if (announcement[i].fields?.isAll != true) {
+              if (announcement[i].fields?.announcementResponseFor == TableNames.ANNOUNCEMENT_ROLE_EMPLOYEE) {
+                if (announcement[i].fields?.hubIdFromHubIds?.isNotEmpty == true) {
+                  bool contains = false;
+                  if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.hubIdFromHubIds?.last) == true) {
+                    contains = true;
+                  }
+                  if (!contains && loginData.accessible_hub_ids?.isNotEmpty == true) {
+                    for (int j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+                      if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.accessible_hub_ids![j]) == true) {
+                        contains = true;
+                        break;
+                      }
+                    }
+                  }
+
+                  if (!contains) {
+                    announcement.removeAt(i);
+                    i--;
+                  }
+                }
+              }
+            }
+          } else {
+            announcement.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
   }
 
   @override

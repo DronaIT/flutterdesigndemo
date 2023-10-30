@@ -110,6 +110,7 @@ class strings_name {
   static const String str_female = "Female";
   static const String str_both = "Both";
   static const String str_submit = "Submit";
+  static const String str_save = "Save";
   static const String str_no_data = "No items";
   static const String str_no_module = "No module assigned";
   static const String str_no_employee = "No employee";
@@ -391,6 +392,7 @@ class strings_name {
 
   static const String str_job_added = "New job opportunity added successfully";
   static const String str_job_updated = "Job opportunity updated successfully";
+  static const String str_job_approval_sent = "Job opportunity has been sent for approval";
 
   static const String str_apply = "Apply";
   static const String str_already_applied = "Already Applied";
@@ -408,6 +410,10 @@ class strings_name {
   static const String str_job_status_timeout = "timeout for new application";
   static const String str_job_status_interview_scheduled = "interview scheduled";
   static const String str_job_status_process_complete = "process complete";
+
+  static const String str_company_status_pending = "Pending";
+  static const String str_company_status_approved = "Approved";
+  static const String str_company_status_rejected = "Rejected";
 
   static const String str_please_select_one_student = "Please shortlist one student";
   static const String str_schadule_interview = "Schedule interview";
@@ -469,7 +475,8 @@ class strings_name {
   static const String str_completed_placement = "Completed internship process";
   static const String str_upload_resume = "Upload resume";
   static const String str_pending = "Pending";
-  static const String str_reject = "Rejected";
+  static const String str_rejected = "Rejected";
+  static const String str_reject = "Reject";
   static const String str_placed = "Placed";
   static const String str_empty_joing_Date = "Please select joining date";
 
@@ -537,6 +544,7 @@ class strings_name {
   static const String str_others_tickets = "Tickets assigned to me as Moderator";
   static const String str_ticket_id = "Ticket No:";
   static const String str_created_by = "Created by:";
+  static const String str_created_on = "Created on:";
   static const String str_help_desk_detail = "Help desk details";
   static const String str_notes = "Notes:";
   static const String str_status = "Status:";
@@ -545,8 +553,10 @@ class strings_name {
   static const String str_type_here = "Provide feedback...";
   static const String str_update_ticket_status = "Update ticket status";
   static const String str_update_ticket_type = "Update ticket category";
+  static const String str_update_ticket_assignee = "Update ticket assignee";
   static const String str_update_ticket_message = "Ticket updated successfully";
   static const String str_create_ticket_message = "Ticket created successfully";
+  static const String str_empty_ticket_assignee = "Please select at least one assignee";
 
   static const String str_task = "Task";
   static const String str_my_task = "My task";
@@ -620,6 +630,8 @@ class strings_name {
 
   static const String str_announcement_added = "Announcement add successfully.";
   static const String str_announcement_updated = "Announcement updated successfully.";
+  static const String str_remove_announcement = "Remove announcement";
+  static const String str_announcement_removed = "Announcement removed successfully.";
 
   /// Time Table Mobule String
   static const String str_time_table = "Time Table";
@@ -675,5 +687,29 @@ class strings_name {
   static const String str_empty_father_name = "Please add father's Full Name";
   static const String str_empty_profile_pic = "Please select profile pic";
   static const String str_details_updated = "Details are already uploaded";
+
   static const String str_no_placed = "No one placed here";
+  static const String str_self_placement = "Self placement";
+  static const String str_apply_for_self_placement = "Apply for self placement";
+  static const String str_approve_self_placement = "Approve self placement";
+  static const String str_placement_drive = "Placement Drive";
+
+  static const String str_internship_detail = "Internship details";
+  static const String str_applied_student = "Applied students";
+  static const String str_placed_student = "Placed students";
+  static const String str_empty_selfplace_company = "Please enter company details";
+  static const String str_empty_selfplace_job = "Please enter internship details";
+  static const String str_empty_applied_students = "Please select applied students";
+  static const String str_empty_placed_students = "Please select placed students";
+  static const String str_select_student = "Please select employee";
+  static const String str_empty_company = "Please select company";
+  static const String str_select_company = "Select company";
+
+  static const String str_err_company_setup = "Error in setting up the company";
+  static const String str_select_company_option = "Please select";
+  static const String str_option_create_company = "Create new company";
+  static const String str_option_select_company = "Select from existing company";
+  static const String str_rejection_reason = "Please provide rejection reason";
+  static const String str_self_place_rejected = "Job is rejected.";
+  static const String str_self_place_approved = "Job is approved.";
 }

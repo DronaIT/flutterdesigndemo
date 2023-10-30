@@ -45,7 +45,7 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
       isVisible = true;
     });
     var query = "FIND('$companyId', ${TableNames.CLM_COMPANY_ID}, 0)";
-    jobpportunityData = await apiRepository.getJoboppoApi(query);
+    jobpportunityData = await apiRepository.getJobOppoApi(query);
     setState(() {
       isVisible = false;
     });

@@ -47,7 +47,7 @@ class _InterViewScheduleDetailState extends State<InterViewScheduleDetail> {
     });
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
     try {
-      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+      jobOpportunityData = await apiRepository.getJobOppoApi(query);
       setState(() {
         isVisible = false;
       });

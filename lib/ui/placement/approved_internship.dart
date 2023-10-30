@@ -55,7 +55,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}')";
     try {
-      var data = await apiRepository.getJoboppoApi(query, offset);
+      var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           jobOpportunityList?.clear();

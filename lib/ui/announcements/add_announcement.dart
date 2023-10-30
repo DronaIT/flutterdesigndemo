@@ -365,6 +365,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
                       ? 'student'
                       : 'employee',
               isAll: isForAll ? true : false,
+              isActive: 1,
               attachments: attachmentResultCloudinary,
               createdBy: [createdBy],
               hubIds: isForAll ? [] : selectedHubIds,
@@ -499,6 +500,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
                       ? 'student'
                       : 'employee',
               isAll: isForAll ? true : false,
+              isActive: 1,
               attachments: attachmentResultCloudinary,
               createdBy: [announcementData?.fields?.createdBy.first ?? ''],
               updatedBy: [updatedBy],

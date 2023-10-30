@@ -44,7 +44,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
     });
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}',${TableNames.CLM_DISPLAY_INTERNSHIP}='2')";
     try{
-      var data = await apiRepository.getJoboppoApi(query, offset);
+      var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           jobOpportunityList?.clear();
@@ -55,7 +55,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
           getRecords();
         } else {
           setState(() {
-            jobOpportunityList?.sort((a, b) => a.fields!.jobTitle!.trim().compareTo(b.fields!.jobTitle!.trim()));
+            jobOpportunityList?.sort((a, b) => a.fields!.companyName!.last.trim().compareTo(b.fields!.companyName!.last.trim()));
             isVisible = false;
           });
         }

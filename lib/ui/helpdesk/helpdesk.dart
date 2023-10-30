@@ -202,11 +202,6 @@ class _HelpDeskState extends State<HelpDesk> {
       isVisible = true;
     });
     if (helpPath.isNotEmpty) {
-      // CloudinaryResponse response = await cloudinary.uploadFile(
-      //   CloudinaryFile.fromFile(helpPath,
-      //       resourceType: CloudinaryResourceType.Auto,
-      //       folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
-      // );
       if (!kIsWeb) {
         CloudinaryResponse response = await cloudinary.uploadFile(
           CloudinaryFile.fromFile(helpPath,
