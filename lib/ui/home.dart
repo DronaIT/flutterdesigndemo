@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -25,6 +26,7 @@ import 'package:flutterdesigndemo/ui/task/task_dashboard.dart';
 import 'package:flutterdesigndemo/ui/time_table/time_table_list.dart';
 import 'package:flutterdesigndemo/ui/upload_documents.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -64,6 +66,7 @@ class _HomeState extends State<Home> {
   bool canShowAnnouncements = false;
 
   List<BaseApiResponseWithSerializable<AnnouncementResponse>> announcement = [];
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Future<void> getRecords(String roleId) async {
     var query = "SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0)";
@@ -198,7 +201,6 @@ class _HomeState extends State<Home> {
 
       /// Employee
       else if (isLogin == 2) {
-        // for(var data in loginData.semester??[]){
         if (loginData.hubIdFromHubIds != null) {
           for (int i = 0; i < loginData.hubIdFromHubIds.length; i++) {
             query += "${i == 0 ? '' : ','}FIND(\"${loginData.hubIdFromHubIds[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
@@ -260,25 +262,33 @@ class _HomeState extends State<Home> {
           if (announcement[i].fields?.isActive == 1) {
             if (announcement[i].fields?.isAll != true) {
               if (announcement[i].fields?.announcementResponseFor == TableNames.ANNOUNCEMENT_ROLE_STUDENT) {
+                bool removed = false;
                 if (announcement[i].fields?.hubIdFromHubIds?.isNotEmpty == true) {
                   if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.hubIdFromHubIds?.last) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
-                } else if (announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
+                }
+                if (!removed && announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
                   if (announcement[i].fields?.specializationIdFromSpecializationIds?.contains(loginData.specializationIdFromSpecializationIds?.last) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
-                } else if (announcement[i].fields?.semesters?.isNotEmpty == true) {
+                }
+                if (!removed && announcement[i].fields?.semesters?.isNotEmpty == true) {
                   if (announcement[i].fields?.semesters?.contains(loginData.semester) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
-                } else if (announcement[i].fields?.divisions?.isNotEmpty == true) {
+                }
+                if (!removed && announcement[i].fields?.divisions?.isNotEmpty == true) {
                   if (announcement[i].fields?.divisions?.contains(loginData.division) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
                 }
               }
@@ -327,6 +337,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    FirebaseMessaging.onMessage.listen(handlePushNotification);
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
@@ -344,6 +355,27 @@ class _HomeState extends State<Home> {
       phone = loginData.contactNumber.toString();
       getRecords(TableNames.ORGANIZATION_ROLE_ID);
     }
+
+    // PushNotificationService.sendNotification("Title", "Test Message");
+  }
+
+  void handlePushNotification(RemoteMessage message) async {
+    final title = message.data['title'];
+    final body = message.data['body'];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: custom_text(text: 'OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

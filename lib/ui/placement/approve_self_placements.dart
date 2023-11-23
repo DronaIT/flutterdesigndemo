@@ -546,12 +546,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
 
         var resp = await apiRepository.createJobOpportunityApi(request);
         if (resp.id!.isNotEmpty) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_job_added);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(closeOverlays: true, result: true);
+          placeStudent(jobInfo);
         } else {
           setState(() {
             isVisible = false;
@@ -566,6 +561,39 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_err_company_setup);
+    }
+  }
+
+  Future<void> placeStudent(BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+    if (jobInfo?.fields?.placedStudents?.last.isNotEmpty == true) {
+      setState(() {
+        isVisible = true;
+      });
+      try {
+        Map<String, dynamic> requestParams = Map();
+        requestParams[TableNames.CLM_IS_PLACED_NOW] = "1";
+        requestParams[TableNames.CLM_HAS_RESIGNED] = 0;
+
+        var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, jobInfo?.fields?.placedStudents?.last ?? "");
+        if (dataUpdate.fields != null) {
+          setState(() {
+            isVisible = false;
+          });
+          Utils.showSnackBar(context, strings_name.str_job_updated);
+          await Future.delayed(const Duration(milliseconds: 2000));
+          Get.back(closeOverlays: true, result: true);
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
+      }
     }
   }
 }

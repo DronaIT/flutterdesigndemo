@@ -80,6 +80,7 @@ class TableNames {
   static const TBL_HELPDESK = "TBL_HELPDESK";
   static const TBL_ANNOUNCEMENT = "TBL_ANNOUNCEMENT";
   static const TBL_TIMETABLE = "TBL_TIMETABLE";
+  static const TBL_MARKETING = "TBL_MARKETING";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";

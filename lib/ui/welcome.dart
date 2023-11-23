@@ -20,17 +20,17 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
-    var lWidth = MediaQuery.of(context).size.width - 20.h;
+    var lWidth = MediaQuery.of(context).size.width - 20.w;
     var lHeight = MediaQuery.of(context).size.height * 0.30;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.only(left: 10, right: 10),
+            margin: EdgeInsets.only(left: 10.w, right: 10.w),
             child: Column(
               children: [
-                SizedBox(height: 60.h),
-                Container(alignment: Alignment.topLeft, child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h)),
+                SizedBox(height: 40.h),
+                Container(alignment: Alignment.topLeft, child: Image.asset(AppImage.ic_launcher, width: 80, height: 80)),
                 custom_text(
                   text: strings_name.str_welcome,
                   alignment: Alignment.topLeft,

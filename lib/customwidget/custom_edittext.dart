@@ -56,7 +56,7 @@ class _customState extends State<custom_edittext> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.margin ?? EdgeInsets.only(left: 10.w, right: 10.w, top: widget.topValue),
+      margin: widget.margin ?? EdgeInsets.only(left: 10, right: 10, top: widget.topValue),
       alignment: widget.alignment,
       child: TextFormField(
         keyboardType: widget.type,

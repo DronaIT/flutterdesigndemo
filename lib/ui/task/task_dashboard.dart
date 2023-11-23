@@ -174,6 +174,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
 
   differentiateTasks() {
     myTaskList?.clear();
+    taskAssignedByMeList?.clear();
     taskAssignedList?.clear();
 
     taskList?.sort((a, b) {
@@ -219,13 +220,14 @@ class _TaskDashboardState extends State<TaskDashboard> {
                     flex: 1,
                     child: CustomEditTextSearch(
                       type: TextInputType.text,
-                      hintText: "Search by name..",
+                      hintText: "Search by assignee name..",
                       textInputAction: TextInputAction.done,
                       controller: controllerSearch,
                       onChanges: (value) {
                         if (value.isEmpty) {
                           taskList = [];
                           taskList = List.from(mainList!);
+                          differentiateTasks();
                           setState(() {});
                         } else {
                           taskList = [];
@@ -324,6 +326,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"canUpdateTicketCategory": false},
                                       {"recordId": myTaskList?[index].id},
                                       {"title": strings_name.str_task_detail},
+                                      {"canUpdateTicketAssignee": false},
                                     ])?.then((value) {
                                       if (value != null && value) {
                                         taskList?.clear();
@@ -596,6 +599,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                                 {"canUpdateTicketCategory": true},
                                                 {"recordId": taskAssignedList?[index].id},
                                                 {"title": strings_name.str_task_detail},
+                                                {"canUpdateTicketAssignee": canUpdateTicketAssignee},
                                               ])?.then((value) {
                                                 if (value != null && value) {
                                                   taskList?.clear();

@@ -196,7 +196,6 @@ class _ConfirmInternShipState extends State<ConfirmInternShip> {
       isVisible = true;
     });
     var loginData = PreferenceUtils.getLoginData();
-    // var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
     var query = "SEARCH('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE})";
     try{
       var data = await apiRepository.loginApi(query);

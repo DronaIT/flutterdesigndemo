@@ -31,7 +31,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   bool isVisible = false;
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
@@ -53,8 +52,8 @@ class _LoginState extends State<Login> {
                 margin: const EdgeInsets.only(left: 10, right: 10),
                 child: Column(
                   children: [
-                    SizedBox(height: 60.h),
-                    Container(alignment: Alignment.topLeft, child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h)),
+                    SizedBox(height: 20.h),
+                    Container(alignment: Alignment.topLeft, child: Image.asset(AppImage.ic_launcher, width: 80, height: 80)),
                     custom_text(
                       text: strings_name.str_lest_started,
                       alignment: Alignment.topLeft,
@@ -65,34 +64,26 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 0),
-                            width: viewWidth,
-                            child: DropdownButtonFormField<String>(
-                              elevation: 16,
-                              style: blackText16,
-                              focusColor: Colors.white,
-                              value: loginValue,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  loginValue = newValue!;
-                                });
-                              },
-                              items: loginRole.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 0),
+                      width: viewWidth,
+                      child: DropdownButtonFormField<String>(
+                        elevation: 16,
+                        style: blackText16,
+                        focusColor: Colors.white,
+                        value: loginValue,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            loginValue = newValue!;
+                          });
+                        },
+                        items: loginRole.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
                     ),
                     SizedBox(height: 10.h),
                     custom_text(
@@ -157,9 +148,7 @@ class _LoginState extends State<Login> {
                         ),
                         const SizedBox(width: 5),
                         Expanded(
-                          child:
-                              // custom_text(text: strings_name.str_terms_privacy_policy, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)
-                              Text.rich(
+                          child: Text.rich(
                             TextSpan(
                               children: [
                                 const TextSpan(
@@ -192,7 +181,7 @@ class _LoginState extends State<Login> {
                         )
                       ],
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 15.h),
                     CustomButton(
                         text: strings_name.str_signin,
                         click: () async {
@@ -241,7 +230,7 @@ class _LoginState extends State<Login> {
                                   });
                                   Utils.showSnackBar(context, strings_name.str_something_wrong);
                                 }
-                              } else if(loginValue == TableNames.LOGIN_ROLE_EMPLOYEE){
+                              } else if (loginValue == TableNames.LOGIN_ROLE_EMPLOYEE) {
                                 var dataEmployee = await loginRepository.loginEmployeeApi(query);
                                 if (dataEmployee.records!.isNotEmpty) {
                                   setState(() {
@@ -271,7 +260,7 @@ class _LoginState extends State<Login> {
                                   });
                                   Utils.showSnackBar(context, strings_name.str_something_wrong);
                                 }
-                              } else if(loginValue == TableNames.LOGIN_ROLE_ORGANIZATION){
+                              } else if (loginValue == TableNames.LOGIN_ROLE_ORGANIZATION) {
                                 var queryOrg = "OR(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',AND(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
                                 var dataOrg = await loginRepository.getCompanyDetailApi(queryOrg);
                                 if (dataOrg.records!.isNotEmpty) {
@@ -312,7 +301,7 @@ class _LoginState extends State<Login> {
                             }
                           }
                         }),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 10.h),
                     GestureDetector(
                       child: AppWidgets.spannableText(strings_name.str_donot_signup, strings_name.str_signup, primaryTextSemiBold16),
                       onTap: () {

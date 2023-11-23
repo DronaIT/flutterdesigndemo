@@ -225,6 +225,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                         if (value.isEmpty) {
                           ticketList = [];
                           ticketList = List.from(mainList!);
+                          differentiateTickets();
                           setState(() {});
                         } else {
                           ticketList = [];
@@ -301,6 +302,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                     {"canUpdateTicketCategory": false},
                                     {"recordId": myTicketList?[index].id},
                                     {"title": strings_name.str_help_desk_detail},
+                                    {"canUpdateTicketAssignee": false},
                                   ]);
                                 },
                                 child: Column(children: [

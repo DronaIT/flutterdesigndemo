@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/models/attendance_data.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
@@ -568,6 +569,32 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
             isVisible = true;
           });
 
+          List<AttendanceData> lecturesData = [];
+          for (int i = 0; i < viewStudent!.length; i++) {
+            if ((viewStudent![i].fields!.lectureIds?.length ?? 0) > 0) {
+              for (int j = 0; j < viewStudent![i].fields!.lectureIds!.length; j++) {
+                var isAdded = lecturesData.indexWhere((element) => element.lectureId == viewStudent![i].fields!.lectureIds![j]);
+                if (isAdded == -1) {
+                  AttendanceData lData = AttendanceData();
+                  lData.lectureDate = viewStudent![i].fields!.lecture_date![j];
+                  lData.lectureId = viewStudent![i].fields!.lectureIds![j];
+                  lData.lectureTime = viewStudent![i].fields!.lecture_time![j];
+                  lData.employeeName = viewStudent![i].fields!.employee_name![j];
+                  lData.subjectTitle = viewStudent![i].fields!.lecture_subject_title![j];
+                  lData.specializationId = viewStudent![i].fields!.lecture_specialization_id![j];
+
+                  lecturesData.add(lData);
+                }
+              }
+            }
+          }
+
+          lecturesData.sort((a,b) {
+            var adate = a.lectureDate;
+            var bdate = b.lectureDate;
+            return adate!.compareTo(bdate!);
+          });
+
           List<String> titleList = [];
           titleList.add("Enrollment Number");
           titleList.add("Name");
@@ -591,25 +618,26 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
             if (strDate == null) {
               strDate = startDate;
             } else {
-              strDate = strDate.add(Duration(days: 1));
+              strDate = strDate.add(const Duration(days: 1));
             }
             strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
-            if (viewStudent![0].fields!.lecture_date?.contains(strCheck) == true) {
+            var isContains = lecturesData.firstWhereOrNull((element) => element.lectureDate == strCheck);
+            if (isContains != null) {
               int? pos = 0;
               do {
-                pos = viewStudent![0].fields!.lecture_date?.indexOf(strCheck, pos!);
+                pos = lecturesData.indexWhere((element) => element.lectureDate == strCheck, pos!);
                 if (pos != -1) {
-                  if (viewStudent![0].fields!.lecture_specialization_id![pos!] == viewStudent![0].fields!.specializationIds!.first) {
+                  if (lecturesData[pos].specializationId == viewStudent![0].fields!.specializationIds!.first) {
                     var lectureDate = DateFormat("dd MMM yyyy").format(strDate);
                     totalSub++;
-                    titleList.add("$lectureDate ${viewStudent![0].fields?.lecture_time![pos]} - ${viewStudent![0].fields?.employee_name![pos]} - (${viewStudent![0].fields?.lecture_subject_title![pos]})");
+                    titleList.add("$lectureDate ${lecturesData[pos].lectureTime} - ${lecturesData[pos].employeeName} - (${lecturesData[pos].subjectTitle})");
                   }
                   pos = pos + 1;
-                  if (pos >= viewStudent![0].fields!.lecture_date!.length) {
+                  if (pos >= lecturesData.length) {
                     break;
                   }
                 }
-              } while (viewStudent![0].fields!.lecture_date?.indexOf(strCheck, pos!) != -1);
+              } while (lecturesData.indexWhere((element) => element.lectureDate == strCheck, pos) != -1);
             }
           } while (strCheck != enCheck);
           sheet.appendRow(titleList);
@@ -624,16 +652,18 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
               if (strDate == null) {
                 strDate = startDate;
               } else {
-                strDate = strDate.add(Duration(days: 1));
+                strDate = strDate.add(const Duration(days: 1));
               }
               strCheck = DateFormat("yyyy-MM-dd").format(strDate!);
-              if (viewStudent![i].fields!.lecture_date?.contains(strCheck) == true) {
+              var isContains = lecturesData.firstWhereOrNull((element) => element.lectureDate == strCheck);
+
+              if (isContains != null) {
                 int? pos = 0;
                 do {
-                  pos = viewStudent![i].fields!.lecture_date?.indexOf(strCheck, pos!);
+                  pos = lecturesData.indexWhere((element) => element.lectureDate == strCheck, pos!);
                   if (pos != -1) {
-                    if (viewStudent![i].fields!.lecture_specialization_id![pos!] == viewStudent![i].fields!.specializationIds!.first) {
-                      if (viewStudent![i].fields!.absentLectureIds?.contains(viewStudent![i].fields!.lectureIds![pos]) == true) {
+                    if (lecturesData[pos].specializationId == viewStudent![i].fields!.specializationIds!.first) {
+                      if (viewStudent![i].fields!.absentLectureIds?.contains(lecturesData[pos].lectureId) == true) {
                         attendanceData.add("A");
                       } else {
                         presentSub++;
@@ -641,11 +671,11 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
                       }
                     }
                     pos = pos + 1;
-                    if (pos >= viewStudent![i].fields!.lecture_date!.length) {
+                    if (pos >= lecturesData.length) {
                       break;
                     }
                   }
-                } while (viewStudent![i].fields!.lecture_date?.indexOf(strCheck, pos!) != -1);
+                } while (lecturesData.indexWhere((element) => element.lectureDate == strCheck, pos) != -1);
               }
             } while (strCheck != enCheck);
 

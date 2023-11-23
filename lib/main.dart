@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/ui/splash_screen.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -18,17 +20,18 @@ void main() async {
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
-      apiKey: 'AIzaSyCD4tKcvsOm2Axz6YQCgaLlbt0Eu9iOVD4',
-      appId: '1:694081930115:web:5016bfc419949837716cb6',
-      messagingSenderId: '694081930115',
-      projectId: 'dronaapp-36d3c',
-    ));
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyCD4tKcvsOm2Axz6YQCgaLlbt0Eu9iOVD4',
+        appId: '1:694081930115:web:5016bfc419949837716cb6',
+        messagingSenderId: '694081930115',
+        projectId: 'dronaapp-36d3c',
+      ),
+    );
   } else {
     await Firebase.initializeApp();
+    String? deviceId = await Utils.getId();
   }
   await PreferenceUtils.init();
   setup();
@@ -46,22 +49,22 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        useInheritedMediaQuery: true,
-        // designSize: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
-        builder: (context, child) {
-          return GetMaterialApp(
-            scrollBehavior: MyCustomScrollBehavior(),
-            debugShowCheckedModeBanner: false,
-            title: 'Drona foundation',
-            home: SplashScreen(),
-            theme: ThemeData(
-                primarySwatch: primaryColor,
-                buttonTheme: ButtonTheme.of(context).copyWith(
-                  textTheme: ButtonTextTheme.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-                )),
-          );
-        });
+      useInheritedMediaQuery: true,
+      builder: (context, child) {
+        return GetMaterialApp(
+          scrollBehavior: MyCustomScrollBehavior(),
+          debugShowCheckedModeBanner: false,
+          title: 'Drona Foundation',
+          home: SplashScreen(),
+          theme: ThemeData(
+              primarySwatch: primaryColor,
+              buttonTheme: ButtonTheme.of(context).copyWith(
+                textTheme: ButtonTextTheme.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+              )),
+        );
+      },
+    );
   }
 
   static const MaterialColor primaryColor = MaterialColor(

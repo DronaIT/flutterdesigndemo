@@ -204,25 +204,33 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
           if (announcement[i].fields?.isActive == 1) {
             if (announcement[i].fields?.isAll != true) {
               if (announcement[i].fields?.announcementResponseFor == TableNames.ANNOUNCEMENT_ROLE_STUDENT) {
+                bool removed = false;
                 if (announcement[i].fields?.hubIdFromHubIds?.isNotEmpty == true) {
                   if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.hubIdFromHubIds?.last) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
-                } else if (announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
+                }
+                if (!removed && announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
                   if (announcement[i].fields?.specializationIdFromSpecializationIds?.contains(loginData.specializationIdFromSpecializationIds?.last) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
-                } else if (announcement[i].fields?.semesters?.isNotEmpty == true) {
+                }
+                if (!removed && announcement[i].fields?.semesters?.isNotEmpty == true) {
                   if (announcement[i].fields?.semesters?.contains(loginData.semester) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
-                } else if (announcement[i].fields?.divisions?.isNotEmpty == true) {
+                }
+                if (!removed && announcement[i].fields?.divisions?.isNotEmpty == true) {
                   if (announcement[i].fields?.divisions?.contains(loginData.division) != true) {
                     announcement.removeAt(i);
                     i--;
+                    removed = true;
                   }
                 }
               }

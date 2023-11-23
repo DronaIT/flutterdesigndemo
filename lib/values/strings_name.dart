@@ -701,7 +701,7 @@ class strings_name {
   static const String str_empty_selfplace_job = "Please enter internship details";
   static const String str_empty_applied_students = "Please select applied students";
   static const String str_empty_placed_students = "Please select placed students";
-  static const String str_select_student = "Please select employee";
+  static const String str_select_student = "Please select student";
   static const String str_empty_company = "Please select company";
   static const String str_select_company = "Select company";
 
@@ -712,4 +712,11 @@ class strings_name {
   static const String str_rejection_reason = "Please provide rejection reason";
   static const String str_self_place_rejected = "Job is rejected.";
   static const String str_self_place_approved = "Job is approved.";
+
+  static const String str_add_marketing_record = "Add Marketing Record";
+  static const String str_edit_marketing_record = "Edit Marketing Record";
+  static const String str_number_of_approach = "Number of approaches done*";
+  static const String str_number_of_meeting = "Number of meetings done*";
+  static const String str_number_of_seminars_arranged = "Number of seminars arranged*";
+  static const String str_number_of_seminars_completed = "Number of seminars completed*";
 }
