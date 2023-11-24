@@ -32,12 +32,13 @@ class _FilterDataState extends State<FilterData> {
 
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentEligibiltyList = [];
 
-
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> test = [];
 
   bool isVisible = false;
-  var subjectName ;
-  var subjectId ;
+  var subjectName;
+
+  var subjectId;
+
   var isFromEligible;
   var eligiblePersentage;
   var speName;
@@ -56,36 +57,36 @@ class _FilterDataState extends State<FilterData> {
       hubName = Get.arguments[3]["hub"];
       isFromEligible = Get.arguments[5]["eligible"];
       eligiblePersentage = Get.arguments[6]["eligible_percentage"];
-      if(isFromEligible){
+      if (isFromEligible) {
         checkPresentAbsentDetailBySubject();
       }
     }
   }
 
   void checkPresentAbsentDetailBySubject() {
-    for(int i = 0 ; i<studentList.length ; i++){
-      if(studentList[i].fields!.lectureSubjectId!.contains(subjectId)){
+    for (int i = 0; i < studentList.length; i++) {
+      if (studentList[i].fields!.lectureSubjectId!.contains(subjectId)) {
         studentEligibiltyList.add(studentList[i]);
       }
     }
     test.clear();
     studentList.clear();
     for (int j = 0; j < studentEligibiltyList.length; j++) {
-      var total_lecture = 0,  total_present = 0;
-      for( int k=0; k < studentEligibiltyList[j].fields!.lectureSubjectId!.length ; k++){
-        if(studentEligibiltyList[j].fields!.lectureSubjectId![k] == subjectId){
+      var total_lecture = 0, total_present = 0;
+      for (int k = 0; k < studentEligibiltyList[j].fields!.lectureSubjectId!.length; k++) {
+        if (studentEligibiltyList[j].fields!.lectureSubjectId![k] == subjectId) {
           total_lecture += 1;
         }
       }
-      if(studentEligibiltyList[j].fields!.presentSubjectId != null){
-        for( int M=0; M < studentEligibiltyList[j].fields!.presentSubjectId!.length ; M++){
-          if(studentEligibiltyList[j].fields!.presentSubjectId![M] == subjectId){
+      if (studentEligibiltyList[j].fields!.presentSubjectId != null) {
+        for (int M = 0; M < studentEligibiltyList[j].fields!.presentSubjectId!.length; M++) {
+          if (studentEligibiltyList[j].fields!.presentSubjectId![M] == subjectId) {
             total_present += 1;
           }
         }
       }
       var totalPresentPercentage = ((total_present * 100) / total_lecture);
-      if(totalPresentPercentage < int.parse(eligiblePersentage)){
+      if (totalPresentPercentage < (int.tryParse(eligiblePersentage) ?? 75)) {
         test.add(studentEligibiltyList[j]);
       }
       studentEligibiltyList[j].fields!.percentage = totalPresentPercentage.toStringAsFixed(2);
@@ -93,16 +94,26 @@ class _FilterDataState extends State<FilterData> {
     studentList = List.from(test);
   }
 
-
   Future<void> saveExcelFile(List<BaseApiResponseWithSerializable<LoginFieldsResponse>> data) async {
-
     setState(() {
       isVisible = true;
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'EnrollmentNumber', 'Mobile Number', 'Address', 'City', 'Division', 'Gender', 'joining year', 'Semester',
-        'Hub Name', 'Specialization', 'Subject',
+    sheet.appendRow([
+      'Name',
+      'Email',
+      'Enrollment Number',
+      'Mobile Number',
+      'Address',
+      'City',
+      'Division',
+      'Gender',
+      'joining year',
+      'Semester',
+      'Hub Name',
+      'Specialization',
+      'Subject',
     ]);
     List<LoginFieldsReportResponse> myData = [];
     for (var i = 0; i < data.length; i++) {
@@ -118,70 +129,29 @@ class _FilterDataState extends State<FilterData> {
         joiningYear: data[i].fields!.joiningYear ?? "",
         semester: data[i].fields!.semester ?? "",
         hub: hubName ?? "",
-        specialization:  speName ?? "",
+        specialization: speName ?? "",
         subject: subjectName ?? "",
       );
       myData.add(responseValue);
     }
     myData.forEach((row) {
-      sheet.appendRow([
-        row.name,
-        row.email,
-        row.enrollmentNumber,
-        row.mobileNumber,
-        row.address,
-        row.city,
-        row.division,
-        row.gender,
-        row.joiningYear,
-        row.semester,
-        row.hub,
-        row.specialization,
-        row.subject
-      ]);
+      sheet.appendRow([row.name, row.email, row.enrollmentNumber, row.mobileNumber, row.address, row.city, row.division, row.gender, row.joiningYear, row.semester, row.hub, row.specialization, row.subject]);
     });
 
-    // var data1 = [];
-    // for(var row in data){
-    //   print("test=>${row}");
-    //
-    // }
-    // sheet.appendRow(data1);
-    // int colIndex = 0;
-    // data.forEach((colValue) {
-    //   sheet.cell(CellIndex.indexByColumnRow(
-    //     rowIndex: sheet.maxRows,
-    //     columnIndex: colIndex,
-    //   ))
-    //     ..value = colValue.fields;
-    // });
-
-    // List<List<String>> newData = [];
-    // List<String> newData1 = [];
-
-    // for( var i =0 ; i< data.length ; i++){
-    //   newData1.add(data[i].fields!.name!);
-    //   newData.add(newData1);
-    // }
-    // for (var row in newData) {
-    //   sheet.appendRow(row);
-    // }
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
     var file = File("${appDocumentsDirectory.path}/Student_Report.xlsx");
     await file.writeAsBytes(excel.encode()!);
-    try{
+    try {
       await OpenFilex.open(file.path);
       setState(() {
         isVisible = false;
       });
-
-    }catch(e){
+    } catch (e) {
       setState(() {
         isVisible = false;
       });
       Utils.showSnackBarUsingGet("No Application found to open this file");
     }
-
   }
 
   @override
@@ -249,10 +219,7 @@ class _FilterDataState extends State<FilterData> {
                                     custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
                                     custom_text(topValue: 0, bottomValue: 5, text: "Specialization: ${Utils.getSpecializationName(studentList[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
                                     custom_text(topValue: 0, bottomValue: 5, text: "Mobile No: ${studentList[index].fields?.mobileNumber}", textStyles: blackTextSemiBold14),
-                                    Visibility(
-                                        visible: isFromEligible,
-                                        child: custom_text(topValue: 0, bottomValue: 5, text: "Attendance Percentage: ${studentList[index].fields?.percentage}%", textStyles: blackTextSemiBold14)),
-
+                                    Visibility(visible: isFromEligible, child: custom_text(topValue: 0, bottomValue: 5, text: "Attendance Percentage: ${studentList[index].fields?.percentage}%", textStyles: blackTextSemiBold14)),
                                     Align(
                                       alignment: Alignment.bottomRight,
                                       child: CustomButton(
@@ -281,7 +248,7 @@ class _FilterDataState extends State<FilterData> {
 
   _launchCaller(String mobile) async {
     try {
-      await launchUrl(Uri.parse("tel:$mobile"));
+      await launchUrl(Uri.parse("tel:$mobile"), mode: LaunchMode.externalApplication);
     } catch (e) {
       Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
     }

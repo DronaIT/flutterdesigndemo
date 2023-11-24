@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final addAnnouncementRequest = addAnnouncementRequestFromJson(jsonString);
-
 import 'dart:convert';
 
 AddAnnouncementRequest addAnnouncementRequestFromJson(String str) => AddAnnouncementRequest.fromJson(json.decode(str));
@@ -48,6 +44,7 @@ class Fields {
   List<Attachment>? attachments;
   List<String> createdBy;
   bool? isAll;
+  int? isActive;
   List<String>? hubIds = [];
   List<String>? specializationIds = [];
   List<String>? semesters = [];
@@ -62,6 +59,7 @@ class Fields {
     this.attachments,
     required this.createdBy,
     this.isAll,
+    this.isActive,
     this.hubIds,
     this.specializationIds,
     this.semesters,
@@ -77,6 +75,7 @@ class Fields {
     attachments: json["attachments"] == null ? [] : List<Attachment>.from(json["attachments"]!.map((x) => Attachment.fromJson(x))),
     createdBy: List<String>.from(json["created_by"].map((x) => x)),
     isAll: json["is_all"],
+    isActive: json["is_active"],
     hubIds: json["hub_ids"] == null ? [] : List<String>.from(json["hub_ids"]!.map((x) => x)),
     specializationIds: json["specialization_ids"] == null ? [] : List<String>.from(json["specialization_ids"]!.map((x) => x)),
     semesters: json["semesters"] == null ? [] : List<String>.from(json["semesters"]!.map((x) => x)),
@@ -92,6 +91,7 @@ class Fields {
     "attachments": attachments == null ? [] : List<dynamic>.from(attachments!.map((x) => x.toJson())),
     "created_by": List<dynamic>.from(createdBy.map((x) => x)),
     "is_all": isAll,
+    "is_active": isActive,
     "hub_ids": hubIds == null ? [] : List<dynamic>.from(hubIds!.map((x) => x)),
     "specialization_ids": specializationIds == null ? [] : List<dynamic>.from(specializationIds!.map((x) => x)),
     "semesters": semesters == null ? [] : List<dynamic>.from(semesters!.map((x) => x)),

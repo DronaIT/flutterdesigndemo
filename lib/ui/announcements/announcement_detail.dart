@@ -1,34 +1,33 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/utils/utils.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
-
 import '../../models/announcement_response.dart';
 import '../../models/base_api_response.dart';
 import '../../models/request/update_announcement_request.dart';
 import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
-import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 import 'add_announcement.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
 
 class AnnouncementDetail extends StatefulWidget {
   final BaseApiResponseWithSerializable<AnnouncementResponse> announcement;
   final bool isEdit;
-  const AnnouncementDetail(
-      {super.key, required this.announcement, required this.isEdit});
+
+  const AnnouncementDetail({super.key, required this.announcement, required this.isEdit});
 
   @override
   State<AnnouncementDetail> createState() => _AnnouncementDetailState();
@@ -40,7 +39,6 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   @override
   void initState() {
     isEdit = widget.isEdit;
-    // TODO: implement initState
     super.initState();
     getPermission();
     addViewBy();
@@ -49,6 +47,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   var isLogin = 0;
   bool isVisible = false;
   bool canAddAnnouncements = false;
+  bool canRemoveAnnouncements = false;
   var loginData;
   String loginType = "";
   var loginId = "";
@@ -78,16 +77,17 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
       loginType = TableNames.ANNOUNCEMENT_ROLE_ORGANIZATION;
     }
 
-    var query =
-        "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_ANNOUNCEMENT}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_ANNOUNCEMENT}')";
 
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
-          if (data.records![i].fields!.permissionId ==
-              TableNames.PERMISSION_ID_ADD_ANNOUNCEMENT) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_ANNOUNCEMENT) {
             canAddAnnouncements = true;
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_REMOVE_ANNOUNCEMENT) {
+            canRemoveAnnouncements = true;
           }
         }
         setState(() {
@@ -131,15 +131,12 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         updateAttachments.add(UpdateAttachment(url: data.url));
       }
 
-      List<String>? seenByEmployees =
-          announcementData.fields?.seenByEmployees ?? [];
-      List<String>? seenByStudents =
-          announcementData.fields?.seenByStudents ?? [];
+      List<String>? seenByEmployees = announcementData.fields?.seenByEmployees ?? [];
+      List<String>? seenByStudents = announcementData.fields?.seenByStudents ?? [];
 
       String createdBy = PreferenceUtils.getLoginRecordId();
 
-      if (seenByEmployees.contains(createdBy) ||
-          seenByStudents.contains(createdBy)) {
+      if (seenByEmployees.contains(createdBy) || seenByStudents.contains(createdBy)) {
         return;
       }
 
@@ -153,10 +150,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         }
       }
 
-
       // return;
-      UpdateAnnouncementRequest updateAnnouncementRequest =
-          UpdateAnnouncementRequest(records: [
+      UpdateAnnouncementRequest updateAnnouncementRequest = UpdateAnnouncementRequest(records: [
         UpdateRecord(
           id: announcementData.id ?? '',
           fields: UpdateFields(
@@ -165,6 +160,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
             image: announcementData.fields?.image ?? '',
             fieldsFor: announcementData.fields?.announcementResponseFor ?? '',
             isAll: announcementData.fields?.isAll ?? false,
+            isActive: 1,
             attachments: updateAttachments,
             createdBy: [announcementData.fields?.createdBy.first ?? ''],
             updatedBy: [announcementData.fields?.createdBy.first ?? ''],
@@ -178,10 +174,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         )
       ]);
 
-      var dataUpdate = await apiRepository.updateAnnouncementDataApi(
-          updateAnnouncementRequest.toJson(), announcementData.id ?? '');
-    } catch (e) {
-    }
+      var dataUpdate = await apiRepository.updateAnnouncementDataApi(updateAnnouncementRequest.toJson(), announcementData.id ?? '');
+    } catch (e) {}
   }
 
   @override
@@ -193,7 +187,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
             visible: canAddAnnouncements,
             child: GestureDetector(
               onTap: () async {
-                var result = await Get.to(const AddAnnouncement(isFromDetailScreen:true));
+                var result = await Get.to(const AddAnnouncement(isFromDetailScreen: true));
                 if (result == 'updateAnnouncement') {
                   Get.back(result: 'addAnnouncement');
                 }
@@ -254,15 +248,15 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                     height: 10.h,
                   ),
                   SizedBox(
-                    height: 160.h,
+                    height: 180.h,
                     child: Stack(
                       children: [
                         CachedNetworkImage(
                           imageUrl: widget.announcement.fields?.image ?? '',
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                           width: 1.sw,
-                          errorWidget: (context, url, error) =>
-                              const Center(child: Icon(Icons.error)),
+                          height: 190.h,
+                          errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -272,8 +266,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16.0, bottom: 16.0, right: 16.0),
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 16.0, right: 10.0),
                             child: Text(
                               widget.announcement.fields?.title ?? '',
                               style: whiteTextSemiBold20,
@@ -284,17 +277,17 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 10.0.w, vertical: 10.h),
-                    child: Text(
-                      widget.announcement.fields?.description ?? '',
-                      style: lightBlackText16,
+                    padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 10.h),
+                    child: SelectableLinkify(
+                      text: widget.announcement.fields?.description ?? '',
+                      style: blackText16,
+                      onOpen: (link) async {
+                        await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication);
+                      },
                     ),
                   ),
                   Visibility(
-                    visible:
-                        widget.announcement.fields?.attachments?.isNotEmpty ??
-                            false,
+                    visible: widget.announcement.fields?.attachments?.isNotEmpty ?? false,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0.w),
                       child: Column(
@@ -314,37 +307,23 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                           ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: widget.announcement.fields?.attachments
-                                      ?.length ??
-                                  0,
+                              itemCount: widget.announcement.fields?.attachments?.length ?? 0,
                               itemBuilder: (context, index) {
-                                var data = widget
-                                    .announcement.fields?.attachments?[index];
+                                var data = widget.announcement.fields?.attachments?[index];
                                 return Card(
                                   elevation: 5,
                                   child: Container(
                                     color: colors_name.colorWhite,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Expanded(
-                                            child: Text("${data?.filename}",
-                                                textAlign: TextAlign.start,
-                                                style: blackTextSemiBold16)),
+                                        Expanded(child: Text("${data?.filename}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
                                         GestureDetector(
                                             onTap: () async {
-                                              await launchUrl(
-                                                  Uri.parse(data?.url??''),
-                                                  mode: LaunchMode.externalApplication
-                                              );
+                                              await launchUrl(Uri.parse(data?.url ?? ''), mode: LaunchMode.externalApplication);
                                             },
-                                            child: const Icon(Icons.download,
-                                                size: 30,
-                                                color:
-                                                    colors_name.colorPrimary))
+                                            child: const Icon(Icons.download, size: 30, color: colors_name.colorPrimary))
                                       ],
                                     ),
                                   ),
@@ -356,10 +335,85 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  Visibility(
+                      visible: canRemoveAnnouncements,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
+                        child: CustomButton(
+                          text: strings_name.str_remove_announcement,
+                          click: () {
+                            confirmationDialog();
+                          },
+                        ),
+                      )),
                 ],
               ),
       ),
     );
+  }
+
+  Future<void> confirmationDialog() async {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          custom_text(
+            text: 'Are you sure you want to remove this announcement?',
+            textStyles: primaryTextSemiBold16,
+            maxLines: 3,
+          ),
+          Row(
+            children: [
+              SizedBox(width: 5.h),
+              Expanded(
+                  child: CustomButton(
+                      text: strings_name.str_yes,
+                      click: () {
+                        Get.back(closeOverlays: true);
+                        removeAnnouncement();
+                      })),
+              SizedBox(width: 10.h),
+              Expanded(
+                  child: CustomButton(
+                      text: strings_name.str_cancle,
+                      click: () {
+                        Get.back(closeOverlays: true);
+                      })),
+              SizedBox(width: 5.h),
+            ],
+          )
+        ],
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+  removeAnnouncement() async {
+    try {
+      Map<String, dynamic> request = {"is_active": 0};
+
+      var dataUpdate = await apiRepository.removeAnnouncementDataApi(request, widget.announcement.id ?? '');
+
+      if (dataUpdate.records != null) {
+        setState(() {
+          isVisible = false;
+        });
+        // Utils.showSnackBar(context, strings_name.str_announcement_removed);
+        // await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(result: 'updateAnnouncement');
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 }

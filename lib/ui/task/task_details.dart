@@ -1,25 +1,27 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/ui/task/add_task.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/help_desk_type_response.dart';
 import '../../models/helpdesk_responses.dart';
 import '../../values/text_styles.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 
 class TaskDetail extends StatefulWidget {
   const TaskDetail({Key? key}) : super(key: key);
@@ -68,25 +70,34 @@ class _TaskDetailState extends State<TaskDetail> {
         children: [
           SingleChildScrollView(
             child: Container(
-              margin: const EdgeInsets.all(10),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
-                          custom_text(text: helpDeskTypeResponse!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            custom_text(text: strings_name.str_ticket_id, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5),
+                            custom_text(text: helpDeskTypeResponse!.ticketId.toString(), textStyles: blackTextSemiBold16, rightValue: 0, leftValue: 5),
+                          ],
+                        ),
                       ),
                       helpDeskTypeResponse!.ticketTitle != null && helpDeskTypeResponse!.ticketTitle!.isNotEmpty
                           ? Container(
                               decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
                               padding: const EdgeInsets.all(1),
-                              margin: const EdgeInsets.only(right: 5),
-                              child: custom_text(text: helpDeskTypeResponse!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3),
+                              child: custom_text(
+                                text: helpDeskTypeResponse!.ticketTitle![0].toString(),
+                                textStyles: whiteTextSemiBold16,
+                                alignment: Alignment.centerRight,
+                                topValue: 1,
+                                bottomValue: 1,
+                                leftValue: 3,
+                                rightValue: 3,
+                              ),
                             )
                           : Container(),
                     ],
@@ -97,14 +108,21 @@ class _TaskDetailState extends State<TaskDetail> {
                     children: [
                       custom_text(text: strings_name.str_assigned_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                       Expanded(
-                        child: custom_text(
-                            text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
-                                ? helpDeskTypeResponse!.studentName![0].toString()
-                                : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
-                            textStyles: blackTextSemiBold16,
-                            leftValue: 5,
-                            maxLines: 2,
-                            topValue: 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (helpDeskTypeResponse!.studentName?.isNotEmpty == true) {
+                              Get.to(const StudentHistory(), arguments: helpDeskTypeResponse!.studentMobileNumber![0]);
+                            }
+                          },
+                          child: custom_text(
+                              text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
+                                  ? helpDeskTypeResponse!.studentName![0].toString()
+                                  : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                              textStyles: helpDeskTypeResponse!.studentName?.isNotEmpty == true ? linkTextSemiBold16 : blackTextSemiBold16,
+                              leftValue: 5,
+                              maxLines: 2,
+                              topValue: 0),
+                        ),
                       ),
                     ],
                   ),
@@ -151,6 +169,16 @@ class _TaskDetailState extends State<TaskDetail> {
                       )
                     ],
                   ),
+                  helpDeskTypeResponse!.attachments != null
+                      ? Row(children: [
+                          custom_text(text: "${strings_name.str_attachments} : ", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 5),
+                          GestureDetector(
+                              onTap: () async {
+                                await launchUrl(Uri.parse(helpDeskTypeResponse!.attachments?.first.url ?? ""), mode: LaunchMode.externalApplication);
+                              },
+                              child: custom_text(text: "Show", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 0)),
+                        ])
+                      : Container(),
                   helpDeskTypeResponse!.required_time != null
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -214,13 +242,12 @@ class _TaskDetailState extends State<TaskDetail> {
                       custom_text(text: "${helpDeskTypeResponse!.resolutionRemark}", textStyles: blackTextSemiBold16, maxLines: 5000, leftValue: 5, rightValue: 0, topValue: 0),
                     ]),
                   ),
-                  helpDeskTypeResponse?.status_updated_by_employee_name?.isNotEmpty != null ? Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        custom_text(text: "${strings_name.str_updated_by}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 5, bottomValue: 5),
-                        custom_text(text: helpDeskTypeResponse!.status_updated_by_employee_name![0], textStyles: blackTextSemiBold16, maxLines: 2, leftValue: 5, rightValue: 0, topValue: 5),
-                      ]) : Container(),
+                  helpDeskTypeResponse?.status_updated_by_employee_name?.isNotEmpty != null
+                      ? Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          custom_text(text: "${strings_name.str_updated_by}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 5, bottomValue: 5),
+                          custom_text(text: helpDeskTypeResponse!.status_updated_by_employee_name![0], textStyles: blackTextSemiBold16, maxLines: 2, leftValue: 5, rightValue: 0, topValue: 5),
+                        ])
+                      : Container(),
                   Visibility(
                       visible: (helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED || helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_COMPLETED) && canUpdateTask,
                       child: CustomButton(

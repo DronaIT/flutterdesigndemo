@@ -46,7 +46,7 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
     try{
-      jobpportunityData = await apiRepository.getJoboppoApi(query);
+      jobpportunityData = await apiRepository.getJobOppoApi(query);
       int completion = 0;
       String completionName = strings_name.str_pending;
       for (var i = 0; i < jobpportunityData.records!.length; i++) {
@@ -57,7 +57,7 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
               completionName = strings_name.str_placed;
             } else if (jobpportunityData.records![i].fields!.rejected_students != null && jobpportunityData.records![i].fields!.rejected_students!.contains(jobpportunityData.records![i].fields!.selectedStudents![j])) {
               completion = 2;
-              completionName = strings_name.str_reject;
+              completionName = strings_name.str_rejected;
             }
             var jobModuleResponse = CompleteModuleResponse(
                 applied_students_email: jobpportunityData.records![i].fields!.selected_students_email![j],
@@ -147,7 +147,7 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
                         );
                       }),
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_placed, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

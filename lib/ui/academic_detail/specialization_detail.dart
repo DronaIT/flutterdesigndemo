@@ -10,7 +10,6 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/add_subject.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/subject_detail.dart';
-import 'package:flutterdesigndemo/ui/academic_detail/upload_documents_acdemic.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -20,7 +19,6 @@ import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
 import '../../utils/preference.dart';
-import '../placement/upload_documents_placement.dart';
 
 class SpecializationDetail extends StatefulWidget {
   const SpecializationDetail({Key? key}) : super(key: key);
@@ -162,9 +160,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                 child: Column(
                   children: [
                     custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
-
                     custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
-
                     custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
 
                     Visibility(

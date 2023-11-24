@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
@@ -49,6 +50,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
   BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
   String typeofValue = "1";
   String path = "", title = "";
+  var logoData, loiData;
   String loiPath = "", loiTitle = "";
   List<Map<String, CreateCompanyDetailRequest>> list = [];
   final companyDetailRepository = getIt.get<ApiRepository>();
@@ -128,10 +130,9 @@ class _CompanyDetailState extends State<CompanyDetail> {
               reportBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
               reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
               cityController.text = compnayDetailData![0].fields!.city.toString();
-              if(compnayDetailData![0].fields!.company_loi != null){
+              if (compnayDetailData![0].fields!.company_loi != null) {
                 loiPath = compnayDetailData![0].fields!.company_loi!.first.url!;
                 loiTitle = compnayDetailData![0].fields!.company_loi!.first.filename!;
-
               }
 
               for (var i = 0; i < typeofResponseArray!.length; i++) {
@@ -148,7 +149,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   setState(() {
                     hubResponse = hubResponseArray![i];
                     hubValue = hubResponseArray![i].fields!.hubId.toString();
-                    hubRecordId= hubResponseArray![i].id!;
+                    hubRecordId = hubResponseArray![i].id!;
                   });
                   break;
                 }
@@ -449,6 +450,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       ],
                     ),
                   ),
+                  custom_text(
+                    text: strings_name.str_file_size_limit,
+                    alignment: Alignment.topLeft,
+                    maxLines: 3,
+                    textStyles: primaryTextSemiBold14,
+                    leftValue: 10,
+                  ),
                   SizedBox(height: 20.h),
                   CustomButton(
                       text: strings_name.str_submit,
@@ -484,16 +492,30 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           });
                           var updatedPath = "", loiFilePath = "";
                           if (path.isNotEmpty) {
-                            CloudinaryResponse response = await cloudinary.uploadFile(
-                              CloudinaryFile.fromFile(path, resourceType: CloudinaryResourceType.Image, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOGO),
-                            );
-                            updatedPath = response.secureUrl;
+                            if (kIsWeb) {
+                              CloudinaryResponse response = await cloudinary.uploadFile(
+                                CloudinaryFile.fromByteData(Utils.uint8ListToByteData(logoData.bytes!), resourceType: CloudinaryResourceType.Image, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOGO, identifier: logoData.name),
+                              );
+                              updatedPath = response.secureUrl;
+                            } else {
+                              CloudinaryResponse response = await cloudinary.uploadFile(
+                                CloudinaryFile.fromFile(path, resourceType: CloudinaryResourceType.Image, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOGO),
+                              );
+                              updatedPath = response.secureUrl;
+                            }
                           }
                           if (loiPath.isNotEmpty && !loiPath.contains("https")) {
-                            CloudinaryResponse response = await cloudinary.uploadFile(
-                              CloudinaryFile.fromFile(loiPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI),
-                            );
-                            loiFilePath = response.secureUrl;
+                            if (kIsWeb) {
+                              CloudinaryResponse response = await cloudinary.uploadFile(
+                                CloudinaryFile.fromByteData(Utils.uint8ListToByteData(loiData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI, identifier: loiData.name),
+                              );
+                              loiFilePath = response.secureUrl;
+                            } else {
+                              CloudinaryResponse response = await cloudinary.uploadFile(
+                                CloudinaryFile.fromFile(loiPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOI),
+                              );
+                              loiFilePath = response.secureUrl;
+                            }
                           }
                           CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
                           response.company_name = nameofCompanyController.text.trim().toString();
@@ -525,7 +547,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                             List<Map<String, dynamic>> listData = [];
                             listData.add(map);
                             response.company_loi = listData;
-                          }else{
+                          } else {
                             Map<String, dynamic> map = Map();
                             map["url"] = loiPath;
                             List<Map<String, dynamic>> listData = [];
@@ -539,7 +561,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
 
                           if (!fromEdit) {
                             try {
-                              var resp = await companyDetailRepository.createCopmanyDetailApi(list);
+                              var resp = await companyDetailRepository.createCompanyDetailApi(list);
                               if (resp.records!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;
@@ -561,7 +583,10 @@ class _CompanyDetailState extends State<CompanyDetail> {
                             }
                           } else {
                             try {
-                              var resp = await companyDetailRepository.updateCompanyDetailApi(response.toJson(), compnayDetailData![0].id.toString());
+                              var json = response.toJson();
+                              json.removeWhere((key, value) => value == null);
+
+                              var resp = await companyDetailRepository.updateCompanyDetailApi(json, compnayDetailData![0].id.toString());
                               if (resp.id!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;
@@ -588,8 +613,16 @@ class _CompanyDetailState extends State<CompanyDetail> {
                 ],
               ),
             ),
-            Center(
-              child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+            Visibility(
+              visible: isVisible,
+              child: Container(
+                color: colors_name.colorWhite,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+                ),
+              ),
             )
           ],
         ),
@@ -600,20 +633,38 @@ class _CompanyDetailState extends State<CompanyDetail> {
   picImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      setState(() {
-        title = result.files.single.name;
-        path = result.files.single.path!;
-      });
+      title = result.files.single.name;
+      if (kIsWeb) {
+        setState(() {
+          path = result.files.single.bytes.toString();
+          logoData = result.files.single;
+        });
+      } else {
+        setState(() {
+          path = result.files.single.path!;
+        });
+      }
     }
   }
 
   picLOIFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
-      setState(() {
+      if (result.files.single.size / (1024 * 1024) < 2) {
         loiTitle = result.files.single.name;
-        loiPath = result.files.single.path!;
-      });
+        if (kIsWeb) {
+          setState(() {
+            loiData = result.files.single;
+            loiPath = result.files.single.bytes.toString();
+          });
+        } else {
+          setState(() {
+            loiPath = result.files.single.path!;
+          });
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_file_size_limit);
+      }
     }
   }
 }

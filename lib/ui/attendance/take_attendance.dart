@@ -14,7 +14,7 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/units_response.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_student_list.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_student_list.dart';
 
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -113,7 +113,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_take_attendence),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_take_attendance),
       body: Stack(children: [
         SingleChildScrollView(
           child: Container(
@@ -165,7 +165,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             children: [
                               SizedBox(height: 10.h),
                               custom_text(
-                                text: strings_name.str_select_spelization,
+                                text: strings_name.str_select_specialization,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
                               ),
@@ -502,7 +502,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       });
       specializationValue = "";
 
-      var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+      // var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+      var query = "SEARCH('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS})";
       try {
         var speData = await apiRepository.getSpecializationDetailApi(query);
         setState(() {
@@ -618,7 +619,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       isVisible = true;
     });
     var query = "AND(";
-    query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+    // query += "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+    query += "${TableNames.CLM_HUB_IDS}='${Utils.getHubIds(hubValue)}'";
     query += ",FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0)";
     query += ",FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0)";
     query += ",FIND('$divisionValue', ${TableNames.CLM_DIVISION}, 0)";

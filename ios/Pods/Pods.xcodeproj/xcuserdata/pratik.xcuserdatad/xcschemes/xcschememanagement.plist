@@ -99,12 +99,22 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>file_selector_ios.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>firebase_core.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>firebase_messaging.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>image_picker_ios.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -125,6 +135,11 @@
 			<false/>
 		</dict>
 		<key>path_provider_foundation.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>permission_handler_apple.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

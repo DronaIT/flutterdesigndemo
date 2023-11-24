@@ -45,8 +45,9 @@ class StudentAttendanceResponse {
       this.topicTitleFromTopicId,
       this.enrollmentNumberFromStudentIds,
       this.nameFromStudentIds,
-        this.lecture_duration,
-      this.absent_ids});
+      this.lecture_duration,
+      this.absent_ids,
+    });
 
   StudentAttendanceResponse.fromJson(Map<String, dynamic> json) {
     lectureId = json['lecture_id'];

@@ -46,19 +46,18 @@ class _InterViewScheduleDetailState extends State<InterViewScheduleDetail> {
       isVisible = true;
     });
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    try{
-      jobOpportunityData = await apiRepository.getJoboppoApi(query);
+    try {
+      jobOpportunityData = await apiRepository.getJobOppoApi(query);
       setState(() {
         isVisible = false;
       });
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -82,10 +81,16 @@ class _InterViewScheduleDetailState extends State<InterViewScheduleDetail> {
                         leftValue: 5,
                       ),
                       custom_text(text: "${strings_name.str_interview_date_time} : ${formatterShow.format(DateTime.parse(jobOpportunityData.records!.first.fields!.interviewDatetime!))}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
-                      custom_text(text: "${strings_name.str_special_instrcutor} :", textStyles: blackTextSemiBold15, topValue: 8, maxLines: 1000, bottomValue: 0, leftValue: 5),
-                      custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewInstruction}", textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
+                      jobOpportunityData.records?.first.fields!.interviewInstruction != null
+                          ? Column(
+                              children: [
+                                custom_text(text: "${strings_name.str_special_instruction} :", textStyles: blackTextSemiBold15, topValue: 8, maxLines: 1000, bottomValue: 0, leftValue: 5),
+                                custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewInstruction}", textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5)
+                              ],
+                            )
+                          : Container(),
                       custom_text(text: "${strings_name.str_interview_address} :", textStyles: blackTextSemiBold15, topValue: 8, bottomValue: 5, leftValue: 5),
-                      custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewPlaceAddress}", textStyles: blackTextSemiBold14, topValue: 2, maxLines: 100, bottomValue: 5, leftValue: 5),
+                      custom_text(text: "${jobOpportunityData.records?.first.fields!.interviewPlaceAddress?.trim()}", textStyles: blackTextSemiBold14, topValue: 2, maxLines: 100, bottomValue: 5, leftValue: 5),
                       Visibility(
                         visible: jobOpportunityData.records?.first.fields!.interviewPlaceUrl != null,
                         child: Container(

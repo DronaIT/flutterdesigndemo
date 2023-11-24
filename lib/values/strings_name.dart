@@ -47,6 +47,8 @@ class strings_name {
   static const String str_add_students = "Add students";
   static const String str_add_student = "Add student";
   static const String str_update_student_details = "Update student details";
+  static const String str_update_details = "Update details";
+  static const String str_update_details_successfully = "Details updated successfully";
 
   static const String str_view_students = "View students";
   static const String str_add_employee = "Add employee";
@@ -108,13 +110,15 @@ class strings_name {
   static const String str_female = "Female";
   static const String str_both = "Both";
   static const String str_submit = "Submit";
+  static const String str_save = "Save";
   static const String str_no_data = "No items";
   static const String str_no_module = "No module assigned";
   static const String str_no_employee = "No employee";
   static const String str_no_hub = "No hubs";
   static const String str_no_students = "No students";
   static const String str_employee_update = "Employee details updated successfully";
-  static const String str_select_spelization = "Select specialization";
+  static const String str_select_specialization = "Select specialization";
+  static const String str_select_specialization_r = "Select specialization*";
   static const String str_empty_spe = "Please select specialization";
 
   static const String str_specializations = "Specializations";
@@ -212,13 +216,13 @@ class strings_name {
   static const String str_subject_detail = "Subject detail";
   static const String str_spe_detail = "Specialization detail";
 
-  static const String str_attendence = "Attendance Summary";
+  static const String str_attendance = "Attendance Summary";
 
-  static const String str_take_attendence = "Take Attendance";
-  static const String str_viewothers_attendence = "Attendance History";
-  static const String str_viewself_attendence = "My Attendance";
-  static const String str_attendence_reports = "Attendance Reports";
-  static const String str_attendence_report = "Attendance Report";
+  static const String str_take_attendance = "Take Attendance";
+  static const String str_viewothers_attendance = "Attendance History";
+  static const String str_viewself_attendance = "My Attendance";
+  static const String str_attendance_reports = "Attendance Reports";
+  static const String str_attendance_report = "Attendance Report";
 
   static const String str_semester = "Semester";
   static const String str_division = "Division";
@@ -227,7 +231,7 @@ class strings_name {
   static const String str_total_lectures = "Total lectures";
   static const String str_total_p_lectures = "Total present lectures";
   static const String str_total_a_lectures = "Total absent lectures";
-  static const String str_total_attendence = "Total Attendence";
+  static const String str_total_attendance = "Total Attendance";
 
   static const String str_get_students = "Get Students";
   static const String str_students = "Students";
@@ -254,7 +258,7 @@ class strings_name {
   static const String str_taken_by = "Taken by";
   static const String str_by_semester = "Semester";
   static const String str_by_subject = "Subject";
-  static const String str_attendence_his_detail = "Attendance history detail";
+  static const String str_attendance_his_detail = "Attendance history detail";
 
   static const String str_submit_attendance = "Submit Attendance";
   static const String str_err_submit_attendance = "Please select attendance for all the students";
@@ -318,6 +322,7 @@ class strings_name {
   static const String str_reporting_address = "Reporting address";
   static const String str_logo_of_company = "Logo of company";
   static const String str_letter_of_intent = "Letter of intent (LOI)";
+  static const String str_file_size_limit = "File size should not be more than 2 MB.";
   static const String str_empty_letter_of_intent = "Please upload letter of intent (LOI)";
   static const String str_company_detail = "Company details";
   static const String str_empty_company_name = "Please enter company name";
@@ -383,9 +388,11 @@ class strings_name {
   static const String str_empty_end_time_tt = "Please select end time";
   static const String str_empty_meeting_link = "Please enter online meeting link";
   static const String str_empty_class_number = "Please enter classroom Number";
+  static const String str_empty_hub_data = "Please select at least one hub";
 
   static const String str_job_added = "New job opportunity added successfully";
   static const String str_job_updated = "Job opportunity updated successfully";
+  static const String str_job_approval_sent = "Job opportunity has been sent for approval";
 
   static const String str_apply = "Apply";
   static const String str_already_applied = "Already Applied";
@@ -404,13 +411,18 @@ class strings_name {
   static const String str_job_status_interview_scheduled = "interview scheduled";
   static const String str_job_status_process_complete = "process complete";
 
+  static const String str_company_status_pending = "Pending";
+  static const String str_company_status_approved = "Approved";
+  static const String str_company_status_rejected = "Rejected";
+
   static const String str_please_select_one_student = "Please shortlist one student";
   static const String str_schadule_interview = "Schedule interview";
   static const String str_export_selected_student = "Export selected student details";
+  static const String str_export_student_data = "Export student details";
 
   static const String str_job_interview_job_timing = "Interview job timing";
   static const String str_enter_time = "Enter date time";
-  static const String str_special_instrcutor = "Special instruction (if any)";
+  static const String str_special_instruction = "Special instruction (if any)";
   static const String str_interview_address = "Interview address";
   static const String str_google_map_link = "Google map link";
   static const String str_empty_job_date_time = "Please select interview date & time";
@@ -427,8 +439,8 @@ class strings_name {
   static const String str_selected_student = "Select student";
   static const String str_selected_students = "Student selected successfully";
 
-  static const String str_no_company = "No company added yet";
-  static const String str_no_jobs_created = "No jobs created yet";
+  static const String str_no_company = "No company found";
+  static const String str_no_jobs_created = "No jobs found";
   static const String str_no_jobs_approval_pending = "No jobs available to approve";
   static const String str_no_jobs_publish = "No jobs available for students to apply";
   static const String str_no_jobs = "No jobs available";
@@ -448,11 +460,13 @@ class strings_name {
   static const String str_not_selected_for_jobs = "Not selected for any internship yet";
   static const String str_accept_offer = "Accept offer";
   static const String str_reject_offer = "Reject offer";
-  static const String str_reject_offer_disclaimer = "Please note that by not accepting this opportunity, you will not get placement support from Drona Foundation for next one semester.";
-  static const String str_banned_from_placement = "You are not allowed to access placement module and you will not get placement support from Drona Foundation for next one semester. Because you have rejected one of the offer.";
+  static const String str_reject_offer_disclaimer = "Please note that by not accepting this opportunity, you will not get placement support from Drona Foundation.";
+  static const String str_banned_from_placement = "You are not allowed to access placement module and you will not get placement support from Drona Foundation. Because you have rejected one of the offer.";
+  static const String str_resignation_disclaimer = "Please note that if you have resigned from the company without informing Drona Foundation Placement Head / Center Head or You have left the company abruptly without service Notice Period / Bond Period then you will be blacklisted from Drona Foundation Placement Module and You are not allowed to access placement module and you will not get placement support from Drona Foundation. Because you are resigning from current position.";
   static const String str_congratulation_for_internship = "Congratulations for\ngetting selected at";
   static const String str_internship_tnc = "I hereby accept the Placement SOP & Terms.";
   static const String str_empty_internship_tnc = "Please accept Placement SOP & Terms";
+  static const String str_placement_info_upload_warning = "Please note that you need to upload below documents each month.";
 
   static const String str_placement_info = "Placement info";
   static const String str_placement = "Placement";
@@ -461,7 +475,8 @@ class strings_name {
   static const String str_completed_placement = "Completed internship process";
   static const String str_upload_resume = "Upload resume";
   static const String str_pending = "Pending";
-  static const String str_reject = "Rejected";
+  static const String str_rejected = "Rejected";
+  static const String str_reject = "Reject";
   static const String str_placed = "Placed";
   static const String str_empty_joing_Date = "Please select joining date";
 
@@ -470,12 +485,17 @@ class strings_name {
   static const String str_empty_placement_attendance_data = "Please select company consent letter and monthly attendance file.";
 
   static const String str_placement_info_updated = "Placement info updated successfully";
+  static const String str_resignation_sent = "Resignation sent";
   static const String str_joing_date = "Joining date";
-  static const String str_apply_for_leave = "Apply for leave";
+  static const String str_apply_for_leave = "Apply to leave internship";
   static const String str_notice_period_date = "Notice period end date";
+  static const String str_empty_notice_period_date = "Please provide notice period end date";
   static const String str_reason_for_leaving = "Reason for leaving company";
+  static const String str_empty_reason_for_leaving = "Please specify reason for leaving company";
   static const String str_leave_internship = "Leave internship";
   static const String str_resignation_letter = "Resignation letter";
+  static const String str_empty_resignation_letter = "Please provide resignation letter";
+  static const String str_designation = "Designation";
 
   static const String str_terms_privacy_policy = "I hereby accept the Terms & condition and Privacy policy.";
   static const String str_accept_terms = "Please accept Terms & Condition and Privacy Policy";
@@ -499,9 +519,10 @@ class strings_name {
   static const String str_3_days = "Continuous 3 days absents";
   static const String str_5_days = "Continuous 5 days absents";
   static const String str_10_days = "Continuous 10 days absents";
-  static const String str_today_days = "Today's absents ";
+  static const String str_today_days = "Today's absents";
   static const String str_eligiblity_report = "Ineligible report";
-  static const String str_past_data = "Past report";
+  static const String str_past_data = "Past semester report";
+  static const String str_custom_days_report = "Full report";
 
   static const String str_export_data = "Export data";
 
@@ -523,6 +544,7 @@ class strings_name {
   static const String str_others_tickets = "Tickets assigned to me as Moderator";
   static const String str_ticket_id = "Ticket No:";
   static const String str_created_by = "Created by:";
+  static const String str_created_on = "Created on:";
   static const String str_help_desk_detail = "Help desk details";
   static const String str_notes = "Notes:";
   static const String str_status = "Status:";
@@ -531,8 +553,10 @@ class strings_name {
   static const String str_type_here = "Provide feedback...";
   static const String str_update_ticket_status = "Update ticket status";
   static const String str_update_ticket_type = "Update ticket category";
+  static const String str_update_ticket_assignee = "Update ticket assignee";
   static const String str_update_ticket_message = "Ticket updated successfully";
   static const String str_create_ticket_message = "Ticket created successfully";
+  static const String str_empty_ticket_assignee = "Please select at least one assignee";
 
   static const String str_task = "Task";
   static const String str_my_task = "My task";
@@ -606,6 +630,8 @@ class strings_name {
 
   static const String str_announcement_added = "Announcement add successfully.";
   static const String str_announcement_updated = "Announcement updated successfully.";
+  static const String str_remove_announcement = "Remove announcement";
+  static const String str_announcement_removed = "Announcement removed successfully.";
 
   /// Time Table Mobule String
   static const String str_time_table = "Time Table";
@@ -618,6 +644,7 @@ class strings_name {
   static const String str_semester_r = "Semester*";
   static const String str_division_r = "Division*";
   static const String str_subject_r = "Subject*";
+  static const String str_range = "Date Range";
   static const String str_range_r = "Date Range*";
   static const String str_done = "Done";
   static const String str_data_range = "Select Date Range";
@@ -653,4 +680,43 @@ class strings_name {
 
   static const String str_attendance_already_taken = "Attendance already taken";
   static const String str_not_per_atek_attedndance = "You do not have permission to take attendance in this lecture";
+
+  static const String str_nsdc_changes_warning = "These details are collected for students registration on NSDC & Skill India Portal for B.Voc, So please fill it strictly as per your School Leaving Certificate (LC) because same details will reflect in your NSDC and Skill India Certificate.";
+  static const String str_father_name = "Father's full name";
+  static const String str_profile_pic = "Professional profile pic";
+  static const String str_empty_father_name = "Please add father's Full Name";
+  static const String str_empty_profile_pic = "Please select profile pic";
+  static const String str_details_updated = "Details are already uploaded";
+
+  static const String str_no_placed = "No one placed here";
+  static const String str_self_placement = "Self placement";
+  static const String str_apply_for_self_placement = "Apply for self placement";
+  static const String str_approve_self_placement = "Approve self placement";
+  static const String str_placement_drive = "Placement Drive";
+
+  static const String str_internship_detail = "Internship details";
+  static const String str_applied_student = "Applied students";
+  static const String str_placed_student = "Placed students";
+  static const String str_empty_selfplace_company = "Please enter company details";
+  static const String str_empty_selfplace_job = "Please enter internship details";
+  static const String str_empty_applied_students = "Please select applied students";
+  static const String str_empty_placed_students = "Please select placed students";
+  static const String str_select_student = "Please select student";
+  static const String str_empty_company = "Please select company";
+  static const String str_select_company = "Select company";
+
+  static const String str_err_company_setup = "Error in setting up the company";
+  static const String str_select_company_option = "Please select";
+  static const String str_option_create_company = "Create new company";
+  static const String str_option_select_company = "Select from existing company";
+  static const String str_rejection_reason = "Please provide rejection reason";
+  static const String str_self_place_rejected = "Job is rejected.";
+  static const String str_self_place_approved = "Job is approved.";
+
+  static const String str_add_marketing_record = "Add Marketing Record";
+  static const String str_edit_marketing_record = "Edit Marketing Record";
+  static const String str_number_of_approach = "Number of approaches done*";
+  static const String str_number_of_meeting = "Number of meetings done*";
+  static const String str_number_of_seminars_arranged = "Number of seminars arranged*";
+  static const String str_number_of_seminars_completed = "Number of seminars completed*";
 }

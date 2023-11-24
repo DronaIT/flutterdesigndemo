@@ -182,7 +182,7 @@ class _UploadDocumentsAcademicState extends State<UploadDocumentsAcademic> {
                           var docMainPath = " ";
                           if (docPath.isNotEmpty) {
                             CloudinaryResponse response = await cloudinary.uploadFile(
-                              CloudinaryFile.fromFile(docPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_STUDENT_RESUME),
+                              CloudinaryFile.fromFile(docPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ACADEMIC_MATERIAL),
                             );
                             docMainPath = response.secureUrl;
                           }

@@ -36,28 +36,21 @@ class _StudentAttendancePastHistoryState extends State<StudentAttendancePastHist
   }
 
   void checkPresentAbsentDetailBySubject() {
-    // for(int m = 0; m < fields!.semesterByStudent!.length; m++){
-    //   print("tetsbrforre=>${fields?.semester}==>${fields?.semesterByStudent?[m]}");
-    //   if(int.parse(fields?.semesterByStudent?[m]) < int.parse(fields!.semester!)){
-    //     print("tets=>${fields?.semester}==>${fields?.semesterByStudent?[m]}");
-    //   }
-    // }
-
     if (fields != null && fields?.lectureIds != null) {
       for (int i = 0; i < fields!.lectureIds!.length; i++) {
         if(fields!.semesterByStudent![i] != fields?.semester) {
           if (fields!.presentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
-            var viewAttendence = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
+            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
                 subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
-            viewAttendence.present_lectures = 1;
-            viewAttendence.total_lectures += 1;
-            studentList.add(viewAttendence);
+            viewAttendance.present_lectures = 1;
+            viewAttendance.total_lectures += 1;
+            studentList.add(viewAttendance);
           } else if (fields!.absentLectureIds?.contains(fields!.lectureIds?[i]) == true) {
-            var viewAttendence = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
+            var viewAttendance = ViewStudentAttendance(subject_id: fields!.lectureSubjectId![i],
                 subject_title: fields!.lecture_subject_title![i], lecture_date: fields!.lecture_date![i], status: 1);
-            viewAttendence.absent_lectures = 1;
-            viewAttendence.total_lectures += 1;
-            studentList.add(viewAttendence);
+            viewAttendance.absent_lectures = 1;
+            viewAttendance.total_lectures += 1;
+            studentList.add(viewAttendance);
           }
         }
       }
@@ -80,14 +73,14 @@ class _StudentAttendancePastHistoryState extends State<StudentAttendancePastHist
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          appBar: AppWidgets.appBarWithoutBack(strings_name.str_viewothers_attendence),
+          appBar: AppWidgets.appBarWithoutBack(strings_name.str_viewothers_attendance),
           body: Stack(children: [
             Column(
               children: [
                 SizedBox(height: 5.h),
                 custom_text(text: "Total Lectures : $totalLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 0),
                 custom_text(text: "Total Present lectures : $totalPresentLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 0),
-                custom_text(text: "Total Absent lectures : ${totalAbsentLectures}", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 0),
+                custom_text(text: "Total Absent lectures : $totalAbsentLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 0),
                 studentList.isNotEmpty
                     ? Expanded(
                   child: Container(

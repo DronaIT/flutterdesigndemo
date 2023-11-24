@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 
 class custom_edittext extends StatefulWidget {
-
   final bool enabled;
   final bool readOnly;
   final String labelText;
@@ -27,7 +26,8 @@ class custom_edittext extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
 
   custom_edittext(
-      {super.key, this.labelText = "",
+      {super.key,
+      this.labelText = "",
       this.hintText = "",
       this.color = Colors.black,
       this.alignment = Alignment.topLeft,
@@ -45,7 +45,8 @@ class custom_edittext extends StatefulWidget {
       this.minLines = 1,
       this.capitalization = TextCapitalization.sentences,
       this.fontWeight = FontWeight.w700,
-      this.textalign = TextAlign.start,this.margin});
+      this.textalign = TextAlign.start,
+      this.margin});
 
   @override
   State<custom_edittext> createState() => _customState();
@@ -55,7 +56,7 @@ class _customState extends State<custom_edittext> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.margin ?? EdgeInsets.only(left: 10.w, right: 10.w, top: widget.topValue),
+      margin: widget.margin ?? EdgeInsets.only(left: 10, right: 10, top: widget.topValue),
       alignment: widget.alignment,
       child: TextFormField(
         keyboardType: widget.type,

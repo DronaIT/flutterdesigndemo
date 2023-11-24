@@ -536,7 +536,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
-                    text: strings_name.str_select_spelization,
+                    text: strings_name.str_select_specialization,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),
@@ -825,8 +825,11 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                               });
                             }
                           } else {
-                            Map<String, CreateStudentRequest> map = Map();
-                            map["fields"] = response;
+                            var json = response.toJson();
+                            json.removeWhere((key, value) => value == null);
+
+                            Map<String, dynamic> map = Map();
+                            map["fields"] = json;
                             var updateStudent = await apiRepository.updateStudentApi(map, addStudentId);
                             if (updateStudent != null) {
                               setState(() {

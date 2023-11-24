@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -10,11 +11,12 @@ import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
+import 'package:flutterdesigndemo/ui/manage_user/student_extra_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
@@ -24,6 +26,7 @@ import 'package:flutterdesigndemo/ui/task/task_dashboard.dart';
 import 'package:flutterdesigndemo/ui/time_table/time_table_list.dart';
 import 'package:flutterdesigndemo/ui/upload_documents.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -63,6 +66,7 @@ class _HomeState extends State<Home> {
   bool canShowAnnouncements = false;
 
   List<BaseApiResponseWithSerializable<AnnouncementResponse>> announcement = [];
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Future<void> getRecords(String roleId) async {
     var query = "SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0)";
@@ -185,8 +189,8 @@ class _HomeState extends State<Home> {
             query += "${i == 0 ? ',' : ''}FIND(\"${loginData.hubIdFromHubIds[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
           }
         }
-        if (loginData.specialization_name != null) {
-          for (var data in loginData.specialization_name) {
+        if (loginData.specializationIdFromSpecializationIds != null) {
+          for (var data in loginData.specializationIdFromSpecializationIds) {
             query += ",FIND(\"$data\", ARRAYJOIN({specialization_id (from specialization_ids)}))";
           }
         }
@@ -197,25 +201,14 @@ class _HomeState extends State<Home> {
 
       /// Employee
       else if (isLogin == 2) {
-        // for(var data in loginData.semester??[]){
         if (loginData.hubIdFromHubIds != null) {
           for (int i = 0; i < loginData.hubIdFromHubIds.length; i++) {
             query += "${i == 0 ? '' : ','}FIND(\"${loginData.hubIdFromHubIds[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
           }
         }
-        if (loginData.semester != null) {
-          for (int i = 0; i < loginData.semester.length; i++) {
-            query += "${i == 0 ? ',' : ''}FIND(\"${loginData.semester[i]}\", ARRAYJOIN({semesters}))";
-          }
-        }
-        if (loginData.specialization_name != null) {
-          for (var data in loginData.specialization_name ?? []) {
-            query += ",FIND(\"$data\", ARRAYJOIN({specialization_id (from specialization_ids)}))";
-          }
-        }
-        if (loginData.division != null) {
-          for (int i = 0; i < loginData.division.length; i++) {
-            query += ",FIND(\"${loginData.division[i]}\", ARRAYJOIN({divisions}))";
+        if (loginData.accessible_hub_ids != null) {
+          for (int i = 0; i < loginData.accessible_hub_ids.length; i++) {
+            query += ",FIND(\"${loginData.accessible_hub_ids[i]}\", ARRAYJOIN({hub_id (from hub_ids)}))";
           }
         }
       }
@@ -228,12 +221,13 @@ class _HomeState extends State<Home> {
           announcement.clear();
         }
         announcement.addAll(data.records as Iterable<BaseApiResponseWithSerializable<AnnouncementResponse>>);
+        await filterData();
         offset = data.offset;
         if (_timer == null) {
           _startTimer();
         }
         setState(() {
-          isNoNewAnnouncements = false;
+          isNoNewAnnouncements = announcement.isEmpty;
           isAnnouncementLoading = false;
         });
       } else {
@@ -260,9 +254,90 @@ class _HomeState extends State<Home> {
     debugPrint('../ fetchAnnouncement ');
   }
 
+  filterData() {
+    if (announcement.isNotEmpty) {
+      if (PreferenceUtils.getIsLogin() == 1) {
+        var loginData = PreferenceUtils.getLoginData();
+        for (int i = 0; i < announcement.length; i++) {
+          if (announcement[i].fields?.isActive == 1) {
+            if (announcement[i].fields?.isAll != true) {
+              if (announcement[i].fields?.announcementResponseFor == TableNames.ANNOUNCEMENT_ROLE_STUDENT) {
+                bool removed = false;
+                if (announcement[i].fields?.hubIdFromHubIds?.isNotEmpty == true) {
+                  if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.hubIdFromHubIds?.last) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                    removed = true;
+                  }
+                }
+                if (!removed && announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
+                  if (announcement[i].fields?.specializationIdFromSpecializationIds?.contains(loginData.specializationIdFromSpecializationIds?.last) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                    removed = true;
+                  }
+                }
+                if (!removed && announcement[i].fields?.semesters?.isNotEmpty == true) {
+                  if (announcement[i].fields?.semesters?.contains(loginData.semester) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                    removed = true;
+                  }
+                }
+                if (!removed && announcement[i].fields?.divisions?.isNotEmpty == true) {
+                  if (announcement[i].fields?.divisions?.contains(loginData.division) != true) {
+                    announcement.removeAt(i);
+                    i--;
+                    removed = true;
+                  }
+                }
+              }
+            }
+          } else {
+            announcement.removeAt(i);
+            i--;
+          }
+        }
+      } else if (PreferenceUtils.getIsLogin() == 2) {
+        var loginData = PreferenceUtils.getLoginDataEmployee();
+        for (int i = 0; i < announcement.length; i++) {
+          if (announcement[i].fields?.isActive == 1) {
+            if (announcement[i].fields?.isAll != true) {
+              if (announcement[i].fields?.announcementResponseFor == TableNames.ANNOUNCEMENT_ROLE_EMPLOYEE) {
+                if (announcement[i].fields?.hubIdFromHubIds?.isNotEmpty == true) {
+                  bool contains = false;
+                  if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.hubIdFromHubIds?.last) == true) {
+                    contains = true;
+                  }
+                  if (!contains && loginData.accessible_hub_ids?.isNotEmpty == true) {
+                    for (int j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+                      if (announcement[i].fields?.hubIdFromHubIds?.contains(loginData.accessible_hub_ids![j]) == true) {
+                        contains = true;
+                        break;
+                      }
+                    }
+                  }
+
+                  if (!contains) {
+                    announcement.removeAt(i);
+                    i--;
+                  }
+                }
+              }
+            }
+          } else {
+            announcement.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    FirebaseMessaging.onMessage.listen(handlePushNotification);
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
@@ -280,6 +355,27 @@ class _HomeState extends State<Home> {
       phone = loginData.contactNumber.toString();
       getRecords(TableNames.ORGANIZATION_ROLE_ID);
     }
+
+    // PushNotificationService.sendNotification("Title", "Test Message");
+  }
+
+  void handlePushNotification(RemoteMessage message) async {
+    final title = message.data['title'];
+    final body = message.data['body'];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: custom_text(text: 'OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -295,7 +391,7 @@ class _HomeState extends State<Home> {
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_home),
       drawer: Drawer(
-        width: 250,
+        width: 300,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -314,6 +410,8 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       bottomValue: 0,
+                      leftValue: 5,
+                      rightValue: 5,
                     ),
                     custom_text(
                       text: phone,
@@ -321,6 +419,8 @@ class _HomeState extends State<Home> {
                       textStyles: blackTextSemiBold16,
                       topValue: 5,
                       bottomValue: 0,
+                      leftValue: 5,
+                      rightValue: 5,
                     ),
                   ],
                 ),
@@ -399,8 +499,12 @@ class _HomeState extends State<Home> {
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
                                               Get.to(const Attendance());
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
-                                              if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0) {
-                                                Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
+                                              if (PreferenceUtils.getIsLogin() == 1) {
+                                                if (PreferenceUtils.getLoginData().is_banned != 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 && PreferenceUtils.getLoginData().is_placed_now == "1") {
+                                                  Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
+                                                } else {
+                                                  Get.to(const PlacementDashboard());
+                                                }
                                               } else if (PreferenceUtils.getIsLogin() == 3) {
                                                 Get.to(const PlacementDashboard());
                                               } else {
@@ -418,6 +522,8 @@ class _HomeState extends State<Home> {
                                               Get.to(const AllAnnouncements());
                                             } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TIME_TABLE) {
                                               Get.to(const TimeTableList());
+                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_NSDC_SKILL_INDIA) {
+                                              Get.to(const StudentExtraDetail());
                                             }
                                           },
                                         ),

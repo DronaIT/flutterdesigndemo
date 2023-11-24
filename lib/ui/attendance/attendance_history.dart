@@ -1,23 +1,22 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
-import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/view_lecture_attendance.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_history_detail.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_student_list.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_history_detail.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_student_list.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
-import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 import '../../api/dio_exception.dart';
 import '../../utils/utils.dart';
@@ -116,7 +115,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
       query = "(${TableNames.TB_USERS_PHONE}='$phone')";
     }
     print(query);
-    try{
+    try {
       data = await apiRepository.loginEmployeeApi(query);
       if (data.records != null) {
         setState(() {
@@ -130,7 +129,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
         });
         viewLectureArray?.clear();
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -166,7 +165,6 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 division: data.records![j].fields!.division![i],
                 lecture_id: data.records![j].fields!.lectureIds![i],
                 specilization: data.records![j].fields!.specialization_name![i],
-
                 employee_name: data.records![j].fields!.employeeName));
           }
         }
@@ -187,7 +185,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
             bottom: Radius.circular(14),
           ),
         ),
-        title: const Text(strings_name.str_viewothers_attendence),
+        title: const Text(strings_name.str_viewothers_attendance),
         actions: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10),

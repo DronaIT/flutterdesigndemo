@@ -45,7 +45,7 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
       isVisible = true;
     });
     var query = "FIND('$companyId', ${TableNames.CLM_COMPANY_ID}, 0)";
-    jobpportunityData = await apiRepository.getJoboppoApi(query);
+    jobpportunityData = await apiRepository.getJobOppoApi(query);
     setState(() {
       isVisible = false;
     });
@@ -132,6 +132,16 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                   leftValue: 5,
                                   maxLines: 1000,
                                 ),
+                                jobpportunityData.records![index].fields!.specificRequirements != null
+                                    ? custom_text(
+                                        text: "Specific Requirement: ${jobpportunityData.records![index].fields!.specificRequirements?.trim()}",
+                                        textStyles: blackTextSemiBold12,
+                                        topValue: 5,
+                                        maxLines: 1000,
+                                        bottomValue: 5,
+                                        leftValue: 5,
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ),

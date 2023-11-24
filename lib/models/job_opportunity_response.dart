@@ -49,6 +49,7 @@ class JobOpportunityResponse {
   List<String>? applied_students_name;
   List<String>? applied_students_number;
   List<String>? applied_students_specialization;
+  List<String>? applied_students_semester;
   List<AppliedResume>? applied_students_resume;
 
   List<String>? shortlisted_students_email;
@@ -61,6 +62,8 @@ class JobOpportunityResponse {
 
   List<String>? rejected_students;
   List<DocumentResponse>? company_loi;
+  List<DocumentResponse>? bond_structure;
+  List<DocumentResponse>? incentive_structure;
 
   JobOpportunityResponse({
       this.jobDescription,
@@ -109,6 +112,7 @@ class JobOpportunityResponse {
       this.applied_students_name,
       this.applied_students_number,
       this.applied_students_specialization,
+      this.applied_students_semester,
       this.shortlisted_students_email,
       this.shortlisted_students_enrollment_number,
       this.shortlisted_students_name,
@@ -116,7 +120,10 @@ class JobOpportunityResponse {
       this.selected_students_enrollment_number,
       this.selected_students_name,
       this.rejected_students,
-      this.company_loi});
+      this.company_loi,
+      this.bond_structure,
+      this.incentive_structure,
+  });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
     jobDescription = json['job_description'];
@@ -165,6 +172,7 @@ class JobOpportunityResponse {
     applied_students_name = json['applied_students_name']?.cast<String>();
     applied_students_number = json['applied_students_number']?.cast<String>();
     applied_students_specialization = json['applied_students_specialization']?.cast<String>();
+    applied_students_semester = json['applied_students_semester']?.cast<String>();
 
     shortlisted_students_email = json['shortlisted_students_email']?.cast<String>();
     shortlisted_students_enrollment_number = json['shortlisted_students_enrollment_number']?.cast<String>();
@@ -180,6 +188,18 @@ class JobOpportunityResponse {
       company_loi = <DocumentResponse>[];
       json['company_loi'].forEach((v) {
         company_loi!.add(new DocumentResponse.fromJson(v));
+      });
+    }
+  if (json['bond_structure'] != null) {
+      bond_structure = <DocumentResponse>[];
+      json['bond_structure'].forEach((v) {
+        bond_structure!.add(new DocumentResponse.fromJson(v));
+      });
+    }
+  if (json['incentive_structure'] != null) {
+    incentive_structure = <DocumentResponse>[];
+      json['incentive_structure'].forEach((v) {
+        incentive_structure!.add(new DocumentResponse.fromJson(v));
       });
     }
 
@@ -239,6 +259,8 @@ class JobOpportunityResponse {
     data['applied_students_name'] = this.applied_students_name;
     data['applied_students_number'] = this.applied_students_number;
     data['applied_students_specialization'] = this.applied_students_specialization;
+    data['applied_students_semester'] = this.applied_students_semester;
+
     data['shortlisted_students_email'] = this.shortlisted_students_email;
     data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
     data['shortlisted_students_name'] = this.shortlisted_students_name;
@@ -250,6 +272,12 @@ class JobOpportunityResponse {
 
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
+    }
+    if (this.bond_structure != null) {
+      data['bond_structure'] = this.bond_structure!.map((v) => v.toJson()).toList();
+    }
+    if (this.incentive_structure != null) {
+      data['incentive_structure'] = this.incentive_structure!.map((v) => v.toJson()).toList();
     }
     if (this.applied_students_resume != null) {
       data['applied_students_resume'] = this.applied_students_resume?.map((v) => v.toJson()).toList();

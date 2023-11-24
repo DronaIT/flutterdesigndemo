@@ -39,19 +39,18 @@ class _AppliedInternshipState extends State<AppliedInternship> {
       isVisible = true;
     });
     var query = "FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_APPLIED_STUDENTS}, 0)";
-    try{
+    try {
       jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
       setState(() {
         isVisible = false;
       });
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -95,7 +94,15 @@ class _AppliedInternshipState extends State<AppliedInternship> {
                                 custom_text(text: "Timings: ${jobOpportunityData.records?[index].fields!.timingStart} - ${jobOpportunityData.records?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(text: "Vacancies: ${jobOpportunityData.records?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                 custom_text(
-                                  text: "Location: ${jobOpportunityData.records?[index].fields!.reportingAddress?.first}",
+                                  text: "Location: ${jobOpportunityData.records?[index].fields!.reportingAddress?.first.toString().trim()}",
+                                  textStyles: blackTextSemiBold12,
+                                  topValue: 5,
+                                  maxLines: 5,
+                                  bottomValue: 5,
+                                  leftValue: 5,
+                                ),
+                                custom_text(
+                                  text: "City: ${jobOpportunityData.records?[index].fields!.city?.first.toString().trim()}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
                                   maxLines: 5,
@@ -111,13 +118,23 @@ class _AppliedInternshipState extends State<AppliedInternship> {
                                   leftValue: 5,
                                 ),
                                 custom_text(
-                                  text: "Description: ${jobOpportunityData.records![index].fields!.jobDescription!}",
+                                  text: "Description: ${jobOpportunityData.records![index].fields!.jobDescription!.trim()}",
                                   textStyles: blackTextSemiBold12,
                                   bottomValue: 5,
                                   topValue: 5,
                                   leftValue: 5,
                                   maxLines: 1000,
                                 ),
+                                jobOpportunityData.records?[index].fields!.specificRequirements != null
+                                    ? custom_text(
+                                        text: "Specific Requirement: ${jobOpportunityData.records?[index].fields!.specificRequirements?.trim()}",
+                                        textStyles: blackTextSemiBold12,
+                                        topValue: 5,
+                                        maxLines: 1000,
+                                        bottomValue: 5,
+                                        leftValue: 5,
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ),

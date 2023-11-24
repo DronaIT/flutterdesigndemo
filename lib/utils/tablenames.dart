@@ -17,10 +17,12 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
   static const CLOUDARY_FOLDER_APP_ASSETS = "AppAssets";
   static const CLOUDARY_FOLDER_STUDENT_RESUME = "student_resume";
+  static const CLOUDARY_FOLDER_ACADEMIC_MATERIAL = "academic_material";
   static const CLOUDARY_FOLDER_COMPANY_BONDS = "CompanyBonds";
   static const CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE = "PlacementAttendance";
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
   static const CLOUDARY_FOLDER_ANNOUNCEMENT = "Announcement";
+  static const CLOUDARY_FOLDER_PROFILE_PIC = "ProfilePic";
 
   static const STUDENT_ROLE_ID = "DR09";
   static const ORGANIZATION_ROLE_ID = "DR24";
@@ -37,6 +39,7 @@ class TableNames {
   static const MODULE_TASK = "DM09";
   static const MODULE_ANNOUNCEMENT = "DM10";
   static const MODULE_TIME_TABLE = "DM11";
+  static const MODULE_NSDC_SKILL_INDIA = "DM12";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -53,7 +56,7 @@ class TableNames {
   static const ONE_HOUR = "1 Hour";
   static const TWO_HOUR = "2 Hour";
 
-  static const TB_STUDENT = "TBL_STUDENT";
+  static const TBL_STUDENT = "TBL_STUDENT";
   static const TBL_MODULE = "TBL_MODULE";
   static const TBL_ROLE = "TBL_ROLE";
   static const TBL_HUB = "TBL_HUB_CENTER";
@@ -67,7 +70,9 @@ class TableNames {
   static const TBL_SECTOR = "TBL_SECTORS";
   static const TBL_COMPANY_APPROACH = "TBL_COMPANY_APPROACH";
   static const TBL_COMPANY_DETAIL = "TBL_COMPANY";
+  static const TBL_SELF_COMPANY_DETAIL = "TBL_SELF_COMPANY";
   static const TBL_JOBS = "TBL_JOBS";
+  static const TBL_SELF_JOBS = "TBL_SELF_JOBS";
   static const TBL_PLACEMENT_ATTENDANCE = "TBL_PLACEMENT_ATTENDANCE";
   static const TBL_APP_TRACKING = "TBL_APP_TRACKING";
   static const TBL_APP_DATA = "TBL_APP_DATA";
@@ -75,6 +80,7 @@ class TableNames {
   static const TBL_HELPDESK = "TBL_HELPDESK";
   static const TBL_ANNOUNCEMENT = "TBL_ANNOUNCEMENT";
   static const TBL_TIMETABLE = "TBL_TIMETABLE";
+  static const TBL_MARKETING = "TBL_MARKETING";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -116,6 +122,9 @@ class TableNames {
   static const CLM_PLACED_JOB = "placed_job";
   static const CLM_REJECTED_JOB = "rejected_job";
   static const CLM_BANNED_FROM_PLACEMENT = "is_banned_from_placement";
+  static const CLM_IS_PLACED_NOW = "is_placed_now";
+  static const CLM_HAS_RESIGNED = "has_resigned";
+  static const CLM_SELF_PLACE_STATUS = "self_place_company_status";
 
   static const CLM_PRESENT_SUBJECT_IDS = "present_subject_id";
   static const CLM_ABSENT_SUBJECT_IDS = "absent_subject_id";
@@ -182,7 +191,11 @@ class TableNames {
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
   static const PERMISSION_ID_COMPLETED_INTERNSHIP = "DP0419";
   static const PERMISSION_ID_UPLOAD_RESUME = "DP0420";
-  static const PERMISSION_ID_PLACED_UNPLACED_STUDENT_LIST = "DP0421";
+  static const PERMISSION_ID_PLACED_UNPLACED_STUDENT_LIST = "DP0422";
+  static const PERMISSION_ID_ENABLE_RESIGNATION = "DP0423";
+  static const PERMISSION_ID_ENABLE_SELFPLACE = "DP0424";
+  static const PERMISSION_ID_APPROVE_SELF_PLACEMENTS = "DP0425";
+  static const PERMISSION_ID_PLACEMENT_DRIVE = "DP0426";
 
   static const PERMISSION_ID_VIEW_RESUME = "DP0421";
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";
@@ -193,10 +206,12 @@ class TableNames {
   static const PERMISSION_ID_VIEW_OTHER_TICKET = "DP0801";
   static const PERMISSION_ID_UPDATE_TICKET_STATUS = "DP0802";
   static const PERMISSION_ID_UPDATE_TICKET_CATEGORY = "DP0803";
+  static const PERMISSION_ID_UPDATE_TICKET_ASSIGNEE = "DP0804";
 
   static const PERMISSION_ID_VIEW_ANNOUNCEMENT = "DP1001";
   static const PERMISSION_ID_ADD_ANNOUNCEMENT = "DP1002";
   static const PERMISSION_ID_UPDATE_ANNOUNCEMENT = "DP1003";
+  static const PERMISSION_ID_REMOVE_ANNOUNCEMENT = "DP1004";
 
   static const PERMISSION_ID_VIEW_TIME_TABLE = "DP1101";
   static const PERMISSION_ID_ADD_TIME_TABLE = "DP1102";
@@ -252,4 +267,8 @@ class TableNames {
 
   static const LUK_ADD_TIME_TABLE = "addTimeTable";
   static const LUK_UPDATE_TIME_TABLE = "updateTimeTable";
+
+  static const SELFPLACE_STATUS_PENDING = "Pending";
+  static const SELFPLACE_STATUS_APPROVED = "Approved";
+  static const SELFPLACE_STATUS_REJECTED = "Rejected";
 }

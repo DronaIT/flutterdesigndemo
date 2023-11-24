@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -129,30 +130,38 @@ class Utils {
 
   static void showSnackBar(BuildContext context, String message) {
     Flushbar(
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      animationDuration: const Duration(seconds: 1),
-      backgroundColor: colors_name.colorPrimary,
-      message: message,
-      messageText: Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
-      duration: const Duration(seconds: 2),
-      messageSize: 500
-    ).show(context);
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            flushbarPosition: FlushbarPosition.BOTTOM,
+            animationDuration: const Duration(seconds: 1),
+            backgroundColor: colors_name.colorPrimary,
+            message: message,
+            messageText: Text(message, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+            duration: const Duration(seconds: 2),
+            messageSize: 500)
+        .show(context);
   }
 
+  static ByteData uint8ListToByteData(Uint8List uint8List) {
+    final buffer = uint8List.buffer;
+    return ByteData.view(buffer);
+  }
 
   static Future<String?> getId() async {
     String? deviceId;
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    if (Platform.isIOS) {
-      messaging.requestPermission();
+    if (kIsWeb || Platform.isAndroid) {
+      try {
+        deviceId = await messaging.getToken();
+        debugPrint('FCM token: $deviceId');
+      } catch (E) {
+        debugPrint('../ token error $E');
+      }
+    } else if (Platform.isIOS) {
+      await messaging.requestPermission();
       deviceId = await messaging.getAPNSToken();
-      print('APNs token: $deviceId');
-    } else if (Platform.isAndroid) {
-      deviceId = await messaging.getToken();
-      print('FCM token: $deviceId');
+      debugPrint('APNs token: $deviceId');
     }
-    return deviceId;
+    return deviceId ?? '';
   }
 
   static void showSnackBarDuration(BuildContext context, String message, int second) {

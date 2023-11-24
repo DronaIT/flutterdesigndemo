@@ -13,6 +13,8 @@ ${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
 ${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework
 ${BUILT_PRODUCTS_DIR}/device_info/device_info.framework
 ${BUILT_PRODUCTS_DIR}/file_picker/file_picker.framework
+${BUILT_PRODUCTS_DIR}/file_selector_ios/file_selector_ios.framework
+${BUILT_PRODUCTS_DIR}/image_picker_ios/image_picker_ios.framework
 ${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework
 ${BUILT_PRODUCTS_DIR}/open_filex/open_filex.framework
 ${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework

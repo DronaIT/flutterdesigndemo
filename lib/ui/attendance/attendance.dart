@@ -2,12 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendance_history.dart';
-import 'package:flutterdesigndemo/ui/attendence/attendence_report_day.dart';
-import 'package:flutterdesigndemo/ui/attendence/myattendance.dart';
-import 'package:flutterdesigndemo/ui/attendence/take_attendance.dart';
-import 'package:flutterdesigndemo/ui/attendence/filter_screen.dart';
-import 'package:flutterdesigndemo/ui/attendence/take_attendance_for_predefined_lec.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_history.dart';
+import 'package:flutterdesigndemo/ui/attendance/attendance_report_day.dart';
+import 'package:flutterdesigndemo/ui/attendance/myattendance.dart';
+import 'package:flutterdesigndemo/ui/attendance/take_attendance.dart';
+import 'package:flutterdesigndemo/ui/attendance/filter_screen.dart';
+import 'package:flutterdesigndemo/ui/attendance/take_attendance_for_predefined_lec.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -132,7 +132,7 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_attendence),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_attendance),
       body: Stack(
         children: [
           Container(
@@ -149,7 +149,7 @@ class _AttendanceState extends State<Attendance> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_take_attendence, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_take_attendance, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
@@ -169,7 +169,7 @@ class _AttendanceState extends State<Attendance> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_viewself_attendence, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_viewself_attendance, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
@@ -188,7 +188,7 @@ class _AttendanceState extends State<Attendance> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_viewothers_attendence, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_viewothers_attendance, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
@@ -210,12 +210,12 @@ class _AttendanceState extends State<Attendance> {
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text(strings_name.str_attendence_reports, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: const [Text(strings_name.str_attendance_reports, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
                         ),
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const AttendenceReportDay());
+                      Get.to(() => const AttendanceReportDay());
                     },
                   ),
                 ),

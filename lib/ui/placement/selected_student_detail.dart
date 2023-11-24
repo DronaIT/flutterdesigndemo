@@ -53,8 +53,8 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
       isVisible = true;
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
-    try{
-      jobpportunityData = await apiRepository.getJoboppoApi(query);
+    try {
+      jobpportunityData = await apiRepository.getJobOppoApi(query);
       for (var i = 0; i < jobpportunityData.records!.length; i++) {
         if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.shortlistedStudents != null) {
           for (var j = 0; j < jobpportunityData.records![i].fields!.shortlistedStudents!.length; j++) {
@@ -77,7 +77,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
           }
         }
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -117,23 +117,19 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
                                   child: Container(
                                     margin: const EdgeInsets.all(10),
                                     child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            custom_text(
-                                              text: "${studentResponse[index].applied_students_name}",
-                                              textStyles: centerTextStyle14,
-                                              topValue: 0,
-                                              maxLines: 2,
-                                              bottomValue: 5,
-                                              leftValue: 5,
-                                            ),
-                                            //custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
-                                            custom_text(text: "${strings_name.str_email}: ${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                            custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              custom_text(text: "${studentResponse[index].applied_students_name}", textStyles: centerTextStyle14, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              //custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
+                                              custom_text(text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                            ],
+                                          ),
                                         ),
                                         if (studentResponse[index].selected) const Icon(Icons.check, size: 25, color: colors_name.colorPrimary)
                                       ],
@@ -229,7 +225,6 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
   }
 
   selectNow() async {
-
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
     List<String> selectedStudentsData = [];
     for (var i = 0; i < studentResponse.length; i++) {
@@ -245,7 +240,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
       setState(() {
         isVisible = true;
       });
-      try{
+      try {
         var resp = await apiRepository.updateJobSortListedApi(json, jobpportunityData.records!.first.id!);
         if (resp.id!.isNotEmpty) {
           setState(() {
@@ -259,14 +254,13 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
             isVisible = false;
           });
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
         final errorMessage = DioExceptions.fromDioError(e).toString();
         Utils.showSnackBarUsingGet(errorMessage);
       }
-
     } else {
       Utils.showSnackBar(context, strings_name.str_please_select_one_student);
     }

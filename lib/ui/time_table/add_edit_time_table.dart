@@ -349,7 +349,8 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   }
 
   fetchFaculty() async {
-    var query = "AND({is_working} = 1,{role_ids} = 'DR05')";
+    // var query = "AND({is_working} = 1,{role_ids} = 'DR05')";
+    var query = "AND({is_working} = 1)";
     try {
       var data = await apiRepository.getEmployeeListApi(query, offset);
       if (data.records!.isNotEmpty) {

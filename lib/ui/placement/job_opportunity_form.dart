@@ -1,6 +1,7 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -53,6 +54,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   List<SemesterData>? semesterData = [];
 
   String bondFilePath = "", incentiveStructureFilePath = "";
+  var bondFileData, incentiveStructureData;
 
   List<String> preferredGenderArr = <String>[strings_name.str_both, strings_name.str_male, strings_name.str_female];
   String preferredGenderValue = strings_name.str_both;
@@ -91,7 +93,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     });
 
     var query = "FIND('$jobCode', ${TableNames.CLM_JOB_CODE}, 0)";
-    try{
+    try {
       var data = await apiRepository.getJobOpportunityApi(query);
 
       setState(() {
@@ -154,14 +156,13 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
           Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
       });
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   void submitData() async {
@@ -171,16 +172,31 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
 
     var bondPath = "", incentivePath = "";
     if (bondFilePath.isNotEmpty) {
-      CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(bondFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_BONDS),
-      );
-      bondPath = response.secureUrl;
+      if (kIsWeb) {
+        // bondFileData
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(bondFileData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_BONDS, identifier: bondFileData.name),
+        );
+        bondPath = response.secureUrl;
+      } else {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(bondFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_BONDS),
+        );
+        bondPath = response.secureUrl;
+      }
     }
     if (incentiveStructureFilePath.isNotEmpty) {
-      CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(incentiveStructureFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE),
-      );
-      incentivePath = response.secureUrl;
+      if (kIsWeb) {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(incentiveStructureData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE, identifier: incentiveStructureData.name),
+        );
+        incentivePath = response.secureUrl;
+      } else {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(incentiveStructureFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE),
+        );
+        incentivePath = response.secureUrl;
+      }
     }
 
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
@@ -190,12 +206,20 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     request.specificRequirements = jobSpecificReqController.text.trim().toString();
     request.stipendType = stipendType.trim().toString();
     if (stipendType == strings_name.str_amount_type_range) {
-      request.stipendRangeMin = int.parse(minRangeController.text.trim().toString());
-      request.stipendRangeMax = int.parse(maxRangeController.text.trim().toString());
+      if (minRangeController.text.toString().trim().isNotEmpty) {
+        request.stipendRangeMin = int.parse(minRangeController.text.trim().toString());
+      }
+      if (maxRangeController.text.toString().trim().isNotEmpty) {
+        request.stipendRangeMax = int.parse(maxRangeController.text.trim().toString());
+      }
     }
-    request.vacancies = int.parse(vacancyController.text.trim().toString());
+    request.vacancies = int.tryParse(vacancyController.text.trim().toString()) ?? 1;
     request.gender = preferredGenderValue.trim().toString();
-    request.minimumAge = int.parse(minAgeLimitController.text.trim().toString());
+    if (minAgeLimitController.text.toString().trim().isNotEmpty) {
+      if (int.tryParse(minAgeLimitController.text.trim().toString()) != null) {
+        request.minimumAge = int.tryParse(minAgeLimitController.text.trim().toString());
+      }
+    }
     request.timingStart = startTimeController.text.trim().toString();
     request.timingEnd = endTimeController.text.trim().toString();
     request.internshipModes = internshipModeValue.trim().toString();
@@ -236,9 +260,13 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
       selectedSemesterData.add(semesterData![i].semester.toString());
     }
     request.semester = selectedSemesterData;
-     try{
+
+    var json = request.toJson();
+    json.removeWhere((key, value) => value == null);
+
+    try {
       if (fromEdit && jobRecordId.isNotEmpty) {
-        var resp = await apiRepository.updateJobOpportunityApi(request.toJson(), jobRecordId);
+        var resp = await apiRepository.updateJobOpportunityApi(json, jobRecordId);
         if (resp.id!.isNotEmpty) {
           setState(() {
             isVisible = false;
@@ -266,14 +294,13 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
           });
         }
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 
   @override
@@ -289,7 +316,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
               children: [
                 SizedBox(height: 10.h),
                 custom_text(
-                  text: strings_name.str_job_title,
+                  text: "${strings_name.str_job_title}*",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -301,7 +328,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                 ),
                 SizedBox(height: 5.h),
                 custom_text(
-                  text: strings_name.str_job_desc,
+                  text: "${strings_name.str_job_desc}*",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -331,7 +358,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                 ),
                 SizedBox(height: 5.h),
                 custom_text(
-                  text: strings_name.str_stipend_amount,
+                  text: "${strings_name.str_stipend_amount}*",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -407,7 +434,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     )),
                 SizedBox(height: 5.h),
                 custom_text(
-                  text: strings_name.str_vacancy,
+                  text: "${strings_name.str_vacancy}*",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -640,7 +667,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                 ),
                 SizedBox(height: 5.h),
                 custom_text(
-                  text: strings_name.str_internship_timing,
+                  text: "${strings_name.str_internship_timing}*",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
                 ),
@@ -685,7 +712,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     child: InkWell(
                       child: IgnorePointer(
                         child: custom_edittext(
-                          hintText: strings_name.str_end_time,
+                          hintText: "${strings_name.str_end_time}*",
                           type: TextInputType.none,
                           textInputAction: TextInputAction.next,
                           controller: endTimeController,
@@ -742,7 +769,8 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     ),
                   ],
                 ),
-                Visibility(visible: incentiveStructureFilePath.isNotEmpty, child: custom_text(text: incentiveStructureFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                // Visibility(visible: incentiveStructureFilePath.isNotEmpty, child: custom_text(text: incentiveStructureFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                incentiveStructureData == null ? SizedBox() : Visibility(visible: incentiveStructureData != null, child: custom_text(text: incentiveStructureData.name, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: strings_name.str_internship_mode,
@@ -831,6 +859,8 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                       Utils.showSnackBar(context, strings_name.str_empty_start_time);
                     } else if (endTimeController.text.toString().trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_end_time);
+                    } else if (hubsData?.isEmpty == true) {
+                      Utils.showSnackBar(context, strings_name.str_empty_hub_data);
                     } else {
                       submitData();
                     }
@@ -850,14 +880,28 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   picBondFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
-      bondFilePath = result.files.single.path!;
+      setState(() {
+        if (kIsWeb) {
+          bondFileData = result.files.single;
+          bondFilePath = result.files.single.bytes.toString();
+        } else {
+          bondFilePath = result.files.single.path!;
+        }
+      });
     }
   }
 
   picIncentiveFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result != null) {
-      incentiveStructureFilePath = result.files.single.path!;
+      setState(() {
+        if (kIsWeb) {
+          incentiveStructureData = result.files.single;
+          incentiveStructureFilePath = result.files.single.bytes.toString();
+        } else {
+          incentiveStructureFilePath = result.files.single.path!;
+        }
+      });
     }
   }
 }

@@ -51,7 +51,7 @@ class _AddSubjectState extends State<AddSubject> {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${Get.arguments[0]["subjectId"]}', ${TableNames.CLM_SUBJECT_ID}, 0)";
+      var query = "SEARCH('${Get.arguments[0]["subjectId"]}', ${TableNames.CLM_SUBJECT_ID})";
       try{
         var data = await apiRepository.getSubjectsApi(query);
         if (data.records?.isNotEmpty == true) {
@@ -68,7 +68,7 @@ class _AddSubjectState extends State<AddSubject> {
               semesterValue = subjectData![0].fields!.semester!;
               specializationIds = subjectData![0].fields!.specializationIds!;
             });
-            var query = "FIND('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS}, 0)";
+            var query = "SEARCH('${subjectData![0].fields!.ids}', ${TableNames.CLM_SUBJECT_IDS})";
             try{
               var data = await apiRepository.getUnitsApi(query);
               if (data.records?.isNotEmpty == true) {

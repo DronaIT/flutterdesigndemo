@@ -8,14 +8,13 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
-import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
-import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
 import 'package:flutterdesigndemo/models/update_job_opportunity.dart';
+import 'package:flutterdesigndemo/ui/placement/leave_internship.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
+import 'package:flutterdesigndemo/values/app_images.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
@@ -37,8 +36,10 @@ class _PlacementInfoState extends State<PlacementInfo> {
   UpdateJobOpportunity jobOpportunityData = UpdateJobOpportunity();
   String jobRecordId = "";
   String attendanceFilePath = "", consentFilePath = "";
+  String attendanceFileName = "", consentFileName = "";
 
   var cloudinary;
+  bool canEnableResignationPermission = false;
 
   @override
   void initState() {
@@ -48,25 +49,59 @@ class _PlacementInfoState extends State<PlacementInfo> {
       jobRecordId = Get.arguments;
     }
     getRecords();
+    getPermission();
   }
 
-  getRecords() async {
+  Future<void> getPermission() async {
     setState(() {
       isVisible = true;
     });
-    try{
-      jobOpportunityData = await apiRepository.getJobOpportunityWithRecordIdApi(jobRecordId);
-      setState(() {
-        isVisible = false;
-      });
-    }on DioError catch (e) {
+    var query = "";
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 1) {
+      query = "AND(FIND('${TableNames.STUDENT_ROLE_ID}',role_ids)>0,module_ids='${TableNames.MODULE_PLACEMENT}')";
+    }
+    try {
+      if(isLogin == 1) {
+        var data = await apiRepository.getPermissionsApi(query);
+        if (data.records!.isNotEmpty) {
+          for (var i = 0; i < data.records!.length; i++) {
+            if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ENABLE_RESIGNATION) {
+              canEnableResignationPermission = true;
+            }
+          }
+        } else {
+          Utils.showSnackBar(context, strings_name.str_something_wrong);
+        }
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
+  }
 
+  getRecords() async {
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      jobOpportunityData = await apiRepository.getJobOpportunityWithRecordIdApi(jobRecordId);
+      setState(() {
+        isVisible = false;
+      });
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   @override
@@ -81,10 +116,42 @@ class _PlacementInfoState extends State<PlacementInfo> {
                   margin: const EdgeInsets.all(10),
                   child: Column(
                     children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: custom_text(
+                              text: strings_name.str_placement_info_upload_warning,
+                              alignment: Alignment.topLeft,
+                              maxLines: 10,
+                              textStyles: primaryTextSemiBold16,
+                              leftValue: 5,
+                            ),
+                          ),
+                          Visibility(
+                            visible: canEnableResignationPermission,
+                            child: GestureDetector(
+                              child: Image.asset(
+                                AppImage.ic_resignation,
+                                height: 24,
+                                width: 24,
+                              ),
+                              onTap: () {
+                                Get.to(const LeaveInternShip(), arguments: jobOpportunityData.fields?.jobCode)?.then((result) {
+                                  if (result != null && result) {
+                                    Get.back(closeOverlays: true);
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 5.h),
                       custom_text(text: "${strings_name.str_company_name} : ${jobOpportunityData.fields?.companyName?.first}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
                       SizedBox(height: 5.h),
-                      custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.fields?.joiningDate}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
+                      custom_text(text: "${strings_name.str_designation} : ${jobOpportunityData.fields?.jobTitle ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 3, bottomValue: 5, leftValue: 5),
+                      SizedBox(height: 5.h),
+                      custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.fields?.joiningDate ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
                       SizedBox(height: 5.h),
                       Row(children: [
                         custom_text(text: "${strings_name.str_letter_of_intent} : ", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
@@ -92,7 +159,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
                             onTap: () async {
                               await launchUrl(Uri.parse(jobOpportunityData.fields?.company_loi?.first.url ?? ""), mode: LaunchMode.externalApplication);
                             },
-                            child: custom_text(text: "Show", textStyles: primaryTextSemiBold14, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 0)),
+                            child: custom_text(text: "Show", textStyles: primaryTextSemiBold16, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 0)),
                       ]),
                       SizedBox(height: 5.h),
                       Row(
@@ -122,14 +189,14 @@ class _PlacementInfoState extends State<PlacementInfo> {
                           ),
                         ],
                       ),
-                      Visibility(visible: consentFilePath.isNotEmpty, child: custom_text(text: attendanceFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                      Visibility(visible: consentFileName.isNotEmpty, child: custom_text(text: consentFileName, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0, leftValue: 5)),
                       SizedBox(height: 5.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           custom_text(
                             leftValue: 5,
-                            text: strings_name.str_attendence,
+                            text: strings_name.str_attendance,
                             alignment: Alignment.topLeft,
                             textStyles: blackTextSemiBold16,
                           ),
@@ -151,7 +218,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
                           ),
                         ],
                       ),
-                      Visibility(visible: attendanceFilePath.isNotEmpty, child: custom_text(text: attendanceFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                      Visibility(visible: attendanceFileName.isNotEmpty, child: custom_text(text: attendanceFileName, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0, leftValue: 5)),
                       SizedBox(height: 8.h),
                       CustomButton(
                           text: strings_name.str_submit,
@@ -159,68 +226,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
                             if (attendanceFilePath.isEmpty && consentFilePath.isEmpty) {
                               Utils.showSnackBar(context, strings_name.str_empty_placement_attendance_data);
                             } else {
-                              setState(() {
-                                isVisible = true;
-                              });
-
-                              var attendancePath = "", consentPath = "";
-                              AddPlacementAttendanceData request = AddPlacementAttendanceData();
-                              if (attendanceFilePath.isNotEmpty) {
-                                CloudinaryResponse response = await cloudinary.uploadFile(
-                                  CloudinaryFile.fromFile(attendanceFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE),
-                                );
-                                attendancePath = response.secureUrl;
-                              }
-                              if (consentFilePath.isNotEmpty) {
-                                CloudinaryResponse response = await cloudinary.uploadFile(
-                                  CloudinaryFile.fromFile(consentFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOC),
-                                );
-                                consentPath = response.secureUrl;
-                              }
-
-                              if (attendancePath.isNotEmpty) {
-                                Map<String, dynamic> map = Map();
-                                map["url"] = attendancePath;
-                                List<Map<String, dynamic>> listData = [];
-                                listData.add(map);
-
-                                request.attendance_form = listData;
-                              }
-                              if (consentPath.isNotEmpty) {
-                                Map<String, dynamic> map = Map();
-                                map["url"] = consentPath;
-                                List<Map<String, dynamic>> listData = [];
-                                listData.add(map);
-
-                                request.company_loc = listData;
-                              }
-                              request.job_id = jobRecordId.split(",");
-                              request.student_id = PreferenceUtils.getLoginRecordId().split(",");
-
-                              var json = request.toJson();
-                              json.removeWhere((key, value) => value == null);
-                               try{
-                                 var resp = await apiRepository.updatePlacementInfoApi(json);
-                                 if (resp.id!.isNotEmpty) {
-                                   setState(() {
-                                     isVisible = false;
-                                   });
-                                   Utils.showSnackBar(context, strings_name.str_placement_info_updated);
-                                   await Future.delayed(const Duration(milliseconds: 2000));
-                                   Get.back(closeOverlays: true, result: true);
-                                 } else {
-                                   setState(() {
-                                     isVisible = false;
-                                   });
-                                 }
-                               }on DioError catch (e) {
-                                 setState(() {
-                                   isVisible = false;
-                                 });
-                                 final errorMessage = DioExceptions.fromDioError(e).toString();
-                                 Utils.showSnackBarUsingGet(errorMessage);
-                               }
-
+                              submitPlacementData();
                             }
                           }),
                     ],
@@ -240,6 +246,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
     if (result != null) {
       setState(() {
         attendanceFilePath = result.files.single.path!;
+        attendanceFileName = result.files.single.name;
       });
     }
   }
@@ -249,7 +256,72 @@ class _PlacementInfoState extends State<PlacementInfo> {
     if (result != null) {
       setState(() {
         consentFilePath = result.files.single.path!;
+        consentFileName = result.files.single.name;
       });
+    }
+  }
+
+  submitPlacementData() async {
+    setState(() {
+      isVisible = true;
+    });
+
+    var attendancePath = "", consentPath = "";
+    AddPlacementAttendanceData request = AddPlacementAttendanceData();
+    if (attendanceFilePath.isNotEmpty) {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(attendanceFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE),
+      );
+      attendancePath = response.secureUrl;
+    }
+    if (consentFilePath.isNotEmpty) {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(consentFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_LOC),
+      );
+      consentPath = response.secureUrl;
+    }
+
+    if (attendancePath.isNotEmpty) {
+      Map<String, dynamic> map = Map();
+      map["url"] = attendancePath;
+      List<Map<String, dynamic>> listData = [];
+      listData.add(map);
+
+      request.attendance_form = listData;
+    }
+    if (consentPath.isNotEmpty) {
+      Map<String, dynamic> map = Map();
+      map["url"] = consentPath;
+      List<Map<String, dynamic>> listData = [];
+      listData.add(map);
+
+      request.company_loc = listData;
+    }
+    request.job_id = jobRecordId.split(",");
+    request.student_id = PreferenceUtils.getLoginRecordId().split(",");
+
+    var json = request.toJson();
+    json.removeWhere((key, value) => value == null);
+    try {
+      var resp = await apiRepository.updatePlacementInfoApi(json);
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_placement_info_updated);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

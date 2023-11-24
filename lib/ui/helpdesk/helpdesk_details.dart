@@ -1,17 +1,23 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
+import 'package:flutterdesigndemo/ui/task/employee_selection.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../customwidget/app_widgets.dart';
 import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_edittext.dart';
@@ -19,7 +25,6 @@ import '../../customwidget/custom_text.dart';
 import '../../models/help_desk_type_response.dart';
 import '../../models/helpdesk_responses.dart';
 import '../../values/text_styles.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 
 class HelpdeskDetail extends StatefulWidget {
   const HelpdeskDetail({Key? key}) : super(key: key);
@@ -38,12 +43,15 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
 
   HelpdeskResponses? helpDeskTypeResponse;
   String? helpDeskTypeResponseId, title;
-  bool canUpdateTicketStatus = false, canUpdateTicketCategory = false;
+  bool canUpdateTicketStatus = false, canUpdateTicketCategory = false, canUpdateTicketAssignee = false;
 
   TextEditingController helpDoneController = TextEditingController();
 
   List<String> ticketStatusArray = <String>[TableNames.TICKET_STATUS_OPEN, TableNames.TICKET_STATUS_INPROGRESS, TableNames.TICKET_STATUS_HOLD, TableNames.TICKET_STATUS_RESOLVED, TableNames.TICKET_STATUS_SUGGESTION];
-  String ticketValue = "";
+  String ticketValue = "", createdOn = "";
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
+  String offset = "";
 
   @override
   void initState() {
@@ -53,9 +61,17 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
     canUpdateTicketCategory = Get.arguments[2]["canUpdateTicketCategory"];
     helpDeskTypeResponseId = Get.arguments[3]["recordId"];
     title = Get.arguments[4]["title"];
+    canUpdateTicketAssignee = Get.arguments[5]["canUpdateTicketAssignee"];
     ticketValue = helpDeskTypeResponse?.status ?? TableNames.TICKET_STATUS_OPEN;
     if (canUpdateTicketCategory) {
       helpDeskType();
+    }
+
+    var createdDateTime = DateTime.parse(helpDeskTypeResponse!.createdOn!.trim()).toLocal();
+    createdOn = DateFormat("yyyy-MM-dd hh:mm aa").format(createdDateTime);
+
+    if (helpDeskTypeResponse?.assignedTo?.isNotEmpty == true) {
+      getEmployeeData();
     }
   }
 
@@ -120,14 +136,31 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                     children: [
                       custom_text(text: strings_name.str_created_by, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                       Expanded(
-                        child: custom_text(
-                            text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
-                                ? helpDeskTypeResponse!.studentName![0].toString()
-                                : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
-                            textStyles: blackTextSemiBold16,
-                            leftValue: 5,
-                            maxLines: 2,
-                            topValue: 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (helpDeskTypeResponse!.studentName?.isNotEmpty == true) {
+                              Get.to(const StudentHistory(), arguments: helpDeskTypeResponse!.studentMobileNumber![0]);
+                            }
+                          },
+                          child: custom_text(
+                              text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
+                                  ? helpDeskTypeResponse!.studentName![0].toString()
+                                  : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                              textStyles: helpDeskTypeResponse!.studentName?.isNotEmpty == true ? linkTextSemiBold16 : blackTextSemiBold16,
+                              leftValue: 5,
+                              maxLines: 2,
+                              topValue: 0),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      custom_text(text: strings_name.str_created_on, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                      Expanded(
+                        child: custom_text(text: createdOn, textStyles: blackTextSemiBold16, leftValue: 5, maxLines: 2, topValue: 0),
                       ),
                     ],
                   ),
@@ -173,6 +206,16 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                       )
                     ],
                   ),
+                  helpDeskTypeResponse!.attachments != null
+                      ? Row(children: [
+                          custom_text(text: "${strings_name.str_attachments} : ", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 5),
+                          GestureDetector(
+                              onTap: () async {
+                                await launchUrl(Uri.parse(helpDeskTypeResponse!.attachments?.first.url ?? ""), mode: LaunchMode.externalApplication);
+                              },
+                              child: custom_text(text: "Show", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 0)),
+                        ])
+                      : Container(),
                   SizedBox(height: 5.h),
                   Row(
                     children: [
@@ -232,6 +275,13 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           text: strings_name.str_update_ticket_type,
                           click: () {
                             showCategoryUpdateDialog(viewWidth);
+                          })),
+                  Visibility(
+                      visible: helpDeskTypeResponse!.status != TableNames.TICKET_STATUS_RESOLVED && canUpdateTicketAssignee,
+                      child: CustomButton(
+                          text: strings_name.str_update_ticket_assignee,
+                          click: () {
+                            showUpdateAssigneeDialog();
                           })),
                 ],
               ),
@@ -448,5 +498,149 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                 ));
           });
         });
+  }
+
+  showUpdateAssigneeDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, StateSetter setState) {
+            return Dialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    custom_text(
+                      text: strings_name.str_update_ticket_assignee,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        custom_text(
+                          text: strings_name.str_assigned_to,
+                          alignment: Alignment.topLeft,
+                          textStyles: blackTextSemiBold16,
+                        ),
+                        GestureDetector(
+                          child: custom_text(
+                            text: employeeData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                            alignment: Alignment.topLeft,
+                            textStyles: primaryTextSemiBold16,
+                          ),
+                          onTap: () {
+                            Get.to(const EmployeeSelection(), arguments: employeeData)?.then((result) {
+                              if (result != null) {
+                                setState(() {
+                                  employeeData = result;
+                                });
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    employeeData!.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: employeeData?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 2,
+                                child: GestureDetector(
+                                  child: Container(
+                                    color: colors_name.colorWhite,
+                                    padding: const EdgeInsets.all(5),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    // Get.to(const SpecializationDetail(), arguments: employeeData![index].fields?.id);
+                                  },
+                                ),
+                              );
+                            })
+                        : Container(),
+                    CustomButton(
+                        text: strings_name.str_update,
+                        click: () {
+                          if (employeeData?.isNotEmpty == true) {
+                            Get.back();
+
+                            List<String> assigned_to = [];
+                            for (int j = 0; j < employeeData!.length; j++) {
+                              assigned_to.add(employeeData![j].id!);
+                            }
+
+                            Map<String, dynamic> ticketFormula = {};
+                            ticketFormula["assigned_to"] = assigned_to;
+
+                            updateTicket(ticketFormula);
+                          } else {
+                            Utils.showSnackBarUsingGet(strings_name.str_empty_ticket_assignee);
+                          }
+                        }),
+                  ],
+                ));
+          });
+        });
+  }
+
+  getEmployeeData() async {
+    setState(() {
+      if (!isVisible) isVisible = true;
+    });
+
+    var query = "OR(";
+    for (int i = 0; i < helpDeskTypeResponse!.assignedMobileNumber!.length; i++) {
+      query += "${TableNames.TB_USERS_PHONE}='${helpDeskTypeResponse!.assignedMobileNumber![i]}'";
+      if (i + 1 < helpDeskTypeResponse!.assignedMobileNumber!.length) query += ",";
+    }
+    query += ")";
+    print(query);
+
+    try {
+      var data = await helpRepository.getEmployeeListApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          employeeData?.clear();
+        }
+        employeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          getEmployeeData();
+        } else {
+          employeeData?.sort((a, b) {
+            var adate = a.fields!.employeeName;
+            var bdate = b.fields!.employeeName;
+            return adate!.compareTo(bdate!);
+          });
+          for (var j = 0; j < employeeData!.length; j++) {
+            employeeData![j].fields!.selected = true;
+          }
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } else {
+        setState(() {
+          isVisible = false;
+          if (offset.isEmpty) {
+            employeeData = [];
+          }
+        });
+        offset = "";
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 }

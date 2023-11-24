@@ -15,35 +15,52 @@ class CompanyDetailResponse {
   List<String>? companySector;
   List<String>? sectorTitleFromCompanySector;
   List<String>? hubIds;
-  List<Attachment_response>?company_loi;
+  List<Attachment_response>? company_loi;
+  List<Attachment_response>? company_logo;
   String? reporting_branch;
   String? reporting_address;
   String? city;
   String? password;
   String? token;
+  String? status;
+  String? rejection_reason;
+  List<String>? created_by_student;
+  List<String>? created_by_student_number;
+  List<String>? created_by_student_name;
+  List<String>? self_job;
+  List<String>? self_job_code;
+  bool selected = false;
 
-  CompanyDetailResponse(
-      {this.id,
-        this.companyName,
-        this.contactName,
-        this.contactNumber,
-        this.contactWhatsappNumber,
-        this.contactDesignation,
-        this.contactEmail,
-        this.companyWebsite,
-        this.companyIdentityNumber,
-        this.companySector,
-        this.company_code,
-        this.company_landline,
-        this.reporting_branch,
-        this.reporting_address,
-        this.city,
-        this.sectorTitleFromCompanySector,
-        this.password,
-        this.token,
-        this.hubIds,
-        this.company_loi
-      });
+  CompanyDetailResponse({
+    this.id,
+    this.companyName,
+    this.contactName,
+    this.contactNumber,
+    this.contactWhatsappNumber,
+    this.contactDesignation,
+    this.contactEmail,
+    this.companyWebsite,
+    this.companyIdentityNumber,
+    this.companySector,
+    this.company_code,
+    this.company_landline,
+    this.reporting_branch,
+    this.reporting_address,
+    this.city,
+    this.sectorTitleFromCompanySector,
+    this.password,
+    this.token,
+    this.hubIds,
+    this.company_loi,
+    this.company_logo,
+    this.status,
+    this.rejection_reason,
+    this.created_by_student,
+    this.created_by_student_number,
+    this.created_by_student_name,
+    this.self_job,
+    this.self_job_code,
+  });
 
   CompanyDetailResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -59,17 +76,29 @@ class CompanyDetailResponse {
     company_code = json['company_code'];
     company_landline = json['company_landline'] ?? " ";
     companySector = json['company_sector']?.cast<String>();
-    sectorTitleFromCompanySector =
-        json['sector_title (from company_sector)']?.cast<String>();
+    sectorTitleFromCompanySector = json['sector_title (from company_sector)']?.cast<String>();
     reporting_branch = json['reporting_branch'] ?? " ";
     reporting_address = json['reporting_address'] ?? " ";
     city = json['city'] ?? " ";
     password = json['password'] ?? " ";
     token = json['token'] ?? " ";
+    status = json['status'] ?? " ";
+    rejection_reason = json['rejection_reason'] ?? " ";
+    created_by_student = json['created_by_student']?.cast<String>();
+    created_by_student_number = json['created_by_student_number']?.cast<String>();
+    created_by_student_name = json['created_by_student_name']?.cast<String>();
+    self_job = json['self_job']?.cast<String>();
+    self_job_code = json['self_job_code']?.cast<String>();
     if (json['company_loi'] != null) {
       company_loi = <Attachment_response>[];
       json['company_loi'].forEach((v) {
         company_loi!.add(Attachment_response.fromJson(v));
+      });
+    }
+    if (json['company_logo'] != null) {
+      company_logo = <Attachment_response>[];
+      json['company_logo'].forEach((v) {
+        company_logo!.add(Attachment_response.fromJson(v));
       });
     }
   }
@@ -95,8 +124,18 @@ class CompanyDetailResponse {
     data['city'] = this.city;
     data['password'] = this.password;
     data['token'] = this.token;
+    data['status'] = this.status;
+    data['rejection_reason'] = this.rejection_reason;
+    data['created_by_student'] = this.created_by_student;
+    data['created_by_student_number'] = this.created_by_student_number;
+    data['created_by_student_name'] = this.created_by_student_name;
+    data['self_job'] = this.self_job;
+    data['self_job_code'] = this.self_job_code;
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
+    }
+    if (this.company_logo != null) {
+      data['company_logo'] = this.company_logo!.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -38,7 +38,6 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   final apiRepository = getIt.get<ApiRepository>();
 
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityListMain = [];
-
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityList = [];
   String offset = "";
   var controllerSearch = TextEditingController();
@@ -50,12 +49,14 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   }
 
   getRecords() async {
-    setState(() {
-      isVisible = true;
-    });
+    if(!isVisible) {
+      setState(() {
+        isVisible = true;
+      });
+    }
     var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}')";
     try {
-      var data = await apiRepository.getJoboppoApi(query, offset);
+      var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           jobOpportunityList?.clear();
@@ -103,12 +104,11 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 8,
-              ),
+              SizedBox(height: 8),
               Visibility(
-                visible: jobOpportunityList != null && jobOpportunityList!.isNotEmpty,
+                visible: jobOpportunityListMain != null && jobOpportunityListMain!.isNotEmpty,
                 child: CustomEditTextSearch(
+                  hintText: "Search by company name..",
                   type: TextInputType.text,
                   textInputAction: TextInputAction.done,
                   controller: controllerSearch,
@@ -196,6 +196,16 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                     leftValue: 5,
                                     maxLines: 1000,
                                   ),
+                                  jobOpportunityList![index].fields!.specificRequirements != null
+                                      ? custom_text(
+                                          text: "Specific Requirement: ${jobOpportunityList![index].fields!.specificRequirements?.trim()}",
+                                          textStyles: blackTextSemiBold12,
+                                          topValue: 5,
+                                          maxLines: 1000,
+                                          bottomValue: 5,
+                                          leftValue: 5,
+                                        )
+                                      : Container(),
                                   Container(
                                     alignment: Alignment.centerRight,
                                     margin: const EdgeInsets.only(right: 10),

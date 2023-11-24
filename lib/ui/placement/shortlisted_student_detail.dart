@@ -41,12 +41,12 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
   String company_name = "";
   String jobId = "";
   TextEditingController startTimeController = TextEditingController();
-  TextEditingController specialinstrcutController = TextEditingController();
+  TextEditingController specialInstructionController = TextEditingController();
   TextEditingController postalAddressController = TextEditingController();
-  TextEditingController googleMaplinkController = TextEditingController();
+  TextEditingController googleMapLinkController = TextEditingController();
 
-  TextEditingController cordinatorNameController = TextEditingController();
-  TextEditingController cordinatorNumberController = TextEditingController();
+  TextEditingController coordinatorNameController = TextEditingController();
+  TextEditingController coordinatorNumberController = TextEditingController();
 
   List<JobModuleResponse> studentResponse = [];
 
@@ -66,7 +66,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
     try {
-      jobpportunityData = await apiRepository.getJoboppoApi(query);
+      jobpportunityData = await apiRepository.getJobOppoApi(query);
       for (var i = 0; i < jobpportunityData.records!.length; i++) {
         if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.appliedStudents != null) {
           for (var j = 0; j < jobpportunityData.records![i].fields!.appliedStudents!.length; j++) {
@@ -77,7 +77,8 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                 applied_students: jobpportunityData.records![i].fields!.appliedStudents![j],
                 applied_students_number: jobpportunityData.records![i].fields!.applied_students_number![j],
                 applied_students_resume: jobpportunityData.records![i].fields!.applied_students_resume![j].url,
-                applied_students_specialization: jobpportunityData.records![i].fields!.applied_students_specialization![j]);
+                applied_students_specialization: jobpportunityData.records![i].fields!.applied_students_specialization![j],
+                applied_students_semester: jobpportunityData.records![i].fields!.applied_students_semester![j]);
             studentResponse.add(jobModuleResponse);
           }
         }
@@ -155,6 +156,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                                               custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
                                               custom_text(text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                               custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(text: "${strings_name.str_semester}: ${studentResponse[index].applied_students_semester}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
                                             ],
                                           ),
                                         ),
@@ -189,7 +191,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: colors_name.presentColor,
+                          backgroundColor: colors_name.presentColor,
                           padding: const EdgeInsets.all(13),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -237,7 +239,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'EnrollmentNumber', 'MobileNumber', 'Resume']);
+    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'Enrollment Number', 'Mobile Number', 'Resume']);
 
     List<JobModuleResponse> myData = [];
     for (var i = 0; i < studentResponse.length; i++) {
@@ -247,11 +249,11 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     }
 
     myData.forEach((row) {
-      sheet.appendRow([row.applied_students_name, row.applied_students_email, row.applied_students_enrollment_number, row.applied_students_number, row.applied_students_resume]);
+      sheet.appendRow([row.applied_students_name, row.applied_students_email, row.applied_students_specialization, row.applied_students_semester, row.applied_students_enrollment_number, row.applied_students_number, row.applied_students_resume]);
     });
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
-    var file = File("${appDocumentsDirectory.path}/ShortlistedFor$company_name.xlsx");
+    var file = File("${appDocumentsDirectory.path}/ShortlistedFor${company_name.split(" ").first}.xlsx");
     await file.writeAsBytes(excel.encode()!);
     try {
       await OpenFilex.open(file.path);
@@ -309,7 +311,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
 
   Future<void> interviewScheduleDialog() async {
     Dialog errorDialog = Dialog(
-      insetPadding: EdgeInsets.all(10),
+      insetPadding: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
       child: SingleChildScrollView(
         child: Column(
@@ -371,8 +373,8 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             custom_edittext(
               type: TextInputType.multiline,
               textInputAction: TextInputAction.newline,
-              controller: specialinstrcutController,
-              hintText: strings_name.str_special_instrcutor,
+              controller: specialInstructionController,
+              hintText: strings_name.str_special_instruction,
               maxLines: 2,
               minLines: 2,
               maxLength: 50000,
@@ -393,7 +395,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             custom_edittext(
               type: TextInputType.text,
               textInputAction: TextInputAction.newline,
-              controller: googleMaplinkController,
+              controller: googleMapLinkController,
               hintText: strings_name.str_google_map_link,
               topValue: 0,
             ),
@@ -401,7 +403,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             custom_edittext(
               type: TextInputType.text,
               textInputAction: TextInputAction.newline,
-              controller: cordinatorNameController,
+              controller: coordinatorNameController,
               hintText: strings_name.str_codinator_name,
               topValue: 0,
             ),
@@ -409,7 +411,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             custom_edittext(
               type: TextInputType.number,
               textInputAction: TextInputAction.done,
-              controller: cordinatorNumberController,
+              controller: coordinatorNumberController,
               hintText: strings_name.str_codinator_number,
               maxLength: 10,
               topValue: 0,
@@ -417,13 +419,16 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
             CustomButton(
                 text: strings_name.str_submit,
                 click: () {
+/*
                   if (startTimeController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_job_date_time);
-                  } else if (postalAddressController.text.trim().isEmpty) {
+                  }
+*/
+                  if (postalAddressController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_postal_Address);
-                  } else if (cordinatorNameController.text.trim().isEmpty) {
+                  } else if (coordinatorNameController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_coori_name);
-                  } else if (cordinatorNumberController.text.trim().isEmpty) {
+                  } else if (coordinatorNumberController.text.trim().isEmpty) {
                     Utils.showSnackBar(context, strings_name.str_empty_coori_number);
                   } else {
                     Get.back(closeOverlays: true);
@@ -449,11 +454,11 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     request.sortlisted = selectedStudentsData;
     request.status = strings_name.str_job_status_interview_scheduled;
     request.interview_datetime = startTimeController.text.trim().toString();
-    request.interview_instruction = specialinstrcutController.text.trim().toString();
+    request.interview_instruction = specialInstructionController.text.trim().toString();
     request.interview_place_address = postalAddressController.text.trim().toString();
-    request.interview_place_url = googleMaplinkController.text.trim().toString();
-    request.coordinator_mobile_number = cordinatorNumberController.text.trim().toString();
-    request.coordinator_name = cordinatorNameController.text.trim().toString();
+    request.interview_place_url = googleMapLinkController.text.trim().toString();
+    request.coordinator_mobile_number = coordinatorNumberController.text.trim().toString();
+    request.coordinator_name = coordinatorNameController.text.trim().toString();
 
     var json = request.toJson();
     json.removeWhere((key, value) => value == null);

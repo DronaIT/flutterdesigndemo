@@ -51,7 +51,8 @@ class _AddSpecializationState extends State<AddSpecialization> {
       setState(() {
         isVisible = true;
       });
-      var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
+      // var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
+      var query = "SEARCH('${Get.arguments}',${TableNames.CLM_SPE_ID})";
       try{
         var data = await apiRepository.getSpecializationDetailApi(query);
         if (data.records?.isNotEmpty == true) {
@@ -62,7 +63,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
           if (specializationData?.isNotEmpty == true) {
             titleController.text = specializationData![0].fields!.specializationName.toString();
             descController.text = specializationData![0].fields!.specializationDesc.toString();
-            var query = "FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0)";
+            var query = "SEARCH('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS})";
             var data = await apiRepository.getSubjectsApi(query);
             if (data.records?.isNotEmpty == true) {
               subjectData = data.records;

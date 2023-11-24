@@ -1,6 +1,8 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
@@ -38,11 +40,14 @@ class _HelpDeskState extends State<HelpDesk> {
   TextEditingController helpNoteController = TextEditingController();
   int helpDeskId = 0;
   String helpPath = "", helpTitle = "";
+  late PlatformFile helpAttechmentData;
   var cloudinary;
   List<String> assigned_to = [];
   List<String> authority_of = [];
   var hubName;
   var isLogin = 0;
+
+  List<XFile> files = [];
 
   @override
   void initState() {
@@ -177,6 +182,11 @@ class _HelpDeskState extends State<HelpDesk> {
     ));
   }
 
+  ByteData uint8ListToByteData(Uint8List uint8List) {
+    final buffer = uint8List.buffer;
+    return ByteData.view(buffer);
+  }
+
   createTicket() async {
     authority_of.clear();
     if (helpDeskTypeResponses!.fields!.centerAutority != null) {
@@ -192,10 +202,27 @@ class _HelpDeskState extends State<HelpDesk> {
       isVisible = true;
     });
     if (helpPath.isNotEmpty) {
-      CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
-      );
-      helpPath = response.secureUrl;
+      if (!kIsWeb) {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(helpPath,
+              resourceType: CloudinaryResourceType.Auto,
+              folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
+        );
+        helpPath = response.secureUrl;
+      } else {
+        try {
+          CloudinaryResponse response = await cloudinary.uploadFile(
+            CloudinaryFile.fromByteData(
+                uint8ListToByteData(helpAttechmentData.bytes!),
+                resourceType: CloudinaryResourceType.Auto,
+                folder: TableNames.CLOUDARY_FOLDER_HELP_DESK,
+                identifier: helpAttechmentData.name.toString()),
+          );
+          helpPath = response.secureUrl;
+        } catch (e) {
+          debugPrint('../ error helpPath $e');
+        }
+      }
     }
 
     HelpDeskRequest helpDeskReq = HelpDeskRequest();
@@ -272,7 +299,12 @@ class _HelpDeskState extends State<HelpDesk> {
     if (result != null) {
       setState(() {
         helpTitle = result.files.single.name;
-        helpPath = result.files.single.path!;
+        if (kIsWeb) {
+          helpPath = result.files.single.bytes.toString();
+          helpAttechmentData = result.files.single;
+        } else {
+          helpPath = result.files.single.path!;
+        }
       });
     }
   }

@@ -8,10 +8,10 @@ import '../utils/image_dialog.dart';
 class AppImage {
   static String commanName = "assets/images/";
   static String LOGO = "assets/images/test.jpg";
-  // static String ic_splash = "${commanName}ic_splash.png";
   static String ic_welcome = "${commanName}welcome.json";
   static String ic_avtar = "${commanName}ic_avtar.png";
   static String ic_launcher = "${commanName}ic_launcher.png";
+  static String ic_resignation = "${commanName}resignation.png";
 
   static Widget loadSVG(String image, {double width = double.maxFinite, double height = double.maxFinite, BoxFit fit = BoxFit.contain, double radius = 0, Color? color}) {
     return ClipRRect(

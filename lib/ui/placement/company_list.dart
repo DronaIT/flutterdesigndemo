@@ -21,14 +21,14 @@ import '../../models/company_detail_response.dart';
 import '../../models/hub_response.dart';
 import '../../values/text_styles.dart';
 
-class GetCompanyDetail extends StatefulWidget {
-  const GetCompanyDetail({Key? key}) : super(key: key);
+class CompanyList extends StatefulWidget {
+  const CompanyList({Key? key}) : super(key: key);
 
   @override
-  State<GetCompanyDetail> createState() => _GetCompanyDetailState();
+  State<CompanyList> createState() => _CompanyListState();
 }
 
-class _GetCompanyDetailState extends State<GetCompanyDetail> {
+class _CompanyListState extends State<CompanyList> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? companyList = [];
@@ -77,26 +77,22 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
         }
       }
     }
-    if(hubResponseArray != null ){
+    if (hubResponseArray != null) {
       hubResponse = hubResponseArray?.first;
       hubValue = hubResponseArray!.first.fields!.id!.toString();
-      setState(() {
-
-      });
+      setState(() {});
     }
     getPermission();
-
-
   }
 
   Future<void> getRecords() async {
-    if(!isVisible) {
+    if (!isVisible) {
       setState(() {
         isVisible = true;
       });
     }
     try {
-      var query = "SEARCH('${hubValue}',${TableNames.CLM_HUB_ID},0)";
+      var query = "SEARCH('$hubValue',${TableNames.CLM_HUB_ID},0)";
       var data = await apiRepository.getCompanyDetailApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
@@ -215,7 +211,6 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                         hubValue = newValue!.fields!.id!.toString();
                         hubResponse = newValue;
                         getRecords();
-
                       });
                     },
                     items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
@@ -230,7 +225,7 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                   height: 4,
                 ),
                 Visibility(
-                  visible: companyList != null && companyList!.isNotEmpty,
+                  visible: companyListMain != null && companyListMain!.isNotEmpty,
                   child: CustomEditTextSearch(
                     type: TextInputType.text,
                     textInputAction: TextInputAction.done,
@@ -258,8 +253,8 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
                     margin: const EdgeInsets.all(10),
                     child: companyList != null && companyList!.isNotEmpty
                         ? ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
+                            primary: false,
+                            shrinkWrap: true,
                             itemCount: companyList?.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Card(
@@ -357,8 +352,16 @@ class _GetCompanyDetailState extends State<GetCompanyDetail> {
               ],
             ),
           ),
-          Center(
-            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          Visibility(
+            visible: isVisible,
+            child: Container(
+              color: colors_name.colorWhite,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: const Center(
+                child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+              ),
+            ),
           )
         ],
       ),

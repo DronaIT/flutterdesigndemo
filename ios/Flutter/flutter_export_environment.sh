@@ -1,12 +1,12 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=C:\Users\abc\flutter"
-export "FLUTTER_APPLICATION_PATH=G:\DronaApp"
+export "FLUTTER_ROOT=/Users/pratik/Downloads/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/pratik/StudioProjects/flutterdesigndemo"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
-export "FLUTTER_TARGET=lib\main.dart"
+export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
-export "FLUTTER_BUILD_NAME=1.0.9"
-export "FLUTTER_BUILD_NUMBER=11"
+export "FLUTTER_BUILD_NAME=1.0.15"
+export "FLUTTER_BUILD_NUMBER=17"
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=true"
 export "TREE_SHAKE_ICONS=false"

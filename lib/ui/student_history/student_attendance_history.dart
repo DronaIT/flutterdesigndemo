@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/values/colors_name.dart';
+import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 
 import '../../customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/values/strings_name.dart';
-
-import 'package:flutterdesigndemo/values/colors_name.dart';
-
-import '../../customwidget/custom_edittext_search.dart';
 import '../../customwidget/custom_text.dart';
-import '../../models/base_api_response.dart';
 import '../../models/login_fields_response.dart';
 import '../../models/view_student_attendance.dart';
 import '../../values/text_styles.dart';
@@ -27,11 +23,12 @@ class _StudentAttendanceHistoryState extends State<StudentAttendanceHistory> {
   LoginFieldsResponse? fields;
 
   List<ViewStudentAttendance> attendanceList = [];
- // List<ViewStudentAttendance> test = [];
+
+  // List<ViewStudentAttendance> test = [];
 
   var total_lecture = 0, present_lecture = 0, absent_lecture = 0;
   int totalLectures = 0, totalPresentLectures = 0, totalAbsentLectures = 0;
-   var totalPresentPercentage;
+  var totalPresentPercentage;
 
   @override
   void initState() {
@@ -43,7 +40,7 @@ class _StudentAttendanceHistoryState extends State<StudentAttendanceHistory> {
   void checkPresentAbsentDetailBySubject() {
     if (fields != null && fields?.presentSubjectId != null) {
       for (int i = 0; i < fields!.presentSubjectId!.length; i++) {
-        if(fields!.presentSemesterByStudent![i] == fields?.semester) {
+        if (fields!.presentSemesterByStudent![i] == fields?.semester) {
           var isAdded = false;
           for (int j = 0; j < attendanceList.length; j++) {
             if (attendanceList[j].subject_id == fields!.presentSubjectId![i]) {
@@ -102,7 +99,7 @@ class _StudentAttendanceHistoryState extends State<StudentAttendanceHistory> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_attendence),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_attendance),
       body: Stack(children: [
         Column(
           children: [
@@ -147,7 +144,11 @@ class _StudentAttendanceHistoryState extends State<StudentAttendanceHistory> {
                                   padding: const EdgeInsets.all(10),
                                   child: Column(
                                     children: [
-                                      custom_text(text: "${attendanceList[index].subject_title}", textStyles: primaryTextSemiBold16,maxLines: 3,),
+                                      custom_text(
+                                        text: "${attendanceList[index].subject_title}",
+                                        textStyles: primaryTextSemiBold16,
+                                        maxLines: 3,
+                                      ),
                                       Row(
                                         children: [
                                           Expanded(
@@ -180,7 +181,6 @@ class _StudentAttendanceHistoryState extends State<StudentAttendanceHistory> {
                                               ),
                                             ),
                                           )
-
                                         ],
                                       ),
                                     ],
