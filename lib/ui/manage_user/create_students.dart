@@ -312,7 +312,7 @@ class _AddStudent extends State<CreateStudent> {
       for (var table in excel.tables.keys) {
         for (var row = 1; row < excel.tables[table]!.maxRows; row++) {
           CreateStudentRequest request = CreateStudentRequest();
-          for (var col = 0; col < excel.tables[table]!.maxCols; col++) {
+          for (var col = 0; col < excel.tables[table]!.maxColumns; col++) {
             switch (excel.tables[table]?.rows[0][col]?.value.toString()) {
               case TableNames.EXCEL_COL_NAME:
                 request.name = excel.tables[table]?.rows[row][col]?.value.toString();
