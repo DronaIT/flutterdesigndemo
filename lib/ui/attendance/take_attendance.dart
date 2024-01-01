@@ -149,7 +149,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                   getSpecializations();
                                 });
                               },
-                              items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                              items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                                  (BaseApiResponseWithSerializable<HubResponse> value) {
                                 return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                                   value: value,
                                   child: Text(value.fields!.hubName!.toString()),
@@ -190,7 +191,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                             getSubjects();
                                           });
                                         },
-                                        items: specializationResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                                        items: specializationResponseArray
+                                            ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                                                (BaseApiResponseWithSerializable<SpecializationResponse> value) {
                                           return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                                             value: value,
                                             child: Text(value.fields!.specializationName!.toString()),
@@ -280,7 +283,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             ],
                           )
                         : Container(),
-                    subjectResponseArray!.isNotEmpty
+                    specializationValue.isNotEmpty && subjectResponseArray!.isNotEmpty
                         ? Column(
                             children: [
                               SizedBox(height: 10.h),
@@ -311,7 +314,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                             getUnits();
                                           });
                                         },
-                                        items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                        items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>(
+                                            (BaseApiResponseWithSerializable<SubjectResponse> value) {
                                           return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                                             value: value,
                                             child: Text(value.fields!.subjectTitle!.toString()),
@@ -325,7 +329,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             ],
                           )
                         : Container(),
-                    unitResponseArray!.isNotEmpty
+                    specializationValue.isNotEmpty && subjectResponseArray?.isNotEmpty == true && unitResponseArray?.isNotEmpty == true
                         ? Column(
                             children: [
                               SizedBox(height: 10.h),
@@ -356,7 +360,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                             getTopics();
                                           });
                                         },
-                                        items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>((BaseApiResponseWithSerializable<UnitsResponse> value) {
+                                        items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>(
+                                            (BaseApiResponseWithSerializable<UnitsResponse> value) {
                                           return DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>(
                                             value: value,
                                             child: Text(value.fields!.unitTitle!.toString()),
@@ -370,7 +375,10 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             ],
                           )
                         : Container(),
-                    topicResponseArray!.isNotEmpty
+                    specializationValue.isNotEmpty &&
+                            subjectResponseArray?.isNotEmpty == true &&
+                            unitResponseArray?.isNotEmpty == true &&
+                            topicResponseArray?.isNotEmpty == true
                         ? Column(
                             children: [
                               SizedBox(height: 10.h),
@@ -400,7 +408,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                             topicRecordId = newValue.id!;
                                           });
                                         },
-                                        items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>((BaseApiResponseWithSerializable<TopicsResponse> value) {
+                                        items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>(
+                                            (BaseApiResponseWithSerializable<TopicsResponse> value) {
                                           return DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>(
                                             value: value,
                                             child: Text(value.fields!.topicTitle!.toString()),
@@ -439,7 +448,6 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         lectureValue = newValue!;
-
                                       });
                                     },
                                     items: lectureHourResponseArray.map<DropdownMenuItem<String>>((String value) {
@@ -474,7 +482,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                           Utils.showSnackBar(context, strings_name.str_empty_unit);
                         } else if (topicValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_topic);
-                        }else if (lectureValue.trim().isEmpty) {
+                        } else if (lectureValue.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_lduration);
                         } else {
                           getStudents();
@@ -502,8 +510,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       });
       specializationValue = "";
 
-      // var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
-      var query = "SEARCH('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS})";
+      var query = "SEARCH('${hubResponse?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
       try {
         var speData = await apiRepository.getSpecializationDetailApi(query);
         setState(() {
@@ -533,7 +540,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       unitValue = "";
       topicValue = "";
 
-      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      var query =
+          "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       try {
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {
@@ -614,6 +622,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
 
   String offset = "";
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> studentList = [];
+
   Future<void> getStudents() async {
     setState(() {
       isVisible = true;
@@ -650,7 +659,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
           request.subjectId = subjectRecordId.split(",");
           request.unitId = unitRecordId.split(",");
           request.topicId = topicRecordId.split(",");
-          request.lecture_duration= lectureValue;
+          request.lecture_duration = lectureValue;
           request.semesterByStudent = semesterValue.toString();
           Get.to(AttendanceStudentList(), arguments: [
             {"studentList": studentList},

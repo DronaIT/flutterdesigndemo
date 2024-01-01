@@ -56,7 +56,14 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
   BaseApiResponseWithSerializable<HelpDeskTypeResponse>? helpDeskTypeResponses;
   int helpDeskId = 0;
 
-  List<String> ticketStatusArray = <String>[TableNames.TICKET_STATUS_OPEN, TableNames.TICKET_STATUS_INPROGRESS, TableNames.TICKET_STATUS_HOLD, TableNames.TICKET_STATUS_RESOLVED, TableNames.TICKET_STATUS_SUGGESTION, TableNames.TICKET_STATUS_COMPLETED];
+  List<String> ticketStatusArray = <String>[
+    TableNames.TICKET_STATUS_OPEN,
+    TableNames.TICKET_STATUS_INPROGRESS,
+    TableNames.TICKET_STATUS_HOLD,
+    TableNames.TICKET_STATUS_RESOLVED,
+    TableNames.TICKET_STATUS_SUGGESTION,
+    TableNames.TICKET_STATUS_COMPLETED
+  ];
   String ticketValue = "";
 
   final apiRepository = getIt.get<ApiRepository>();
@@ -72,7 +79,6 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
     fromTask = Get.arguments;
 
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -104,7 +110,25 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
         }
       }
 
+      getSpecializations();
       helpDeskType();
+    }
+  }
+
+  getSpecializations(){
+    speResponseArray = PreferenceUtils.getSpecializationList().records;
+    for (int i = 0; i < (speResponseArray?.length ?? 0); i++) {
+      bool contains = false;
+      for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+        if (speResponseArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+          contains = true;
+          break;
+        }
+      }
+      if (!contains) {
+        speResponseArray?.removeAt(i);
+        i--;
+      }
     }
   }
 
@@ -136,7 +160,13 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                                     setState(() {});
                                   },
                                 ),
-                                custom_text(text: strings_name.str_only_task, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1, bottomValue: 5, leftValue: 0), //Text
+                                custom_text(
+                                    text: strings_name.str_only_task,
+                                    textStyles: blackTextSemiBold14,
+                                    topValue: 5,
+                                    maxLines: 1,
+                                    bottomValue: 5,
+                                    leftValue: 0), //Text
                               ],
                             )
                           : Container(),
@@ -165,7 +195,8 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                                     onlyTask = false;
                                   });
                                 },
-                                items: helpDeskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
+                                items: helpDeskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>(
+                                    (BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
                                   return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
                                     value: value,
                                     child: Text(value.fields!.title.toString()),
@@ -229,9 +260,26 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                             setState(() {
                               hubValue = newValue!.fields!.id!.toString();
                               hubResponse = newValue;
+
+                              getSpecializations();
+                              if (hubValue.trim().isNotEmpty) {
+                                for (int i = 0; i < speResponseArray!.length; i++) {
+                                  if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                                    speResponseArray!.removeAt(i);
+                                    i--;
+                                  }
+                                }
+                              }
+                              speValue = "";
+                              speResponse = null;
+                              if (speResponseArray?.isEmpty == true) {
+                                Utils.showSnackBar(context, strings_name.str_no_specialization_linked);
+                              }
+                              setState(() {});
                             });
                           },
-                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                              (BaseApiResponseWithSerializable<HubResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                               value: value,
                               child: Text(value.fields!.hubName!.toString()),
@@ -261,7 +309,8 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                               getSubjects();
                             });
                           },
-                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                              (BaseApiResponseWithSerializable<SpecializationResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                               value: value,
                               child: Text(value.fields!.specializationName.toString()),
@@ -363,7 +412,8 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                                               // getUnits();
                                             });
                                           },
-                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>(
+                                              (BaseApiResponseWithSerializable<SubjectResponse> value) {
                                             return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                                               value: value,
                                               child: Text(value.fields!.subjectTitle!.toString(), overflow: TextOverflow.visible),
@@ -414,7 +464,8 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
       });
       subjectValue = "";
 
-      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(speValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      var query =
+          "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(speValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       try {
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {

@@ -12,6 +12,7 @@ class strings_name {
   static const String str_signup = "Do setup";
   static const String str_donot_signup = "New user? ";
   static const String str_phone = "Phone number";
+  static const String str_mobile = "Mobile No";
   static const String str_otp = "Enter code sent to ";
   static const String str_password = "Password";
   static const String str_forgot_password = "Forgot password?";
@@ -47,7 +48,7 @@ class strings_name {
   static const String str_add_students = "Add students";
   static const String str_add_student = "Add student";
   static const String str_update_student_details = "Update student details";
-  static const String str_update_details = "Update details";
+  static const String str_update_details = "Update Details";
   static const String str_update_details_successfully = "Details updated successfully";
 
   static const String str_view_students = "View students";
@@ -112,6 +113,7 @@ class strings_name {
   static const String str_submit = "Submit";
   static const String str_save = "Save";
   static const String str_no_data = "No items";
+  static const String str_no_data_found = "No record found";
   static const String str_no_module = "No module assigned";
   static const String str_no_employee = "No employee";
   static const String str_no_hub = "No hubs";
@@ -296,7 +298,7 @@ class strings_name {
   static const String str_parent_number = "Parent number";
   static const String str_spouse_number = "Spouse number";
 
-  static const String str_company_approach = "Company approach";
+  static const String str_company_approach = "Company Approach";
   static const String str_name_of_company = "Name of company";
   static const String str_type_of_industry = "Select type of industry/sector";
   static const String str_contact_person = "Contact person's name";
@@ -436,7 +438,7 @@ class strings_name {
 
   static const String str_interview_time_schedule = "Interview time scheduled successfully";
 
-  static const String str_selected_student = "Select student";
+  static const String str_selected_student = "Selected student";
   static const String str_selected_students = "Student selected successfully";
 
   static const String str_no_company = "No company found";
@@ -503,6 +505,7 @@ class strings_name {
   static const String str_sure_want_delete = "Are you sure want to DELETE ACCOUNT?";
   static const String str_otp_expired = "OTP expired, please try again.";
   static const String str_filter = "Filters";
+  static const String str_date_range = "Date range:";
   static const String str_select_date_range = "Select date range:";
   static const String str_empty_date_range = "Please select date range";
 
@@ -588,10 +591,10 @@ class strings_name {
   static const String str_assigned_by = "Assigned by:";
   static const String str_assigned_to = "Assigned to:";
   static const String str_employee = "Employees";
-  static const String str_select_employee = "Select employee";
-  static const String str_provided_duration = "Provided duration: ";
+  static const String str_select_employee = "Select Employee";
+  static const String str_provided_duration = "Provided Duration: ";
   static const String str_deadline = "Deadline: ";
-  static const String str_task_importance = "Task importance: ";
+  static const String str_task_importance = "Task Importance: ";
 
   static const String str_materials = "Materials";
   static const String str_ticket_status = "Status";
@@ -612,7 +615,7 @@ class strings_name {
   static const String edit_announcements = "Edit Announcement";
   static const String update_announcements = "Update Announcement";
   static const String announcement_title_asterisk = "Announcement Title*";
-  static const String announcement_des_asterisk = "Announcement Description**";
+  static const String announcement_des_asterisk = "Announcement Description*";
   static const String attach_files = "Attach Files";
   static const String everyone = "Everyone";
   static const String add_image = "Add Image";
@@ -633,7 +636,7 @@ class strings_name {
   static const String str_remove_announcement = "Remove announcement";
   static const String str_announcement_removed = "Announcement removed successfully.";
 
-  /// Time Table Mobule String
+  /// Time Table Module String
   static const String str_time_table = "Time Table";
   static const String str_subject_name = "Subject Name";
   static const String str_new_time_table_icon = "+ New Time Table";
@@ -701,7 +704,7 @@ class strings_name {
   static const String str_empty_selfplace_job = "Please enter internship details";
   static const String str_empty_applied_students = "Please select applied students";
   static const String str_empty_placed_students = "Please select placed students";
-  static const String str_select_student = "Please select student";
+  static const String str_empty_select_student = "Please select student";
   static const String str_empty_company = "Please select company";
   static const String str_select_company = "Select company";
 
@@ -713,10 +716,111 @@ class strings_name {
   static const String str_self_place_rejected = "Job is rejected.";
   static const String str_self_place_approved = "Job is approved.";
 
-  static const String str_add_marketing_record = "Add Marketing Record";
-  static const String str_edit_marketing_record = "Edit Marketing Record";
-  static const String str_number_of_approach = "Number of approaches done*";
-  static const String str_number_of_meeting = "Number of meetings done*";
-  static const String str_number_of_seminars_arranged = "Number of seminars arranged*";
-  static const String str_number_of_seminars_completed = "Number of seminars completed*";
+  static const String str_marketing = "Marketing";
+  static const String str_marketing_records = "Marketing record";
+  static const String str_add_marketing_record = "Add marketing record";
+  static const String str_update_marketing_record = "Update marketing record";
+  static const String str_number_of_approach = "Number of approaches done";
+  static const String str_number_of_meeting = "Number of meetings done";
+  static const String str_number_of_seminars_arranged = "Number of seminars arranged";
+  static const String str_number_of_seminars_completed = "Number of seminars completed";
+  static const String str_empty_number_of_approach = "Please add number of approaches done";
+  static const String str_empty_number_of_meeting = "Please add number of meetings done";
+  static const String str_empty_number_of_seminars_arranged = "Please add number of seminars arranged";
+  static const String str_empty_number_of_seminars_completed = "Please add number of seminars completed";
+
+  static const String str_added_marketing_record = "Record added successfully";
+  static const String str_updated_marketing_record = "Record updated successfully";
+
+  static const String str_my_records = "My Records";
+  static const String str_added_by_subordinates = "Added by my subordinates";
+  static const String str_added_by = "Added by";
+  static const String str_invalid_data = "Please enter valid details";
+
+  static const String str_fees_records = "Fees record";
+  static const String str_add_fees_record = "Add fees record";
+  static const String str_update_fees_record = "Update fees record";
+  static const String str_select_student = "Select student";
+  static const String str_enter_fees_paid = "Fees paid";
+  static const String str_empty_fees_paid = "Please add fees paid";
+  static const String str_proof_of_payment = "Proof of payment";
+  static const String str_empty_proof_of_payment = "Please attach proof of payment";
+
+  static const String str_fees = "Fees";
+  static const String str_fees_dashboard = "Fees Dashboard";
+  static const String str_add_record = "+ Add Record";
+  static const String str_browse_hub_wise = "Browse Hub Wise";
+  static const String str_added_fees_record = "Record added successfully";
+  static const String str_updated_fees_record = "Record updated successfully";
+
+  static const String str_mis_dashboard = "MIS Dashboard";
+
+  static const String str_attendance_dashboard = "Attendance Dashboard";
+  static const String str_placement_dashboard = "Placement Dashboard";
+  static const String str_total_lectures_taken = "Total Lectures taken";
+  static const String str_overall_student_attendance = "Overall Student Attendance";
+  static const String str_average_attendace = "Average Attendance per Lecture";
+
+  static const String str_no_specialization_linked = "No specialization linked.";
+
+  static const String str_number_of_company_registered = "Number of new companies registered";
+  static const String str_number_of_jobs_created = "Number of new jobs added";
+  static const String str_number_of_vacancies_confirmed = "Number of new vacancies confirmed";
+  static const String str_number_of_new_students_placed = "Number of new placed students";
+  static const String str_number_of_new_self_placed_students = "Number of new self placed students";
+  static const String str_total_students_placed = "Total number of students placed";
+  static const String str_total_companies = "Total number of companies registered";
+  static const String str_overall_student_placement = "Overall Student Placement";
+
+  static const String str_view_details = "View Details";
+  static const String str_total_fees_received = "Total Fees Received";
+  static const String str_total_students_who_paid = "Total students who paid";
+  static const String str_no_fees_received = "No fees received";
+
+  static const String str_punch_leave_records = "Punch-in & Leave";
+  static const String str_add_punch_record = "Add Punch Record";
+  static const String str_update_punch_record = "Update Punch record";
+  static const String str_actual_punch_in_time = "Actual Punch-in Time";
+  static const String str_actual_punch_out_time = "Actual Punch-out Time";
+
+  static const String str_punch_date = "Punch Date";
+  static const String str_punch_time = "Punch Time";
+  static const String str_punch_time_in = "Punch-in";
+  static const String str_punch_time_out = "Punch-out";
+  static const String str_on_leave = "On Leave?";
+  static const String str_full_day = "Full Day";
+  static const String str_first_half = "First Half";
+  static const String str_second_half = "Second Half";
+  static const String str_reason_for_leave = "Reason for Leave";
+  static const String str_running_late = "Running Late";
+  static const String str_attendance_type = "Attendance Type";
+
+  static const String str_empty_select_employee = "Please Select Employee";
+  static const String str_empty_punch_date = "Please Select Punch Date";
+  static const String str_empty_punch_in_time = "Please Select Punch-in Time";
+  static const String str_empty_punch_out_time = "Please Select Punch-out Time";
+  static const String str_empty_reason_for_leave = "Please provide reason for Leave";
+
+  static const String str_total_employees = "Total Employees";
+  static const String str_total_on_leave = "Total on Leave";
+
+  static const String str_push_desc_new_ticket_assigned = "New ticket assigned!";
+  static const String str_push_desc_ticket_assignee_updated = "Ticket assignee is updated!";
+  static const String str_push_desc_assigned_ticket_category_updated = "Assigned ticket category is updated!";
+  static const String str_push_desc_ticket_category_updated = "Your ticket category is updated!";
+  static const String str_push_desc_ticket_status_updated = "Your ticket status is updated!";
+  static const String str_push_desc_ticket_resolved = "Your ticket is resolved!";
+
+  static const String str_push_desc_student_absent = "You were absent in Today's ";
+  static const String str_push_desc_task_status_updated = "Task status is updated!";
+  static const String str_push_desc_task_completed = "Task is completed!";
+  static const String str_push_desc_new_task_assigned = "New task assigned!";
+  static const String str_push_desc_new_announcement = "New announcement!!";
+  static const String str_push_desc_update_announcement = "Please check announcement update for ";
+
+  static const String str_student_details = "Student Details";
+  static const String str_company_details = "Company Details";
+  static const String str_job_details = "Job Details";
+  static const String str_rejection_remarks = "Rejection Remarks:";
+  static const String str_self_place_job_updated = "Self placed job approved successfully";
 }

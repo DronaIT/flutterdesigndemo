@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
@@ -142,20 +143,7 @@ class _AddStudent extends State<CreateStudent> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        title: const Text(strings_name.str_add_students),
-        backgroundColor: colors_name.colorPrimary,
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(14),
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_add_students),
       body: Stack(children: [
         Column(children: [
           SizedBox(height: 8.h),
@@ -238,7 +226,7 @@ class _AddStudent extends State<CreateStudent> {
               if (list.isEmpty) {
                 if (fileName.isNotEmpty && !showError) {
                   Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
-                } else if(showError){
+                } else if (showError) {
                   Utils.showSnackBarDuration(context, strings_name.str_empty_mobile_sheet, 5);
                 } else {
                   Utils.showSnackBar(context, strings_name.str_empty_file);
@@ -294,12 +282,11 @@ class _AddStudent extends State<CreateStudent> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['xlsx']);
 
     if (result != null) {
-
       var bytes;
 
-      if(kIsWeb){
+      if (kIsWeb) {
         bytes = result.files.single.bytes;
-      }else{
+      } else {
         bytes = File(result.files.single.path!).readAsBytesSync();
       }
 
@@ -387,8 +374,7 @@ class _AddStudent extends State<CreateStudent> {
           }
           // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
           if (request.mobileNumber != null) {
-            var query = "FIND('${request.mobileNumber.toString()}',${TableNames
-                .TB_USERS_PHONE},0)";
+            var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
             try {
               var checkMobile = await createStudentRepository.loginApi(query);
               if (checkMobile.records?.isEmpty == true) {
@@ -420,7 +406,7 @@ class _AddStudent extends State<CreateStudent> {
         setState(() {
           isVisible = false;
         });
-        if(!showError){
+        if (!showError) {
           Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
         }
       }

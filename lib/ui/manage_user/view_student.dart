@@ -12,7 +12,6 @@ import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/ui/manage_user/view_student_list.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
@@ -37,6 +36,7 @@ class _ViewStudentState extends State<ViewStudent> {
   int semesterValue = 1;
 
   final apiRepository = getIt.get<ApiRepository>();
+
   //bool isVisible = false;
 
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? viewStudent = [];
@@ -48,7 +48,6 @@ class _ViewStudentState extends State<ViewStudent> {
   void initState() {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
     canUpdateStudent = Get.arguments;
 
     var isLogin = PreferenceUtils.getIsLogin();
@@ -81,46 +80,28 @@ class _ViewStudentState extends State<ViewStudent> {
         }
       }
     }
+
+    // getSpecializations();
   }
 
-  // Future<void> fetchRecords() async {
-  //   var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue',${TableNames.CLM_SEMESTER}='${semesterValue.toString()}')";
-  //   setState(() {
-  //     isVisible = true;
-  //   });
-  //   try {
-  //     var data = await apiRepository.loginApi(query, offset);
-  //     if (data.records!.isNotEmpty) {
-  //       if (offset.isEmpty) {
-  //         viewStudent?.clear();
-  //       }
-  //       viewStudent?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
-  //       offset = data.offset;
-  //       if (offset.isNotEmpty) {
-  //         fetchRecords();
-  //       } else {
-  //         setState(() {
-  //           viewStudent?.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
-  //           isVisible = false;
-  //         });
-  //       }
-  //     } else {
-  //       setState(() {
-  //         isVisible = false;
-  //         if (offset.isEmpty) {
-  //           viewStudent = [];
-  //         }
-  //       });
-  //       offset = "";
-  //     }
-  //   } on DioError catch (e) {
-  //     setState(() {
-  //       isVisible = false;
-  //     });
-  //     final errorMessage = DioExceptions.fromDioError(e).toString();
-  //     Utils.showSnackBarUsingGet(errorMessage);
-  //   }
-  // }
+  getSpecializations() {
+    speResponseArray = [];
+    speResponseArray?.addAll(PreferenceUtils.getSpecializationList().records!);
+
+    for (int i = 0; i < (speResponseArray?.length ?? 0); i++) {
+      bool contains = false;
+      for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+        if (speResponseArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+          contains = true;
+          break;
+        }
+      }
+      if (!contains) {
+        speResponseArray?.removeAt(i);
+        i--;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,12 +131,27 @@ class _ViewStudentState extends State<ViewStudent> {
                       style: blackText16,
                       focusColor: Colors.white,
                       onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                        setState(() {
-                          hubValue = newValue!.fields!.id!.toString();
-                          hubResponse = newValue;
-                        });
+                        hubValue = newValue!.fields!.id!.toString();
+                        hubResponse = newValue;
+
+                        getSpecializations();
+                        if (hubValue.trim().isNotEmpty) {
+                          for (int i = 0; i < speResponseArray!.length; i++) {
+                            if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                              speResponseArray!.removeAt(i);
+                              i--;
+                            }
+                          }
+                        }
+                        speValue = "";
+                        speResponse = null;
+                        if (speResponseArray?.isEmpty == true) {
+                          Utils.showSnackBar(context, strings_name.str_no_specialization_linked);
+                        }
+                        setState(() {});
                       },
-                      items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                      items: hubResponseArray
+                          ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                         return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                           value: value,
                           child: Text(value.fields!.hubName!.toString()),
@@ -184,7 +180,8 @@ class _ViewStudentState extends State<ViewStudent> {
                           speResponse = newValue;
                         });
                       },
-                      items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                      items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                          (BaseApiResponseWithSerializable<SpecializationResponse> value) {
                         return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                           value: value,
                           child: Text(value.fields!.specializationName.toString()),
@@ -240,7 +237,6 @@ class _ViewStudentState extends State<ViewStudent> {
                     },
                     text: strings_name.str_submit,
                   ),
-
                 ],
               ),
             ),

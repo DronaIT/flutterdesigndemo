@@ -203,7 +203,7 @@ class _StudentSelectionState extends State<StudentSelection> {
                     if (selectedStudentData.isNotEmpty) {
                       Get.back(result: selectedStudentData);
                     } else {
-                      Utils.showSnackBar(context, strings_name.str_select_student);
+                      Utils.showSnackBar(context, strings_name.str_empty_select_student);
                     }
                   },
                 )

@@ -58,6 +58,7 @@ class LoginFieldsResponse {
   List<String>? selectedJob;
   List<String>? placedJob;
   List<String>? rejectedJob;
+  List<int>? isSelfPlacedCurrently;
 
   List<String>? job_title_selected_job;
   List<String>? company_name_from_selected_job;
@@ -152,6 +153,7 @@ class LoginFieldsResponse {
     this.selectedJob,
     this.placedJob,
     this.rejectedJob,
+    this.isSelfPlacedCurrently,
     this.token,
     this.percentage,
     this.Total_lectures,
@@ -285,6 +287,7 @@ class LoginFieldsResponse {
     selectedJob = json['selected_job']?.cast<String>();
     placedJob = json['placed_job']?.cast<String>();
     rejectedJob = json['rejected_job']?.cast<String>();
+    isSelfPlacedCurrently = json['is_self_placed_currently']?.cast<int>();
     token = json['token'];
     father_full_name = json['father_full_name'];
     percentage = json['percentage'];
@@ -393,6 +396,7 @@ class LoginFieldsResponse {
     data['selected_job'] = this.selectedJob;
     data['placed_job'] = this.placedJob;
     data['rejected_job'] = this.rejectedJob;
+    data['is_self_placed_currently'] = this.isSelfPlacedCurrently;
     data['token'] = this.token;
     data['father_full_name'] = this.father_full_name;
     data['is_placed_now'] = this.is_placed_now;

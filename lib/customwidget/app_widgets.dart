@@ -1,6 +1,7 @@
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/values/text_styles.dart';
 import '../values/app_images.dart';
 import 'app_text_style.dart';
 
@@ -270,7 +271,8 @@ class AppWidgets {
           bottom: Radius.circular(14),
         ),
       ),
-      title: Text(title),
+      title: Text(title, style: whiteTextSemiBold20),
+      iconTheme: const IconThemeData(color: colors_name.colorWhite),
     );
   }
 
@@ -284,8 +286,9 @@ class AppWidgets {
           bottom: Radius.circular(14),
         ),
       ),
-      title: Text(title),
+      title: Text(title, style: whiteTextSemiBold20),
       actions: actions,
+      iconTheme: const IconThemeData(color: colors_name.colorWhite),
     );
   }
 
@@ -294,10 +297,6 @@ class AppWidgets {
       {List<Widget>? actions}) {
     return AppBar(
       leading: GestureDetector(
-        // child: Container(
-        //   padding: const EdgeInsets.all(18),
-        //   child: AppImage.loadSVG(AppImage.BACK, height: 20, width: 13),
-        // ),
         onTap: () {
           Navigator.pop(context, false);
         },

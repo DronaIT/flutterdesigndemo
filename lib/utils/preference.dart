@@ -17,6 +17,7 @@ class PreferenceUtils {
   static const _keyEmail = 'email';
 
   static const _keyisLogin = 'isLogin';
+  static const _keyEnablePush = 'enablePushNotification';
   static const _keyisOtpVerify = 'isOtpVerify';
   static const _keyLoginData = 'isLoginData';
   static const _keyRoleList = 'roleList';
@@ -44,6 +45,10 @@ class PreferenceUtils {
   static Future setIsLogin(int amount) async => await _preferences.setInt(_keyisLogin, amount);
 
   static int getIsLogin() => _preferences.getInt(_keyisLogin) ?? 0;
+
+  static Future setEnablePush(String push) async => await _preferences.setString(_keyEnablePush, push);
+
+  static String getIsPushEnabled() => _preferences.getString(_keyEnablePush) ?? "0";
 
   static Future setisOtpVerify(bool amount) async => await _preferences.setBool(_keyisOtpVerify, amount);
 

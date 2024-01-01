@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/ui/task/employee_selection.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -47,7 +48,13 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
 
   TextEditingController helpDoneController = TextEditingController();
 
-  List<String> ticketStatusArray = <String>[TableNames.TICKET_STATUS_OPEN, TableNames.TICKET_STATUS_INPROGRESS, TableNames.TICKET_STATUS_HOLD, TableNames.TICKET_STATUS_RESOLVED, TableNames.TICKET_STATUS_SUGGESTION];
+  List<String> ticketStatusArray = <String>[
+    TableNames.TICKET_STATUS_OPEN,
+    TableNames.TICKET_STATUS_INPROGRESS,
+    TableNames.TICKET_STATUS_HOLD,
+    TableNames.TICKET_STATUS_RESOLVED,
+    TableNames.TICKET_STATUS_SUGGESTION
+  ];
   String ticketValue = "", createdOn = "";
 
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
@@ -127,7 +134,14 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           decoration: const BoxDecoration(color: colors_name.colorAccent, borderRadius: BorderRadius.all(Radius.circular(5))),
                           padding: const EdgeInsets.all(1),
                           margin: const EdgeInsets.only(right: 5),
-                          child: custom_text(text: helpDeskTypeResponse!.ticketTitle![0].toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                          child: custom_text(
+                              text: helpDeskTypeResponse!.ticketTitle![0].toString(),
+                              textStyles: whiteTextSemiBold16,
+                              alignment: Alignment.centerRight,
+                              topValue: 1,
+                              bottomValue: 1,
+                              leftValue: 3,
+                              rightValue: 3)),
                     ],
                   ),
                   Row(
@@ -145,7 +159,11 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           child: custom_text(
                               text: helpDeskTypeResponse!.studentName?.isNotEmpty == true
                                   ? helpDeskTypeResponse!.studentName![0].toString()
-                                  : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true ? helpDeskTypeResponse!.employeeName![0].toString() : (helpDeskTypeResponse!.companyName?.isNotEmpty == true ? helpDeskTypeResponse!.companyName![0].toString() : "")),
+                                  : (helpDeskTypeResponse!.employeeName?.isNotEmpty == true
+                                      ? helpDeskTypeResponse!.employeeName![0].toString()
+                                      : (helpDeskTypeResponse!.companyName?.isNotEmpty == true
+                                          ? helpDeskTypeResponse!.companyName![0].toString()
+                                          : "")),
                               textStyles: helpDeskTypeResponse!.studentName?.isNotEmpty == true ? linkTextSemiBold16 : blackTextSemiBold16,
                               leftValue: 5,
                               maxLines: 2,
@@ -171,7 +189,12 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           children: [
                             custom_text(text: strings_name.str_hubname, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                             Expanded(
-                              child: custom_text(text: helpDeskTypeResponse!.studentHubName![0].toString(), textStyles: blackText16, leftValue: 5, maxLines: 2, topValue: 0),
+                              child: custom_text(
+                                  text: helpDeskTypeResponse!.studentHubName![0].toString(),
+                                  textStyles: blackText16,
+                                  leftValue: 5,
+                                  maxLines: 2,
+                                  topValue: 0),
                             ),
                           ],
                         )
@@ -181,9 +204,15 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            custom_text(text: strings_name.str_specialization, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            custom_text(
+                                text: strings_name.str_specialization, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                             Expanded(
-                              child: custom_text(text: helpDeskTypeResponse!.studentSpecializationName![0].toString(), textStyles: blackText16, leftValue: 5, maxLines: 2, topValue: 0),
+                              child: custom_text(
+                                  text: helpDeskTypeResponse!.studentSpecializationName![0].toString(),
+                                  textStyles: blackText16,
+                                  leftValue: 5,
+                                  maxLines: 2,
+                                  topValue: 0),
                             ),
                           ],
                         )
@@ -208,12 +237,19 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                   ),
                   helpDeskTypeResponse!.attachments != null
                       ? Row(children: [
-                          custom_text(text: "${strings_name.str_attachments} : ", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 5),
+                          custom_text(
+                              text: "${strings_name.str_attachments} : ",
+                              textStyles: primaryTextSemiBold16,
+                              topValue: 5,
+                              maxLines: 2,
+                              bottomValue: 10,
+                              leftValue: 5),
                           GestureDetector(
                               onTap: () async {
                                 await launchUrl(Uri.parse(helpDeskTypeResponse!.attachments?.first.url ?? ""), mode: LaunchMode.externalApplication);
                               },
-                              child: custom_text(text: "Show", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 0)),
+                              child: custom_text(
+                                  text: "Show", textStyles: primaryTextSemiBold16, topValue: 5, maxLines: 2, bottomValue: 10, leftValue: 0)),
                         ])
                       : Container(),
                   SizedBox(height: 5.h),
@@ -230,18 +266,33 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           decoration: const BoxDecoration(color: colors_name.presentColor, borderRadius: BorderRadius.all(Radius.circular(5))),
                           padding: const EdgeInsets.all(1),
                           margin: const EdgeInsets.only(right: 5),
-                          child: custom_text(text: helpDeskTypeResponse!.status.toString(), textStyles: whiteTextSemiBold16, alignment: Alignment.centerRight, topValue: 1, bottomValue: 1, leftValue: 3, rightValue: 3)),
+                          child: custom_text(
+                              text: helpDeskTypeResponse!.status.toString(),
+                              textStyles: whiteTextSemiBold16,
+                              alignment: Alignment.centerRight,
+                              topValue: 1,
+                              bottomValue: 1,
+                              leftValue: 3,
+                              rightValue: 3)),
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  PreferenceUtils.getIsLogin() == 2 && helpDeskTypeResponse!.assignedEmployeeName != null && helpDeskTypeResponse!.assignedEmployeeName!.isNotEmpty
+                  PreferenceUtils.getIsLogin() == 2 &&
+                          helpDeskTypeResponse!.assignedEmployeeName != null &&
+                          helpDeskTypeResponse!.assignedEmployeeName!.isNotEmpty
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            custom_text(text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
+                            custom_text(
+                                text: strings_name.str_assigned_to, textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0),
                             Expanded(
-                              child: custom_text(text: helpDeskTypeResponse!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "", textStyles: blackTextSemiBold16, leftValue: 5, maxLines: 5000, topValue: 0),
+                              child: custom_text(
+                                  text: helpDeskTypeResponse!.assignedEmployeeName?.join(",").replaceAll(" ,", ", ") ?? "",
+                                  textStyles: blackTextSemiBold16,
+                                  leftValue: 5,
+                                  maxLines: 5000,
+                                  topValue: 0),
                             ),
                           ],
                         )
@@ -251,15 +302,39 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                     visible: helpDeskTypeResponse!.resolutionRemark?.trim().isNotEmpty == true,
                     child: Column(children: [
                       SizedBox(height: 3.h),
-                      custom_text(text: "${strings_name.str_remarks}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0, bottomValue: 5),
-                      custom_text(text: "${helpDeskTypeResponse!.resolutionRemark}", textStyles: blackTextSemiBold16, maxLines: 5000, leftValue: 5, rightValue: 0, topValue: 0),
+                      custom_text(
+                          text: "${strings_name.str_remarks}: ",
+                          textStyles: primaryTextSemiBold16,
+                          rightValue: 0,
+                          leftValue: 5,
+                          topValue: 0,
+                          bottomValue: 5),
+                      custom_text(
+                          text: "${helpDeskTypeResponse!.resolutionRemark}",
+                          textStyles: blackTextSemiBold16,
+                          maxLines: 5000,
+                          leftValue: 5,
+                          rightValue: 0,
+                          topValue: 0),
                     ]),
                   ),
                   SizedBox(height: 5.h),
                   helpDeskTypeResponse?.status_updated_by_employee_name?.isNotEmpty != null
                       ? Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          custom_text(text: "${strings_name.str_updated_by}: ", textStyles: primaryTextSemiBold16, rightValue: 0, leftValue: 5, topValue: 0, bottomValue: 5),
-                          custom_text(text: helpDeskTypeResponse!.status_updated_by_employee_name![0], textStyles: blackTextSemiBold16, maxLines: 2, leftValue: 5, rightValue: 0, topValue: 0),
+                          custom_text(
+                              text: "${strings_name.str_updated_by}: ",
+                              textStyles: primaryTextSemiBold16,
+                              rightValue: 0,
+                              leftValue: 5,
+                              topValue: 0,
+                              bottomValue: 5),
+                          custom_text(
+                              text: helpDeskTypeResponse!.status_updated_by_employee_name![0],
+                              textStyles: blackTextSemiBold16,
+                              maxLines: 2,
+                              leftValue: 5,
+                              rightValue: 0,
+                              topValue: 0),
                         ])
                       : Container(),
                   Visibility(
@@ -295,18 +370,25 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
     ));
   }
 
-  Future<void> updateTicket(Map<String, dynamic> ticketFormula) async {
+  /*
+  *   Type values
+  *   1 => Updated category
+  *   2 => Status updated
+  *   3 => Assignee updated
+  */
+  Future<void> updateTicket(Map<String, dynamic> ticketFormula, int type) async {
     setState(() {
       isVisible = true;
     });
     try {
       var resp = await helpRepository.updateTicket(ticketFormula, helpDeskTypeResponseId!);
-      if (resp != null) {
+      if (resp.fields != null) {
         Utils.showSnackBarUsingGet(strings_name.str_update_ticket_message);
         setState(() {
           helpDeskTypeResponse = resp.fields;
           isVisible = false;
         });
+        sendPushNotification(type);
         Get.back(result: true);
       } else {
         setState(() {
@@ -319,6 +401,41 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  sendPushNotification(int type) {
+    String message = "", selfMessage = "";
+    if (type == 1) {
+      message = strings_name.str_push_desc_assigned_ticket_category_updated;
+      selfMessage = strings_name.str_push_desc_ticket_category_updated;
+    } else if (type == 2) {
+      if (helpDeskTypeResponse?.status == TableNames.TICKET_STATUS_COMPLETED || helpDeskTypeResponse?.status == TableNames.TICKET_STATUS_RESOLVED) {
+        selfMessage = strings_name.str_push_desc_ticket_resolved;
+      } else {
+        selfMessage = strings_name.str_push_desc_ticket_status_updated;
+      }
+    } else if (type == 3) {
+      message = strings_name.str_push_desc_ticket_assignee_updated;
+    }
+
+    if (helpDeskTypeResponse?.assignedToToken?.isNotEmpty == true && message.isNotEmpty) {
+      List<String> tokens = helpDeskTypeResponse!.assignedToToken!;
+      if (PreferenceUtils.getIsLogin() == 2 && tokens.contains(PreferenceUtils.getLoginDataEmployee().token!)) {
+        tokens.remove(PreferenceUtils.getLoginDataEmployee().token!);
+      }
+      if (tokens.isNotEmpty) {
+        PushNotificationService.sendNotificationToMultipleDevices(tokens, "", message);
+      }
+    }
+    if (helpDeskTypeResponse?.createdByOrganizationToken?.isNotEmpty == true && selfMessage.isNotEmpty) {
+      PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByOrganizationToken!, "", selfMessage);
+    }
+    if (helpDeskTypeResponse?.createdByStudentToken?.isNotEmpty == true && selfMessage.isNotEmpty) {
+      PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByStudentToken!, "", selfMessage);
+    }
+    if (helpDeskTypeResponse?.createdByEmployeeToken?.isNotEmpty == true && selfMessage.isNotEmpty) {
+      PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByEmployeeToken!, "", selfMessage);
     }
   }
 
@@ -357,7 +474,8 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                                   helpDeskTypeSelected = newValue;
                                 });
                               },
-                              items: helpDeskTypeArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
+                              items: helpDeskTypeArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>(
+                                  (BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
                                 return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
                                   value: value,
                                   child: Text(value.fields!.title.toString()),
@@ -403,7 +521,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           ticketFormula["assigned_to"] = assigned_to;
                           ticketFormula["authority_of"] = authority_of;
 
-                          updateTicket(ticketFormula);
+                          updateTicket(ticketFormula, 1);
                         }),
                   ],
                 ));
@@ -492,7 +610,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                             }
                           }
                           ticketFormula["status_updated_by"] = updatedBy.split(",");
-                          updateTicket(ticketFormula);
+                          updateTicket(ticketFormula, 2);
                         })
                   ],
                 ));
@@ -555,7 +673,12 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                                     padding: const EdgeInsets.all(5),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                      children: [
+                                        Expanded(
+                                            child:
+                                                Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)),
+                                        const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                      ],
                                     ),
                                   ),
                                   onTap: () {
@@ -579,7 +702,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                             Map<String, dynamic> ticketFormula = {};
                             ticketFormula["assigned_to"] = assigned_to;
 
-                            updateTicket(ticketFormula);
+                            updateTicket(ticketFormula, 3);
                           } else {
                             Utils.showSnackBarUsingGet(strings_name.str_empty_ticket_assignee);
                           }
@@ -601,7 +724,7 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
       if (i + 1 < helpDeskTypeResponse!.assignedMobileNumber!.length) query += ",";
     }
     query += ")";
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await helpRepository.getEmployeeListApi(query, offset);

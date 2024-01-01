@@ -8,6 +8,8 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/ui/task/add_task.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -275,18 +277,25 @@ class _TaskDetailState extends State<TaskDetail> {
     ));
   }
 
-  Future<void> updateTicket(Map<String, String> ticketFormula) async {
+  /*
+  *   Type values
+  *   1 => Updated category
+  *   2 => Status updated
+  *   3 => Assignee updated
+  */
+  Future<void> updateTicket(Map<String, String> ticketFormula, int type) async {
     setState(() {
       isVisible = true;
     });
     try {
       var resp = await helpRepository.updateTicket(ticketFormula, helpDeskTypeResponseId!);
-      if (resp != null) {
+      if (resp.fields != null) {
         Utils.showSnackBarUsingGet(strings_name.str_update_ticket_message);
         setState(() {
           helpDeskTypeResponse = resp.fields;
           isVisible = false;
         });
+        sendPushNotification(type);
       } else {
         setState(() {
           isVisible = false;
@@ -298,6 +307,41 @@ class _TaskDetailState extends State<TaskDetail> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  sendPushNotification(int type) {
+    String message = "", selfMessage = "";
+    if (type == 1) {
+      message = strings_name.str_push_desc_assigned_ticket_category_updated;
+      selfMessage = strings_name.str_push_desc_ticket_category_updated;
+    } else if (type == 2) {
+      if (helpDeskTypeResponse?.status == TableNames.TICKET_STATUS_COMPLETED || helpDeskTypeResponse?.status == TableNames.TICKET_STATUS_RESOLVED) {
+        selfMessage = strings_name.str_push_desc_ticket_resolved;
+      } else {
+        selfMessage = strings_name.str_push_desc_ticket_status_updated;
+      }
+    } else if (type == 3) {
+      message = strings_name.str_push_desc_ticket_assignee_updated;
+    }
+
+    if (helpDeskTypeResponse?.assignedToToken?.isNotEmpty == true && message.isNotEmpty) {
+      List<String> tokens = helpDeskTypeResponse!.assignedToToken!;
+      if (PreferenceUtils.getIsLogin() == 2 && tokens.contains(PreferenceUtils.getLoginDataEmployee().token!)) {
+        tokens.remove(PreferenceUtils.getLoginDataEmployee().token!);
+      }
+      if (tokens.isNotEmpty) {
+        PushNotificationService.sendNotificationToMultipleDevices(tokens, "", message);
+      }
+    }
+    if (helpDeskTypeResponse?.createdByOrganizationToken?.isNotEmpty == true && selfMessage.isNotEmpty) {
+      PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByOrganizationToken!, "", selfMessage);
+    }
+    if (helpDeskTypeResponse?.createdByStudentToken?.isNotEmpty == true && selfMessage.isNotEmpty) {
+      PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByStudentToken!, "", selfMessage);
+    }
+    if (helpDeskTypeResponse?.createdByEmployeeToken?.isNotEmpty == true && selfMessage.isNotEmpty) {
+      PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByEmployeeToken!, "", selfMessage);
     }
   }
 }

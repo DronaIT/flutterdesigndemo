@@ -13,13 +13,17 @@ import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
 import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
+import 'package:flutterdesigndemo/ui/fees/fees_dashboard.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
 import 'package:flutterdesigndemo/ui/hub_setup/setup_collage.dart';
 import 'package:flutterdesigndemo/ui/manage_user/manage_user.dart';
 import 'package:flutterdesigndemo/ui/manage_user/student_extra_detail.dart';
+import 'package:flutterdesigndemo/ui/marketing/marketing_dashboard.dart';
+import 'package:flutterdesigndemo/ui/mis/mis_dashboard.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_dashboard.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/profile.dart';
+import 'package:flutterdesigndemo/ui/punch_leaves/punch_dashboard.dart';
 import 'package:flutterdesigndemo/ui/settings_screen.dart';
 import 'package:flutterdesigndemo/ui/student_history/filter_screen_student.dart';
 import 'package:flutterdesigndemo/ui/task/task_dashboard.dart';
@@ -69,7 +73,7 @@ class _HomeState extends State<Home> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Future<void> getRecords(String roleId) async {
-    var query = "SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0)";
+    var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0),is_active=1)";
     setState(() {
       isVisible = true;
     });
@@ -177,8 +181,10 @@ class _HomeState extends State<Home> {
       isAnnouncementLoading = true;
     });
     try {
-      var query = "AND(AND(IS_AFTER({created_on},DATETIME_PARSE(DATETIME_FORMAT(DATEADD(NOW(),-1,'day'),'YYYY-MM-DDTHH:mm:ss.SSSZ'),'YYYY-MM-DDTHH:mm:ss.SSSZ')),IS_BEFORE({created_on},DATETIME_PARSE(DATETIME_FORMAT(NOW(),'YYYY-MM-DDTHH:mm:ss.SSSZ'),'YYYY-MM-DDTHH:mm:ss.SSSZ'))),";
-      query += "OR(${TableNames.ANNOUNCEMENT_ROLE_EMPLOYEE == loginType ? '{created_by} = $loginId,' : ''}{for}=\"everyone\",AND({for}=\"$loginType\",{is_all}=1),AND({for}=\"$loginType\",{is_all}=0,";
+      var query =
+          "AND(AND(IS_AFTER({created_on},DATETIME_PARSE(DATETIME_FORMAT(DATEADD(NOW(),-1,'day'),'YYYY-MM-DDTHH:mm:ss.SSSZ'),'YYYY-MM-DDTHH:mm:ss.SSSZ')),IS_BEFORE({created_on},DATETIME_PARSE(DATETIME_FORMAT(NOW(),'YYYY-MM-DDTHH:mm:ss.SSSZ'),'YYYY-MM-DDTHH:mm:ss.SSSZ'))),";
+      query +=
+          "OR(${TableNames.ANNOUNCEMENT_ROLE_EMPLOYEE == loginType ? '{created_by} = $loginId,' : ''}{for}=\"everyone\",AND({for}=\"$loginType\",{is_all}=1),AND({for}=\"$loginType\",{is_all}=0,";
       query += "OR(";
       if (isLogin == 1) {
         if (loginData.semester != null) {
@@ -237,8 +243,6 @@ class _HomeState extends State<Home> {
         });
       }
     } on DioError catch (e) {
-      // final errorMessage = DioExceptions.fromDioError(e).toString();
-      // Utils.showSnackBarUsingGet(errorMessage);
       setState(() {
         isAnnouncementLoading = false;
         isNoNewAnnouncements = true;
@@ -271,7 +275,11 @@ class _HomeState extends State<Home> {
                   }
                 }
                 if (!removed && announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
-                  if (announcement[i].fields?.specializationIdFromSpecializationIds?.contains(loginData.specializationIdFromSpecializationIds?.last) != true) {
+                  if (announcement[i]
+                          .fields
+                          ?.specializationIdFromSpecializationIds
+                          ?.contains(loginData.specializationIdFromSpecializationIds?.last) !=
+                      true) {
                     announcement.removeAt(i);
                     i--;
                     removed = true;
@@ -337,7 +345,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.onMessage.listen(handlePushNotification);
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 1) {
       var loginData = PreferenceUtils.getLoginData();
@@ -355,27 +362,6 @@ class _HomeState extends State<Home> {
       phone = loginData.contactNumber.toString();
       getRecords(TableNames.ORGANIZATION_ROLE_ID);
     }
-
-    // PushNotificationService.sendNotification("Title", "Test Message");
-  }
-
-  void handlePushNotification(RemoteMessage message) async {
-    final title = message.data['title'];
-    final body = message.data['body'];
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: custom_text(text: 'OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -447,93 +433,100 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: [
           homeModule.records?.isNotEmpty == true
-              ? Container(
-                  // margin: EdgeInsets.only(left: 10.h, right: 10.h, top: 10.h),
-                  child: ListView(
-                    children: [
-                      Visibility(visible: canShowAnnouncements, child: announcementSection()),
-                      GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.only(left: 10.h, right: 10.h, top: 8.h, bottom: 20.h),
-                        crossAxisCount: 3,
-                        shrinkWrap: true,
-                        children: List.generate(
-                          homeModule.records != null ? homeModule.records!.length : 0,
-                          (index) {
-                            return Padding(
-                                padding: const EdgeInsets.all(2),
-                                child: Card(
-                                    elevation: 10,
-                                    child: Container(
-                                      height: 300,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(0),
-                                        child: GestureDetector(
-                                          child: Column(
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(10.0),
-                                                  child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
-                                                ),
+              ? ListView(
+                  children: [
+                    Visibility(visible: canShowAnnouncements, child: announcementSection()),
+                    GridView.count(
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(left: 10.h, right: 10.h, top: 8.h, bottom: 20.h),
+                      crossAxisCount: 3,
+                      shrinkWrap: true,
+                      children: List.generate(
+                        homeModule.records != null ? homeModule.records!.length : 0,
+                        (index) {
+                          return Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: Card(
+                                  elevation: 10,
+                                  child: Container(
+                                    height: 300,
+                                    decoration: BoxDecoration(color: colors_name.colorWhite, borderRadius: BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(0),
+                                      child: GestureDetector(
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(10.0),
+                                                child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
                                               ),
-                                              custom_text(
-                                                text: homeModule.records![index].fields!.moduleTitle.toString(),
-                                                alignment: Alignment.center,
-                                                textAlign: TextAlign.center,
-                                                textStyles: blackTextSemiBold14,
-                                                maxLines: 3,
-                                                topValue: 0,
-                                                bottomValue: 5,
-                                              ),
-                                            ],
-                                          ),
-                                          onTap: () {
-                                            if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
-                                              Get.to(const ManageUser());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
-                                              Get.to(const AcademicDetails());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
-                                              Get.to(const SetupCollage());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
-                                              Get.to(const Attendance());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
-                                              if (PreferenceUtils.getIsLogin() == 1) {
-                                                if (PreferenceUtils.getLoginData().is_banned != 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 && PreferenceUtils.getLoginData().is_placed_now == "1") {
-                                                  Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
-                                                } else {
-                                                  Get.to(const PlacementDashboard());
-                                                }
-                                              } else if (PreferenceUtils.getIsLogin() == 3) {
-                                                Get.to(const PlacementDashboard());
+                                            ),
+                                            custom_text(
+                                              text: homeModule.records![index].fields!.moduleTitle.toString(),
+                                              alignment: Alignment.center,
+                                              textAlign: TextAlign.center,
+                                              textStyles: blackTextSemiBold14,
+                                              maxLines: 3,
+                                              topValue: 0,
+                                              bottomValue: 5,
+                                            ),
+                                          ],
+                                        ),
+                                        onTap: () {
+                                          if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
+                                            Get.to(const ManageUser());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
+                                            Get.to(const AcademicDetails());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
+                                            Get.to(const SetupCollage());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
+                                            Get.to(const Attendance());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
+                                            if (PreferenceUtils.getIsLogin() == 1) {
+                                              if (PreferenceUtils.getLoginData().is_banned != 1 &&
+                                                  (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 &&
+                                                  PreferenceUtils.getLoginData().is_placed_now == "1") {
+                                                Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
                                               } else {
                                                 Get.to(const PlacementDashboard());
                                               }
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
-                                              Get.to(const UploadDocuments());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
-                                              Get.to(const FilterScreenStudent());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
-                                              Get.to(const HelpdeskDashboard());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TASK) {
-                                              Get.to(const TaskDashboard());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ANNOUNCEMENT) {
-                                              Get.to(const AllAnnouncements());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TIME_TABLE) {
-                                              Get.to(const TimeTableList());
-                                            } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_NSDC_SKILL_INDIA) {
-                                              Get.to(const StudentExtraDetail());
+                                            } else if (PreferenceUtils.getIsLogin() == 3) {
+                                              Get.to(const PlacementDashboard());
+                                            } else {
+                                              Get.to(const PlacementDashboard());
                                             }
-                                          },
-                                        ),
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
+                                            Get.to(const UploadDocuments());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
+                                            Get.to(const FilterScreenStudent());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
+                                            Get.to(const HelpdeskDashboard());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TASK) {
+                                            Get.to(const TaskDashboard());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ANNOUNCEMENT) {
+                                            Get.to(const AllAnnouncements());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TIME_TABLE) {
+                                            Get.to(const TimeTableList());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_NSDC_SKILL_INDIA) {
+                                            Get.to(const StudentExtraDetail());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MARKETING) {
+                                            Get.to(const MarketingDashboard());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_FEES) {
+                                            Get.to(const FeesDashboard());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PUNCH_LEAVES) {
+                                            Get.to(const PunchDashboard());
+                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MIS) {
+                                            Get.to(const MISDashboard());
+                                          }
+                                        },
                                       ),
-                                    )));
-                          },
-                        ),
+                                    ),
+                                  )));
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 )
               : Container(
                   margin: const EdgeInsets.only(top: 100),
@@ -630,7 +623,8 @@ class _HomeState extends State<Home> {
                         margin: EdgeInsets.symmetric(horizontal: 10.w),
                         data: item,
                         onTap: () async {
-                          var result = await Get.to(AnnouncementDetail(announcement: item, isEdit: canEditAnnouncements && item.fields!.employeeIdFromCreatedBy.contains(employeeId)));
+                          var result = await Get.to(AnnouncementDetail(
+                              announcement: item, isEdit: canEditAnnouncements && item.fields!.employeeIdFromCreatedBy.contains(employeeId)));
                           if (result == 'updateAnnouncement') {
                             Utils.showSnackBar(context, strings_name.str_announcement_updated);
                             announcement.clear();

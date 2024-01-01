@@ -10,19 +10,23 @@ class HelpdeskResponses {
   List<String>? assignedTo;
   List<String>? assignedEmployeeName;
   List<String>? assignedMobileNumber;
+  List<String>? assignedToToken;
 
   List<String>? createdByEmployee;
+  List<String>? createdByEmployeeToken;
   List<String>? employeeRoleTitle;
   List<String>? employeeName;
   List<String>? employeeMobileNumber;
 
   List<String>? createdByStudent;
+  List<String>? createdByStudentToken;
   List<String>? studentName;
   List<String>? studentHubName;
   List<String>? studentSpecializationName;
   List<String>? studentMobileNumber;
 
   List<String>? createdByOrganization;
+  List<String>? createdByOrganizationToken;
   List<String>? companyName;
   List<String>? companyContactNumber;
 
@@ -49,19 +53,23 @@ class HelpdeskResponses {
     assignedTo = json['assigned_to']?.cast<String>();
     assignedEmployeeName = json['assigned_employee_name']?.cast<String>();
     assignedMobileNumber = json['assigned_mobile_number']?.cast<String>();
+    assignedToToken = json['assigned_to_token']?.cast<String>();
 
     createdByEmployee = json['created_by_employee']?.cast<String>();
+    createdByEmployeeToken = json['created_by_employee_token']?.cast<String>();
     employeeRoleTitle = json['employee_role_title']?.cast<String>();
     employeeName = json['employee_name']?.cast<String>();
     employeeMobileNumber = json['employee_mobile_number']?.cast<String>();
 
     createdByStudent = json['created_by_student']?.cast<String>();
+    createdByStudentToken = json['created_by_student_token']?.cast<String>();
     studentName = json['student_name']?.cast<String>();
     studentHubName = json['student_hub_name']?.cast<String>();
     studentSpecializationName = json['student_specialization_name']?.cast<String>();
     studentMobileNumber = json['student_mobile_number']?.cast<String>();
 
     createdByOrganization = json['created_by_organization']?.cast<String>();
+    createdByOrganizationToken = json['created_by_organization_token']?.cast<String>();
     companyName = json['company_name']?.cast<String>();
     companyContactNumber = json['company_contact_number']?.cast<String>();
     createdOn = json['created_on'];
@@ -94,16 +102,20 @@ class HelpdeskResponses {
         this.assignedTo,
         this.assignedEmployeeName,
         this.assignedMobileNumber,
+        this.assignedToToken,
         this.createdByEmployee,
+        this.createdByEmployeeToken,
         this.employeeRoleTitle,
         this.employeeName,
         this.employeeMobileNumber,
         this.createdByStudent,
+        this.createdByStudentToken,
         this.studentName,
         this.studentHubName,
         this.studentMobileNumber,
         this.studentSpecializationName,
         this.createdByOrganization,
+        this.createdByOrganizationToken,
         this.companyName,
         this.companyContactNumber,
         this.createdOn,
@@ -129,19 +141,23 @@ class HelpdeskResponses {
     data['assigned_to'] = this.assignedTo;
     data['assigned_employee_name'] = this.assignedEmployeeName;
     data['assigned_mobile_number'] = this.assignedMobileNumber;
+    data['assigned_to_token'] = this.assignedToToken;
 
     data['created_by_employee'] = this.createdByEmployee;
+    data['created_by_employee_token'] = this.createdByEmployeeToken;
     data['employee_role_title'] = this.employeeRoleTitle;
     data['employee_name'] = this.employeeName;
     data['employee_mobile_number'] = this.employeeMobileNumber;
 
     data['created_by_student'] = this.createdByStudent;
+    data['created_by_student_token'] = this.createdByStudentToken;
     data['student_name'] = this.studentName;
     data['student_hub_name'] = this.studentHubName;
     data['student_specialization_name'] = this.studentSpecializationName;
     data['student_mobile_number'] = this.studentMobileNumber;
 
     data['created_by_organization'] = this.createdByOrganization;
+    data['created_by_organization_token'] = this.createdByOrganizationToken;
     data['company_name'] = this.companyName;
     data['company_contact_number'] = this.companyContactNumber;
 

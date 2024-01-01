@@ -129,7 +129,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
       if (filterTicketValue.isNotEmpty) query += ", FIND('$filterTicketValue', ${TableNames.CLM_TICKET_STATUS}, 0)";
     }
     query += ")";
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await apiRepository.getTicketsApi(query, offset);
@@ -145,7 +145,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
           ticketList = [];
           ticketList = List.from(mainList!);
           differentiateTickets();
-          print("Result size: ${ticketList?.length}");
+          debugPrint("Result size: ${ticketList?.length}");
 
           setState(() {
             isVisible = false;

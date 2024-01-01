@@ -15,6 +15,7 @@ class CompanyDetailResponse {
   List<String>? companySector;
   List<String>? sectorTitleFromCompanySector;
   List<String>? hubIds;
+  List<String>? hubIdFromHubIds;
   List<Attachment_response>? company_loi;
   List<Attachment_response>? company_logo;
   String? reporting_branch;
@@ -51,6 +52,7 @@ class CompanyDetailResponse {
     this.password,
     this.token,
     this.hubIds,
+    this.hubIdFromHubIds,
     this.company_loi,
     this.company_logo,
     this.status,
@@ -65,6 +67,7 @@ class CompanyDetailResponse {
   CompanyDetailResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     hubIds = json['hub_id']?.cast<String>();
+    hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     companyName = json['company_name'];
     contactName = json['contact_name'];
     contactNumber = json['contact_number'];
@@ -108,6 +111,7 @@ class CompanyDetailResponse {
     data['id'] = this.id;
     data['company_name'] = this.companyName;
     data['hub_id'] = this.hubIds;
+    data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
     data['contact_name'] = this.contactName;
     data['contact_number'] = this.contactNumber;
     data['contact_whatsapp_number'] = this.contactWhatsappNumber;

@@ -11,10 +11,10 @@ class ImageDialog extends StatefulWidget {
   const ImageDialog({required this.image});
 
   @override
-  _ImageDialogState createState() => _ImageDialogState();
+  ImageDialogState createState() => ImageDialogState();
 }
 
-class _ImageDialogState extends State<ImageDialog> {
+class ImageDialogState extends State<ImageDialog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

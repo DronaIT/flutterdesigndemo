@@ -14,11 +14,21 @@ class AddStudentAttendanceRequest {
   String? lecture_duration;
   String? semesterByStudent;
 
-  AddStudentAttendanceRequest({this.employeeId, this.hubId, this.specializationId,
-    this.subjectId, this.unitId, this.topicId, this.division, this.lectureDate,
-    this.studentIds, this.presentIds, this.absentIds, this.lectureTime,
-    this.lecture_duration, this.semesterByStudent
-  });
+  AddStudentAttendanceRequest(
+      {this.employeeId,
+      this.hubId,
+      this.specializationId,
+      this.subjectId,
+      this.unitId,
+      this.topicId,
+      this.division,
+      this.lectureDate,
+      this.studentIds,
+      this.presentIds,
+      this.absentIds,
+      this.lectureTime,
+      this.lecture_duration,
+      this.semesterByStudent});
 
   AddStudentAttendanceRequest.fromJson(Map<String, dynamic> json) {
     employeeId = json['employee_id']?.cast<String>();

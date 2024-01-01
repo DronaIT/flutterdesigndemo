@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
+import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/ui/manage_user/addemployee.dart';
 import 'package:flutterdesigndemo/ui/manage_user/addsinglestudent.dart';
 import 'package:flutterdesigndemo/ui/manage_user/create_students.dart';
@@ -29,8 +30,10 @@ class ManageUser extends StatefulWidget {
 
 class _ManageUserState extends State<ManageUser> {
   bool isVisible = false;
-  bool canAddEmployee = false, canUpdateEmployee = false, canViewEmployee = false;
-  bool canAddStudent = false, canViewStudent = false , canUpdateStudent = false;
+  bool canAddEmployee = false,
+      canUpdateEmployee = false,
+      canViewEmployee = false;
+  bool canAddStudent = false, canViewStudent = false, canUpdateStudent = false;
 
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -45,38 +48,45 @@ class _ManageUserState extends State<ManageUser> {
       isVisible = true;
     });
     var loginData = PreferenceUtils.getLoginDataEmployee();
-    var query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_MANAGE_USER}')";
+    var query =
+        "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_MANAGE_USER}')";
     print(query);
-    try{
+    try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
-          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_EMPLOYEE) {
+          if (data.records![i].fields!.permissionId ==
+              TableNames.PERMISSION_ID_ADD_EMPLOYEE) {
             setState(() {
               canAddEmployee = true;
             });
           }
-          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_STUDENT) {
+          if (data.records![i].fields!.permissionId ==
+              TableNames.PERMISSION_ID_ADD_STUDENT) {
             setState(() {
               canAddStudent = true;
             });
           }
-          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_EMPLOYEE) {
+          if (data.records![i].fields!.permissionId ==
+              TableNames.PERMISSION_ID_VIEW_EMPLOYEE) {
             setState(() {
               canViewEmployee = true;
             });
           }
-          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_EMPLOYEE) {
+          if (data.records![i].fields!.permissionId ==
+              TableNames.PERMISSION_ID_UPDATE_EMPLOYEE) {
             setState(() {
               canUpdateEmployee = true;
             });
           }
-          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_STUDENT) {
+          if (data.records![i].fields!.permissionId ==
+              TableNames.PERMISSION_ID_VIEW_STUDENT) {
             setState(() {
               canViewStudent = true;
             });
           }
-          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPDATE_STUDENT) {
+          if (data.records![i].fields!.permissionId ==
+              TableNames.PERMISSION_ID_UPDATE_STUDENT) {
             setState(() {
               canUpdateStudent = true;
             });
@@ -85,7 +95,7 @@ class _ManageUserState extends State<ManageUser> {
       } else {
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -101,20 +111,7 @@ class _ManageUserState extends State<ManageUser> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        title: const Text(strings_name.str_manage_users),
-        backgroundColor: colors_name.colorPrimary,
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(14),
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_manage_users),
       body: Stack(children: [
         Container(
           margin: const EdgeInsets.all(15),
@@ -125,12 +122,19 @@ class _ManageUserState extends State<ManageUser> {
                 child: GestureDetector(
                   child: Card(
                     elevation: 5,
-                      child: Container(
+                    child: Container(
                       color: colors_name.colorWhite,
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [Text(strings_name.str_add_employee, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        children: const [
+                          Text(strings_name.str_add_employee,
+                              textAlign: TextAlign.center,
+                              style: blackTextSemiBold16),
+                          Icon(Icons.keyboard_arrow_right,
+                              size: 30, color: colors_name.colorPrimary)
+                        ],
                       ),
                     ),
                   ),
@@ -147,10 +151,17 @@ class _ManageUserState extends State<ManageUser> {
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [Text(strings_name.str_add_students, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        children: const [
+                          Text(strings_name.str_add_students,
+                              textAlign: TextAlign.center,
+                              style: blackTextSemiBold16),
+                          Icon(Icons.keyboard_arrow_right,
+                              size: 30, color: colors_name.colorPrimary)
+                        ],
                       ),
                     ),
                   ),
@@ -159,24 +170,32 @@ class _ManageUserState extends State<ManageUser> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          content: Text(strings_name.str_add_student, style: centerTextStyle20),
+                          content: Text(strings_name.str_add_student,
+                              style: centerTextStyle20),
                           backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
                           actions: <Widget>[
                             TextButton(
                               child: const Text(
                                 strings_name.str_add_multiple_student,
                                 style: whiteText13,
                               ),
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colors_name.colorPrimary)),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      colors_name.colorPrimary)),
                               onPressed: () {
                                 Navigator.pop(context);
                                 Get.to(const CreateStudent());
                               },
                             ),
                             TextButton(
-                              child: const Text(strings_name.str_add_single_student, style: whiteText13),
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colors_name.colorPrimary)),
+                              child: const Text(
+                                  strings_name.str_add_single_student,
+                                  style: whiteText13),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      colors_name.colorPrimary)),
                               onPressed: () {
                                 Navigator.pop(context);
                                 Get.to(const AddSingleStudent());
@@ -197,10 +216,17 @@ class _ManageUserState extends State<ManageUser> {
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [Text(strings_name.str_view_employee, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        children: const [
+                          Text(strings_name.str_view_employee,
+                              textAlign: TextAlign.center,
+                              style: blackTextSemiBold16),
+                          Icon(Icons.keyboard_arrow_right,
+                              size: 30, color: colors_name.colorPrimary)
+                        ],
                       ),
                     ),
                   ),
@@ -217,10 +243,17 @@ class _ManageUserState extends State<ManageUser> {
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [Text(strings_name.str_update_employee, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        children: const [
+                          Text(strings_name.str_update_employee,
+                              textAlign: TextAlign.center,
+                              style: blackTextSemiBold16),
+                          Icon(Icons.keyboard_arrow_right,
+                              size: 30, color: colors_name.colorPrimary)
+                        ],
                       ),
                     ),
                   ),
@@ -237,15 +270,22 @@ class _ManageUserState extends State<ManageUser> {
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [Text(strings_name.str_view_students, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                        children: const [
+                          Text(strings_name.str_view_students,
+                              textAlign: TextAlign.center,
+                              style: blackTextSemiBold16),
+                          Icon(Icons.keyboard_arrow_right,
+                              size: 30, color: colors_name.colorPrimary)
+                        ],
                       ),
                     ),
                   ),
                   onTap: () {
-                    Get.to(const ViewStudent() , arguments: canUpdateStudent);
+                    Get.to(const ViewStudent(), arguments: canUpdateStudent);
                   },
                 ),
               ),
@@ -253,7 +293,10 @@ class _ManageUserState extends State<ManageUser> {
           ),
         ),
         Center(
-          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          child: Visibility(
+              visible: isVisible,
+              child: const CircularProgressIndicator(
+                  strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
       ]),
     ));

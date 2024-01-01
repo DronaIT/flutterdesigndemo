@@ -94,7 +94,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_selected_student),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_select_student),
       body: Stack(
         children: [
           studentResponse != null && studentResponse.isNotEmpty

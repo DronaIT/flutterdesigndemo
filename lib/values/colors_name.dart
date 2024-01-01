@@ -1,19 +1,15 @@
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-
-abstract class colors_name{
-
-
+abstract class colors_name {
   static const Color textcolorcustomer = Color(0xff225379);
   static const Color colorgraylight = Color(0xff939393);
   static const Color colorblue = Color(0xff2282c6);
 
   static const Color pageBackground = Color(0xFFFAFBFD);
-  static const Color statusBarColor = Color(0xFF38686A);
-  static const Color appBarColor = Color(0xFF38686A);
+  static const Color statusBarColor = Color(0xFF000000);
+  static const Color appBarColor = Color(0xFF800000);
 
   static const Color appBarIconColor = Color(0xFFFFFFFF);
   static const Color appBarTextColor = Color(0xFFFFFFFF);
@@ -37,6 +33,7 @@ abstract class colors_name{
   static const Color lightGrayColor = Color(0xFFE4E4E4);
   static const Color darkGrayColor = Color(0xFF676767);
   static const Color blue = Color(0xFF5A60FF);
+
   // static const Color borderColor = Color(0xFFE7E7E7);
   // static const Color borderColor = Color(0xFFABABAB);
 
@@ -59,5 +56,4 @@ abstract class colors_name{
 
   static const Color lightCoffee = Color(0xFFFFF1D5);
   static const Color coffee = Color(0xFFCC8800);
-
 }

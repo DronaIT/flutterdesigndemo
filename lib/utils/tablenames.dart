@@ -9,6 +9,10 @@ class TableNames {
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
   static const TEMPLATE_ID_FORGOT_PASSWORD = "1007956316471143887";
 
+  // FCM Details
+  static const FCM_KEY = "AAAAoZqBw4M:APA91bEtTRpbCXGa_hffoFkrDrUueNPyOlP3pEeKWrCOoNotzovGkejCozJfJqyhFGhM-vcmmzRTHAzpLgfAK269CzVmetr9EEXgs0X-GmmN-J0XLN1W9hAeihr-MCWsuLskqSK20GOz";
+  static const FCM_PUSH_API = "https://fcm.googleapis.com/fcm/send";
+
   static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";
   static const CLOUDARY_PRESET = "kgicun2o";
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
@@ -23,6 +27,7 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE = "CompanyIncentiveStructure";
   static const CLOUDARY_FOLDER_ANNOUNCEMENT = "Announcement";
   static const CLOUDARY_FOLDER_PROFILE_PIC = "ProfilePic";
+  static const CLOUDARY_FOLDER_PROOF_OF_FEES = "ProofOfFees";
 
   static const STUDENT_ROLE_ID = "DR09";
   static const ORGANIZATION_ROLE_ID = "DR24";
@@ -40,6 +45,10 @@ class TableNames {
   static const MODULE_ANNOUNCEMENT = "DM10";
   static const MODULE_TIME_TABLE = "DM11";
   static const MODULE_NSDC_SKILL_INDIA = "DM12";
+  static const MODULE_MARKETING = "DM13";
+  static const MODULE_FEES = "DM14";
+  static const MODULE_PUNCH_LEAVES = "DM15";
+  static const MODULE_MIS = "DM16";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -81,6 +90,8 @@ class TableNames {
   static const TBL_ANNOUNCEMENT = "TBL_ANNOUNCEMENT";
   static const TBL_TIMETABLE = "TBL_TIMETABLE";
   static const TBL_MARKETING = "TBL_MARKETING";
+  static const TBL_FEES = "TBL_FEES";
+  static const TBL_PUNCH_DATA = "TBL_PUNCH_DATA";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -93,6 +104,7 @@ class TableNames {
   static const CLM_SPE_ID = "specialization_id";
   static const CLM_SPE_IDS = "specialization_ids";
   static const CLM_SPE_IDS_FROM_SPE_ID = "specialization_name (from specialization_ids)";
+  static const CLM_SPE_ID_FROM_SPE_IDS = "specialization_id (from specialization_ids)";
   static const CLM_SUBJECT_IDS = "subject_ids";
   static const CLM_COMPANY_CODE = "company_code";
   static const CLM_JOB_CODE = "job_code";
@@ -145,6 +157,11 @@ class TableNames {
   static const CLM_STUDENT_SEMESTER = "student_semester";
   static const CLM_STUDENT_DIVISION = "student_division";
   static const CLM_TICKET_TYPEID = "ticket_type_id";
+
+  static const CLM_DETAILS_ADDED_BY = "details_added_by";
+  static const CLM_EMPLOYEE_HUB_ID = "employee_hub_id";
+  static const CLM_STUDENT_SPE_ID = "student_specialization_id";
+  static const CLM_ATTENDANCE_TYPE = "attendance_type";
 
   static const PERMISSION_ID_ADD_EMPLOYEE = "DP0101";
   static const PERMISSION_ID_UPDATE_EMPLOYEE = "DP0102";
@@ -218,6 +235,9 @@ class TableNames {
   static const PERMISSION_ID_UPDATE_TIME_TABLE = "DP1103";
   static const PERMISSION_ID_VIEW_ALL_TIME_TABLE = "DP1104";
 
+  static const PERMISSION_ID_VIEW_OTHERS_MARKETING_RECORD = "DP1301";
+  static const PERMISSION_ID_ADD_MARKETING_RECORD = "DP1302";
+
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
   static const EXCEL_COL_GENDER = "gender";
@@ -271,4 +291,10 @@ class TableNames {
   static const SELFPLACE_STATUS_PENDING = "Pending";
   static const SELFPLACE_STATUS_APPROVED = "Approved";
   static const SELFPLACE_STATUS_REJECTED = "Rejected";
+
+  static const ATTENDANCE_TYPE_PRESENT = "PRESENT";
+  static const ATTENDANCE_TYPE_FULL_DAY_LEAVE = "FULL DAY LEAVE";
+  static const ATTENDANCE_TYPE_FIRST_HALF_LEAVE = "FIRST HALF LEAVE";
+  static const ATTENDANCE_TYPE_SECOND_HALF_LEAVE = "SECOND HALF LEAVE";
+
 }

@@ -148,6 +148,12 @@ const lightBlackText16 = TextStyle(
   height: 1.4
 );
 
+const coffeeText14 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: colors_name.coffee,
+);
+
 const greenText14 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
@@ -158,6 +164,12 @@ const greenText16 = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: colors_name.green,
+);
+
+const whiteText12 = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: Colors.white,
 );
 
 const whiteTextSemiBold16 = TextStyle(
@@ -241,7 +253,11 @@ const primaryTextSemiBold16 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
-
+const primaryTextSemiBold15 = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+  color: colors_name.colorPrimary,
+);
 
 const primaryTextSemiBold14 = TextStyle(
   fontSize: 14,

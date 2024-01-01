@@ -36,7 +36,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   TextEditingController cityController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController joingYearController = TextEditingController();
+  TextEditingController joiningYearController = TextEditingController();
   TextEditingController batchController = TextEditingController();
 
   TextEditingController pincodeController = TextEditingController();
@@ -77,7 +77,6 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
   void initState() {
     super.initState();
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
@@ -108,8 +107,14 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
         }
       }
     }
+
     checkCurrentData();
     initialization();
+  }
+
+  getSpecializations() {
+    speResponseArray = [];
+    speResponseArray?.addAll(PreferenceUtils.getSpecializationList().records!);
   }
 
   void checkCurrentData() {
@@ -127,6 +132,22 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
       var data = await apiRepository.loginApi(query);
       try {
         if (data.records?.isNotEmpty == true) {
+          getSpecializations();
+
+          for (int i = 0; i < (speResponseArray?.length ?? 0); i++) {
+            bool contains = false;
+            for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+              if (speResponseArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+                contains = true;
+                break;
+              }
+            }
+            if (!contains) {
+              speResponseArray?.removeAt(i);
+              i--;
+            }
+          }
+
           setState(() {
             fromEdit = true;
             if (data.records?.first.fields != null) {
@@ -137,7 +158,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
               cityController.text = data.records!.first.fields!.city ?? "";
               addressController.text = data.records!.first.fields!.address ?? "";
               pincodeController.text = data.records!.first.fields!.pin_code ?? "";
-              joingYearController.text = data.records!.first.fields!.joiningYear ?? "";
+              joiningYearController.text = data.records!.first.fields!.joiningYear ?? "";
               srnumberController.text = data.records!.first.fields!.sr_number ?? "";
               birthdateController.text = data.records!.first.fields!.birthdate ?? "";
               batchController.text = data.records!.first.fields!.batch ?? "";
@@ -152,6 +173,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
               mothernumberController.text = data.records!.first.fields!.mother_number ?? "";
               fathernumberController.text = data.records!.first.fields!.father_number ?? "";
               mothernameController.text = data.records!.first.fields!.mother_name ?? "";
+              gender = data.records!.first.fields!.gender ?? strings_name.str_male;
               for (var i = 0; i < speResponseArray!.length; i++) {
                 if (data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId) {
                   setState(() {
@@ -227,6 +249,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   ),
                   custom_edittext(
                     type: TextInputType.text,
+                    capitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.next,
                     controller: nameController,
                     topValue: 2,
@@ -276,7 +299,9 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                       ),
                     ),
                     onTap: () {
-                      showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(1950), lastDate: DateTime.now()).then((pickedDate) {
+                      showDatePicker(
+                              context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(1950), lastDate: DateTime.now())
+                          .then((pickedDate) {
                         if (pickedDate == null) {
                           return;
                         }
@@ -466,11 +491,10 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                   custom_edittext(
                     type: TextInputType.number,
                     textInputAction: TextInputAction.next,
-                    controller: joingYearController,
+                    controller: joiningYearController,
                     topValue: 2,
                     maxLength: 4,
                   ),
-
                   SizedBox(height: 2.h),
                   custom_text(
                     text: strings_name.str_batch,
@@ -484,7 +508,6 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                     maxLength: 10,
                   ),
-
                   SizedBox(height: 2.h),
                   custom_text(
                     text: strings_name.str_serial_number,
@@ -492,11 +515,11 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     textStyles: blackTextSemiBold16,
                   ),
                   custom_edittext(
-                    type: TextInputType.number,
+                    type: TextInputType.text,
+                    capitalization: TextCapitalization.characters,
                     textInputAction: TextInputAction.next,
                     controller: srnumberController,
                     topValue: 2,
-                    maxLength: 4,
                   ),
                   SizedBox(height: 5.h),
                   custom_text(
@@ -518,12 +541,27 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                             style: blackText16,
                             focusColor: Colors.white,
                             onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                              setState(() {
-                                hubValue = newValue!.fields!.hubId!.toString();
-                                hubResponse = newValue;
-                              });
+                              hubValue = newValue!.fields!.hubId!.toString();
+                              hubResponse = newValue;
+
+                              getSpecializations();
+                              if (hubValue.trim().isNotEmpty) {
+                                for (int i = 0; i < speResponseArray!.length; i++) {
+                                  if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                                    speResponseArray!.removeAt(i);
+                                    i--;
+                                  }
+                                }
+                              }
+                              speValue = "";
+                              speResponse = null;
+                              if (speResponseArray?.isEmpty == true) {
+                                Utils.showSnackBar(context, strings_name.str_no_specialization_linked);
+                              }
+                              setState(() {});
                             },
-                            items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                            items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                                (BaseApiResponseWithSerializable<HubResponse> value) {
                               return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                                 value: value,
                                 child: Text(value.fields!.hubName!.toString()),
@@ -559,7 +597,8 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                                 speResponse = newValue;
                               });
                             },
-                            items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                            items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                                (BaseApiResponseWithSerializable<SpecializationResponse> value) {
                               return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                                 value: value,
                                 child: Text(value.fields!.specializationName.toString()),
@@ -743,9 +782,9 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         //   Utils.showSnackBar(context, strings_name.str_empty_pincode);
                       } else if (gender.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_gender);
-                      } else if (joingYearController.text.trim().isEmpty) {
+                      } else if (joiningYearController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_joing_year);
-                      }else if (batchController.text.trim().isEmpty) {
+                      } else if (batchController.text.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_batch);
                       } else if (speValue.trim().isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_empty_spe);
@@ -767,7 +806,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         response.city = cityController.text.trim().toString();
                         response.address = addressController.text.trim().toString();
                         response.specializationIds = Utils.getSpecializationId(speValue)!.split(",");
-                        response.joiningYear = joingYearController.text.trim().toString();
+                        response.joiningYear = joiningYearController.text.trim().toString();
                         response.batch = batchController.text.trim().toString();
                         response.hubIds = Utils.getHubId(hubValue)!.split(",");
                         response.semester = semesterValue.toString();
@@ -798,7 +837,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                               Utils.showSnackBarDuration(context, strings_name.str_student_exists, 5);
                             }
                             if (list.isNotEmpty) {
-                              try{
+                              try {
                                 var resp = await addStudentRepository.createStudentApi(list);
                                 if (resp.records!.isNotEmpty) {
                                   setState(() {
@@ -812,7 +851,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                                     isVisible = false;
                                   });
                                 }
-                              }on DioError catch (e) {
+                              } on DioError catch (e) {
                                 setState(() {
                                   isVisible = false;
                                 });

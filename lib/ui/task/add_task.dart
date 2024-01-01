@@ -11,6 +11,7 @@ import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/request/help_desk_req.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/task/employee_selection.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
@@ -212,7 +213,12 @@ class _AddTaskState extends State<AddTask> {
                                   padding: const EdgeInsets.all(5),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                    children: [
+                                      Expanded(
+                                          child:
+                                              Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)),
+                                      const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                    ],
                                   ),
                                 ),
                                 onTap: () {
@@ -281,7 +287,8 @@ class _AddTaskState extends State<AddTask> {
                         DateTime time = DateFormat("hh:mm aa").parse(deadlineController.text);
                         timeSelected = TimeOfDay.fromDateTime(time);
                       }
-                      showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100)).then((pickedDate) {
+                      showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100))
+                          .then((pickedDate) {
                         if (pickedDate == null) {
                           return;
                         }
@@ -383,7 +390,8 @@ class _AddTaskState extends State<AddTask> {
                                   DateTime time = DateFormat("hh:mm aa").parse(actualFinishedOnController.text);
                                   timeSelected = TimeOfDay.fromDateTime(time);
                                 }
-                                showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime(2005), lastDate: DateTime(2100)).then((pickedDate) {
+                                showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime(2005), lastDate: DateTime(2100))
+                                    .then((pickedDate) {
                                   if (pickedDate == null) {
                                     return;
                                   }
@@ -427,7 +435,8 @@ class _AddTaskState extends State<AddTask> {
                         leftValue: 10,
                       ),
                       GestureDetector(
-                        child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                        child: Container(
+                            margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
                         onTap: () {
                           picLOIFile();
                         },
@@ -488,10 +497,10 @@ class _AddTaskState extends State<AddTask> {
   void addMultipleTask() {
     if (employeeData?.isNotEmpty == true) {
       for (var i = 0; i < employeeData!.length; i++) {
-        updateTask(employeeData![i].id.toString().split("..."), i == employeeData!.length - 1);
+        updateTask(employeeData![i].id.toString().split("..."), employeeData![i].fields?.token?.split("..") ?? [], i == employeeData!.length - 1);
       }
     } else {
-      updateTask(PreferenceUtils.getLoginRecordId().split("..."), true);
+      updateTask(PreferenceUtils.getLoginRecordId().split("..."), [], true);
     }
   }
 
@@ -547,7 +556,7 @@ class _AddTaskState extends State<AddTask> {
     }
   }
 
-  updateTask(List<String> assignedTo, bool canClose) async {
+  updateTask(List<String> assignedTo, List<String> assignedToToken, bool canClose) async {
     if (!isVisible) {
       setState(() {
         isVisible = true;
@@ -556,7 +565,8 @@ class _AddTaskState extends State<AddTask> {
     if (taskFileTitle.isNotEmpty) {
       if (kIsWeb) {
         CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(taskFileData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK, identifier: taskFileData.name),
+          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(taskFileData.bytes!),
+              resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK, identifier: taskFileData.name),
         );
         taskFilePath = response.secureUrl;
       } else {
@@ -603,16 +613,6 @@ class _AddTaskState extends State<AddTask> {
       helpDeskReq.attachments = listData;
     }
 
-/*
-    assignedTo.clear();
-    if (employeeData?.isNotEmpty == true) {
-      for (var i = 0; i < employeeData!.length; i++) {
-        assignedTo.add(employeeData![i].id.toString());
-      }
-    } else {
-      assignedTo.add(PreferenceUtils.getLoginRecordId());
-    }
-*/
     helpDeskReq.assigned_to = assignedTo;
     helpDeskReq.authority_of = authorityOf;
     helpDeskReq.deadline = deadlineController.text;
@@ -635,6 +635,24 @@ class _AddTaskState extends State<AddTask> {
             setState(() {
               isVisible = false;
             });
+            String msg = "";
+            if (helpDeskReq.Status == TableNames.TICKET_STATUS_COMPLETED) {
+              msg = strings_name.str_push_desc_task_completed;
+            } else {
+              msg = strings_name.str_push_desc_task_status_updated;
+            }
+            if (assignedToToken.isNotEmpty) {
+              PushNotificationService.sendNotificationToMultipleDevices(assignedToToken, "", msg);
+            }
+            if (helpDeskTypeResponse?.createdByStudentToken?.isNotEmpty == true) {
+              PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByStudentToken ?? [], "", msg);
+            }
+            if (helpDeskTypeResponse?.createdByEmployeeToken?.isNotEmpty == true) {
+              PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByEmployeeToken ?? [], "", msg);
+            }
+            if (helpDeskTypeResponse?.createdByOrganizationToken?.isNotEmpty == true) {
+              PushNotificationService.sendNotificationToMultipleDevices(helpDeskTypeResponse!.createdByOrganizationToken ?? [], "", msg);
+            }
             Utils.showSnackBar(context, strings_name.str_update_task_message);
             await Future.delayed(const Duration(milliseconds: 2000));
             Get.back(result: true);
@@ -651,6 +669,9 @@ class _AddTaskState extends State<AddTask> {
             setState(() {
               isVisible = false;
             });
+            if (assignedToToken.isNotEmpty) {
+              PushNotificationService.sendNotificationToMultipleDevices(assignedToToken, "", strings_name.str_push_desc_new_task_assigned);
+            }
             Utils.showSnackBar(context, strings_name.str_create_task_message);
             await Future.delayed(const Duration(milliseconds: 2000));
             Get.back(result: true);

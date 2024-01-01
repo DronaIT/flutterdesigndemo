@@ -64,12 +64,12 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                     child: Column(children: [
                       companyInfo != null && companyInfo?.fields?.status == TableNames.SELFPLACE_STATUS_REJECTED
                           ? custom_text(
-                            text: companyInfo?.fields?.rejection_reason ?? "",
-                            textStyles: primaryTextSemiBold16,
-                            maxLines: 100,
-                            leftValue: 5.h,
-                            rightValue: 5.h,
-                          )
+                              text: companyInfo?.fields?.rejection_reason ?? "",
+                              textStyles: primaryTextSemiBold16,
+                              maxLines: 100,
+                              leftValue: 5.h,
+                              rightValue: 5.h,
+                            )
                           : Container(),
                       GestureDetector(
                         child: Card(
@@ -79,7 +79,8 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                               const Text(strings_name.str_company_detail, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                              Icon(canEdit || companyInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
+                              Icon(canEdit || companyInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right,
+                                  size: 30.h, color: colors_name.colorPrimary),
                             ]),
                           ),
                         ),
@@ -104,7 +105,8 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                               const Text(strings_name.str_internship_detail, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                              Icon(canEdit || jobInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
+                              Icon(canEdit || jobInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right,
+                                  size: 30.h, color: colors_name.colorPrimary),
                             ]),
                           ),
                         ),
@@ -136,7 +138,8 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                               padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                 const Text(strings_name.str_applied_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                                Icon(canEdit || (selectedAppliedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
+                                Icon(canEdit || (selectedAppliedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right,
+                                    size: 30.h, color: colors_name.colorPrimary),
                               ]),
                             ),
                           ),
@@ -169,7 +172,8 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                               padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                 const Text(strings_name.str_placed_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                                Icon(canEdit || (selectedPlacedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
+                                Icon(canEdit || (selectedPlacedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right,
+                                    size: 30.h, color: colors_name.colorPrimary),
                               ]),
                             ),
                           ),
@@ -208,7 +212,8 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                               submitData();
                             }
                           } else if (PreferenceUtils.getIsLogin() == 1) {
-                            BaseApiResponseWithSerializable<LoginFieldsResponse>? studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
+                            BaseApiResponseWithSerializable<LoginFieldsResponse>? studentData =
+                                BaseApiResponseWithSerializable<LoginFieldsResponse>();
                             studentData.id = PreferenceUtils.getLoginRecordId();
                             studentData.fields = PreferenceUtils.getLoginData();
 

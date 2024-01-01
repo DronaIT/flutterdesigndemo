@@ -14,6 +14,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/ui/time_table/add_edit_time_table.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -29,7 +30,8 @@ class AttendanceStudentList extends StatefulWidget {
   BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
   DateTime? date;
   String? time;
-  AttendanceStudentList({Key? key,this.timeTableData,this.date,this.time}) : super(key: key);
+
+  AttendanceStudentList({Key? key, this.timeTableData, this.date, this.time}) : super(key: key);
 
   @override
   State<AttendanceStudentList> createState() => _AttendanceStudentListState();
@@ -69,7 +71,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     //   timeTableData = Get.arguments[0]["timeTableData"];
     // }
     // debugPrint('../ time table data ${widget.timeTableData == null}');
-    if(widget.timeTableData!=null){
+    if (widget.timeTableData != null) {
       timeTableData = widget.timeTableData;
     }
   }
@@ -127,11 +129,10 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     return DateFormat('hh:mm a').format(parsedTime.toDateTime());
   }
 
-
   void checkCurrentData() {
     var now = DateTime.now();
-    if(widget.date!=null){
-      now = widget.date??DateTime.now();
+    if (widget.date != null) {
+      now = widget.date ?? DateTime.now();
     }
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
@@ -141,8 +142,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     var dateTime = DateTime.now();
     formattedTime = timeFormatter.format(dateTime);
 
-
-    if(widget.time!=null){
+    if (widget.time != null) {
       print('../ time ${widget.time}');
       formattedTime = convertTo12HourFormat(widget.time!);
     }
@@ -163,7 +163,8 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
             GestureDetector(
               child: custom_text(text: "${strings_name.str_select_date} : $formattedDate", textStyles: blackTextSemiBold16),
               onTap: () {
-                showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now())
+                    .then((pickedDate) {
                   if (pickedDate == null) {
                     return;
                   }
@@ -180,7 +181,16 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                 DateTime dateTime = DateFormat("hh:mm aa").parse(formattedTime);
                 TimeOfDay timeOfDay = TimeOfDay.fromDateTime(dateTime);
 
-                showTimePicker(context: context, initialTime: timeOfDay).then((pickedTime) {
+                showTimePicker(
+                  context: context,
+                  initialTime: timeOfDay,
+                  builder: (BuildContext context, Widget? child) {
+                    return MediaQuery(
+                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                      child: child!,
+                    );
+                  },
+                ).then((pickedTime) {
                   if (pickedTime == null) {
                     return;
                   }
@@ -217,7 +227,11 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     custom_text(text: "${studentList[index].fields?.name}", textStyles: blackTextSemiBold16),
-                                    custom_text(topValue: 0, bottomValue: 10, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
+                                    custom_text(
+                                        topValue: 0,
+                                        bottomValue: 10,
+                                        text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}",
+                                        textStyles: blackTextSemiBold14),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -232,8 +246,18 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                               setState(() {});
                                             },
                                             child: Container(
-                                                decoration: BoxDecoration(color: studentList[index].fields?.attendanceStatus == 1 ? colors_name.colorPrimary : Theme.of(context).cardColor, border: Border.all(color: colors_name.colorDark)),
-                                                child: custom_text(text: strings_name.str_present, textStyles: studentList[index].fields?.attendanceStatus == 1 ? whiteText14 : blackText14, topValue: 5, bottomValue: 5, leftValue: 15, rightValue: 15))),
+                                                decoration: BoxDecoration(
+                                                    color: studentList[index].fields?.attendanceStatus == 1
+                                                        ? colors_name.colorPrimary
+                                                        : Theme.of(context).cardColor,
+                                                    border: Border.all(color: colors_name.colorDark)),
+                                                child: custom_text(
+                                                    text: strings_name.str_present,
+                                                    textStyles: studentList[index].fields?.attendanceStatus == 1 ? whiteText14 : blackText14,
+                                                    topValue: 5,
+                                                    bottomValue: 5,
+                                                    leftValue: 15,
+                                                    rightValue: 15))),
                                         SizedBox(width: 8.h),
                                         GestureDetector(
                                             onTap: () {
@@ -246,8 +270,18 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                               setState(() {});
                                             },
                                             child: Container(
-                                                decoration: BoxDecoration(color: studentList[index].fields?.attendanceStatus == 0 ? colors_name.colorPrimary : Theme.of(context).cardColor, border: Border.all(color: colors_name.colorDark)),
-                                                child: custom_text(text: strings_name.str_absent, textStyles: studentList[index].fields?.attendanceStatus == 0 ? whiteText14 : blackText14, topValue: 5, bottomValue: 5, leftValue: 15, rightValue: 15)))
+                                                decoration: BoxDecoration(
+                                                    color: studentList[index].fields?.attendanceStatus == 0
+                                                        ? colors_name.colorPrimary
+                                                        : Theme.of(context).cardColor,
+                                                    border: Border.all(color: colors_name.colorDark)),
+                                                child: custom_text(
+                                                    text: strings_name.str_absent,
+                                                    textStyles: studentList[index].fields?.attendanceStatus == 0 ? whiteText14 : blackText14,
+                                                    topValue: 5,
+                                                    bottomValue: 5,
+                                                    leftValue: 15,
+                                                    rightValue: 15)))
                                       ],
                                     ),
 /*                                    CustomRadioButton(
@@ -278,7 +312,9 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                           }),
                     ),
                   )
-                : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                : Container(
+                    margin: const EdgeInsets.only(top: 100),
+                    child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             CustomButton(
               text: strings_name.str_submit_attendance,
               click: () {
@@ -388,6 +424,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     List<String> studentIds = [];
     List<String> presentIds = [];
     List<String> absentIds = [];
+    List<String> absentTokens = [];
 
     for (var i = 0; i < studentList.length; i++) {
       studentIds.add(studentList[i].id!);
@@ -395,6 +432,9 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         presentIds.add(studentList[i].id!);
       } else if (studentList[i].fields!.attendanceStatus == 0) {
         absentIds.add(studentList[i].id!);
+        if (studentList[i].fields?.token?.isNotEmpty == true) {
+          absentTokens.add(studentList[i].fields!.token!);
+        }
       }
     }
     try {
@@ -432,17 +472,25 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
 
         var resp = await apiRepository.addStudentAttendanceApi(request);
         if (resp.id!.isNotEmpty) {
-          if(widget.timeTableData == null){
+          if (widget.timeTableData == null) {
             setState(() {
               isVisible = false;
             });
             Utils.showSnackBar(context, strings_name.str_attendance_recorded);
             await Future.delayed(const Duration(milliseconds: 2000));
             Get.back(closeOverlays: true, result: true);
-          }else{
+          } else {
             updateTimeTableRecord();
           }
-
+          if (absentTokens.isNotEmpty) {
+            String msg = "";
+            if (request.subjectId?.isNotEmpty == true && false) {
+              msg = "${strings_name.str_push_desc_student_absent}${request.subjectId} Lecture.";
+            } else {
+              msg = "${strings_name.str_push_desc_student_absent} Lecture.";
+            }
+            PushNotificationService.sendNotificationToMultipleDevices(absentTokens, "", msg);
+          }
         } else {
           setState(() {
             isVisible = false;
@@ -462,35 +510,34 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     try {
       UpdateTimeTableRequest? updateTimeTableModel;
       var data = timeTableData?.fields;
-        updateTimeTableModel = UpdateTimeTableRequest(
-          records: [
-            UpdateRecord(
-              id: timeTableData?.id??'',
-              fields: UpdateFields(
-                  date: timeTableData?.fields?.date??'',
-                  isHoliday: data?.isHoliday,
-                  startTime: data?.startTime,
-                  endTime: data?.endTime,
-                  holidayTitle: data?.holidayTitle,
-                  hubId: data?.hubId??[],
-                  specializationId: data?.specializationId,
-                  semester: data?.semester,
-                  division: data?.division,
-                  lectureId: data?.lectureId??[],
-                  subjectId: data?.subjectId??[],
-                  createdBy: data?.createdBy??[],
-                  updatedBy: data?.updatedBy,
-                  mode: data?.mode,
-                  modeTitle: data?.modeTitle,
-                  isAttendanceTaken : true
-              ),
-            )
-          ],
-        );
+      updateTimeTableModel = UpdateTimeTableRequest(
+        records: [
+          UpdateRecord(
+            id: timeTableData?.id ?? '',
+            fields: UpdateFields(
+                date: timeTableData?.fields?.date ?? '',
+                isHoliday: data?.isHoliday,
+                startTime: data?.startTime,
+                endTime: data?.endTime,
+                holidayTitle: data?.holidayTitle,
+                hubId: data?.hubId ?? [],
+                specializationId: data?.specializationId,
+                semester: data?.semester,
+                division: data?.division,
+                lectureId: data?.lectureId ?? [],
+                subjectId: data?.subjectId ?? [],
+                createdBy: data?.createdBy ?? [],
+                updatedBy: data?.updatedBy,
+                mode: data?.mode,
+                modeTitle: data?.modeTitle,
+                isAttendanceTaken: true),
+          )
+        ],
+      );
 
       debugPrint('../ updateTimeTableModel ${jsonEncode(updateTimeTableModel.toJson())}');
 
-      var resp = await apiRepository.updateTimeTableDataApi(updateTimeTableModel.toJson(),timeTableData?.id??'');
+      var resp = await apiRepository.updateTimeTableDataApi(updateTimeTableModel.toJson(), timeTableData?.id ?? '');
 
       if (resp.records?.isNotEmpty ?? false) {
         setState(() {
@@ -510,8 +557,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
-    }
-    catch(e){
+    } catch (e) {
       setState(() {
         isVisible = false;
       });

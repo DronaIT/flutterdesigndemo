@@ -107,6 +107,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
   Future<void> initialization() async {
     if (Get.arguments != null) {
       companyDetailData?.add(Get.arguments);
+      fromEdit = true;
       setState(() {});
     }
     if (companyDetailData?.isNotEmpty == true) {

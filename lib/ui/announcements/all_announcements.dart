@@ -391,4 +391,11 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
       ),
     );
   }
+
+  @override
+  void setState(VoidCallback fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 }

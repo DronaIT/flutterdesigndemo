@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '19'
+    flutterVersionCode = '24'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.17'
+    flutterVersionName = '1.0.21'
 }
 
 apply plugin: 'com.android.application'
@@ -66,7 +66,7 @@ android {
         release {
             keyAlias keystoreProperties['drona']
             keyPassword keystoreProperties['drona123']
-            storeFile keystoreProperties['G:\\DronaApp\\live_detail\\drona.jks']
+            storeFile keystoreProperties['D:\\project\\flutterdesigndemo\\live_detail\\drona.jks']
             storePassword keystoreProperties['drona123']
         }
     }

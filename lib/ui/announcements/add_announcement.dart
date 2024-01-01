@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:dio/dio.dart';
 import 'package:expansion_tile_group/expansion_tile_group.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/api/dio_exception.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../api/api_repository.dart';
 import '../../api/service_locator.dart';
@@ -55,7 +58,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
   TabController? tabController;
 
   List<PlatformFile> attachmentFiles = [];
-  List<XFile> files = [];
+  List<PlatformFile> files = [];
 
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
   String hubValue = "";
@@ -108,8 +111,9 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
   }
 
   init() {
-    hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
+    hubResponseArray = PreferenceUtils
+        .getHubList()
+        .records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
@@ -140,12 +144,33 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
         }
       }
     }
+    getSpecializations();
+
     announcementData = widget.announcementData;
     if (announcementData != null) {
       setData();
     }
     tabController = TabController(length: 2, vsync: this, initialIndex: isForEmployee ? 1 : 0);
     cloudinary = CloudinaryPublic(TableNames.CLOUDARY_CLOUD_NAME, TableNames.CLOUDARY_PRESET, cache: false);
+  }
+
+  getSpecializations() {
+    speResponseArray = PreferenceUtils
+        .getSpecializationList()
+        .records;
+    for (int i = 0; i < (speResponseArray?.length ?? 0); i++) {
+      bool contains = false;
+      for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+        if (speResponseArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+          contains = true;
+          break;
+        }
+      }
+      if (!contains) {
+        speResponseArray?.removeAt(i);
+        i--;
+      }
+    }
   }
 
   setData() {
@@ -250,7 +275,8 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
   }
 
   _pickAttachment() async {
-    if (kIsWeb) {
+    if (kIsWeb && false) {
+/*
       final List<XFile> tmpFiles = await openFiles();
       if (tmpFiles.isNotEmpty) {
         setState(() {
@@ -258,6 +284,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
         });
       }
       debugPrint('../ files ${files[0].path}');
+*/
     } else {
       FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: true);
       setState(() {
@@ -266,16 +293,230 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
     }
   }
 
-  addAnnouncement() {
+  /*
+  *   messageType :: 1 => Add, 2 => Update
+  */
+  fetchTokenDataAndSendPushNotification(int messageType) async {
+    String pushMessage = strings_name.str_push_desc_new_announcement;
+    if (messageType == 2) {
+      pushMessage = strings_name.str_push_desc_update_announcement + announcementTitleController.text.trim();
+    }
+    if (isForEveryOne) {
+      await fetchEmployeeData(pushMessage);
+      await fetchStudentData(pushMessage);
+    } else if (tabController!.index == 1) {
+      await fetchEmployeeData(pushMessage);
+    } else if (tabController!.index == 0) {
+      await fetchStudentData(pushMessage);
+    }
+  }
+
+  String offset = "";
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mainEmployeeData = [];
+  List<String> employeesToken = [];
+
+  List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? mainStudentData = [];
+  List<String> studentToken = [];
+
+  fetchEmployeeData(String pushMessage) async {
+    var query = "AND(FIND(1,is_working,0)";
+    if (!isForAllEmployee) {
+      int hubSelected = 0;
+      for (var data in hubResponseArray!) {
+        if (data.fields!.selected) {
+          if (hubSelected == 0) {
+            query += ",OR(";
+            hubSelected++;
+          } else {
+            query += ",";
+          }
+          query +=
+          "OR(SEARCH('${data.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0),SEARCH('${data.fields
+              ?.hubId}',ARRAYJOIN({accessible_hub_ids_code}),0))";
+        }
+      }
+      if (hubSelected > 0) {
+        query += ")";
+      }
+    }
+    query += ")";
+    debugPrint(query);
+
+    try {
+      var data = await apiRepository.getEmployeeListApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          mainEmployeeData?.clear();
+        }
+        mainEmployeeData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          fetchEmployeeData(pushMessage);
+        } else {
+          mainEmployeeData?.sort((a, b) {
+            var adate = a.fields!.employeeName;
+            var bdate = b.fields!.employeeName;
+            return adate!.compareTo(bdate!);
+          });
+
+          employeesToken.clear();
+          for (var j = 0; j < mainEmployeeData!.length; j++) {
+            if (mainEmployeeData![j].fields?.token
+                ?.trim()
+                .isNotEmpty == true) {
+              employeesToken.add(mainEmployeeData![j].fields!.token!);
+              if (employeesToken.length == 500) {
+                PushNotificationService.sendNotificationToMultipleDevices(employeesToken, "", pushMessage);
+                employeesToken.clear();
+              }
+            }
+          }
+
+          debugPrint(mainEmployeeData?.length.toString());
+          debugPrint(employeesToken.length.toString());
+          if (employeesToken.isNotEmpty) {
+            PushNotificationService.sendNotificationToMultipleDevices(employeesToken, "", pushMessage);
+            employeesToken.clear();
+          }
+        }
+      } else {
+        if (offset.isEmpty) {
+          employeesToken = [];
+          mainEmployeeData = [];
+        }
+        offset = "";
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  fetchStudentData(String pushMessage) async {
+    var query = "";
+    if (!isForAllStudent) {
+      query += "AND(";
+      int hubSelected = 0,
+          speSelected = 0,
+          semSelected = 0;
+
+      for (var data in hubResponseArray!) {
+        if (data.fields!.selected) {
+          if (hubSelected == 0) {
+            query += "OR(";
+            hubSelected++;
+          } else {
+            query += ",";
+          }
+          query += "SEARCH('${data.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+        }
+      }
+      if (hubSelected > 0) {
+        query += ")";
+      }
+      for (var data in speResponseArray!) {
+        if (data.fields!.selected) {
+          if (hubSelected > 0) {
+            query += ",";
+          }
+          if (speSelected == 0) {
+            query += "OR(";
+            speSelected++;
+          } else {
+            query += ",";
+          }
+          query += "SEARCH('${data.fields?.specializationId}',ARRAYJOIN({${TableNames.CLM_SPE_ID_FROM_SPE_IDS}}),0)";
+        }
+      }
+      if (speSelected > 0) {
+        query += ")";
+      }
+      for (var data in semesterResponseArray) {
+        if (data.isSelected) {
+          if (hubSelected > 0 || speSelected > 0) {
+            query += ",";
+          }
+          if (semSelected == 0) {
+            query += "OR(";
+            semSelected++;
+          } else {
+            query += ",";
+          }
+          query += "${TableNames.CLM_SEMESTER}='${data.name}'";
+        }
+      }
+      if (semSelected > 0) {
+        query += ")";
+      }
+      query += ")";
+    }
+    debugPrint(query);
+
+    try {
+      var data = await apiRepository.loginApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          mainStudentData?.clear();
+        }
+        mainStudentData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          fetchStudentData(pushMessage);
+        } else {
+          mainStudentData?.sort((a, b) {
+            var adate = a.fields!.name;
+            var bdate = b.fields!.name;
+            return adate!.compareTo(bdate!);
+          });
+
+          studentToken.clear();
+          for (var j = 0; j < mainStudentData!.length; j++) {
+            if (mainStudentData![j].fields?.token
+                ?.trim()
+                .isNotEmpty == true) {
+              studentToken.add(mainStudentData![j].fields!.token!);
+              if (studentToken.length == 500) {
+                PushNotificationService.sendNotificationToMultipleDevices(studentToken, "", pushMessage);
+                studentToken.clear();
+              }
+            }
+          }
+
+          debugPrint(mainStudentData?.length.toString());
+          debugPrint(studentToken.length.toString());
+          if (studentToken.isNotEmpty) {
+            PushNotificationService.sendNotificationToMultipleDevices(studentToken, "", pushMessage);
+            studentToken.clear();
+          }
+        }
+      } else {
+        if (offset.isEmpty) {
+          mainStudentData = [];
+          studentToken = [];
+        }
+        offset = "";
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  addAnnouncement() async {
     selectedHubIds.clear();
     selectedSpecializationIds.clear();
     selectedSemesters.clear();
     selectedDivisions.clear();
     if (_image == null) {
       Utils.showSnackBar(context, strings_name.str_empty_image);
-    } else if (announcementTitleController.text.trim().isEmpty) {
+    } else if (announcementTitleController.text
+        .trim()
+        .isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_announcement_title);
-    } else if (announcementDesController.text.trim().isEmpty) {
+    } else if (announcementDesController.text
+        .trim()
+        .isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_announcement_desc);
     } else if (isForEveryOne || isForAllStudent || isForAllEmployee) {
       addAnnouncementApiCall();
@@ -333,7 +574,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
         if (attachmentFiles.isNotEmpty ?? false) {
           attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
             for (var data in attachmentFiles)
-              // CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+            // CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
               CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
           ]);
 
@@ -344,7 +585,10 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
       } else {
         if (files.isNotEmpty ?? false) {
           debugPrint('../ files ${files[0].path}');
-          attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([for (var data in files) CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)]);
+          attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
+            for (var data in files)
+              CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+          ]);
 
           for (var data in attachmentResultCloudinaryResponse) {
             attachmentResultCloudinary.add(Attachment(url: data.secureUrl.toString()));
@@ -362,8 +606,8 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
               fieldsFor: isForEveryOne
                   ? 'everyone'
                   : isForStudent
-                      ? 'student'
-                      : 'employee',
+                  ? 'student'
+                  : 'employee',
               isAll: isForAll ? true : false,
               isActive: 1,
               attachments: attachmentResultCloudinary,
@@ -380,6 +624,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
       var resp = await apiRepository.addAnnouncementDataApi(addAnnouncementRequest.toJson());
 
       if (resp.records?.isNotEmpty ?? false) {
+        await fetchTokenDataAndSendPushNotification(1);
         Get.back(result: 'updateAnnouncement');
         setState(() {
           isLoading = false;
@@ -407,9 +652,13 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
     selectedDivisions.clear();
     if (_image == null && ((announcementData?.fields?.image ?? '') == '')) {
       Utils.showSnackBar(context, strings_name.str_empty_image);
-    } else if (announcementTitleController.text.trim().isEmpty) {
+    } else if (announcementTitleController.text
+        .trim()
+        .isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_announcement_title);
-    } else if (announcementDesController.text.trim().isEmpty) {
+    } else if (announcementDesController.text
+        .trim()
+        .isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_announcement_desc);
     } else if (isForEveryOne || isForAllStudent || isForAllEmployee) {
       updateAnnouncementApiCall();
@@ -471,7 +720,10 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
 
       if (!kIsWeb) {
         if (attachmentFiles.isNotEmpty ?? false) {
-          List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([for (var data in attachmentFiles) CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)]);
+          List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
+            for (var data in attachmentFiles)
+              CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+          ]);
           for (var data in attachmentResultCloudinaryResponse) {
             attachmentResultCloudinary.add(UpdateAttachment(url: data.secureUrl.toString()));
           }
@@ -479,7 +731,10 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
       } else {
         if (files.isNotEmpty ?? false) {
           debugPrint('../ files ${files[0].path}');
-          List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([for (var data in files) CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)]);
+          List<CloudinaryResponse> attachmentResultCloudinaryResponse = await cloudinary.uploadFiles([
+            for (var data in files)
+              CloudinaryFile.fromFile(data.path ?? '', resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_ANNOUNCEMENT)
+          ]);
           for (var data in attachmentResultCloudinaryResponse) {
             attachmentResultCloudinary.add(UpdateAttachment(url: data.secureUrl.toString()));
           }
@@ -497,8 +752,8 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
               fieldsFor: isForEveryOne
                   ? 'everyone'
                   : isForStudent
-                      ? 'student'
-                      : 'employee',
+                  ? 'student'
+                  : 'employee',
               isAll: isForAll ? true : false,
               isActive: 1,
               attachments: attachmentResultCloudinary,
@@ -514,11 +769,11 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
       ]);
       var dataUpdate = await apiRepository.updateAnnouncementDataApi(updateAnnouncementRequest.toJson(), announcementData?.id ?? '');
       if (dataUpdate.records?.isNotEmpty ?? false) {
+        await fetchTokenDataAndSendPushNotification(2);
         setState(() {
           isLoading = false;
         });
         Get.back(result: 'updateAnnouncement');
-        // Utils.showSnackBar(context, strings_name.str_announcement_updated);
       } else {
         setState(() {
           isLoading = false;
@@ -565,21 +820,21 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
           appBar: AppWidgets.appBarWithoutBack(widget.announcementData != null ? strings_name.edit_announcements : strings_name.add_announcements),
           floatingActionButton: isLoading
               ? const Padding(
-                  padding: EdgeInsets.only(bottom: 12.0),
-                  child: CircularProgressIndicator(
-                    color: colors_name.colorPrimary,
-                  ),
-                )
+            padding: EdgeInsets.only(bottom: 12.0),
+            child: CircularProgressIndicator(
+              color: colors_name.colorPrimary,
+            ),
+          )
               : CustomButton(
-                  click: () async {
-                    if (widget.announcementData != null) {
-                      updateAnnouncement();
-                    } else {
-                      addAnnouncement();
-                    }
-                  },
-                  text: widget.announcementData != null ? strings_name.update_announcements : strings_name.add_announcements,
-                ),
+            click: () async {
+              if (widget.announcementData != null) {
+                updateAnnouncement();
+              } else {
+                addAnnouncement();
+              }
+            },
+            text: widget.announcementData != null ? strings_name.update_announcements : strings_name.add_announcements,
+          ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -587,113 +842,114 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
               SizedBox(height: 15.h),
               _image != null
                   ? GestureDetector(
-                      onTap: () {
-                        ImagePickerDialog().openDialog(context, (file) async {
-                          if (file != null) {
-                            setState(() {
-                              _image = file;
-                            });
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 100.h,
-                        width: 1.sw,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.w),
-                          image: DecorationImage(
-                              image: FileImage(
-                                File(_image!.path),
-                              ),
-                              fit: BoxFit.cover,
-                              opacity: 0.5),
-                          color: Colors.black,
+                onTap: () {
+                  ImagePickerDialog().openDialog(context, (file) async {
+                    if (file != null) {
+                      setState(() {
+                        _image = file;
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  height: 100.h,
+                  width: 1.sw,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.w),
+                    image: DecorationImage(
+                        image: FileImage(
+                          File(_image!.path),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.image_outlined,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            const Text(
-                              strings_name.change_image,
-                              style: whiteText16,
-                            )
-                          ],
-                        ),
+                        fit: BoxFit.cover,
+                        opacity: 0.5),
+                    color: Colors.black,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.image_outlined,
+                        color: Colors.white,
                       ),
-                    )
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      const Text(
+                        strings_name.change_image,
+                        style: whiteText16,
+                      )
+                    ],
+                  ),
+                ),
+              )
                   : announcementData?.fields?.image != null
-                      ? GestureDetector(
-                          onTap: () {
-                            ImagePickerDialog().openDialog(context, (file) async {
-                              if (file != null) {
-                                setState(() {
-                                  _image = file;
-                                });
-                              }
-                            });
-                          },
-                          child: Container(
-                            height: 100.h,
-                            width: 1.sw,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.w),
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                    widget.announcementData?.fields?.image ?? '',
-                                  ),
-                                  fit: BoxFit.cover,
-                                  opacity: 0.5),
-                              color: Colors.black,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                const Text(
-                                  strings_name.change_image,
-                                  style: whiteText16,
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            ImagePickerDialog().openDialog(context, (file) async {
-                              if (file != null) {
-                                setState(() {
-                                  _image = file;
-                                });
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 40.h),
-                            decoration: BoxDecoration(border: Border.all(color: colors_name.textColorGreyLight), borderRadius: BorderRadius.circular(15.w)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.image_outlined),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                const Text(strings_name.add_image)
-                              ],
-                            ),
-                          ),
+                  ? GestureDetector(
+                onTap: () {
+                  ImagePickerDialog().openDialog(context, (file) async {
+                    if (file != null) {
+                      setState(() {
+                        _image = file;
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  height: 100.h,
+                  width: 1.sw,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.w),
+                    image: DecorationImage(
+                        image: NetworkImage(
+                          widget.announcementData?.fields?.image ?? '',
                         ),
+                        fit: BoxFit.cover,
+                        opacity: 0.5),
+                    color: Colors.black,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.image_outlined,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      const Text(
+                        strings_name.change_image,
+                        style: whiteText16,
+                      )
+                    ],
+                  ),
+                ),
+              )
+                  : GestureDetector(
+                onTap: () {
+                  ImagePickerDialog().openDialog(context, (file) async {
+                    if (file != null) {
+                      setState(() {
+                        _image = file;
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 40.h),
+                  decoration:
+                  BoxDecoration(border: Border.all(color: colors_name.textColorGreyLight), borderRadius: BorderRadius.circular(15.w)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.image_outlined),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      const Text(strings_name.add_image)
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 24.h),
               custom_text(
                 margin: EdgeInsets.zero,
@@ -825,7 +1081,13 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
               SizedBox(
                 height: 20.h,
               ),
-              custom_text(text: strings_name.who_can_see, textStyles: greyDarkTextStyle12, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5), //Text
+              custom_text(
+                  text: strings_name.who_can_see,
+                  textStyles: greyDarkTextStyle12,
+                  topValue: 5,
+                  maxLines: 1000,
+                  bottomValue: 5,
+                  leftValue: 5), //Text
               Row(
                 children: <Widget>[
                   Checkbox(
@@ -843,7 +1105,13 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
                         isForEveryOne = !isForEveryOne;
                       });
                     },
-                    child: custom_text(text: strings_name.everyone, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
+                    child: custom_text(
+                        text: strings_name.everyone,
+                        textStyles: blackTextSemiBold14,
+                        topValue: 5,
+                        maxLines: 1000,
+                        bottomValue: 5,
+                        leftValue: 5),
                   ), //Text
                 ],
               ),
@@ -911,7 +1179,13 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
                   isForAllEmployee = !isForAllEmployee;
                 });
               },
-              child: custom_text(text: strings_name.all_employee, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
+              child: custom_text(
+                  text: strings_name.all_employee,
+                  textStyles: blackTextSemiBold14,
+                  topValue: 5,
+                  maxLines: 1000,
+                  bottomValue: 5,
+                  leftValue: 5),
             ), //Text
           ],
         ),
@@ -972,7 +1246,13 @@ class _AddAnnouncementState extends State<AddAnnouncement> with SingleTickerProv
                   isForAllStudent = !isForAllStudent;
                 });
               },
-              child: custom_text(text: strings_name.all_students, textStyles: blackTextSemiBold14, topValue: 5, maxLines: 1000, bottomValue: 5, leftValue: 5),
+              child: custom_text(
+                  text: strings_name.all_students,
+                  textStyles: blackTextSemiBold14,
+                  topValue: 5,
+                  maxLines: 1000,
+                  bottomValue: 5,
+                  leftValue: 5),
             ), //Text
           ],
         ),
@@ -1108,15 +1388,15 @@ class CustomCheckListTile extends StatelessWidget {
         Checkbox(visualDensity: VisualDensity.compact, value: isSelected, onChanged: onChanged),
         Expanded(
             child: GestureDetector(
-          onTap: () {
-            onChanged?.call(!isSelected);
-          },
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        )),
+              onTap: () {
+                onChanged?.call(!isSelected);
+              },
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )),
       ],
     );
   }

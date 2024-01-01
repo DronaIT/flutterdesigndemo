@@ -15,6 +15,7 @@ import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/request/create_company_det_req.dart';
 import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
+import 'package:flutterdesigndemo/ui/placement/approve_self_placements_detail.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -56,15 +57,18 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
 
     var query = "AND(";
     query += "OR(FIND('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
+        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query += ",FIND('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
+          query +=
+              ",FIND('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
         }
       }
     }
-    query += "), ${TableNames.CLM_IS_PLACED_NOW}='0', OR(${TableNames.CLM_SELF_PLACE_STATUS}='${TableNames.SELFPLACE_STATUS_PENDING}', ${TableNames.CLM_SELF_PLACE_STATUS}='${TableNames.SELFPLACE_STATUS_REJECTED}'))";
-    print(query);
+    query +=
+        "), ${TableNames.CLM_IS_PLACED_NOW}='0', OR(${TableNames.CLM_SELF_PLACE_STATUS}='${TableNames.SELFPLACE_STATUS_PENDING}', ${TableNames.CLM_SELF_PLACE_STATUS}='${TableNames.SELFPLACE_STATUS_REJECTED}'))";
+    debugPrint(query);
 
     try {
       var data = await apiRepository.loginApi(query, offset);
@@ -162,10 +166,33 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                               margin: const EdgeInsets.all(10),
                               child: Column(
                                 children: [
-                                  custom_text(text: "${studentData?[index].fields!.name}", textStyles: centerTextStyle16, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                  custom_text(topValue: 0, bottomValue: 5, maxLines: 2, leftValue: 5, text: "Specialization: ${Utils.getSpecializationName(studentData?[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
-                                  custom_text(topValue: 0, bottomValue: 5, leftValue: 5, text: "Semester: ${studentData?[index].fields?.semester}", textStyles: blackTextSemiBold14),
-                                  custom_text(topValue: 0, text: "Company name: ${studentData?[index].fields!.self_place_company_name?.first}", textStyles: blackTextSemiBold14, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                  custom_text(
+                                      text: "${studentData?[index].fields!.name}",
+                                      textStyles: centerTextStyle16,
+                                      topValue: 0,
+                                      maxLines: 2,
+                                      bottomValue: 5,
+                                      leftValue: 5),
+                                  custom_text(
+                                      topValue: 0,
+                                      bottomValue: 5,
+                                      maxLines: 2,
+                                      leftValue: 5,
+                                      text: "Specialization: ${Utils.getSpecializationName(studentData?[index].fields?.specializationIds![0])}",
+                                      textStyles: blackTextSemiBold14),
+                                  custom_text(
+                                      topValue: 0,
+                                      bottomValue: 5,
+                                      leftValue: 5,
+                                      text: "Semester: ${studentData?[index].fields?.semester}",
+                                      textStyles: blackTextSemiBold14),
+                                  custom_text(
+                                      topValue: 0,
+                                      text: "Company name: ${studentData?[index].fields!.self_place_company_name?.first}",
+                                      textStyles: blackTextSemiBold14,
+                                      maxLines: 2,
+                                      bottomValue: 5,
+                                      leftValue: 5),
                                   custom_text(
                                     text: "Job title: ${studentData?[index].fields!.applied_self_place_job_title?.first}",
                                     textStyles: blackTextSemiBold14,
@@ -174,59 +201,90 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                                     bottomValue: 5,
                                     leftValue: 5,
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(right: 10),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            approveDialog(studentData?[index]);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            primary: colors_name.presentColor,
-                                            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.to(const ApproveSelfPlacementDetail(), arguments: [
+                                        {"selfPlacementDetail": studentData?[index]},
+                                      ])?.then((result) {
+                                        if (result != null) {
+                                          if (result) {
+                                            updateStatus(true, studentData?[index]);
+                                          } else {
+                                            mainStudentData?.clear();
+                                            studentData?.clear();
+
+                                            getRecords();
+                                          }
+                                        }
+                                      });
+                                    },
+                                    child: custom_text(
+                                      text: strings_name.str_view_details,
+                                      textStyles: primaryTextSemiBold15,
+                                      alignment: Alignment.centerRight,
+                                      topValue: 10,
+                                      bottomValue: 0,
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: false,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.only(right: 10),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              approveDialog(studentData?[index]);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: colors_name.presentColor,
+                                              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              elevation: 5.0,
                                             ),
-                                            elevation: 5.0,
-                                          ),
-                                          child: const Text(
-                                            strings_name.str_approve,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                            child: const Text(
+                                              strings_name.str_approve,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(right: 10),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            rejectionDialog(studentData?[index]);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            primary: colors_name.errorColor,
-                                            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                        Container(
+                                          margin: const EdgeInsets.only(right: 10),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              rejectionDialog(studentData?[index]);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: colors_name.errorColor,
+                                              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              elevation: 5.0,
                                             ),
-                                            elevation: 5.0,
-                                          ),
-                                          child: const Text(
-                                            strings_name.str_reject,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                            child: const Text(
+                                              strings_name.str_reject,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
                             ),
                           );
                         })
-                    : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: custom_text(
+                            text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               )
             ],
           )),
@@ -244,7 +302,11 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          custom_text(text: 'Are you sure you want to approve this placement?', textStyles: primaryTextSemiBold16, maxLines: 3,),
+          custom_text(
+            text: 'Are you sure you want to approve this placement?',
+            textStyles: primaryTextSemiBold16,
+            maxLines: 3,
+          ),
           Row(
             children: [
               SizedBox(width: 5.h),
@@ -276,7 +338,11 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          custom_text(text: 'Provide rejection reason', textStyles: primaryTextSemiBold16, maxLines: 2,),
+          custom_text(
+            text: 'Provide rejection reason',
+            textStyles: primaryTextSemiBold16,
+            maxLines: 2,
+          ),
           custom_edittext(
             type: TextInputType.multiline,
             textInputAction: TextInputAction.newline,
@@ -418,7 +484,8 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     }
   }
 
-  Future<void> createCompanyRequest(BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+  Future<void> createCompanyRequest(
+      BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
     var companyRequest = CreateCompanyDetailRequest();
     companyRequest.company_name = companyInfo?.fields?.companyName?.trim() ?? "";
     companyRequest.company_identity_number = companyInfo?.fields?.companyIdentityNumber?.trim() ?? "";
@@ -479,7 +546,8 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     }
   }
 
-  Future<void> createJobOpportunityRequest(BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+  Future<void> createJobOpportunityRequest(
+      BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
     if (companyInfo?.id?.trim().isNotEmpty == true) {
       CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
       request.companyId = companyInfo?.id?.trim().split(" ") ?? [];
@@ -546,7 +614,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
 
         var resp = await apiRepository.createJobOpportunityApi(request);
         if (resp.id!.isNotEmpty) {
-          placeStudent(jobInfo);
+          placeStudent(companyInfo, jobInfo);
         } else {
           setState(() {
             isVisible = false;
@@ -564,24 +632,34 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     }
   }
 
-  Future<void> placeStudent(BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+  Future<void> placeStudent(
+      BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
     if (jobInfo?.fields?.placedStudents?.last.isNotEmpty == true) {
       setState(() {
         isVisible = true;
       });
       try {
-        Map<String, dynamic> requestParams = Map();
-        requestParams[TableNames.CLM_IS_PLACED_NOW] = "1";
-        requestParams[TableNames.CLM_HAS_RESIGNED] = 0;
+        var query = "SEARCH('${companyInfo?.fields?.created_by_student_number?.last.toString()}', ${TableNames.TB_USERS_PHONE})";
+        var data = await apiRepository.loginApi(query);
+        if (data.records!.isNotEmpty) {
+          Map<String, dynamic> requestParams = Map();
+          requestParams[TableNames.CLM_IS_PLACED_NOW] = "1";
+          requestParams[TableNames.CLM_HAS_RESIGNED] = 0;
+          if (data.records?.last != null) {
+            if (data.records?.last.fields?.is_banned == 1) {
+              requestParams[TableNames.CLM_BANNED_FROM_PLACEMENT] = 2;
+            }
+          }
 
-        var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, jobInfo?.fields?.placedStudents?.last ?? "");
-        if (dataUpdate.fields != null) {
-          setState(() {
-            isVisible = false;
-          });
-          Utils.showSnackBar(context, strings_name.str_job_updated);
-          await Future.delayed(const Duration(milliseconds: 2000));
-          Get.back(closeOverlays: true, result: true);
+          var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, jobInfo?.fields?.placedStudents?.last ?? "");
+          if (dataUpdate.fields != null) {
+            setState(() {
+              isVisible = false;
+            });
+            Utils.showSnackBar(context, strings_name.str_self_place_job_updated);
+            await Future.delayed(const Duration(milliseconds: 2000));
+            Get.back(closeOverlays: true, result: true);
+          }
         } else {
           setState(() {
             isVisible = false;

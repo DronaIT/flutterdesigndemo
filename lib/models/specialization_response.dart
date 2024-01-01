@@ -7,6 +7,18 @@ class SpecializationResponse {
   String? specializationDesc;
   bool selected = false;
 
+  double feesReceived = 0;
+  int studentsWhoPaidFees = 0;
+
+  double averageLectureAttendance = 0;
+  double overallStudentAttendance = 0;
+  int totalLecture = 0;
+
+  int newPlaced = 0;
+  int newSelfPlaced = 0;
+  int totalPlacement = 0;
+  double overallPlacement = 0;
+
   SpecializationResponse({this.id, this.specializationId, this.specializationName, this.hubIds, this.hubIdFromHubIds, this.specializationDesc});
 
   SpecializationResponse.fromJson(Map<String, dynamic> json) {

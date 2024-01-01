@@ -160,6 +160,17 @@ class _TimeTableListState extends State<TimeTableList> {
       loginId = PreferenceUtils.getLoginData().studentId.toString();
       loginData = PreferenceUtils.getLoginData();
       loginType = TableNames.ANNOUNCEMENT_ROLE_STUDENT;
+      for (var i = 0; i < hubResponseArray!.length; i++) {
+        if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+          hubResponseArray?.removeAt(i);
+          i--;
+        } else {
+          hubValue = hubResponseArray![i].fields!.id!.toString();
+          hubResponse = hubResponseArray![i];
+          hubRecordId = hubResponseArray![i].id!;
+          getSpecializations();
+        }
+      }
     } else if (isLogin == 3) {
       loginData = PreferenceUtils.getLoginDataOrganization();
       roleId = TableNames.ORGANIZATION_ROLE_ID;
@@ -240,10 +251,24 @@ class _TimeTableListState extends State<TimeTableList> {
       var isLogin = PreferenceUtils.getIsLogin();
       if (isLogin == 1) {
         query =
-            "OR(AND( FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {specialization_id (from specialization_id)} = '${loginData.specializationIdFromSpecializationIds[0]}', {semester} = '${loginData.semester}', {division} = '${loginData.division}', {date} = TODAY()), AND(FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {is_holiday} = 1, {date} = TODAY()))";
+            "OR(AND({hub_id (from hub_id)} = '${loginData.hubIdFromHubIds[0]}', {specialization_id (from specialization_id)} = '${loginData.specializationIdFromSpecializationIds[0]}', {semester} = '${loginData.semester}', {division} = '${loginData.division}',";
+        if (_tcDateRange.text.isNotEmpty) {
+          List<String> dates = splitAndReFormatDate(_rangeToSend);
+          query += "{date} >= '${dates[0]}', {date} <= '${dates[1]}'";
+        } else {
+          query += " {date} = TODAY()";
+        }
+        query += "), AND(FIND(\"${loginData.hubIdFromHubIds[0]}\", ARRAYJOIN({hub_id (from hub_id)})), {is_holiday} = 1, ";
+        if (_tcDateRange.text.isNotEmpty) {
+          List<String> dates = splitAndReFormatDate(_rangeToSend);
+          query += "{date} >= '${dates[0]}', {date} <= '${dates[1]}'))";
+        } else {
+          query += "{date} = TODAY()))";
+        }
       } else if (isLogin == 2) {
         if (isFilterTimeTable) {
-          query = "OR( AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id})),{is_holiday} = 1),AND( ${canShowAllTimeTable ? '' : 'OR({created_by} = $loginId,{lecture_id} = $loginId),'}FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";
+          query =
+              "OR(AND(FIND(\"$hubRecordId\", ARRAYJOIN({hub_id})),{is_holiday} = 1),AND( ${canShowAllTimeTable ? '' : 'OR({created_by} = $loginId,{lecture_id} = $loginId),'}FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";
           if (specializationValue.trim().isNotEmpty) {
             query += ", {specialization_id} = '$specializationValue'";
           }
@@ -269,7 +294,8 @@ class _TimeTableListState extends State<TimeTableList> {
             query = "AND({date} = TODAY())";
           } else {
             String hubValue = loginData.hubIdFromHubIds![0];
-            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
+            query =
+                "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
           }
         }
       } else {
@@ -342,7 +368,8 @@ class _TimeTableListState extends State<TimeTableList> {
       unitValue = "";
       topicValue = "";
 
-      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      var query =
+          "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       try {
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {
@@ -515,16 +542,21 @@ class _TimeTableListState extends State<TimeTableList> {
                                         }
                                       },
                                       onTap: () {
-                                        if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) || (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false)) {
+                                        if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) ||
+                                            (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false)) {
                                           if (timeTables[index].fields?.isAttendanceTaken ?? false) {
-                                            Utils.showSnackBarUsingGet(strings_name.str_attendance_already_taken);
+                                            if(PreferenceUtils.getIsLogin() != 1) {
+                                              Utils.showSnackBarUsingGet(strings_name.str_attendance_already_taken);
+                                            }
                                           } else {
                                             debugPrint('../ timeTables ${timeTables[index].fields?.toJson()}');
                                             subjectValue = timeTables[index].fields?.subjectIdFromSubjectId?[0].toString() ?? '';
                                             selectUnitAndTopicDropDown(timeTables[index]);
                                           }
                                         } else {
-                                          Utils.showSnackBarUsingGet(strings_name.str_not_per_atek_attedndance);
+                                          if(PreferenceUtils.getIsLogin() != 1) {
+                                            Utils.showSnackBarUsingGet(strings_name.str_not_per_atek_attedndance);
+                                          }
                                         }
                                       },
                                     );
@@ -749,7 +781,8 @@ class _TimeTableListState extends State<TimeTableList> {
                                               getTopics();
                                             });
                                           },
-                                          items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>((BaseApiResponseWithSerializable<UnitsResponse> value) {
+                                          items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>(
+                                              (BaseApiResponseWithSerializable<UnitsResponse> value) {
                                             return DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>(
                                               value: value,
                                               child: Text(value.fields!.unitTitle!.toString()),
@@ -793,7 +826,8 @@ class _TimeTableListState extends State<TimeTableList> {
                                     topicResponse = newValue;
                                     topicRecordId = newValue.id!;
                                   },
-                                  items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>((BaseApiResponseWithSerializable<TopicsResponse> value) {
+                                  items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>(
+                                      (BaseApiResponseWithSerializable<TopicsResponse> value) {
                                     return DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>(
                                       value: value,
                                       child: Text(value.fields!.topicTitle!.toString()),
@@ -846,52 +880,16 @@ class _TimeTableListState extends State<TimeTableList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        custom_text(
-          text: strings_name.str_campus_r,
-          alignment: Alignment.topLeft,
-          textStyles: blackTextSemiBold16,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              fit: FlexFit.loose,
-              child: Container(
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                width: viewWidth,
-                child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
-                  value: hubResponse,
-                  elevation: 16,
-                  style: blackText16,
-                  focusColor: Colors.white,
-                  onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                    setState(() {
-                      hubValue = newValue!.fields!.id!.toString();
-                      hubResponse = newValue;
-                      hubRecordId = newValue.id!;
-                      getSpecializations();
-                    });
-                  },
-                  items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
-                    return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
-                      value: value,
-                      child: Text(value.fields!.hubName!.toString()),
-                    );
-                  }).toList(),
-                ),
+        Visibility(
+          visible: PreferenceUtils.getIsLogin() == 2,
+          child: Column(
+            children: [
+              custom_text(
+                text: strings_name.str_campus_r,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        custom_text(
-          text: strings_name.str_specializations,
-          alignment: Alignment.topLeft,
-          textStyles: blackTextSemiBold16,
-        ),
-        isSpeLoading
-            ? progressIndicator()
-            : Row(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Flexible(
@@ -899,23 +897,24 @@ class _TimeTableListState extends State<TimeTableList> {
                     child: Container(
                       margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                       width: viewWidth,
-                      child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
-                        value: specializationResponse,
+                      child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                        value: hubResponse,
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,
-                        onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
+                        onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                           setState(() {
-                            specializationValue = newValue!.fields!.id!.toString();
-                            specializationResponse = newValue;
-                            specializationRecordId = newValue.id!;
-                            // getSubjects();
+                            hubValue = newValue!.fields!.id!.toString();
+                            hubResponse = newValue;
+                            hubRecordId = newValue.id!;
+                            getSpecializations();
                           });
                         },
-                        items: specializationResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
-                          return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
+                        items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                            (BaseApiResponseWithSerializable<HubResponse> value) {
+                          return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                             value: value,
-                            child: Text(value.fields!.specializationName!.toString()),
+                            child: Text(value.fields!.hubName!.toString()),
                           );
                         }).toList(),
                       ),
@@ -923,76 +922,120 @@ class _TimeTableListState extends State<TimeTableList> {
                   ),
                 ],
               ),
-        SizedBox(height: 10.h),
-        custom_text(
-          text: strings_name.str_semester,
-          alignment: Alignment.topLeft,
-          textStyles: blackTextSemiBold16,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              fit: FlexFit.loose,
-              child: Container(
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                width: viewWidth,
-                child: DropdownButtonFormField<int>(
-                  elevation: 16,
-                  style: blackText16,
-                  focusColor: Colors.white,
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      semesterValue = newValue!;
-                      getSubjects();
-                    });
-                  },
-                  value: semesterValue == -1 ? null : semesterValue,
-                  items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text("Semester $value"),
-                    );
-                  }).toList(),
+              SizedBox(height: 10.h),
+              custom_text(
+                text: strings_name.str_specializations,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
+              ),
+              isSpeLoading
+                  ? progressIndicator()
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                            width: viewWidth,
+                            child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
+                              value: specializationResponse,
+                              elevation: 16,
+                              style: blackText16,
+                              focusColor: Colors.white,
+                              onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
+                                setState(() {
+                                  specializationValue = newValue!.fields!.id!.toString();
+                                  specializationResponse = newValue;
+                                  specializationRecordId = newValue.id!;
+                                  // getSubjects();
+                                });
+                              },
+                              items: specializationResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                                  (BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                                return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
+                                  value: value,
+                                  child: Text(value.fields!.specializationName!.toString()),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              SizedBox(height: 10.h),
+              custom_text(
+                text: strings_name.str_semester,
+                alignment: Alignment.topLeft,
+                textStyles: blackTextSemiBold16,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                      width: viewWidth,
+                      child: DropdownButtonFormField<int>(
+                        elevation: 16,
+                        style: blackText16,
+                        focusColor: Colors.white,
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            semesterValue = newValue!;
+                            getSubjects();
+                          });
+                        },
+                        value: semesterValue == -1 ? null : semesterValue,
+                        items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text("Semester $value"),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              Visibility(
+                child: custom_text(
+                  text: strings_name.str_division,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
                 ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        Visibility(
-          child: custom_text(
-            text: strings_name.str_division,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-          ),
-        ),
-        Visibility(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                fit: FlexFit.loose,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                  width: viewWidth,
-                  child: DropdownButtonFormField<String>(
-                    elevation: 16,
-                    style: blackText16,
-                    focusColor: Colors.white,
-                    value: divisionValue == '' ? null : divisionValue,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        divisionValue = newValue!;
-                      });
-                    },
-                    items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+              Visibility(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                        width: viewWidth,
+                        child: DropdownButtonFormField<String>(
+                          elevation: 16,
+                          style: blackText16,
+                          focusColor: Colors.white,
+                          value: divisionValue == '' ? null : divisionValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              divisionValue = newValue!;
+                            });
+                          },
+                          items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -1030,8 +1073,10 @@ class _TimeTableListState extends State<TimeTableList> {
     setState(() {
       if (args.value is PickerDateRange) {
         DateTime endD = args.value.endDate ?? args.value.startDate;
-        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
-        _rangeToSend = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(endD.add(const Duration(days: 1)))}';
+        _range =
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        _rangeToSend =
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(endD.add(const Duration(days: 1)))}';
         startDate = args.value.startDate;
         endDate = args.value.endDate ?? args.value.startDate;
       } else if (args.value is DateTime) {
@@ -1060,7 +1105,9 @@ class _TimeTableListState extends State<TimeTableList> {
             height: 350,
             width: 095.w,
             child: SfDateRangePicker(
-              onSelectionChanged: _onSelectionChanged, selectionMode: DateRangePickerSelectionMode.range, // initialSelectedRange: PickerDateRange(DateTime.now().subtract(const Duration(days: 4)), DateTime.now().add(const Duration(days: 3))),
+              onSelectionChanged: _onSelectionChanged,
+              selectionMode: DateRangePickerSelectionMode.range,
+              // initialSelectedRange: PickerDateRange(DateTime.now().subtract(const Duration(days: 4)), DateTime.now().add(const Duration(days: 3))),
               initialSelectedRange: startDate == null && endDate == null ? null : PickerDateRange(startDate, endDate),
             ),
           ),
@@ -1140,7 +1187,8 @@ class TimeTableCard extends StatelessWidget {
         ? Container(
             margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
             padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-            decoration: BoxDecoration(color: colors_name.lightCoffee, border: Border.all(color: colors_name.coffee), borderRadius: BorderRadius.circular(6.w)),
+            decoration: BoxDecoration(
+                color: colors_name.lightCoffee, border: Border.all(color: colors_name.coffee), borderRadius: BorderRadius.circular(6.w)),
             child: Column(
               children: [
                 Row(
@@ -1211,7 +1259,9 @@ class TimeTableCard extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10.h),
-                      decoration: BoxDecoration(color: colors_name.colorLightGreen3, borderRadius: BorderRadius.only(topLeft: Radius.circular(6.w), topRight: Radius.circular(6.w))),
+                      decoration: BoxDecoration(
+                          color: colors_name.colorLightGreen3,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(6.w), topRight: Radius.circular(6.w))),
                       child: const Text(
                         strings_name.str_online,
                         style: blackTextSemiBold16,
@@ -1361,7 +1411,8 @@ class TimeTableCard extends StatelessWidget {
                               ),
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 2.h),
-                                decoration: BoxDecoration(border: Border.all(color: colors_name.colorBlack), borderRadius: BorderRadius.circular(20.w)),
+                                decoration:
+                                    BoxDecoration(border: Border.all(color: colors_name.colorBlack), borderRadius: BorderRadius.circular(20.w)),
                                 child: Text(timeTable?.modeTitle ?? ''),
                               )
                             ],

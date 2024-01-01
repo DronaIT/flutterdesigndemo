@@ -185,7 +185,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
             bottom: Radius.circular(14),
           ),
         ),
-        title: const Text(strings_name.str_viewothers_attendance),
+        title: const Text(strings_name.str_viewothers_attendance, style: whiteTextSemiBold20),
+        iconTheme: const IconThemeData(color: colors_name.colorWhite),
         actions: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10),
@@ -194,7 +195,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 color: Colors.white,
                 iconSize: 30,
                 onPressed: () {
-                  showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                  showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now())
+                      .then((pickedDate) {
                     if (pickedDate == null) {
                       return;
                     }
@@ -246,7 +248,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                               viewEmpLectures();
                             });
                           },
-                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                              (BaseApiResponseWithSerializable<HubResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                               value: value,
                               child: Text(value.fields!.hubName!.toString()),
@@ -288,7 +291,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                                           bottomValue: 0,
                                         ),
                                         custom_text(
-                                          text: "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",
+                                          text:
+                                              "${strings_name.str_by_date}: ${formatterShow.format(DateTime.parse(viewLectureArray![index].lecture_date!))}",
                                           alignment: Alignment.topLeft,
                                           textStyles: blackTextSemiBold12,
                                           topValue: 5,
@@ -304,7 +308,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                                           ),
                                         ),
                                         custom_text(
-                                          text: "${strings_name.str_semester}: ${viewLectureArray![index].semester!} ${", "} ${strings_name.str_division}: ${viewLectureArray![index].division!}",
+                                          text:
+                                              "${strings_name.str_semester}: ${viewLectureArray![index].semester!} ${", "} ${strings_name.str_division}: ${viewLectureArray![index].division!}",
                                           alignment: Alignment.topLeft,
                                           textStyles: blackTextSemiBold12,
                                           topValue: 5,
@@ -331,7 +336,9 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                             },
                           );
                         })
-                    : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(
+                        margin: const EdgeInsets.only(top: 100),
+                        child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ),
             ]),
           ),

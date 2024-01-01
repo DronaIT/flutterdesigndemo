@@ -7,8 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/ui/splash_screen.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/utils/push_notification_service.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:get/get.dart';
+
+final _pushMessagingNotification = PushNotificationService();
 
 void main() async {
   if (!kIsWeb) {
@@ -33,9 +36,20 @@ void main() async {
     await Firebase.initializeApp();
     String? deviceId = await Utils.getId();
   }
+
+  await _pushMessagingNotification.initialize();
+  FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+
   await PreferenceUtils.init();
   setup();
   runApp(const MyApp());
+}
+
+@pragma('vm:entry-point')
+Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
+  debugPrint("testHandleback=>${message.notification?.title}");
+  final payload = message.data; //jsonDecode(message.data);
+  _pushMessagingNotification.handleScreenRedirection(payload);
 }
 
 class MyApp extends StatefulWidget {

@@ -64,8 +64,6 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
     super.initState();
 
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
-
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
@@ -98,6 +96,25 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
     }
   }
 
+  getSpecializations() {
+    speResponseArray = [];
+    speResponseArray?.addAll(PreferenceUtils.getSpecializationList().records!);
+
+    for (int i = 0; i < (speResponseArray?.length ?? 0); i++) {
+      bool contains = false;
+      for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+        if (speResponseArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+          contains = true;
+          break;
+        }
+      }
+      if (!contains) {
+        speResponseArray?.removeAt(i);
+        i--;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var viewWidth = MediaQuery.of(context).size.width;
@@ -110,7 +127,6 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                   child: Column(
                     children: [
                       SizedBox(height: 10.h),
-                      SizedBox(height: 5.h),
                       custom_text(
                         text: strings_name.str_select_hub_r,
                         alignment: Alignment.topLeft,
@@ -129,6 +145,27 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                             setState(() {
                               hubValue = newValue!.fields!.id!.toString();
                               hubResponse = newValue;
+
+                              getSpecializations();
+                              if (hubValue.trim().isNotEmpty) {
+                                for (int i = 0; i < speResponseArray!.length; i++) {
+                                  if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                                    speResponseArray!.removeAt(i);
+                                    i--;
+                                  }
+                                }
+                              }
+                              speValue = "";
+                              speResponse = null;
+                              if (speResponseArray?.isEmpty == true) {
+                                Utils.showSnackBar(context, strings_name.str_no_specialization_assigned);
+                              }
+
+                              subjectValue = "";
+                              subjectResponse = null;
+                              subjectResponseArray = [];
+
+                              setState(() {});
                             });
                           },
                           items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
@@ -304,7 +341,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   }
 
   Future<void> getSubjects() async {
-    if (semesterValue != -1 && divisionValue.isNotEmpty) {
+    if (semesterValue != -1 && divisionValue.isNotEmpty && speValue.isNotEmpty) {
       setState(() {
         isVisible = true;
       });

@@ -59,10 +59,22 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   List<String> preferredGenderArr = <String>[strings_name.str_both, strings_name.str_male, strings_name.str_female];
   String preferredGenderValue = strings_name.str_both;
 
-  List<String> internshipDurationArr = <String>[strings_name.str_month_6, strings_name.str_month_12, strings_name.str_month_18, strings_name.str_month_24, strings_name.str_month_30, strings_name.str_month_36];
+  List<String> internshipDurationArr = <String>[
+    strings_name.str_month_6,
+    strings_name.str_month_12,
+    strings_name.str_month_18,
+    strings_name.str_month_24,
+    strings_name.str_month_30,
+    strings_name.str_month_36
+  ];
   String internshipDurationValue = strings_name.str_month_6;
 
-  List<String> internshipModeArr = <String>[strings_name.str_mode_work_from_office, strings_name.str_mode_work_from_home, strings_name.str_mode_remote_work, strings_name.str_mode_project_based_work];
+  List<String> internshipModeArr = <String>[
+    strings_name.str_mode_work_from_office,
+    strings_name.str_mode_work_from_home,
+    strings_name.str_mode_remote_work,
+    strings_name.str_mode_project_based_work
+  ];
   String internshipModeValue = strings_name.str_mode_work_from_office;
 
   bool isVisible = false;
@@ -171,11 +183,12 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     });
 
     var bondPath = "", incentivePath = "";
-    if (bondFilePath.isNotEmpty) {
+    if (bondFilePath.isNotEmpty && !bondFilePath.contains("https")) {
       if (kIsWeb) {
         // bondFileData
         CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(bondFileData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_BONDS, identifier: bondFileData.name),
+          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(bondFileData.bytes!),
+              resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_BONDS, identifier: bondFileData.name),
         );
         bondPath = response.secureUrl;
       } else {
@@ -185,15 +198,19 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
         bondPath = response.secureUrl;
       }
     }
-    if (incentiveStructureFilePath.isNotEmpty) {
+    if (incentiveStructureFilePath.isNotEmpty && !incentiveStructureFilePath.contains("https")) {
       if (kIsWeb) {
         CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(incentiveStructureData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE, identifier: incentiveStructureData.name),
+          CloudinaryFile.fromByteData(Utils.uint8ListToByteData(incentiveStructureData.bytes!),
+              resourceType: CloudinaryResourceType.Auto,
+              folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE,
+              identifier: incentiveStructureData.name),
         );
         incentivePath = response.secureUrl;
       } else {
         CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(incentiveStructureFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE),
+          CloudinaryFile.fromFile(incentiveStructureFilePath,
+              resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE),
         );
         incentivePath = response.secureUrl;
       }
@@ -485,7 +502,12 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                               padding: const EdgeInsets.all(10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [
+                                  Expanded(
+                                      child: Text("${specializationData![index].fields!.specializationName}",
+                                          textAlign: TextAlign.start, style: blackText16)),
+                                  const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                ],
                               ),
                             ),
                           );
@@ -531,7 +553,10 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                               padding: const EdgeInsets.all(10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Expanded(child: Text("Semester ${semesterData![index].semester}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                children: [
+                                  Expanded(child: Text("Semester ${semesterData![index].semester}", textAlign: TextAlign.start, style: blackText16)),
+                                  const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                ],
                               ),
                             ),
                           );
@@ -578,7 +603,10 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                                 padding: const EdgeInsets.all(15),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Expanded(child: Text("${hubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                  children: [
+                                    Expanded(child: Text("${hubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)),
+                                    const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                  ],
                                 ),
                               ),
                               onTap: () {
@@ -616,7 +644,9 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     ),
                   ],
                 ),
-                Visibility(visible: bondFilePath.isNotEmpty, child: custom_text(text: bondFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                Visibility(
+                    visible: bondFilePath.isNotEmpty,
+                    child: custom_text(text: bondFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: strings_name.str_preferred_gender,
@@ -692,7 +722,16 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                           timeOfDay = TimeOfDay.fromDateTime(dateTime);
                         }
 
-                        showTimePicker(context: context, initialTime: timeOfDay).then((pickedTime) {
+                        showTimePicker(
+                          context: context,
+                          initialTime: timeOfDay,
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                              child: child!,
+                            );
+                          },
+                        ).then((pickedTime) {
                           if (pickedTime == null) {
                             return;
                           }
@@ -726,7 +765,16 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                           timeOfDay = TimeOfDay.fromDateTime(dateTime);
                         }
 
-                        showTimePicker(context: context, initialTime: timeOfDay).then((pickedTime) {
+                        showTimePicker(
+                          context: context,
+                          initialTime: timeOfDay,
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                              child: child!,
+                            );
+                          },
+                        ).then((pickedTime) {
                           if (pickedTime == null) {
                             return;
                           }
@@ -770,7 +818,12 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                   ],
                 ),
                 // Visibility(visible: incentiveStructureFilePath.isNotEmpty, child: custom_text(text: incentiveStructureFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
-                incentiveStructureData == null ? SizedBox() : Visibility(visible: incentiveStructureData != null, child: custom_text(text: incentiveStructureData.name, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                incentiveStructureData == null
+                    ? SizedBox()
+                    : Visibility(
+                        visible: incentiveStructureData != null,
+                        child: custom_text(
+                            text: incentiveStructureData.name, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: strings_name.str_internship_mode,

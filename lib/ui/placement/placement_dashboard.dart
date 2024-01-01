@@ -60,7 +60,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
     if (PreferenceUtils.getIsLogin() == 1 && PreferenceUtils.getLoginData().is_banned.toString() == "1") {
       isBanned = true;
       getPermission();
-    } else if (PreferenceUtils.getIsLogin() == 1 && (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 && PreferenceUtils.getLoginData().is_placed_now == "1") {
+    } else if (PreferenceUtils.getIsLogin() == 1 &&
+        (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 &&
+        PreferenceUtils.getLoginData().is_placed_now == "1") {
       Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.first);
     } else {
       getPermission();
@@ -196,7 +198,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_company_approach, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_company_approach, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary),
+                              ],
                             ),
                           ),
                         ),
@@ -215,7 +220,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_create_company, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -232,9 +240,11 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                           child: Container(
                             color: colors_name.colorWhite,
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text(PreferenceUtils.getIsLogin() != 3 ? strings_name.str_view_create_company : strings_name.str_company_detail, textAlign: TextAlign.center, style: blackTextSemiBold16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              Text(PreferenceUtils.getIsLogin() != 3 ? strings_name.str_view_create_company : strings_name.str_company_detail,
+                                  textAlign: TextAlign.center, style: blackTextSemiBold16),
+                              const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                            ]),
                           ),
                         ),
                         onTap: () {
@@ -257,7 +267,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_apply_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_apply_internship, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -276,7 +289,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_applied_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_applied_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -295,7 +311,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_short_listed_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_short_listed_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -314,7 +333,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_approved_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_approved_internship, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -333,7 +355,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_published_internship, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_published_internship, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -352,7 +377,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_sortlist_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_sortlist_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -371,7 +399,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_selected_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_select_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -390,7 +421,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_selected_for_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_selected_for_jobs, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -409,7 +443,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_placed_unplaced_student, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_placed_unplaced_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -428,7 +465,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_completed_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_completed_placement, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -447,7 +487,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_upload_resume, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_upload_resume, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -466,7 +509,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_self_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_self_placement, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -485,7 +531,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_approve_self_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_approve_self_placement, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -504,7 +553,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(strings_name.str_placement_drive, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                              children: [
+                                Text(strings_name.str_placement_drive, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
                             ),
                           ),
                         ),
@@ -545,7 +597,10 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text(strings_name.str_self_placement, textAlign: TextAlign.center, style: blackTextSemiBold16), Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          children: [
+                            Text(strings_name.str_self_placement, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                            Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                          ],
                         ),
                       ),
                     ),

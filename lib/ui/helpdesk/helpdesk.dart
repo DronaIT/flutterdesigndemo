@@ -1,7 +1,6 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +20,7 @@ import '../../customwidget/custom_edittext.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/help_desk_type_response.dart';
 import '../../utils/preference.dart';
+import '../../utils/push_notification_service.dart';
 import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
@@ -43,11 +43,10 @@ class _HelpDeskState extends State<HelpDesk> {
   late PlatformFile helpAttechmentData;
   var cloudinary;
   List<String> assigned_to = [];
+  List<String> assigned_to_token = [];
   List<String> authority_of = [];
   var hubName;
   var isLogin = 0;
-
-  List<XFile> files = [];
 
   @override
   void initState() {
@@ -104,7 +103,8 @@ class _HelpDeskState extends State<HelpDesk> {
                                 helpDeskTypeResponses = newValue;
                               });
                             },
-                            items: helpDeskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>((BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
+                            items: helpDeskTypeResponse?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>>(
+                                (BaseApiResponseWithSerializable<HelpDeskTypeResponse> value) {
                               return DropdownMenuItem<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
                                 value: value,
                                 child: Text(value.fields!.title.toString()),
@@ -141,7 +141,8 @@ class _HelpDeskState extends State<HelpDesk> {
                         leftValue: 10,
                       ),
                       GestureDetector(
-                        child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                        child: Container(
+                            margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
                         onTap: () {
                           picLOIFile();
                         },
@@ -194,6 +195,7 @@ class _HelpDeskState extends State<HelpDesk> {
     }
 
     assigned_to.clear();
+    assigned_to_token.clear();
     if (helpDeskTypeResponses!.fields!.concernPerson != null) {
       await getEmployeeData(2);
     }
@@ -204,16 +206,13 @@ class _HelpDeskState extends State<HelpDesk> {
     if (helpPath.isNotEmpty) {
       if (!kIsWeb) {
         CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(helpPath,
-              resourceType: CloudinaryResourceType.Auto,
-              folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
+          CloudinaryFile.fromFile(helpPath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_HELP_DESK),
         );
         helpPath = response.secureUrl;
       } else {
         try {
           CloudinaryResponse response = await cloudinary.uploadFile(
-            CloudinaryFile.fromByteData(
-                uint8ListToByteData(helpAttechmentData.bytes!),
+            CloudinaryFile.fromByteData(uint8ListToByteData(helpAttechmentData.bytes!),
                 resourceType: CloudinaryResourceType.Auto,
                 folder: TableNames.CLOUDARY_FOLDER_HELP_DESK,
                 identifier: helpAttechmentData.name.toString()),
@@ -252,6 +251,10 @@ class _HelpDeskState extends State<HelpDesk> {
         setState(() {
           isVisible = false;
         });
+        debugPrint(assigned_to_token.length.toString());
+        if (assigned_to_token.isNotEmpty) {
+          PushNotificationService.sendNotificationToMultipleDevices(assigned_to_token, "", strings_name.str_push_desc_new_ticket_assigned);
+        }
         Utils.showSnackBar(context, strings_name.str_create_ticket_message);
         await Future.delayed(const Duration(milliseconds: 2000));
         Get.back(result: true);
@@ -275,7 +278,7 @@ class _HelpDeskState extends State<HelpDesk> {
     });
     try {
       var resp = await helpRepository.getHelpdesk();
-      if (resp != null) {
+      if (resp.records != null) {
         setState(() {
           isVisible = false;
           helpDeskTypeResponse = resp.records;
@@ -340,7 +343,7 @@ class _HelpDeskState extends State<HelpDesk> {
         query += ")";
       }
     }
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await helpRepository.getEmployeeListApi(query, offset);
@@ -354,11 +357,15 @@ class _HelpDeskState extends State<HelpDesk> {
           getEmployeeData(type);
         } else {
           for (var j = 0; j < employeeData!.length; j++) {
-            if (employeeData![j].fields!.accessible_hub_ids?.contains(hubName[0]) == true) {
+            if (employeeData![j].fields!.accessible_hub_ids?.contains(hubName[0]) == true ||
+                employeeData![j].fields!.hubIds?.contains(hubName[0]) == true) {
               if (type == 1) {
                 authority_of.add(employeeData![j].id.toString());
               } else {
                 assigned_to.add(employeeData![j].id.toString());
+                if (employeeData![j].fields?.token?.isNotEmpty == true) {
+                  assigned_to_token.add(employeeData![j].fields!.token.toString());
+                }
               }
             }
           }

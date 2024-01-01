@@ -57,7 +57,6 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
     super.initState();
 
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -87,6 +86,27 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
             i--;
           }
         }
+      }
+    }
+
+    // getSpecializations();
+  }
+
+  getSpecializations() {
+    speResponseArray = [];
+    speResponseArray?.addAll(PreferenceUtils.getSpecializationList().records!);
+
+    for (int i = 0; i < (speResponseArray?.length ?? 0); i++) {
+      bool contains = false;
+      for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+        if (speResponseArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+          contains = true;
+          break;
+        }
+      }
+      if (!contains) {
+        speResponseArray?.removeAt(i);
+        i--;
       }
     }
   }
@@ -119,12 +139,27 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
                           style: blackText16,
                           focusColor: Colors.white,
                           onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                            setState(() {
-                              hubValue = newValue!.fields!.id!.toString();
-                              hubResponse = newValue;
-                            });
+                            hubValue = newValue!.fields!.id!.toString();
+                            hubResponse = newValue;
+
+                            getSpecializations();
+                            if (hubValue.trim().isNotEmpty) {
+                              for (int i = 0; i < speResponseArray!.length; i++) {
+                                if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                                  speResponseArray!.removeAt(i);
+                                  i--;
+                                }
+                              }
+                            }
+                            speValue = "";
+                            speResponse = null;
+                            if (speResponseArray?.isEmpty == true) {
+                              Utils.showSnackBar(context, strings_name.str_no_specialization_linked);
+                            }
+                            setState(() {});
                           },
-                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                              (BaseApiResponseWithSerializable<HubResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                               value: value,
                               child: Text(value.fields!.hubName!.toString()),
@@ -153,7 +188,8 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
                               speResponse = newValue;
                             });
                           },
-                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                              (BaseApiResponseWithSerializable<SpecializationResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                               value: value,
                               child: Text(value.fields!.specializationName.toString()),

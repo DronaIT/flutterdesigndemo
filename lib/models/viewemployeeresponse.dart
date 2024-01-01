@@ -8,9 +8,11 @@ class ViewEmployeeResponse {
   String? address;
   String? employeeName;
   String? password;
+  String? token;
   List<String>? hubIds;
   List<String>? roleIdFromRoleIds;
   List<String>? hubIdFromHubIds;
+  List<String>? roleTitleFromRoleIds;
   String? employeeCode;
   String? createdOn;
   String? updatedOn;
@@ -18,30 +20,39 @@ class ViewEmployeeResponse {
   String? spouse_mobile_number = "";
   String? pin_code = "";
   List<String>? accessible_hub_ids;
+  List<String>? accessible_hub_codes;
   String? is_working;
   bool selected = false;
+  String? actual_in_time = "";
+  String? actual_out_time = "";
 
-  ViewEmployeeResponse(
-      {this.gender,
-      this.employeeId,
-      this.city,
-      this.roleIds,
-      this.mobileNumber,
-      this.email,
-      this.employeeName,
-      this.password,
-      this.hubIds,
-      this.roleIdFromRoleIds,
-      this.hubIdFromHubIds,
-      this.employeeCode,
-      this.createdOn,
-      this.address,
-      this.updatedOn,
-      this.parents_mobile_number,
-      this.spouse_mobile_number,
-      this.pin_code,
-      this.accessible_hub_ids,
-      this.is_working});
+  ViewEmployeeResponse({
+    this.gender,
+    this.employeeId,
+    this.city,
+    this.roleIds,
+    this.mobileNumber,
+    this.email,
+    this.employeeName,
+    this.password,
+    this.token,
+    this.hubIds,
+    this.roleIdFromRoleIds,
+    this.hubIdFromHubIds,
+    this.roleTitleFromRoleIds,
+    this.employeeCode,
+    this.createdOn,
+    this.address,
+    this.updatedOn,
+    this.parents_mobile_number,
+    this.spouse_mobile_number,
+    this.pin_code,
+    this.accessible_hub_ids,
+    this.accessible_hub_codes,
+    this.is_working,
+    this.actual_in_time,
+    this.actual_out_time,
+  });
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -53,9 +64,11 @@ class ViewEmployeeResponse {
     mobileNumber = json['mobile_number'];
     employeeName = json['employee_name'];
     password = json['password'];
+    token = json['token'];
     hubIds = json['hub_ids']?.cast<String>();
     roleIdFromRoleIds = json['role_id (from role_ids)']?.cast<String>();
     hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
+    roleTitleFromRoleIds = json['role_title (from role_ids)']?.cast<String>();
     employeeCode = json['employee_code'];
     createdOn = json['created_on'];
     updatedOn = json['updated_on'];
@@ -63,7 +76,10 @@ class ViewEmployeeResponse {
     spouse_mobile_number = json['spouse_mobile_number'];
     pin_code = json['pin_code'];
     accessible_hub_ids = json['accessible_hub_ids']?.cast<String>();
+    accessible_hub_codes = json['accessible_hub_ids_code']?.cast<String>();
     is_working = json['is_working'];
+    actual_in_time = json['actual_in_time'];
+    actual_out_time = json['actual_out_time'];
   }
 
   Map<String, dynamic> toJson() {
@@ -77,9 +93,11 @@ class ViewEmployeeResponse {
     data['mobile_number'] = this.mobileNumber;
     data['employee_name'] = this.employeeName;
     data['password'] = this.password;
+    data['token'] = this.token;
     data['hub_ids'] = this.hubIds;
     data['role_id (from role_ids)'] = this.roleIdFromRoleIds;
     data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
+    data['role_title (from role_ids)'] = this.roleTitleFromRoleIds;
     data['employee_code'] = this.employeeCode;
     data['created_on'] = this.createdOn;
     data['updated_on'] = this.updatedOn;
@@ -87,7 +105,10 @@ class ViewEmployeeResponse {
     data['spouse_mobile_number'] = this.spouse_mobile_number;
     data['pin_code'] = this.pin_code;
     data['accessible_hub_ids'] = this.accessible_hub_ids;
+    data['accessible_hub_ids_code'] = this.accessible_hub_codes;
     data['is_working'] = this.is_working;
+    data['actual_in_time'] = this.actual_in_time;
+    data['actual_out_time'] = this.actual_out_time;
     return data;
   }
 }

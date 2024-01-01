@@ -48,9 +48,11 @@ class _ViewStudentListState extends State<ViewStudentList> {
 
   Future<void> fetchRecords() async {
     var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue',${TableNames.CLM_SPE_IDS}='$speValue',${TableNames.CLM_SEMESTER}='${semesterValue.toString()}')";
-    setState(() {
-      isVisible = true;
-    });
+    if(!isVisible) {
+      setState(() {
+        isVisible = true;
+      });
+    }
     try {
       var data = await apiRepository.loginApi(query, offset);
       if (data.records!.isNotEmpty) {

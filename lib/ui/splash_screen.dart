@@ -193,17 +193,17 @@ class StartState extends State<SplashScreen> {
       roleResponse = await apiRepository.getRolesApi();
       if (roleResponse.records!.isNotEmpty) {
         PreferenceUtils.setRoleList(roleResponse);
-        print("Role ${PreferenceUtils.getRoleList().records!.length}");
+        debugPrint("Role ${PreferenceUtils.getRoleList().records!.length}");
       }
       hubResponse = await apiRepository.getHubApi();
       if (hubResponse.records!.isNotEmpty) {
         PreferenceUtils.setHubList(hubResponse);
-        print("Hub ${PreferenceUtils.getHubList().records!.length}");
+        debugPrint("Hub ${PreferenceUtils.getHubList().records!.length}");
       }
       specializationResponse = await apiRepository.getSpecializationApi();
       if (specializationResponse.records!.isNotEmpty) {
         PreferenceUtils.setSpecializationList(specializationResponse);
-        print("Specialization ${PreferenceUtils.getSpecializationList().records!.length}");
+        debugPrint("Specialization ${PreferenceUtils.getSpecializationList().records!.length}");
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -221,12 +221,16 @@ class StartState extends State<SplashScreen> {
         for (int i = appVersionResponse.records!.length - 1; i >= 0; i--) {
           if (Platform.isAndroid && appVersionResponse.records![i].fields?.androidVersion?.isNotEmpty == true) {
             var androidVer = appVersionResponse.records![i].fields?.androidVersion;
+            String enablePushNotification = appVersionResponse.records![i].fields?.enablePushNotifications ?? "0";
+            PreferenceUtils.setEnablePush(enablePushNotification);
             if (int.parse(androidVer!) > int.parse(version)) {
               updateType = appVersionResponse.records![i].fields!.updateType!;
             }
             break;
           } else if (Platform.isIOS && appVersionResponse.records![i].fields?.iosVersion?.isNotEmpty == true) {
             var iosVer = appVersionResponse.records![i].fields?.iosVersion;
+            String enablePushNotification = appVersionResponse.records![i].fields?.enablePushNotifications ?? "0";
+            PreferenceUtils.setEnablePush(enablePushNotification);
             if (int.parse(iosVer!) > int.parse(version)) {
               updateType = appVersionResponse.records![i].fields!.updateType!;
             }

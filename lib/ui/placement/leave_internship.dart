@@ -78,100 +78,124 @@ class _LeaveInternShipState extends State<LeaveInternShip> {
         body: Stack(
           children: [
             jobOpportunityData.records != null && jobOpportunityData.records?.first.fields != null
-                ? Container(
-                    margin: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        custom_text(text: "${strings_name.str_company_name} : ${jobOpportunityData.records?.first.fields?.companyName?.first ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
-                        SizedBox(height: 5.h),
-                        custom_text(text: "${strings_name.str_designation} : ${jobOpportunityData.records?.first.fields?.jobTitle ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 3, bottomValue: 5, leftValue: 5),
-                        SizedBox(height: 5.h),
-                        custom_text(text: "${strings_name.str_joining_date} : ${jobOpportunityData.records?.first.fields?.joiningDate ?? ""}", textStyles: blackTextSemiBold15, topValue: 10, maxLines: 2, bottomValue: 5, leftValue: 5),
-                        SizedBox(height: 5.h),
-                        custom_edittext(
-                          type: TextInputType.multiline,
-                          textInputAction: TextInputAction.newline,
-                          controller: reasonForLeavingController,
-                          hintText: strings_name.str_reason_for_leaving,
-                          maxLines: 3,
-                          minLines: 3,
-                          maxLength: 50000,
-                          topValue: 0,
-                          margin: EdgeInsets.all(5.h),
-                        ),
-                        InkWell(
-                          child: IgnorePointer(
-                            child: custom_edittext(
-                              hintText: strings_name.str_notice_period_date,
-                              type: TextInputType.none,
-                              textInputAction: TextInputAction.next,
-                              controller: noticePeriodDateController,
-                              topValue: 0,
-                              margin: EdgeInsets.all(5.h),
-                            ),
+                ? SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          custom_text(
+                              text: "${strings_name.str_company_name} : ${jobOpportunityData.records?.first.fields?.companyName?.first ?? ""}",
+                              textStyles: blackTextSemiBold15,
+                              topValue: 10,
+                              maxLines: 2,
+                              bottomValue: 5,
+                              leftValue: 5),
+                          SizedBox(height: 5.h),
+                          custom_text(
+                              text: "${strings_name.str_designation} : ${jobOpportunityData.records?.first.fields?.jobTitle ?? ""}",
+                              textStyles: blackTextSemiBold15,
+                              topValue: 10,
+                              maxLines: 3,
+                              bottomValue: 5,
+                              leftValue: 5),
+                          SizedBox(height: 5.h),
+                          custom_text(
+                              text: "${strings_name.str_joining_date} : ${jobOpportunityData.records?.first.fields?.joiningDate ?? ""}",
+                              textStyles: blackTextSemiBold15,
+                              topValue: 10,
+                              maxLines: 2,
+                              bottomValue: 5,
+                              leftValue: 5),
+                          SizedBox(height: 5.h),
+                          custom_edittext(
+                            type: TextInputType.multiline,
+                            textInputAction: TextInputAction.newline,
+                            controller: reasonForLeavingController,
+                            hintText: strings_name.str_reason_for_leaving,
+                            maxLines: 3,
+                            minLines: 3,
+                            maxLength: 50000,
+                            topValue: 0,
+                            margin: EdgeInsets.all(5.h),
                           ),
-                          onTap: () {
-                            DateTime dateSelected = DateTime.now();
-                            if (noticePeriodDateController.text.isNotEmpty) {
-                              dateSelected = DateFormat("yyyy-MM-dd").parse(noticePeriodDateController.text);
-                            }
-                            showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100)).then((pickedDate) {
-                              if (pickedDate == null) {
-                                return;
+                          InkWell(
+                            child: IgnorePointer(
+                              child: custom_edittext(
+                                hintText: strings_name.str_notice_period_date,
+                                type: TextInputType.none,
+                                textInputAction: TextInputAction.next,
+                                controller: noticePeriodDateController,
+                                topValue: 0,
+                                margin: EdgeInsets.all(5.h),
+                              ),
+                            ),
+                            onTap: () {
+                              DateTime dateSelected = DateTime.now();
+                              if (noticePeriodDateController.text.isNotEmpty) {
+                                dateSelected = DateFormat("yyyy-MM-dd").parse(noticePeriodDateController.text);
                               }
-                              setState(() {
-                                var dateTime = pickedDate;
-                                var formatter = DateFormat('yyyy-MM-dd');
-                                var time = DateTime(dateTime.year, dateTime.month, dateTime.day);
-                                noticePeriodDateController.text = formatter.format(time);
+                              showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100))
+                                  .then((pickedDate) {
+                                if (pickedDate == null) {
+                                  return;
+                                }
+                                setState(() {
+                                  var dateTime = pickedDate;
+                                  var formatter = DateFormat('yyyy-MM-dd');
+                                  var time = DateTime(dateTime.year, dateTime.month, dateTime.day);
+                                  noticePeriodDateController.text = formatter.format(time);
+                                });
                               });
-                            });
-                          },
-                        ),
-                        SizedBox(height: 5.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            custom_text(
-                              text: strings_name.str_resignation_letter,
-                              alignment: Alignment.topLeft,
-                              textStyles: blackTextSemiBold16,
-                              leftValue: 10,
-                            ),
-                            GestureDetector(
-                              child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
-                              onTap: () {
-                                picResignationLetter();
-                              },
-                            ),
-                          ],
-                        ),
-                        Visibility(
-                          visible: resignationFilePath.isNotEmpty,
-                          child: Column(
+                            },
+                          ),
+                          SizedBox(height: 5.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(height: 5.h),
-                              custom_text(text: resignationFileTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                              custom_text(
+                                text: strings_name.str_resignation_letter,
+                                alignment: Alignment.topLeft,
+                                textStyles: blackTextSemiBold16,
+                                leftValue: 10,
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                                onTap: () {
+                                  picResignationLetter();
+                                },
+                              ),
                             ],
                           ),
-                        ),
-                        SizedBox(height: 20.h),
-                        CustomButton(
-                            text: strings_name.str_apply_for_leave,
-                            click: () {
-                              if (reasonForLeavingController.text.trim().isEmpty) {
-                                Utils.showSnackBar(context, strings_name.str_empty_reason_for_leaving);
-                              } else if (noticePeriodDateController.text.trim().isEmpty) {
-                                Utils.showSnackBar(context, strings_name.str_empty_notice_period_date);
-                              } else if (resignationFilePath.isEmpty) {
-                                Utils.showSnackBar(context, strings_name.str_empty_resignation_letter);
-                              } else {
-                                sendResignation();
-                              }
-                            })
+                          Visibility(
+                            visible: resignationFilePath.isNotEmpty,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 5.h),
+                                custom_text(
+                                    text: resignationFileTitle, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          CustomButton(
+                              text: strings_name.str_apply_for_leave,
+                              click: () {
+                                if (reasonForLeavingController.text.trim().isEmpty) {
+                                  Utils.showSnackBar(context, strings_name.str_empty_reason_for_leaving);
+                                } else if (noticePeriodDateController.text.trim().isEmpty) {
+                                  Utils.showSnackBar(context, strings_name.str_empty_notice_period_date);
+                                } else if (resignationFilePath.isEmpty) {
+                                  Utils.showSnackBar(context, strings_name.str_empty_resignation_letter);
+                                } else {
+                                  sendResignation();
+                                }
+                              })
 
-                        //Text
-                      ],
+                          //Text
+                        ],
+                      ),
                     ),
                   )
                 : Container(),
@@ -193,7 +217,8 @@ class _LeaveInternShipState extends State<LeaveInternShip> {
     AddPlacementAttendanceData request = AddPlacementAttendanceData();
     if (resignationFilePath.isNotEmpty) {
       CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(resignationFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE),
+        CloudinaryFile.fromFile(resignationFilePath,
+            resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_PLACEMENT_ATTENDANCE),
       );
       resignationPath = response.secureUrl;
     }

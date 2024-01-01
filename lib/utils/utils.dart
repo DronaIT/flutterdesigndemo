@@ -10,6 +10,7 @@ import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 extension E on String {
   String lastChars(int n) => substring(length - n);
@@ -149,6 +150,7 @@ class Utils {
   static Future<String?> getId() async {
     String? deviceId;
     FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission();
     if (kIsWeb || Platform.isAndroid) {
       try {
         deviceId = await messaging.getToken();
@@ -269,39 +271,22 @@ class Utils {
     }
     return specializationId;
   }
-}
 
-class DateFormate {
-  // static String toFormate(int timeStamp,
-  //     {String formate = "dd MMMM yyyy hh:mm a"}) {
-  //   final f = new DateFormat(formate);
-  //   return f.format(new DateTime.fromMillisecondsSinceEpoch(timeStamp ?? 0));
-  // }
+  static String? getSpecializationNameFromId(String? specializationId) {
+    final specializationList = PreferenceUtils.getSpecializationList();
+    for (int i = 0; i < specializationList.records!.length; i++) {
+      if (specializationList.records![i].fields?.specializationId == specializationId) {
+        return specializationList.records![i].fields?.specializationName!.toString();
+      }
+    }
+    return specializationId;
+  }
 
-  // static String toFormate1(int timeStamp,
-  //     {String formate = "dd  / MM  / yyyy  hh:mm a"}) {
-  //   final f = new DateFormat(formate);
-  //   return f.format(new DateTime.fromMillisecondsSinceEpoch(timeStamp ?? 0));
-  // }
-
-  // static String toFormate2(int timeStamp,
-  //     {String formate = "dd  / MM  / yyyy  hh:mm a"}) {
-  //   final f = new DateFormat(formate);
-  //   return f.format(new DateTime.fromMillisecondsSinceEpoch(timeStamp ?? 0));
-  // }
-
-  // DateTime convertTimeStampToDateTime(int timeStamp) {
-  //   var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-  //   return dateToTimeStamp;
-  // }
-
-  // String convertTimeStampToHumanDate(int timeStamp) {
-  //   var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-  //   return DateFormat('dd MMMM yyyy hh:mm a').format(dateToTimeStamp);
-  // }
-
-  // String convertTimeStampToHumanHour(int timeStamp) {
-  //   var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-  //   return DateFormat('HH:mm').format(dateToTimeStamp);
-  // }
+  static void launchCaller(String mobile) async {
+    try {
+      await launchUrl(Uri.parse("tel:$mobile"), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
+    }
+  }
 }

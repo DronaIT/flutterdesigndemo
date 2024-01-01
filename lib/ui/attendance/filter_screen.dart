@@ -105,7 +105,6 @@ class _FilterState extends State<Filter> {
     }
 
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -137,6 +136,11 @@ class _FilterState extends State<Filter> {
         }
       }
     }
+  }
+
+  getSpecializations() {
+    speResponseArray = [];
+    speResponseArray?.addAll(PreferenceUtils.getSpecializationList().records!);
   }
 
   @override
@@ -191,12 +195,33 @@ class _FilterState extends State<Filter> {
                           style: blackText16,
                           focusColor: Colors.white,
                           onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                            setState(() {
-                              hubValue = newValue!.fields!.id!.toString();
-                              hubResponse = newValue;
-                            });
+                            hubValue = newValue!.fields!.id!.toString();
+                            hubResponse = newValue;
+
+                            getSpecializations();
+                            if (hubValue.trim().isNotEmpty) {
+                              for (int i = 0; i < speResponseArray!.length; i++) {
+                                if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                                  speResponseArray!.removeAt(i);
+                                  i--;
+                                }
+                              }
+                            }
+                            speValue = "";
+                            speResponse = null;
+                            if (speResponseArray?.isEmpty == true) {
+                              Utils.showSnackBar(context, strings_name.str_no_specialization_linked);
+                            }
+
+                            subjectResponseArray = [];
+                            subjectRecordId = "";
+                            subjectRecordId = "";
+                            subjectResponse = null;
+
+                            setState(() {});
                           },
-                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
+                              (BaseApiResponseWithSerializable<HubResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                               value: value,
                               child: Text(value.fields!.hubName!.toString()),
@@ -226,7 +251,8 @@ class _FilterState extends State<Filter> {
                               getSubjects();
                             });
                           },
-                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                              (BaseApiResponseWithSerializable<SpecializationResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                               value: value,
                               child: Text(value.fields!.specializationName.toString()),
@@ -329,7 +355,8 @@ class _FilterState extends State<Filter> {
                                               // getUnits();
                                             });
                                           },
-                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>(
+                                              (BaseApiResponseWithSerializable<SubjectResponse> value) {
                                             return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                                               value: value,
                                               child: Text(
@@ -396,7 +423,7 @@ class _FilterState extends State<Filter> {
   }
 
   Future<void> getSubjects() async {
-    if (semesterValue != -1 && divisionValue.isNotEmpty) {
+    if (semesterValue != -1 && divisionValue.isNotEmpty && speValue.isNotEmpty) {
       setState(() {
         isVisible = true;
       });
@@ -404,12 +431,15 @@ class _FilterState extends State<Filter> {
       unitValue = "";
       topicValue = "";
 
-      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(speValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      var query =
+          "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(speValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       try {
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {
           subjectResponse = null;
           subjectResponseArray = data.records;
+
+          subjectResponseArray?.sort((a, b) => a.fields!.subjectTitle!.trim().toLowerCase().compareTo(b.fields!.subjectTitle!.trim().toLowerCase()));
 
           unitResponse = null;
           topicResponse = null;

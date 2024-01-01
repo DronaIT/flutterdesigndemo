@@ -88,7 +88,7 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_selected_student),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_select_student),
       body: Stack(
         children: [
           SingleChildScrollView(

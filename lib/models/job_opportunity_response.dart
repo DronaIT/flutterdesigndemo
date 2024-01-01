@@ -14,6 +14,7 @@ class JobOpportunityResponse {
   int? minimumAge;
   String? timingStart;
   List<String>? hubIds;
+  List<String>? hubIdFromHubIds;
   String? status;
   int? jobId;
   String? stipendType;
@@ -25,8 +26,8 @@ class JobOpportunityResponse {
   List<dynamic>? city;
   String? jobCode;
   List<String>? contactNameFromCompanyId;
-
   String? joiningDate;
+
   List<String>? selectedStudents;
   List<String>? attendance_data;
   int? stipendRangeMin;
@@ -43,86 +44,89 @@ class JobOpportunityResponse {
   List<String>? appliedStudents;
   String? coordinatorName;
   String? coordinatorMobileNumber;
-
   List<String>? applied_students_email;
+
   List<String>? applied_students_enrollment_number;
   List<String>? applied_students_name;
   List<String>? applied_students_number;
   List<String>? applied_students_specialization;
   List<String>? applied_students_semester;
   List<AppliedResume>? applied_students_resume;
-
   List<String>? shortlisted_students_email;
+
   List<String>? shortlisted_students_enrollment_number;
   List<String>? shortlisted_students_name;
-
   List<String>? selected_students_email;
+
   List<String>? selected_students_enrollment_number;
   List<String>? selected_students_name;
-
   List<String>? rejected_students;
+
   List<DocumentResponse>? company_loi;
   List<DocumentResponse>? bond_structure;
   List<DocumentResponse>? incentive_structure;
+  int? is_self_place;
 
   JobOpportunityResponse({
-      this.jobDescription,
-      this.internshipDuration,
-      this.companyId,
-      this.specificRequirements,
-      this.vacancies,
-      this.internshipModes,
-      this.timingEnd,
-      this.gender,
-      this.semester,
-      this.jobTitle,
-      this.minimumAge,
-      this.timingStart,
-      this.hubIds,
-      this.status,
-      this.jobId,
-      this.stipendType,
-      this.specializationIds,
-      this.companyCode,
-      this.companyName,
-      this.reportingAddress,
-      this.reportingBranch,
-      this.city,
-      this.jobCode,
-      this.contactNameFromCompanyId,
-      this.joiningDate,
-      this.selectedStudents,
-      this.attendance_data,
-      this.stipendRangeMin,
-      this.interviewPlaceAddress,
-      this.interviewCoordinator,
-      this.shortlistedStudents,
-      this.interviewPlaceUrl,
-      this.stipendRangeMax,
-      this.placedStudents,
-      this.interviewDatetime,
-      this.jobApplyEndTime,
-      this.jobApplyStartTime,
-      this.interviewInstruction,
-      this.appliedStudents,
-      this.coordinatorName,
-      this.coordinatorMobileNumber,
-      this.applied_students_email,
-      this.applied_students_enrollment_number,
-      this.applied_students_name,
-      this.applied_students_number,
-      this.applied_students_specialization,
-      this.applied_students_semester,
-      this.shortlisted_students_email,
-      this.shortlisted_students_enrollment_number,
-      this.shortlisted_students_name,
-      this.selected_students_email,
-      this.selected_students_enrollment_number,
-      this.selected_students_name,
-      this.rejected_students,
-      this.company_loi,
-      this.bond_structure,
-      this.incentive_structure,
+    this.jobDescription,
+    this.internshipDuration,
+    this.companyId,
+    this.specificRequirements,
+    this.vacancies,
+    this.internshipModes,
+    this.timingEnd,
+    this.gender,
+    this.semester,
+    this.jobTitle,
+    this.minimumAge,
+    this.timingStart,
+    this.hubIds,
+    this.hubIdFromHubIds,
+    this.status,
+    this.jobId,
+    this.stipendType,
+    this.specializationIds,
+    this.companyCode,
+    this.companyName,
+    this.reportingAddress,
+    this.reportingBranch,
+    this.city,
+    this.jobCode,
+    this.contactNameFromCompanyId,
+    this.joiningDate,
+    this.selectedStudents,
+    this.attendance_data,
+    this.stipendRangeMin,
+    this.interviewPlaceAddress,
+    this.interviewCoordinator,
+    this.shortlistedStudents,
+    this.interviewPlaceUrl,
+    this.stipendRangeMax,
+    this.placedStudents,
+    this.interviewDatetime,
+    this.jobApplyEndTime,
+    this.jobApplyStartTime,
+    this.interviewInstruction,
+    this.appliedStudents,
+    this.coordinatorName,
+    this.coordinatorMobileNumber,
+    this.applied_students_email,
+    this.applied_students_enrollment_number,
+    this.applied_students_name,
+    this.applied_students_number,
+    this.applied_students_specialization,
+    this.applied_students_semester,
+    this.shortlisted_students_email,
+    this.shortlisted_students_enrollment_number,
+    this.shortlisted_students_name,
+    this.selected_students_email,
+    this.selected_students_enrollment_number,
+    this.selected_students_name,
+    this.rejected_students,
+    this.company_loi,
+    this.bond_structure,
+    this.incentive_structure,
+    this.is_self_place,
   });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
@@ -139,6 +143,7 @@ class JobOpportunityResponse {
     minimumAge = json['minimum_age'];
     timingStart = json['timing_start'];
     hubIds = json['hub_ids']?.cast<String>();
+    hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
     status = json['status'];
     jobId = json['job_id'];
     stipendType = json['stipend_type'];
@@ -146,7 +151,7 @@ class JobOpportunityResponse {
     companyCode = json['company_code']?.cast<String>();
     companyName = json['company_name']?.cast<String>();
     reportingAddress = json['reporting_address']?.cast<dynamic>() ?? " ";
-    reportingBranch = json['reporting_branch']?.cast<String>() ;
+    reportingBranch = json['reporting_branch']?.cast<String>();
     city = json['city']?.cast<dynamic>() ?? " ";
     jobCode = json['job_code'];
     contactNameFromCompanyId = json['contact_name (from company_id)']?.cast<String>();
@@ -183,6 +188,7 @@ class JobOpportunityResponse {
     selected_students_name = json['selected_students_name']?.cast<String>();
 
     rejected_students = json['rejected_students']?.cast<String>();
+    is_self_place = json['is_self_place'];
 
     if (json['company_loi'] != null) {
       company_loi = <DocumentResponse>[];
@@ -190,14 +196,14 @@ class JobOpportunityResponse {
         company_loi!.add(new DocumentResponse.fromJson(v));
       });
     }
-  if (json['bond_structure'] != null) {
+    if (json['bond_structure'] != null) {
       bond_structure = <DocumentResponse>[];
       json['bond_structure'].forEach((v) {
         bond_structure!.add(new DocumentResponse.fromJson(v));
       });
     }
-  if (json['incentive_structure'] != null) {
-    incentive_structure = <DocumentResponse>[];
+    if (json['incentive_structure'] != null) {
+      incentive_structure = <DocumentResponse>[];
       json['incentive_structure'].forEach((v) {
         incentive_structure!.add(new DocumentResponse.fromJson(v));
       });
@@ -226,6 +232,7 @@ class JobOpportunityResponse {
     data['minimum_age'] = this.minimumAge;
     data['timing_start'] = this.timingStart;
     data['hub_ids'] = this.hubIds;
+    data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
     data['status'] = this.status;
     data['job_id'] = this.jobId;
     data['stipend_type'] = this.stipendType;
@@ -269,6 +276,7 @@ class JobOpportunityResponse {
     data['selected_students_enrollment_number'] = this.selected_students_enrollment_number;
     data['selected_students_name'] = this.selected_students_name;
     data['rejected_students'] = this.rejected_students;
+    data['is_self_place'] = this.is_self_place;
 
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();
@@ -291,11 +299,11 @@ class AppliedResume {
   String? url;
   String? filename;
 
-  AppliedResume(
-      {this.id,
-        this.url,
-        this.filename,
-      });
+  AppliedResume({
+    this.id,
+    this.url,
+    this.filename,
+  });
 
   AppliedResume.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -101,7 +101,6 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
     }
 
     hubResponseArray = PreferenceUtils.getHubList().records;
-    speResponseArray = PreferenceUtils.getSpecializationList().records;
 
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -134,6 +133,12 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
       }
     }
   }
+
+  getSpecializations() {
+    speResponseArray = [];
+    speResponseArray?.addAll(PreferenceUtils.getSpecializationList().records!);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -187,10 +192,24 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
                           style: blackText16,
                           focusColor: Colors.white,
                           onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                            setState(() {
                               hubValue = newValue!.fields!.id!.toString();
                               hubResponse = newValue;
-                            });
+
+                              getSpecializations();
+                              if (hubValue.trim().isNotEmpty) {
+                                for (int i = 0; i < speResponseArray!.length; i++) {
+                                  if (speResponseArray![i].fields?.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) != true) {
+                                    speResponseArray!.removeAt(i);
+                                    i--;
+                                  }
+                                }
+                              }
+                              speValue = "";
+                              speResponse = null;
+                              if (speResponseArray?.isEmpty == true) {
+                                Utils.showSnackBar(context, strings_name.str_no_specialization_linked);
+                              }
+                              setState(() {});
                           },
                           items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
