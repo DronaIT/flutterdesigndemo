@@ -311,6 +311,7 @@ class strings_name {
   static const String str_published_internship = "Published internship";
 
   static const String str_sortlist_student = "Shortlist student";
+  static const String str_appear_for_interview_student = "Appear for Interview";
 
   static const String str_contact_person_designation = "Contact person's designation";
   static const String str_approved_internship = "Approve internship";
@@ -696,6 +697,9 @@ class strings_name {
   static const String str_apply_for_self_placement = "Apply for self placement";
   static const String str_approve_self_placement = "Approve self placement";
   static const String str_placement_drive = "Placement Drive";
+  static const String str_issue_warning_letter_1 = "Issue Warning Letter 1";
+  static const String str_issue_warning_letter_2 = "Issue Warning Letter 2";
+  static const String str_issue_warning_letter_3 = "Issue Warning Letter 3";
 
   static const String str_internship_detail = "Internship details";
   static const String str_applied_student = "Applied students";
@@ -768,6 +772,7 @@ class strings_name {
   static const String str_number_of_vacancies_confirmed = "Number of new vacancies confirmed";
   static const String str_number_of_new_students_placed = "Number of new placed students";
   static const String str_number_of_new_self_placed_students = "Number of new self placed students";
+  static const String str_total_students = "Total number of students";
   static const String str_total_students_placed = "Total number of students placed";
   static const String str_total_companies = "Total number of companies registered";
   static const String str_overall_student_placement = "Overall Student Placement";
@@ -823,4 +828,24 @@ class strings_name {
   static const String str_job_details = "Job Details";
   static const String str_rejection_remarks = "Rejection Remarks:";
   static const String str_self_place_job_updated = "Self placed job approved successfully";
+
+  static const String str_no_student_shortlisted_for_interview = "No students shortlisted for interview";
+  static const String str_no_student_appeared_for_interview = "No students appeared for interview";
+
+  static const String str_no_jobs_published = "No jobs published during this interval";
+  static const String str_no_students_found = "No students found";
+
+  static const String str_number_of_jobs_came = "Total number of jobs where can apply";
+  static const String str_number_of_missed_to_apply = "Number of jobs missed to apply";
+  static const String str_number_of_missed_to_appear = "Number of times missed to appear for interview";
+  static const String str_no_students_selected = "No students selected";
+  static const String str_warning_letter_sent = "Warning letter sent to selected students";
+
+  static const String str_warning_letter_type = "Warning Letter type";
+  static const String str_warning_letter_for_apply = "For Not Applying";
+  static const String str_warning_letter_for_appear = "For Not Appearing";
+
+  static const String str_warning_letter_1_issued = "Warning Letter 1 issued";
+  static const String str_warning_letter_2_issued = "Warning Letter 2 issued";
+  static const String str_warning_letter_3_issued = "Blacklisted from Placement";
 }

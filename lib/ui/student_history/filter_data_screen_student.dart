@@ -62,14 +62,10 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
       body: Stack(children: [
         Column(
           children: [
-            SizedBox(height: 5.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                custom_text(text: "Total Students: ${test.length}", textStyles: primaryTextSemiBold16),
-              ],
+            custom_text(
+              text: "Total Students: ${test.length}",
+              textStyles: primaryTextSemiBold16,
             ),
-            SizedBox(height: 10.h),
             CustomEditTextSearch(
               type: TextInputType.text,
               textInputAction: TextInputAction.done,
@@ -93,7 +89,7 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
             studentList.isNotEmpty
                 ? Expanded(
                     child: Container(
-                      margin: const EdgeInsets.all(10),
+                      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                       child: ListView.builder(
                           itemCount: studentList.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -104,16 +100,33 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
                               child: Card(
                                 elevation: 5,
                                 child: Container(
-                                  color: colors_name.colorWhite,
-                                  padding: const EdgeInsets.all(10),
+                                  padding: EdgeInsets.symmetric(vertical: 3.h),
+                                  decoration: BoxDecoration(color: colors_name.colorWhite, borderRadius: BorderRadius.circular(10.r)),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      custom_text(text: "${studentList[index].fields?.name}", textStyles: primaryTextSemiBold16),
-                                      custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
-                                      custom_text(topValue: 0, bottomValue: 5, maxLines: 2, text: "Specialization: ${Utils.getSpecializationName(studentList[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
-                                      custom_text(topValue: 0, bottomValue: 5, text: "Mobile No: ${studentList[index].fields?.mobileNumber}", textStyles: blackTextSemiBold14),
-                                      custom_text(topValue: 0, bottomValue: 5, text: "Semester: ${studentList[index].fields?.semester}", textStyles: blackTextSemiBold14),
+                                      custom_text(text: "${studentList[index].fields?.name}", textStyles: linkTextSemiBold16),
+                                      custom_text(
+                                          topValue: 0,
+                                          bottomValue: 5,
+                                          text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}",
+                                          textStyles: blackTextSemiBold14),
+                                      custom_text(
+                                          topValue: 0,
+                                          bottomValue: 5,
+                                          maxLines: 2,
+                                          text: "Specialization: ${Utils.getSpecializationName(studentList[index].fields?.specializationIds![0])}",
+                                          textStyles: blackTextSemiBold14),
+                                      custom_text(
+                                          topValue: 0,
+                                          bottomValue: 5,
+                                          text: "Mobile No: ${studentList[index].fields?.mobileNumber}",
+                                          textStyles: blackTextSemiBold14),
+                                      custom_text(
+                                          topValue: 0,
+                                          bottomValue: 5,
+                                          text: "Semester: ${studentList[index].fields?.semester}",
+                                          textStyles: blackTextSemiBold14),
                                     ],
                                   ),
                                 ),
@@ -122,7 +135,9 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
                           }),
                     ),
                   )
-                : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                : Container(
+                    margin: EdgeInsets.only(top: 100.h),
+                    child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             CustomButton(
               fontSize: 15,
               text: strings_name.str_export_student_data,
@@ -136,8 +151,16 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
             ),
           ],
         ),
-        Center(
-          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+        Visibility(
+          visible: isVisible,
+          child: Container(
+            color: colors_name.colorWhite,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+            ),
+          ),
         )
       ]),
     ));
@@ -150,7 +173,20 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
     sheet.appendRow([Utils.getHubName(studentList[0].fields?.hubIdFromHubIds?.first)]);
-    sheet.appendRow(['Name', 'Enrollment Number', 'Mobile Number', 'Email', 'Specialization', 'Semester', 'Division', 'Placement Status', 'Company Name', 'Job Title', 'Total Attendance', 'Attendance Percentage']);
+    sheet.appendRow([
+      'Name',
+      'Enrollment Number',
+      'Mobile Number',
+      'Email',
+      'Specialization',
+      'Semester',
+      'Division',
+      'Placement Status',
+      'Company Name',
+      'Job Title',
+      'Total Attendance',
+      'Attendance Percentage'
+    ]);
 
     studentList.forEach((row) {
       String placementStatus = "Not Placed", companyName = "", jobTitle = "";
@@ -179,11 +215,25 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
         }
       }
       totalPresentPercentage = ((total_present * 100) / total_lecture).toStringAsFixed(2);
-      sheet.appendRow([row.fields?.name, row.fields?.enrollmentNumber, row.fields?.mobileNumber, row.fields?.email, Utils.getSpecializationName(row.fields?.specializationIds?.first), row.fields?.semester, row.fields?.division, placementStatus, companyName, jobTitle, "$total_present/$total_lecture", "$totalPresentPercentage%"]);
+      sheet.appendRow([
+        row.fields?.name,
+        row.fields?.enrollmentNumber,
+        row.fields?.mobileNumber,
+        row.fields?.email,
+        Utils.getSpecializationName(row.fields?.specializationIds?.first),
+        row.fields?.semester,
+        row.fields?.division,
+        placementStatus,
+        companyName,
+        jobTitle,
+        "$total_present/$total_lecture",
+        "$totalPresentPercentage%"
+      ]);
     });
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
-    var file = File("${appDocumentsDirectory.path}/${Utils.getHubName(studentList[0].fields?.hubIdFromHubIds?.first)?.replaceAll(" ", "").replaceAll("/", "")}_StudentsData.xlsx");
+    var file = File(
+        "${appDocumentsDirectory.path}/${Utils.getHubName(studentList[0].fields?.hubIdFromHubIds?.first)?.replaceAll(" ", "").replaceAll("/", "")}_StudentsData.xlsx");
     await file.writeAsBytes(excel.encode()!);
     try {
       await OpenFilex.open(file.path);

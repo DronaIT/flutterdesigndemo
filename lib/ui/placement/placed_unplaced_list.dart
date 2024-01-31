@@ -18,14 +18,14 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../values/text_styles.dart';
 
-class Placed_unplaced_SList extends StatefulWidget {
-  const Placed_unplaced_SList({super.key});
+class PlacedUnplacedList extends StatefulWidget {
+  const PlacedUnplacedList({super.key});
 
   @override
-  State<Placed_unplaced_SList> createState() => _Placed_unplaced_SListState();
+  State<PlacedUnplacedList> createState() => _PlacedUnplacedListState();
 }
 
-class _Placed_unplaced_SListState extends State<Placed_unplaced_SList> {
+class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
   List<LoginFieldsResponse> studentList = [];
   bool isVisible = false;
   String title = "";

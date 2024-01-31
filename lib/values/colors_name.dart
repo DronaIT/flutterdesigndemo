@@ -14,6 +14,7 @@ abstract class colors_name {
   static const Color appBarIconColor = Color(0xFFFFFFFF);
   static const Color appBarTextColor = Color(0xFFFFFFFF);
   static const Color colorWhite = Color(0xFFFFFFFF);
+  static const Color colorOffWhite = Color(0xFFDDDDDD);
   static const Color colorBlack = Color(0xFF000000);
   static const Color colorPrimary = Color(0xFF800000);
 

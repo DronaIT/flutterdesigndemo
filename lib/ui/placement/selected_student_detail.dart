@@ -56,13 +56,13 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
     try {
       jobpportunityData = await apiRepository.getJobOppoApi(query);
       for (var i = 0; i < jobpportunityData.records!.length; i++) {
-        if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.shortlistedStudents != null) {
-          for (var j = 0; j < jobpportunityData.records![i].fields!.shortlistedStudents!.length; j++) {
+        if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.appearedForInterview != null) {
+          for (var j = 0; j < jobpportunityData.records![i].fields!.appearedForInterview!.length; j++) {
             var jobModuleResponse = JobModuleResponse(
-                applied_students_email: jobpportunityData.records![i].fields!.shortlisted_students_email![j],
-                applied_students_enrollment_number: jobpportunityData.records![i].fields!.shortlisted_students_enrollment_number![j],
-                applied_students_name: jobpportunityData.records![i].fields!.shortlisted_students_name![j],
-                applied_students: jobpportunityData.records![i].fields!.shortlistedStudents![j]);
+                applied_students_email: jobpportunityData.records![i].fields!.appeared_for_interview_email![j],
+                applied_students_enrollment_number: jobpportunityData.records![i].fields!.appeared_for_interview_enrollment_number![j],
+                applied_students_name: jobpportunityData.records![i].fields!.appeared_for_interview_name![j],
+                applied_students: jobpportunityData.records![i].fields!.appearedForInterview![j]);
             studentResponse.add(jobModuleResponse);
           }
         }
@@ -148,7 +148,7 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
                     ),
                   ],
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_student_appeared_for_interview, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

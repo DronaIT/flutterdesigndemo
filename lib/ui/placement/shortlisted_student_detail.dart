@@ -37,7 +37,7 @@ class ShortListedStudentDetail extends StatefulWidget {
 class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
-  BaseLoginResponse<JobOpportunityResponse> jobpportunityData = BaseLoginResponse();
+  BaseLoginResponse<JobOpportunityResponse> jobOpportunityData = BaseLoginResponse();
   String company_name = "";
   String jobId = "";
   TextEditingController startTimeController = TextEditingController();
@@ -66,27 +66,27 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     });
     var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
     try {
-      jobpportunityData = await apiRepository.getJobOppoApi(query);
-      for (var i = 0; i < jobpportunityData.records!.length; i++) {
-        if (jobpportunityData.records![i].fields != null && jobpportunityData.records![i].fields!.appliedStudents != null) {
-          for (var j = 0; j < jobpportunityData.records![i].fields!.appliedStudents!.length; j++) {
+      jobOpportunityData = await apiRepository.getJobOppoApi(query);
+      for (var i = 0; i < jobOpportunityData.records!.length; i++) {
+        if (jobOpportunityData.records![i].fields != null && jobOpportunityData.records![i].fields!.appliedStudents != null) {
+          for (var j = 0; j < jobOpportunityData.records![i].fields!.appliedStudents!.length; j++) {
             var jobModuleResponse = JobModuleResponse(
-                applied_students_email: jobpportunityData.records![i].fields!.applied_students_email?[j],
-                applied_students_enrollment_number: jobpportunityData.records![i].fields!.applied_students_enrollment_number![j],
-                applied_students_name: jobpportunityData.records![i].fields!.applied_students_name![j],
-                applied_students: jobpportunityData.records![i].fields!.appliedStudents![j],
-                applied_students_number: jobpportunityData.records![i].fields!.applied_students_number![j],
-                applied_students_resume: jobpportunityData.records![i].fields!.applied_students_resume![j].url,
-                applied_students_specialization: jobpportunityData.records![i].fields!.applied_students_specialization![j],
-                applied_students_semester: jobpportunityData.records![i].fields!.applied_students_semester![j]);
+                applied_students_email: jobOpportunityData.records![i].fields!.applied_students_email?[j],
+                applied_students_enrollment_number: jobOpportunityData.records![i].fields!.applied_students_enrollment_number![j],
+                applied_students_name: jobOpportunityData.records![i].fields!.applied_students_name![j],
+                applied_students: jobOpportunityData.records![i].fields!.appliedStudents![j],
+                applied_students_number: jobOpportunityData.records![i].fields!.applied_students_number![j],
+                applied_students_resume: jobOpportunityData.records![i].fields!.applied_students_resume![j].url,
+                applied_students_specialization: jobOpportunityData.records![i].fields!.applied_students_specialization![j],
+                applied_students_semester: jobOpportunityData.records![i].fields!.applied_students_semester![j]);
             studentResponse.add(jobModuleResponse);
           }
         }
       }
-      if (jobpportunityData.records!.first.fields!.shortlistedStudents != null) {
+      if (jobOpportunityData.records!.first.fields!.shortlistedStudents != null) {
         for (var j = 0; j < studentResponse.length; j++) {
-          for (var k = 0; k < jobpportunityData.records!.first.fields!.shortlistedStudents!.length; k++) {
-            if (studentResponse[j].applied_students == jobpportunityData.records!.first.fields!.shortlistedStudents![k]) {
+          for (var k = 0; k < jobOpportunityData.records!.first.fields!.shortlistedStudents!.length; k++) {
+            if (studentResponse[j].applied_students == jobOpportunityData.records!.first.fields!.shortlistedStudents![k]) {
               studentResponse[j].selected = true;
               break;
             }
@@ -142,7 +142,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                                               GestureDetector(
                                                 child: custom_text(
                                                   text: "${studentResponse[index].applied_students_name}",
-                                                  textStyles: centerTextStyle14,
+                                                  textStyles: linkTextSemiBold14,
                                                   topValue: 0,
                                                   maxLines: 2,
                                                   bottomValue: 5,
@@ -284,7 +284,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
         isVisible = true;
       });
       try {
-        var resp = await apiRepository.updateJobSortListedApi(json, jobpportunityData.records!.first.id!);
+        var resp = await apiRepository.updateJobSortListedApi(json, jobOpportunityData.records!.first.id!);
         if (resp.id!.isNotEmpty) {
           setState(() {
             isVisible = false;
@@ -319,13 +319,13 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
           children: <Widget>[
             custom_text(text: strings_name.str_schadule_interview, textStyles: boldTitlePrimaryColorStyle),
             custom_text(
-              text: 'Company Name : ${jobpportunityData.records?.first.fields?.companyName?.first.toString()}',
+              text: 'Company Name : ${jobOpportunityData.records?.first.fields?.companyName?.first.toString()}',
               textStyles: blackTextSemiBold14,
               bottomValue: 0,
               topValue: 0,
             ),
             custom_text(
-              text: '${strings_name.str_job_title_} ${jobpportunityData.records?.first.fields?.jobTitle}',
+              text: '${strings_name.str_job_title_} ${jobOpportunityData.records?.first.fields?.jobTitle}',
               textStyles: blackTextSemiBold14,
               bottomValue: 0,
               topValue: 3,
@@ -467,7 +467,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
       isVisible = true;
     });
     try {
-      var resp = await apiRepository.updateJobOpportunityApi(json, jobpportunityData.records!.first.id!);
+      var resp = await apiRepository.updateJobOpportunityApi(json, jobOpportunityData.records!.first.id!);
       if (resp.id!.isNotEmpty) {
         setState(() {
           isVisible = false;

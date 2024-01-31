@@ -84,12 +84,12 @@ class PushNotificationServicess {
         },
       );
       if (response.statusCode == 200) {
-        print('Notification sent successfully to multiple devices.');
+        debugPrint('Notification sent successfully to multiple devices.');
       } else {
-        print('Failed to send notification. Error: ${response.reasonPhrase}');
+        debugPrint('Failed to send notification. Error: ${response.reasonPhrase}');
       }
     } catch (e) {
-      print('Exception while sending notification: $e');
+      debugPrint('Exception while sending notification: $e');
     }
   }
 }

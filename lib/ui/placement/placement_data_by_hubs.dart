@@ -212,6 +212,13 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
                                         bottomValue: 0,
                                       ),
                                       custom_text(
+                                        text: "${strings_name.str_total_students}: ${hubResponseArray![index].fields?.tblStudent!.length}",
+                                        maxLines: 2,
+                                        textStyles: blackTextSemiBold14,
+                                        topValue: 5,
+                                        bottomValue: 0,
+                                      ),
+                                      custom_text(
                                         text: "${strings_name.str_total_students_placed}: ${hubResponseArray![index].fields?.totalPlacement}",
                                         textStyles: blackTextSemiBold14,
                                         maxLines: 2,

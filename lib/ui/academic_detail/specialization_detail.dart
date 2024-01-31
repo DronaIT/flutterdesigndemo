@@ -97,7 +97,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
     //query = "AND(FIND('${Get.arguments}',${TableNames.CLM_SPE_ID}) 0 ,1='${TableNames.MODULE_ATTENDANCE}')";
     //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
 
-    print("test=>${query}");
+    debugPrint("test=>${query}");
     try {
       var data = await apiRepository.getSpecializationDetailApi(query);
       if (data.records?.isNotEmpty == true) {

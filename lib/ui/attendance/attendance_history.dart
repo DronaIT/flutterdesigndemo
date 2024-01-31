@@ -114,7 +114,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
     } else {
       query = "(${TableNames.TB_USERS_PHONE}='$phone')";
     }
-    print(query);
+    debugPrint(query);
     try {
       data = await apiRepository.loginEmployeeApi(query);
       if (data.records != null) {

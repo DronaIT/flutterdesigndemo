@@ -313,7 +313,7 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
                         margin: EdgeInsets.only(top: 14.h, bottom: 10.h),
                         child: AddButton(
                           onTap: () async {
-                            var result = await Get.to(AddAnnouncement());
+                            var result = await Get.to(const AddAnnouncement());
                             if (result == 'updateAnnouncement') {
                               isListUpdate = true;
                               announcement.clear();
@@ -364,7 +364,6 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
                                         }
                                       }
                                     : null,
-                                // margin: EdgeInsets.symmetric(horizontal: 10.w),
                                 data: data,
                                 onTap: () async {
                                   var result = await Get.to(AnnouncementDetail(

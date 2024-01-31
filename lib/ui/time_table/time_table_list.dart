@@ -338,7 +338,7 @@ class _TimeTableListState extends State<TimeTableList> {
       });
       specializationValue = "";
 
-      var query = "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+      var query = "SEARCH('${hubResponse?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}), 0)";
       try {
         var speData = await apiRepository.getSpecializationDetailApi(query);
         setState(() {
@@ -658,12 +658,12 @@ class _TimeTableListState extends State<TimeTableList> {
               isVisible = true;
             });
             var query = "AND(";
-            query += "FIND('${timeTableData.fields?.hubIdFromHubId![0]}',{${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}, 0)";
-            query += ",FIND('${timeTableData.fields?.specializationIdFromSpecializationId![0]}',{${TableNames.CLM_SPE_IDS_FROM_SPE_ID}}, 0)";
-            query += ",FIND('${timeTableData.fields?.semester}', {${TableNames.CLM_SEMESTER}}, 0)";
-            query += ",FIND('${timeTableData.fields?.division}', {${TableNames.CLM_DIVISION}}, 0)";
+            query += "SEARCH('${timeTableData.fields?.hubIdFromHubId![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}), 0)";
+            query += ",SEARCH('${timeTableData.fields?.specializationIdFromSpecializationId![0]}',ARRAYJOIN({${TableNames.CLM_SPE_ID_FROM_SPE_IDS}}), 0)";
+            query += ",FIND('${timeTableData.fields?.semester}', ${TableNames.CLM_SEMESTER}, 0)";
+            query += ",FIND('${timeTableData.fields?.division}', ${TableNames.CLM_DIVISION}, 0)";
             query += ")";
-            print(query);
+            debugPrint(query);
             try {
               var data = await apiRepository.loginApi(query, offset);
               if (data.records!.isNotEmpty) {

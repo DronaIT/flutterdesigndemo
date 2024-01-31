@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../values/text_styles.dart';
 
@@ -17,20 +19,35 @@ class custom_text extends StatefulWidget {
   final TextAlign textAlign;
   final EdgeInsetsGeometry? margin;
 
-  custom_text({required this.text, this.color = Colors.black,
-    this.size = 30, this.fontWeight = FontWeight.bold, this.alignment = Alignment.topLeft, this.textStyles = centerTextStyle,
-    this.maxLines = 1, this.topValue = 10.0, this.leftValue = 10.0, this.rightValue = 10.0, this.bottomValue = 10.0, this.textAlign = TextAlign.start,this.margin});
+  custom_text(
+      {required this.text,
+      this.color = Colors.black,
+      this.size = 30,
+      this.fontWeight = FontWeight.bold,
+      this.alignment = Alignment.topLeft,
+      this.textStyles = centerTextStyle,
+      this.maxLines = 1,
+      this.topValue = 10.0,
+      this.leftValue = 10.0,
+      this.rightValue = 10.0,
+      this.bottomValue = 10.0,
+      this.textAlign = TextAlign.start,
+      this.margin});
 
   @override
   State<custom_text> createState() => _custom_textState();
-
 }
 
 class _custom_textState extends State<custom_text> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.margin ?? EdgeInsets.only(top: widget.topValue, left: widget.leftValue, right: widget.rightValue, bottom: widget.bottomValue),
+      margin: widget.margin ??
+          EdgeInsets.only(
+              top: kIsWeb ? widget.topValue : widget.topValue,
+              left: kIsWeb ? widget.leftValue : widget.leftValue,
+              right: kIsWeb ? widget.rightValue : widget.rightValue,
+              bottom: kIsWeb ? widget.bottomValue : widget.bottomValue),
       alignment: widget.alignment,
       child: Text(
         widget.text,

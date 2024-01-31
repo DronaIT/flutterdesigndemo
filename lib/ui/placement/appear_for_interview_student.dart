@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
-import 'package:flutterdesigndemo/utils/preference.dart';
+import 'package:flutterdesigndemo/ui/placement/appeared_for_interview_student_detail.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -17,18 +17,18 @@ import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
 import '../../models/base_api_response.dart';
 import '../../models/job_opportunity_response.dart';
+import '../../utils/preference.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
-import 'shortlisted_student_detail.dart';
 
-class ShortListStudent extends StatefulWidget {
-  const ShortListStudent({Key? key}) : super(key: key);
+class AppearForInterviewStudent extends StatefulWidget {
+  const AppearForInterviewStudent({Key? key}) : super(key: key);
 
   @override
-  State<ShortListStudent> createState() => _ShortListStudentState();
+  State<AppearForInterviewStudent> createState() => _AppearForInterviewStudentState();
 }
 
-class _ShortListStudentState extends State<ShortListStudent> {
+class _AppearForInterviewStudentState extends State<AppearForInterviewStudent> {
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
 
@@ -91,7 +91,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
       });
     }
     var query =
-        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}',${TableNames.CLM_DISPLAY_INTERNSHIP}='2',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
+        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_interview_scheduled}',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
     try {
       var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
@@ -105,19 +105,19 @@ class _ShortListStudentState extends State<ShortListStudent> {
         if (offset.isNotEmpty) {
           getRecords();
         } else {
-          jobOpportunityListMain?.sort((a, b) => a.fields!.companyName!.last.trim().compareTo(b.fields!.companyName!.last.trim()));
-          jobOpportunityList?.sort((a, b) => a.fields!.companyName!.last.trim().compareTo(b.fields!.companyName!.last.trim()));
+          jobOpportunityListMain?.sort((a, b) => a.fields!.companyName!.first.trim().compareTo(b.fields!.companyName!.first.trim()));
+          jobOpportunityList?.sort((a, b) => a.fields!.companyName!.first.trim().compareTo(b.fields!.companyName!.first.trim()));
           setState(() {
             isVisible = false;
           });
         }
       } else {
+        if (offset.isEmpty) {
+          jobOpportunityListMain = [];
+          jobOpportunityList = [];
+        }
         setState(() {
           isVisible = false;
-          if (offset.isEmpty) {
-            jobOpportunityListMain = [];
-            jobOpportunityList = [];
-          }
         });
         offset = "";
       }
@@ -134,7 +134,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_sortlist_student),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_appear_for_interview_student),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -215,7 +215,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const ShortListedStudentDetail(), arguments: [
+                                  Get.to(() => const AppearedForInterviewStudentDetail(), arguments: [
                                     {"company_name": jobOpportunityList?[index].fields!.companyName?.first},
                                     {"jobcode": jobOpportunityList?[index].fields!.jobCode}
                                   ]);
@@ -235,13 +235,12 @@ class _ShortListStudentState extends State<ShortListStudent> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "${strings_name.str_job_title_} ${jobOpportunityList?[index].fields!.jobTitle}",
-                                          textStyles: blackTextSemiBold144,
-                                          topValue: 0,
-                                          maxLines: 2,
-                                          bottomValue: 5,
-                                          leftValue: 5,
-                                        ),
+                                            text: "${strings_name.str_job_title_} ${jobOpportunityList?[index].fields!.jobTitle}",
+                                            textStyles: blackTextSemiBold144,
+                                            topValue: 0,
+                                            maxLines: 2,
+                                            bottomValue: 5,
+                                            leftValue: 5),
                                         custom_text(
                                           text: "Job created on: ${displayDate(jobOpportunityList?[index].fields!.created)}",
                                           textStyles: blackTextSemiBold12,
@@ -258,7 +257,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
                                             bottomValue: 5,
                                             leftValue: 5),
                                         custom_text(
-                                            text: "${strings_name.str_city}: ${jobOpportunityList?[index].fields!.city?.last}",
+                                            text: "${strings_name.str_city}: ${jobOpportunityList?[index].fields!.city?.first}",
                                             textStyles: blackTextSemiBold12,
                                             topValue: 0,
                                             maxLines: 2,
@@ -272,7 +271,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
                             }),
                       )
                     : Container(
-                        margin: EdgeInsets.only(top: 10.h),
+                        margin: const EdgeInsets.only(top: 10),
                         child: custom_text(text: strings_name.str_no_jobs, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),

@@ -50,7 +50,7 @@ class _ManageUserState extends State<ManageUser> {
     var loginData = PreferenceUtils.getLoginDataEmployee();
     var query =
         "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_MANAGE_USER}')";
-    print(query);
+    debugPrint(query);
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {

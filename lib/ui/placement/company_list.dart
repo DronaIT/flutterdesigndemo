@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/job_opportunity_form.dart';
@@ -45,7 +46,10 @@ class _CompanyListState extends State<CompanyList> {
   void initState() {
     super.initState();
     update = Get.arguments;
+    getPermission();
+  }
 
+  initData() {
     hubResponseArray = PreferenceUtils.getHubList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -82,7 +86,8 @@ class _CompanyListState extends State<CompanyList> {
       hubValue = hubResponseArray!.first.fields!.id!.toString();
       setState(() {});
     }
-    getPermission();
+
+    getRecords();
   }
 
   Future<void> getRecords() async {
@@ -112,12 +117,12 @@ class _CompanyListState extends State<CompanyList> {
           });
         }
       } else {
+        if (offset.isEmpty) {
+          companyList = [];
+          companyListMain = [];
+        }
         setState(() {
           isVisible = false;
-          if (offset.isEmpty) {
-            companyList = [];
-            companyListMain = [];
-          }
         });
         offset = "";
       }
@@ -148,28 +153,23 @@ class _CompanyListState extends State<CompanyList> {
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_JOBALERTS) {
-            setState(() {
-              createJobsAlerts = true;
-            });
+            createJobsAlerts = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEWJOBS) {
-            setState(() {
-              viewJobAlerts = true;
-            });
+            viewJobAlerts = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_EDITJOBS) {
-            setState(() {
-              updateJobAlerts = true;
-            });
+            updateJobAlerts = true;
           }
         }
-        getRecords();
+        setState(() {});
       } else {
         setState(() {
           isVisible = false;
         });
         Utils.showSnackBar(context, strings_name.str_something_wrong);
       }
+      initData();
     } on DioError catch (e) {
       setState(() {
         isVisible = false;
@@ -189,9 +189,7 @@ class _CompanyListState extends State<CompanyList> {
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: 5,
-                ),
+                SizedBox(height: 5.h),
                 custom_text(
                   text: strings_name.str_select_hub,
                   alignment: Alignment.topLeft,
@@ -199,7 +197,7 @@ class _CompanyListState extends State<CompanyList> {
                   bottomValue: 0,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                  margin: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.h),
                   width: MediaQuery.of(context).size.width,
                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                     value: hubResponse,
@@ -213,7 +211,8 @@ class _CompanyListState extends State<CompanyList> {
                         getRecords();
                       });
                     },
-                    items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                    items: hubResponseArray
+                        ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                       return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                         value: value,
                         child: Text(value.fields!.hubName!.toString()),
@@ -221,9 +220,7 @@ class _CompanyListState extends State<CompanyList> {
                     }).toList(),
                   ),
                 ),
-                SizedBox(
-                  height: 4,
-                ),
+                SizedBox(height: 4.h),
                 Visibility(
                   visible: companyListMain != null && companyListMain!.isNotEmpty,
                   child: CustomEditTextSearch(
@@ -248,9 +245,8 @@ class _CompanyListState extends State<CompanyList> {
                     },
                   ),
                 ),
-                SizedBox(height: 5),
                 Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                     child: companyList != null && companyList!.isNotEmpty
                         ? ListView.builder(
                             primary: false,
@@ -266,9 +262,21 @@ class _CompanyListState extends State<CompanyList> {
                                           Flexible(
                                             child: Column(
                                               children: [
-                                                custom_text(text: "${companyList?[index].fields?.companyName?.trim()}", textStyles: centerTextStylePrimary18, topValue: 10, maxLines: 2),
-                                                custom_text(text: "Name: ${companyList?[index].fields?.contactName}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
-                                                custom_text(text: "Contact no.: ${companyList?[index].fields?.contactNumber}", textStyles: blackTextSemiBold12, bottomValue: 5, topValue: 0),
+                                                custom_text(
+                                                    text: "${companyList?[index].fields?.companyName?.trim()}",
+                                                    textStyles: centerTextStylePrimary18,
+                                                    topValue: 10,
+                                                    maxLines: 2),
+                                                custom_text(
+                                                    text: "Name: ${companyList?[index].fields?.contactName}",
+                                                    textStyles: blackTextSemiBold12,
+                                                    bottomValue: 5,
+                                                    topValue: 0),
+                                                custom_text(
+                                                    text: "Contact no.: ${companyList?[index].fields?.contactNumber}",
+                                                    textStyles: blackTextSemiBold12,
+                                                    bottomValue: 5,
+                                                    topValue: 0),
                                               ],
                                             ),
                                           ),
@@ -307,14 +315,14 @@ class _CompanyListState extends State<CompanyList> {
                                                 ),
                                                 elevation: 7.0,
                                               ),
-                                              child: Text(
+                                              child: const Text(
                                                 strings_name.str_create_job_opp_detail,
                                                 textAlign: TextAlign.center,
-                                                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
+                                                style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w400),
                                               ),
                                             ),
                                           ),
-                                          SizedBox(width: 10),
+                                          SizedBox(width: 10.w),
                                           Visibility(
                                             visible: viewJobAlerts,
                                             child: ElevatedButton(

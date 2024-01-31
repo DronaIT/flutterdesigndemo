@@ -524,7 +524,7 @@ class _FilterState extends State<Filter> {
     );
 
     if (result != null) {
-      print(result.start.toString());
+      debugPrint(result.start.toString());
       setState(() {
         startDate = result.start;
         endDate = result.end;
@@ -544,7 +544,7 @@ class _FilterState extends State<Filter> {
     }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     setState(() {
       isVisible = true;
@@ -587,7 +587,7 @@ class _FilterState extends State<Filter> {
   }
 
   void filterData() {
-    print(viewStudent?.length);
+    debugPrint(viewStudent?.length.toString());
     if (continuousCount == 1) {
       startDate = DateTime.now();
       endDate = DateTime.now();
