@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 
 class custom_edittext extends StatefulWidget {
@@ -56,7 +55,7 @@ class _customState extends State<custom_edittext> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.margin ?? EdgeInsets.only(left: 10.w, right: 10.w, top: widget.topValue.h),
+      margin: widget.margin ?? EdgeInsets.only(left: 10, right: 10, top: widget.topValue),
       alignment: widget.alignment,
       child: TextFormField(
         keyboardType: widget.type,
@@ -88,11 +87,11 @@ class _customState extends State<custom_edittext> {
                   )
                 : null,
             border: const OutlineInputBorder(),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: colors_name.textColorGreyLight, width: 1.5.w),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: colors_name.textColorGreyLight, width: 1.5),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: colors_name.colorPrimary, width: 1.5.w),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: colors_name.colorPrimary, width: 1.5),
             ),
             labelText: widget.labelText,
             hintText: widget.hintText,
