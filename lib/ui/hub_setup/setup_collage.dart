@@ -94,7 +94,7 @@ class _SetupCollageState extends State<SetupCollage> {
       isVisible = false;
     });
 
-    print("updates==>${canViewHub}==>${canUpdateHub}==>${canAddHub}");
+    debugPrint("updates==>${canViewHub}==>${canUpdateHub}==>${canAddHub}");
   }
 
   @override

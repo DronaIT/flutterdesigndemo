@@ -9,7 +9,8 @@ class DioClient {
   DioClient(this._dio) {
     _dio
       ..options.baseUrl = TableNames.APIENDPOINTS
-      ..options.responseType = ResponseType.json
+      ..options.responseType = ResponseType.json;
+/*
       ..interceptors.add(LogInterceptor(
         request: true,
         requestHeader: true,
@@ -17,6 +18,7 @@ class DioClient {
         responseHeader: true,
         responseBody: true,
       ));
+*/
   }
   // Get:-----------------------------------------------------------------------
   Future<Response> get(

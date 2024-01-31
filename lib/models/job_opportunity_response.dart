@@ -21,14 +21,15 @@ class JobOpportunityResponse {
   List<String>? specializationIds;
   List<String>? companyCode;
   List<String>? companyName;
-  List<dynamic>? reportingAddress;
+  List<String>? reportingAddress;
   List<String>? reportingBranch;
-  List<dynamic>? city;
+  List<String>? city;
   String? jobCode;
   List<String>? contactNameFromCompanyId;
   String? joiningDate;
 
   List<String>? selectedStudents;
+  List<String>? appearedForInterview;
   List<String>? attendance_data;
   int? stipendRangeMin;
   String? interviewPlaceAddress;
@@ -62,10 +63,16 @@ class JobOpportunityResponse {
   List<String>? selected_students_name;
   List<String>? rejected_students;
 
+  List<String>? appeared_for_interview_email;
+  List<String>? appeared_for_interview_enrollment_number;
+  List<String>? appeared_for_interview_name;
+
   List<DocumentResponse>? company_loi;
   List<DocumentResponse>? bond_structure;
   List<DocumentResponse>? incentive_structure;
   int? is_self_place;
+  String? academic_year;
+  String? created;
 
   JobOpportunityResponse({
     this.jobDescription,
@@ -95,6 +102,7 @@ class JobOpportunityResponse {
     this.contactNameFromCompanyId,
     this.joiningDate,
     this.selectedStudents,
+    this.appearedForInterview,
     this.attendance_data,
     this.stipendRangeMin,
     this.interviewPlaceAddress,
@@ -123,10 +131,15 @@ class JobOpportunityResponse {
     this.selected_students_enrollment_number,
     this.selected_students_name,
     this.rejected_students,
+    this.appeared_for_interview_name,
+    this.appeared_for_interview_email,
+    this.appeared_for_interview_enrollment_number,
     this.company_loi,
     this.bond_structure,
     this.incentive_structure,
     this.is_self_place,
+    this.academic_year,
+    this.created,
   });
 
   JobOpportunityResponse.fromJson(Map<String, dynamic> json) {
@@ -150,13 +163,14 @@ class JobOpportunityResponse {
     specializationIds = json['specialization_ids']?.cast<String>();
     companyCode = json['company_code']?.cast<String>();
     companyName = json['company_name']?.cast<String>();
-    reportingAddress = json['reporting_address']?.cast<dynamic>() ?? " ";
+    reportingAddress = json['reporting_address']?.cast<String>() ?? " ";
     reportingBranch = json['reporting_branch']?.cast<String>();
-    city = json['city']?.cast<dynamic>() ?? " ";
+    city = json['city']?.cast<String>() ?? " ";
     jobCode = json['job_code'];
     contactNameFromCompanyId = json['contact_name (from company_id)']?.cast<String>();
     joiningDate = json['joining_date'];
     selectedStudents = json['selected_students']?.cast<String>();
+    appearedForInterview = json['appeared_for_interview']?.cast<String>();
     attendance_data = json['TBL_PLACEMENT_ATTENDANCE']?.cast<String>();
     stipendRangeMin = json['stipend_range_min'];
     interviewPlaceAddress = json['interview_place_address'];
@@ -187,8 +201,14 @@ class JobOpportunityResponse {
     selected_students_enrollment_number = json['selected_students_enrollment_number']?.cast<String>();
     selected_students_name = json['selected_students_name']?.cast<String>();
 
+    appeared_for_interview_email = json['appeared_for_interview_email']?.cast<String>();
+    appeared_for_interview_enrollment_number = json['appeared_for_interview_enrollment_number']?.cast<String>();
+    appeared_for_interview_name = json['appeared_for_interview_name']?.cast<String>();
+
     rejected_students = json['rejected_students']?.cast<String>();
     is_self_place = json['is_self_place'];
+    academic_year = json['academic_year'];
+    created = json['Created'];
 
     if (json['company_loi'] != null) {
       company_loi = <DocumentResponse>[];
@@ -246,6 +266,7 @@ class JobOpportunityResponse {
     data['contact_name (from company_id)'] = this.contactNameFromCompanyId;
     data['joining_date'] = this.joiningDate;
     data['selected_students'] = this.selectedStudents;
+    data['appeared_for_interview'] = this.appearedForInterview;
     data['TBL_PLACEMENT_ATTENDANCE'] = this.attendance_data;
     data['stipend_range_min'] = this.stipendRangeMin;
     data['interview_place_address'] = this.interviewPlaceAddress;
@@ -272,11 +293,17 @@ class JobOpportunityResponse {
     data['shortlisted_students_enrollment_number'] = this.shortlisted_students_enrollment_number;
     data['shortlisted_students_name'] = this.shortlisted_students_name;
 
+    data['appeared_for_interview_email'] = this.appeared_for_interview_email;
+    data['appeared_for_interview_enrollment_number'] = this.appeared_for_interview_enrollment_number;
+    data['appeared_for_interview_name'] = this.appeared_for_interview_name;
+
     data['selected_students_email'] = this.selected_students_email;
     data['selected_students_enrollment_number'] = this.selected_students_enrollment_number;
     data['selected_students_name'] = this.selected_students_name;
     data['rejected_students'] = this.rejected_students;
     data['is_self_place'] = this.is_self_place;
+    data['academic_year'] = this.academic_year;
+    data['Created'] = this.created;
 
     if (this.company_loi != null) {
       data['company_loi'] = this.company_loi!.map((v) => v.toJson()).toList();

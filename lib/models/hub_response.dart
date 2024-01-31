@@ -6,6 +6,17 @@ class HubResponse {
   String? address;
   List<String>? tblStudent;
   List<String>? studentSpecializationIds;
+  List<String>? studentMobileNumber;
+  List<String>? studentName;
+  List<String>? studentEmail;
+  List<String>? studentSemester;
+  List<String>? studentDivision;
+  List<String>? studentGender;
+  List<String>? admissionBatchStart;
+  List<String>? admissionBatchEnd;
+  List<String>? warningLetter1Issued;
+  List<String>? warningLetter2Issued;
+  List<String>? warningLetter3Issued;
   List<String>? isPlacedNow;
   List<String>? tblCompany;
   List<String>? workingEmployees;
@@ -39,6 +50,17 @@ class HubResponse {
     this.address,
     this.tblStudent,
     this.studentSpecializationIds,
+    this.studentMobileNumber,
+    this.studentName,
+    this.studentEmail,
+    this.studentSemester,
+    this.studentDivision,
+    this.studentGender,
+    this.admissionBatchStart,
+    this.admissionBatchEnd,
+    this.warningLetter1Issued,
+    this.warningLetter2Issued,
+    this.warningLetter3Issued,
     this.isPlacedNow,
     this.tblCompany,
     this.workingEmployees,
@@ -52,6 +74,17 @@ class HubResponse {
     address = json['address'];
     tblStudent = json['TBL_STUDENT']?.cast<String>();
     studentSpecializationIds = json['student_specialization_ids']?.cast<String>();
+    studentMobileNumber = json['student_mobile_number']?.cast<String>();
+    studentName = json['student_name']?.cast<String>();
+    studentEmail = json['student_email']?.cast<String>();
+    studentSemester = json['student_semester']?.cast<String>();
+    studentDivision = json['student_division']?.cast<String>();
+    studentGender = json['student_gender']?.cast<String>();
+    admissionBatchStart = json['admission_batch_start']?.cast<String>();
+    admissionBatchEnd = json['admission_batch_end']?.cast<String>();
+    warningLetter1Issued = json['warning_letter_1_issued']?.cast<String>();
+    warningLetter2Issued = json['warning_letter_2_issued']?.cast<String>();
+    warningLetter3Issued = json['warning_letter_3_issued']?.cast<String>();
     isPlacedNow = json['is_placed_now_data']?.cast<String>();
     tblCompany = json['TBL_COMPANY']?.cast<String>();
     workingEmployees = json['working_employees']?.cast<String>();
@@ -66,6 +99,17 @@ class HubResponse {
     data['address'] = this.address;
     data['TBL_STUDENT'] = this.tblStudent;
     data['student_specialization_ids'] = this.studentSpecializationIds;
+    data['student_mobile_number'] = this.studentMobileNumber;
+    data['student_name'] = this.studentName;
+    data['student_email'] = this.studentEmail;
+    data['student_semester'] = this.studentSemester;
+    data['student_division'] = this.studentDivision;
+    data['student_gender'] = this.studentGender;
+    data['admission_batch_start'] = this.admissionBatchStart;
+    data['admission_batch_end'] = this.admissionBatchEnd;
+    data['warning_letter_1_issued'] = this.warningLetter1Issued;
+    data['warning_letter_2_issued'] = this.warningLetter2Issued;
+    data['warning_letter_3_issued'] = this.warningLetter3Issued;
     data['is_placed_now_data'] = this.isPlacedNow;
     data['TBL_COMPANY'] = this.tblCompany;
     data['working_employees'] = this.workingEmployees;

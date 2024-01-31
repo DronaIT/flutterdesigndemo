@@ -17,6 +17,7 @@ class SpecializationResponse {
   int newPlaced = 0;
   int newSelfPlaced = 0;
   int totalPlacement = 0;
+  int totalStudent = 0;
   double overallPlacement = 0;
 
   SpecializationResponse({this.id, this.specializationId, this.specializationName, this.hubIds, this.hubIdFromHubIds, this.specializationDesc});

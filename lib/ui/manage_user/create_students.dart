@@ -245,7 +245,7 @@ class _AddStudent extends State<CreateStudent> {
                       createStudents(tempList, i == list.length - 1);
                       tempList.clear();
                     } else if (i == list.length - 1) {
-                      print("New students added");
+                      debugPrint("New students added");
                       // createStudents(tempList, true);
                     }
                   }
@@ -264,7 +264,7 @@ class _AddStudent extends State<CreateStudent> {
   openFile() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = "${documentsDirectory.path}/tables_data.xlsx";
-    print(path);
+    debugPrint(path);
 
     ByteData data = await rootBundle.load("assets/res/tables_data.xlsx");
     List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
@@ -400,7 +400,7 @@ class _AddStudent extends State<CreateStudent> {
         setState(() {
           isVisible = false;
         });
-        print(jsonEncode(list));
+        debugPrint(jsonEncode(list));
         // createStudents();
       } else {
         setState(() {

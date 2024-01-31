@@ -63,7 +63,7 @@ class _StudentSelectionState extends State<StudentSelection> {
       }
     }
     query += ")";
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await apiRepository.loginApi(query, offset);

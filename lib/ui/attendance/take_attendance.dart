@@ -634,7 +634,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     query += ",FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0)";
     query += ",FIND('$divisionValue', ${TableNames.CLM_DIVISION}, 0)";
     query += ")";
-    print(query);
+    debugPrint(query);
     try {
       var data = await apiRepository.loginApi(query, offset);
       if (data.records!.isNotEmpty) {

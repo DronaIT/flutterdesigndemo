@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
@@ -38,7 +39,7 @@ class _MyAttendanceState extends State<MyAttendance> {
   List<ViewStudentAttendance>? studentAttendanceBySubjectArray = [];
   List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectData = [];
 
-  var formatterShow = DateFormat('dd-MM-yyyy');
+  var formatterShow = DateFormat('dd MMM, yyyy');
 
   String formattedDate = "";
   String enrollmentNo = "", name = "";
@@ -167,7 +168,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.presentLectureDate != null) {
         for (int i = 0; i < dataByDate.records!.first.fields!.presentLectureDate!.length; i++) {
           DateTime fudgeThis = DateTime.parse(formattedDate);
-          if (DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]) {
+          if (false && DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.presentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(
                 subject_id: dataByDate.records!.first.fields!.presentSubjectId![i],
                 subject_title: dataByDate.records!.first.fields!.presentSubjectTitle![i],
@@ -185,7 +186,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       if (dataByDate.records != null && dataByDate.records!.first.fields != null && dataByDate.records!.first.fields!.absentLectureDate != null) {
         for (int i = 0; i < dataByDate.records!.first.fields!.absentLectureDate!.length; i++) {
           DateTime fudgeThis = DateTime.parse(formattedDate);
-          if (DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
+          if (false && DateFormat("yyyy-dd-MM").format(fudgeThis) == dataByDate.records!.first.fields!.absentLectureDate![i]) {
             studentAttendanceArray?.add(ViewStudentAttendance(
                 subject_id: dataByDate.records!.first.fields!.absentSubjectId![i],
                 subject_title: dataByDate.records!.first.fields!.absentSubjectTitle![i],
@@ -365,7 +366,7 @@ class _MyAttendanceState extends State<MyAttendance> {
           iconTheme: const IconThemeData(color: colors_name.colorWhite),
           actions: <Widget>[
             Container(
-              margin: const EdgeInsets.only(right: 10),
+              margin: EdgeInsets.only(right: 10.w),
               child: IconButton(
                   icon: const Icon(Icons.filter_alt_outlined),
                   color: Colors.white,
@@ -378,7 +379,8 @@ class _MyAttendanceState extends State<MyAttendance> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            custom_text(text: name, alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
+            Visibility(
+                visible: name.isNotEmpty, child: custom_text(text: name, alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5)),
             Visibility(
               visible: PreferenceUtils.getIsLogin() == 2,
               child: custom_text(text: "Total Lectures : $totalLectures", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 5),
@@ -403,14 +405,14 @@ class _MyAttendanceState extends State<MyAttendance> {
                   child: Expanded(
                     child: Container(
                       width: 300,
-                      margin: EdgeInsets.all(5),
+                      margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 5.w),
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           primary: totalPresentPercentage >= 75 ? colors_name.presentColor : colors_name.errorColor,
-                          padding: const EdgeInsets.all(6),
+                          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child: Text(
@@ -427,7 +429,7 @@ class _MyAttendanceState extends State<MyAttendance> {
             Stack(
               children: [
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                   child: studentAttendanceArray!.isNotEmpty
                       ? ListView.builder(
                           primary: false,
@@ -447,6 +449,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                                             alignment: Alignment.topLeft,
                                             textStyles: blackTextSemiBold12,
                                             bottomValue: 5,
+                                            maxLines: 3,
                                           ),
                                           custom_text(
                                             text: formatterShow.format(DateTime.parse(studentAttendanceArray![index].lecture_date!)),
@@ -458,12 +461,12 @@ class _MyAttendanceState extends State<MyAttendance> {
                                       ),
                                     ),
                                     Container(
-                                      margin: const EdgeInsets.all(10),
+                                      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                                       child: ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
                                           primary: studentAttendanceArray![index].status == 1 ? colors_name.presentColor : colors_name.errorColor,
-                                          padding: const EdgeInsets.all(10),
+                                          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
@@ -482,7 +485,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                       : Container(),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                   child: studentAttendanceBySubjectArray!.isNotEmpty
                       ? ListView.builder(
                           primary: false,
@@ -491,92 +494,100 @@ class _MyAttendanceState extends State<MyAttendance> {
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                                 elevation: 5,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                      children: [
-                                        custom_text(
-                                          text: studentAttendanceBySubjectArray![index].subject_title!,
-                                          alignment: Alignment.topLeft,
-                                          textStyles: blackTextSemiBold16,
-                                          bottomValue: 5,
-                                          maxLines: 3,
-                                        ),
-                                        Visibility(
-                                          visible: PreferenceUtils.getIsLogin() == 2,
-                                          child: custom_text(
-                                            text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
-                                            alignment: Alignment.topLeft,
-                                            textStyles: blackTextSemiBold12,
-                                            bottomValue: 0,
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: PreferenceUtils.getIsLogin() == 2,
-                                          child: custom_text(
-                                            text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
-                                            alignment: Alignment.topLeft,
-                                            textStyles: blackTextSemiBold12,
-                                            bottomValue: 0,
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: true,
-                                          child: custom_text(
-                                            text:
-                                                "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%",
-                                            alignment: Alignment.topLeft,
-                                            textStyles: blackTextSemiBold12,
-                                            bottomValue: 10,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        )
-                                      ],
-                                    )),
-                                    Expanded(
-                                      child: Container(
-                                        width: 100,
-                                        margin: EdgeInsets.all(5),
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          style: ElevatedButton.styleFrom(
-                                            primary: ((studentAttendanceBySubjectArray![index].present_lectures * 100) /
-                                                        studentAttendanceBySubjectArray![index].total_lectures) >=
-                                                    75
-                                                ? colors_name.presentColor
-                                                : colors_name.errorColor,
-                                            padding: const EdgeInsets.all(6),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                child: Column(children: [
+                                  custom_text(
+                                    text: studentAttendanceBySubjectArray![index].subject_title!,
+                                    alignment: Alignment.topLeft,
+                                    textStyles: blackTextSemiBold16,
+                                    bottomValue: 0,
+                                    maxLines: 3,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                        children: [
+                                          Visibility(
+                                            visible: PreferenceUtils.getIsLogin() == 2,
+                                            child: custom_text(
+                                              text: "Total Lectures : ${studentAttendanceBySubjectArray![index].total_lectures}",
+                                              alignment: Alignment.topLeft,
+                                              textStyles: blackTextSemiBold12,
+                                              bottomValue: 0,
                                             ),
                                           ),
-                                          child: Text(
-                                            ((studentAttendanceBySubjectArray![index].present_lectures * 100) /
-                                                        studentAttendanceBySubjectArray![index].total_lectures) >=
-                                                    75
-                                                ? "Eligible for exam"
-                                                : "Not eligible for exam",
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
+                                          Visibility(
+                                            visible: PreferenceUtils.getIsLogin() == 2,
+                                            child: custom_text(
+                                              text: "Present Lectures : ${studentAttendanceBySubjectArray![index].present_lectures}",
+                                              alignment: Alignment.topLeft,
+                                              textStyles: blackTextSemiBold12,
+                                              bottomValue: 0,
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: true,
+                                            child: custom_text(
+                                              text:
+                                                  "Present : ${((studentAttendanceBySubjectArray![index].present_lectures * 100) / studentAttendanceBySubjectArray![index].total_lectures).toStringAsFixed(2)}%",
+                                              alignment: Alignment.topLeft,
+                                              textStyles: blackTextSemiBold12,
+                                              bottomValue: 10,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5.h)
+                                        ],
+                                      )),
+                                      Expanded(
+                                        child: Container(
+                                          width: 100,
+                                          margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 5.w),
+                                          child: ElevatedButton(
+                                            onPressed: () {},
+                                            style: ElevatedButton.styleFrom(
+                                              primary: ((studentAttendanceBySubjectArray![index].present_lectures * 100) /
+                                                          studentAttendanceBySubjectArray![index].total_lectures) >=
+                                                      75
+                                                  ? colors_name.presentColor
+                                                  : colors_name.errorColor,
+                                              padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              ((studentAttendanceBySubjectArray![index].present_lectures * 100) /
+                                                          studentAttendanceBySubjectArray![index].total_lectures) >=
+                                                      75
+                                                  ? "Eligible for exam"
+                                                  : "Not eligible for exam",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w400),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ));
+                                      )
+                                    ],
+                                  ),
+                                ]));
                           })
                       : Container(),
                 ),
                 (studentAttendanceArray.isBlank == true && studentAttendanceBySubjectArray.isBlank == true)
                     ? Container(
-                        margin: const EdgeInsets.only(top: 100),
+                        margin: EdgeInsets.only(top: 100.h),
                         child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
                     : Container(),
-                Center(
-                  child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+                Visibility(
+                  visible: isVisible,
+                  child: Container(
+                    color: colors_name.colorWhite,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -593,18 +604,16 @@ class _MyAttendanceState extends State<MyAttendance> {
         builder: (context) {
           return StatefulBuilder(
             builder: (context, setState) => Container(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.25,
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10.h),
                       Row(
                         children: [
                           Expanded(
@@ -621,6 +630,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                           child: Column(
                         children: [
                           RadioListTile(
+                            dense: true,
                             activeColor: colors_name.colorPrimary,
                             title: custom_text(
                               text: strings_name.str_by_date,
@@ -668,11 +678,12 @@ class _MyAttendanceState extends State<MyAttendance> {
                             onChanged: (value) {
                               setState(() {
                                 _isDate = value.toString();
-                                print("isSemester==> ${_isDate}");
+                                debugPrint("isSemester==> ${_isDate}");
                               });
                             },
                           ),*/
                           RadioListTile(
+                            dense: true,
                             activeColor: colors_name.colorPrimary,
                             title: custom_text(
                               text: strings_name.str_by_subject,

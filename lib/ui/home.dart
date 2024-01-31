@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -10,6 +12,7 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
+import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
 import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
@@ -37,11 +40,13 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:open_filex/open_filex.dart';
 
 import '../../customwidget/announcements_card.dart';
 import '../api/dio_exception.dart';
 import '../customwidget/custom_pageIndicator.dart';
 import '../models/announcement_response.dart';
+import '../utils/pdf_api.dart';
 import '../utils/utils.dart';
 import 'announcements/add_announcement.dart';
 import 'announcements/all_announcements.dart';
@@ -71,6 +76,9 @@ class _HomeState extends State<Home> {
 
   List<BaseApiResponseWithSerializable<AnnouncementResponse>> announcement = [];
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  String warningLetterDisplayType = "";
+  String warningLetterString = "";
 
   Future<void> getRecords(String roleId) async {
     var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0),is_active=1)";
@@ -362,6 +370,29 @@ class _HomeState extends State<Home> {
       phone = loginData.contactNumber.toString();
       getRecords(TableNames.ORGANIZATION_ROLE_ID);
     }
+
+    if (isLogin == 1) {
+      LoginFieldsResponse loginData = PreferenceUtils.getLoginData();
+      if (loginData.warning_letter_3_for_appearing?.isNotEmpty == true) {
+        warningLetterDisplayType = strings_name.str_warning_letter_3_issued;
+        warningLetterString = loginData.warning_letter_3_for_appearing!;
+      } else if (loginData.warning_letter_3_for_applying?.isNotEmpty == true) {
+        warningLetterDisplayType = strings_name.str_warning_letter_3_issued;
+        warningLetterString = loginData.warning_letter_3_for_applying!;
+      } else if (loginData.warning_letter_2_for_appearing?.isNotEmpty == true) {
+        warningLetterDisplayType = strings_name.str_warning_letter_2_issued;
+        warningLetterString = loginData.warning_letter_2_for_appearing!;
+      } else if (loginData.warning_letter_2_for_applying?.isNotEmpty == true) {
+        warningLetterDisplayType = strings_name.str_warning_letter_2_issued;
+        warningLetterString = loginData.warning_letter_2_for_applying!;
+      } else if (loginData.warning_letter_1_for_appearing?.isNotEmpty == true) {
+        warningLetterDisplayType = strings_name.str_warning_letter_1_issued;
+        warningLetterString = loginData.warning_letter_1_for_appearing!;
+      } else if (loginData.warning_letter_1_for_applying?.isNotEmpty == true) {
+        warningLetterDisplayType = strings_name.str_warning_letter_1_issued;
+        warningLetterString = loginData.warning_letter_1_for_applying!;
+      }
+    }
   }
 
   @override
@@ -436,91 +467,112 @@ class _HomeState extends State<Home> {
               ? ListView(
                   children: [
                     Visibility(visible: canShowAnnouncements, child: announcementSection()),
+                    Visibility(
+                        visible: warningLetterString.isNotEmpty,
+                        child: Card(
+                          margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                          elevation: 5,
+                          child: Container(
+                            decoration: BoxDecoration(color: colors_name.colorWhite, borderRadius: BorderRadius.circular(10.r)),
+                            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(warningLetterDisplayType, textAlign: TextAlign.center, style: primaryTextSemiBold16, maxLines: 2),
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.error_outline_sharp, color: colors_name.colorPrimary),
+                                  label: const Text("View", style: primaryTextSemiBold15),
+                                  onPressed: () async {
+                                    final pdfFile = await PdfApi.generateCenteredText(warningLetterString, warningLetterDisplayType);
+                                    OpenFilex.open(pdfFile.path);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
                     GridView.count(
                       physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(left: 10.h, right: 10.h, top: 8.h, bottom: 20.h),
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 0, bottom: 20.h),
                       crossAxisCount: 3,
                       shrinkWrap: true,
                       children: List.generate(
                         homeModule.records != null ? homeModule.records!.length : 0,
                         (index) {
                           return Padding(
-                              padding: const EdgeInsets.all(2),
+                              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.w),
                               child: Card(
                                   elevation: 10,
                                   child: Container(
-                                    height: 300,
-                                    decoration: BoxDecoration(color: colors_name.colorWhite, borderRadius: BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: GestureDetector(
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(10.0),
-                                                child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill),
-                                              ),
+                                    height: 300.h,
+                                    decoration: BoxDecoration(color: colors_name.colorWhite, borderRadius: BorderRadius.circular(10.r)),
+                                    child: GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(10.h),
+                                              child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill, errorBuilder: (context, url, error) => const Center(child: Icon(Icons.error))),
                                             ),
-                                            custom_text(
-                                              text: homeModule.records![index].fields!.moduleTitle.toString(),
-                                              alignment: Alignment.center,
-                                              textAlign: TextAlign.center,
-                                              textStyles: blackTextSemiBold14,
-                                              maxLines: 3,
-                                              topValue: 0,
-                                              bottomValue: 5,
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
-                                            Get.to(const ManageUser());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
-                                            Get.to(const AcademicDetails());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
-                                            Get.to(const SetupCollage());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
-                                            Get.to(const Attendance());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
-                                            if (PreferenceUtils.getIsLogin() == 1) {
-                                              if (PreferenceUtils.getLoginData().is_banned != 1 &&
-                                                  (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 &&
-                                                  PreferenceUtils.getLoginData().is_placed_now == "1") {
-                                                Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
-                                              } else {
-                                                Get.to(const PlacementDashboard());
-                                              }
-                                            } else if (PreferenceUtils.getIsLogin() == 3) {
-                                              Get.to(const PlacementDashboard());
+                                          ),
+                                          custom_text(
+                                            text: homeModule.records![index].fields!.moduleTitle.toString(),
+                                            alignment: Alignment.center,
+                                            textAlign: TextAlign.center,
+                                            textStyles: blackTextSemiBold14,
+                                            maxLines: 3,
+                                            topValue: 0,
+                                            bottomValue: 5.h,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MANAGE_USER) {
+                                          Get.to(const ManageUser());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ACADEMIC_DETAIL) {
+                                          Get.to(const AcademicDetails());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_SETUP_COLLAGE) {
+                                          Get.to(const SetupCollage());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ATTENDANCE) {
+                                          Get.to(const Attendance());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PLACEMENT) {
+                                          if (PreferenceUtils.getIsLogin() == 1) {
+                                            if (PreferenceUtils.getLoginData().is_banned != 1 &&
+                                                (PreferenceUtils.getLoginData().placedJob?.length ?? 0) > 0 &&
+                                                PreferenceUtils.getLoginData().is_placed_now == "1") {
+                                              Get.to(const PlacementInfo(), arguments: PreferenceUtils.getLoginData().placedJob?.last);
                                             } else {
                                               Get.to(const PlacementDashboard());
                                             }
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
-                                            Get.to(const UploadDocuments());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
-                                            Get.to(const FilterScreenStudent());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
-                                            Get.to(const HelpdeskDashboard());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TASK) {
-                                            Get.to(const TaskDashboard());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ANNOUNCEMENT) {
-                                            Get.to(const AllAnnouncements());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TIME_TABLE) {
-                                            Get.to(const TimeTableList());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_NSDC_SKILL_INDIA) {
-                                            Get.to(const StudentExtraDetail());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MARKETING) {
-                                            Get.to(const MarketingDashboard());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_FEES) {
-                                            Get.to(const FeesDashboard());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PUNCH_LEAVES) {
-                                            Get.to(const PunchDashboard());
-                                          } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MIS) {
-                                            Get.to(const MISDashboard());
+                                          } else if (PreferenceUtils.getIsLogin() == 3) {
+                                            Get.to(const PlacementDashboard());
+                                          } else {
+                                            Get.to(const PlacementDashboard());
                                           }
-                                        },
-                                      ),
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_UPLOAD_DOCUMENT) {
+                                          Get.to(const UploadDocuments());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_DIRECTORY) {
+                                          Get.to(const FilterScreenStudent());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_HELP_DESK) {
+                                          Get.to(const HelpdeskDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TASK) {
+                                          Get.to(const TaskDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ANNOUNCEMENT) {
+                                          Get.to(const AllAnnouncements());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_TIME_TABLE) {
+                                          Get.to(const TimeTableList());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_NSDC_SKILL_INDIA) {
+                                          Get.to(const StudentExtraDetail());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MARKETING) {
+                                          Get.to(const MarketingDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_FEES) {
+                                          Get.to(const FeesDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_PUNCH_LEAVES) {
+                                          Get.to(const PunchDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MIS) {
+                                          Get.to(const MISDashboard());
+                                        }
+                                      },
                                     ),
                                   )));
                         },
@@ -544,16 +596,12 @@ class _HomeState extends State<Home> {
         children: [
           Visibility(
             visible: isNoNewAnnouncements || canAddAnnouncements || canShowAnnouncements,
-            child: SizedBox(
-              height: 14.h,
-            ),
+            child: SizedBox(height: 14.h),
           ),
           Visibility(
             visible: canShowAnnouncements,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.w,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -580,20 +628,16 @@ class _HomeState extends State<Home> {
           Visibility(
             // visible: !isNoNewAnnouncements && canAddAnnouncements,
             visible: canAddAnnouncements || canShowAnnouncements,
-            child: SizedBox(
-              height: 5.h,
-            ),
+            child: SizedBox(height: 5.h),
           ),
           Visibility(
             visible: canAddAnnouncements,
-            child: SizedBox(
-              height: 6.h,
-            ),
+            child: SizedBox(height: 6.h),
           ),
           Visibility(
               visible: !isNoNewAnnouncements,
-              child: Container(
-                height: 180.h,
+              child: SizedBox(
+                height: kIsWeb ? MediaQuery.of(context).size.height * 0.35 : 200.h,
                 child: PageView.builder(
                     controller: pageController,
                     scrollDirection: Axis.horizontal,
@@ -637,7 +681,7 @@ class _HomeState extends State<Home> {
           Visibility(
               visible: !isNoNewAnnouncements,
               child: Padding(
-                padding: EdgeInsets.only(top: 8.0.h),
+                padding: EdgeInsets.only(top: 8.h),
                 child: CustomPageIndicatorScrolling(
                   totalItems: announcement.length,
                   controller: pageController,
@@ -647,7 +691,7 @@ class _HomeState extends State<Home> {
             visible: isNoNewAnnouncements && !isAnnouncementLoading,
             child: Container(
               margin: EdgeInsets.only(top: 5.h, right: 10.w, left: 10.w),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25.h),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 25.h),
               alignment: Alignment.center,
               decoration: BoxDecoration(border: Border.all(color: colors_name.textColorGreyLight), borderRadius: BorderRadius.circular(20)),
               child: Column(
@@ -659,23 +703,19 @@ class _HomeState extends State<Home> {
                     style: blackText18,
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
+                  SizedBox(height: 5.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
                           onTap: () {
-                            Get.to(() => AllAnnouncements());
+                            Get.to(() => const AllAnnouncements());
                           },
                           child: const Text(
                             strings_name.tap_here,
                             style: primryTextSemiBold14,
                           )),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      SizedBox(width: 3.w),
                       const Text(
                         strings_name.to_see_all_announcements,
                       )

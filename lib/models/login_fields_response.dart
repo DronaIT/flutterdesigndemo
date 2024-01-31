@@ -88,12 +88,22 @@ class LoginFieldsResponse {
   List<String>? placed_self_place_job_title;
 
   String? token;
-  List<dynamic>? semesterByStudent;
-  List<dynamic>? presentSemesterByStudent;
-  List<dynamic>? absentSemesterByStudent;
-  List<dynamic>? present_specialization_id;
-  List<dynamic>? absent_specialization_id;
+  String? warning_letter_1_for_applying;
+  String? warning_letter_2_for_applying;
+  String? warning_letter_3_for_applying;
+  String? warning_letter_1_for_appearing;
+  String? warning_letter_2_for_appearing;
+  String? warning_letter_3_for_appearing;
+
+  List<String>? semesterByStudent;
+  List<String>? presentSemesterByStudent;
+  List<String>? absentSemesterByStudent;
+  List<String>? present_specialization_id;
+  List<String>? absent_specialization_id;
   int? Total_lectures;
+
+  List<String>? admission_batch_start;
+  List<String>? admission_batch_end;
 
   List<Attachment_response>? resume;
   List<Attachment_response>? profile_pic;
@@ -101,6 +111,9 @@ class LoginFieldsResponse {
   String? is_placed_now;
   int? has_resigned;
   bool selected = false;
+  int totalJobsCame = 0;
+  int missedToApply = 0;
+  int missedToAppearForInterview = 0;
 
   LoginFieldsResponse({
     this.city,
@@ -186,19 +199,30 @@ class LoginFieldsResponse {
     this.absentSemesterByStudent,
     this.present_specialization_id,
     this.absent_specialization_id,
+    this.admission_batch_start,
+    this.admission_batch_end,
     this.resume,
     this.profile_pic,
     this.father_full_name,
     this.is_placed_now,
     this.has_resigned,
+    this.warning_letter_1_for_appearing,
+    this.warning_letter_2_for_appearing,
+    this.warning_letter_3_for_appearing,
+    this.warning_letter_1_for_applying,
+    this.warning_letter_2_for_applying,
+    this.warning_letter_3_for_applying,
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
-    semesterByStudent = json['semester_by_student'];
-    presentSemesterByStudent = json['present_semester_by_student'];
-    absentSemesterByStudent = json['absent_semester_by_student'];
-    present_specialization_id = json['present_specialization_id'];
-    absent_specialization_id = json['absent_specialization_id'];
+    semesterByStudent = json['semester_by_student']?.cast<String>();
+    presentSemesterByStudent = json['present_semester_by_student']?.cast<String>();
+    absentSemesterByStudent = json['absent_semester_by_student']?.cast<String>();
+    present_specialization_id = json['present_specialization_id']?.cast<String>();
+    absent_specialization_id = json['absent_specialization_id']?.cast<String>();
+
+    admission_batch_start = json['admission_batch_start']?.cast<String>();
+    admission_batch_end = json['admission_batch_end']?.cast<String>();
 
     job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
@@ -289,6 +313,13 @@ class LoginFieldsResponse {
     rejectedJob = json['rejected_job']?.cast<String>();
     isSelfPlacedCurrently = json['is_self_placed_currently']?.cast<int>();
     token = json['token'];
+    warning_letter_1_for_applying = json['warning_letter_1_for_applying'];
+    warning_letter_2_for_applying = json['warning_letter_2_for_applying'];
+    warning_letter_3_for_applying = json['warning_letter_3_for_applying'];
+    warning_letter_1_for_appearing = json['warning_letter_1_for_appearing'];
+    warning_letter_2_for_appearing = json['warning_letter_2_for_appearing'];
+    warning_letter_3_for_appearing = json['warning_letter_3_for_appearing'];
+
     father_full_name = json['father_full_name'];
     percentage = json['percentage'];
     is_placed_now = json['is_placed_now'];
@@ -391,6 +422,9 @@ class LoginFieldsResponse {
     data['pin_code'] = this.pin_code;
     data['is_banned_from_placement'] = this.is_banned;
 
+    data['admission_batch_start'] = this.admission_batch_start;
+    data['admission_batch_end'] = this.admission_batch_end;
+
     data['applied_job'] = this.appliedJob;
     data['shortlisted_job'] = this.shortlistedJob;
     data['selected_job'] = this.selectedJob;
@@ -398,6 +432,14 @@ class LoginFieldsResponse {
     data['rejected_job'] = this.rejectedJob;
     data['is_self_placed_currently'] = this.isSelfPlacedCurrently;
     data['token'] = this.token;
+
+    data['warning_letter_1_for_applying'] = this.warning_letter_1_for_applying;
+    data['warning_letter_2_for_applying'] = this.warning_letter_2_for_applying;
+    data['warning_letter_3_for_applying'] = this.warning_letter_3_for_applying;
+    data['warning_letter_1_for_appearing'] = this.warning_letter_1_for_appearing;
+    data['warning_letter_2_for_appearing'] = this.warning_letter_2_for_appearing;
+    data['warning_letter_3_for_appearing'] = this.warning_letter_3_for_appearing;
+
     data['father_full_name'] = this.father_full_name;
     data['is_placed_now'] = this.is_placed_now;
     data['has_resigned'] = this.has_resigned;

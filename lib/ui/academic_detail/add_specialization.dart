@@ -53,7 +53,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
       });
       // var query = "FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0)";
       var query = "SEARCH('${Get.arguments}',${TableNames.CLM_SPE_ID})";
-      try{
+      try {
         var data = await apiRepository.getSpecializationDetailApi(query);
         if (data.records?.isNotEmpty == true) {
           setState(() {
@@ -72,7 +72,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
         } else {
           Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
-      }on DioError catch (e) {
+      } on DioError catch (e) {
         setState(() {
           isVisible = false;
         });
@@ -161,20 +161,27 @@ class _AddSpecializationState extends State<AddSpecialization> {
                             itemCount: subjectData?.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
-                                margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 10.w),
                                 child: Card(
                                   elevation: 5,
                                   child: GestureDetector(
                                     child: Container(
                                       color: colors_name.colorWhite,
-                                      padding: const EdgeInsets.all(8),
+                                      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [Expanded(child: Text("${subjectData![index].fields!.subjectTitle}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                        children: [
+                                          Expanded(
+                                              child: Text("${subjectData![index].fields!.subjectTitle}",
+                                                  textAlign: TextAlign.start, style: blackText16)),
+                                          const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                        ],
                                       ),
                                     ),
                                     onTap: () {
-                                      Get.to(const SubjectDetail(), arguments: subjectData![index].fields?.ids);
+                                      Get.to(const SubjectDetail(), arguments: [
+                                        {"subjectId": subjectData![index]},
+                                      ]);
                                     },
                                   ),
                                 ),
@@ -222,7 +229,7 @@ class _AddSpecializationState extends State<AddSpecialization> {
       selectedSubjectData.add(subjectData![i].id.toString());
     }
     request.tBLSUBJECT = selectedSubjectData;
-    try{
+    try {
       if (!fromEdit) {
         var resp = await apiRepository.addSpecializationApi(request);
         if (resp.id!.isNotEmpty) {
@@ -252,13 +259,12 @@ class _AddSpecializationState extends State<AddSpecialization> {
           });
         }
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 }

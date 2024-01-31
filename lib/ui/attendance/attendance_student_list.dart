@@ -136,18 +136,18 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     }
     var formatter = DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
-    print(formattedDate);
+    debugPrint(formattedDate);
 
     var timeFormatter = DateFormat('hh:mm aa');
     var dateTime = DateTime.now();
     formattedTime = timeFormatter.format(dateTime);
 
     if (widget.time != null) {
-      print('../ time ${widget.time}');
+      debugPrint('../ time ${widget.time}');
       formattedTime = convertTo12HourFormat(widget.time!);
     }
 
-    print(formattedTime);
+    debugPrint(formattedTime);
   }
 
   List<GlobalKey<CustomRadioButtonState<String>>> key = [];
@@ -161,7 +161,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         Column(
           children: [
             GestureDetector(
-              child: custom_text(text: "${strings_name.str_select_date} : $formattedDate", textStyles: blackTextSemiBold16),
+              child: custom_text(text: "${strings_name.str_select_date} : $formattedDate", textStyles: blackTextSemiBold16, bottomValue: 0),
               onTap: () {
                 showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now())
                     .then((pickedDate) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
+import 'package:flutterdesigndemo/ui/placement/appear_for_interview_student.dart';
 import 'package:flutterdesigndemo/ui/placement/applied_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/apply_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/approve_self_placements.dart';
@@ -10,6 +11,7 @@ import 'package:flutterdesigndemo/ui/placement/company_approach.dart';
 import 'package:flutterdesigndemo/ui/placement/company_detail.dart';
 import 'package:flutterdesigndemo/ui/placement/company_list.dart';
 import 'package:flutterdesigndemo/ui/placement/completed_internship_list.dart';
+import 'package:flutterdesigndemo/ui/placement/issue_warning_letter.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_info.dart';
 import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/self_placement_student.dart';
@@ -45,8 +47,8 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
 
   // For employee
   bool companyApproach = false, createCompany = false, getCompanyDetail = false, editCompanyDetail = false, createJobsAlerts = false;
-  bool publishedList = false, approvedList = false, shortListed = false, selectedStudent = false, isBanned = false;
-  bool approveSelfPlacements = false, placementDrive = false;
+  bool publishedList = false, approvedList = false, shortListed = false, appearForInterview = false, selectedStudent = false, isBanned = false;
+  bool approveSelfPlacements = false, placementDrive = false, issueWarningLetter = false;
 
   // For student
   bool applyInternship = false, appliedInternship = false, completedInternShip = false, palced_uplaced_sList = false;
@@ -135,6 +137,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SHORTlIST_STUDENTS) {
             shortListed = true;
           }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_APPEAR_FOR_INTERVIEW) {
+            appearForInterview = true;
+          }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP) {
             selectedInternship = true;
           }
@@ -155,6 +160,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PLACEMENT_DRIVE) {
             placementDrive = true;
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ISSUE_WARNING_LETTER) {
+            issueWarningLetter = true;
           }
         }
         setState(() {});
@@ -363,7 +371,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                           ),
                         ),
                         onTap: () {
-                          Get.to(() => const PublishInternship());
+                          Get.to(() => const PublishedInternship());
                         },
                       ),
                     ),
@@ -386,6 +394,28 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         ),
                         onTap: () {
                           Get.to(() => const ShortListStudent());
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: appearForInterview,
+                      child: GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          child: Container(
+                            color: colors_name.colorWhite,
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings_name.str_appear_for_interview_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Get.to(() => const AppearForInterviewStudent());
                         },
                       ),
                     ),
@@ -562,6 +592,93 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         ),
                         onTap: () {
                           Get.to(() => const SelfPlacementStudent());
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: issueWarningLetter,
+                      child: GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          child: Container(
+                            color: colors_name.colorWhite,
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings_name.str_issue_warning_letter_1, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Get.to(() => const IssueWarningLetter(), arguments: [
+                            {"title": strings_name.str_issue_warning_letter_1},
+                            {"letterType": 1},
+                          ])?.then((result) {
+                            if (result != null && result) {
+                              // Get.back(closeOverlays: true);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: issueWarningLetter,
+                      child: GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          child: Container(
+                            color: colors_name.colorWhite,
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings_name.str_issue_warning_letter_2, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Get.to(() => const IssueWarningLetter(), arguments: [
+                            {"title": strings_name.str_issue_warning_letter_2},
+                            {"letterType": 2},
+                          ])?.then((result) {
+                            if (result != null && result) {
+                              // Get.back(closeOverlays: true);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: issueWarningLetter,
+                      child: GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          child: Container(
+                            color: colors_name.colorWhite,
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings_name.str_issue_warning_letter_3, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Get.to(() => const IssueWarningLetter(), arguments: [
+                            {"title": strings_name.str_issue_warning_letter_3},
+                            {"letterType": 3},
+                          ])?.then((result) {
+                            if (result != null && result) {
+                              // Get.back(closeOverlays: true);
+                            }
+                          });
                         },
                       ),
                     ),

@@ -511,7 +511,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
     );
 
     if (result != null) {
-      print(result.start.toString());
+      debugPrint(result.start.toString());
       setState(() {
         startDate = result.start;
         endDate = result.end;
@@ -531,7 +531,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
     }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     setState(() {
       isVisible = true;
@@ -574,7 +574,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
   }
 
   Future<void> filterData() async {
-    print(viewStudent?.length);
+    debugPrint(viewStudent?.length.toString());
     if (continuousCount == 1) {
       startDate = DateTime.now();
       endDate = DateTime.now();

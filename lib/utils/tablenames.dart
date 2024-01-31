@@ -1,6 +1,7 @@
 class TableNames {
   static const APIENDPOINTS = "https://api.airtable.com/v0/appwU8yBYoG1yhBXx/";
-  static const APIKEY = "keyszHTHXMxxKKs9b";
+  // static const APIKEY = "keyszHTHXMxxKKs9b";
+  static const APIKEY = "patEzmE9EqSF6g5vZ.fbe52a8008b23423f0e7e384deb4d141a81dbea18b2ac13ea6f71a622e697846";
   static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
   // Kaleyra keys
@@ -61,6 +62,7 @@ class TableNames {
 
   static const PLACED = "Placed";
   static const UNPLACED = "UnPlaced";
+  static const BANNED = "Banned";
 
   static const ONE_HOUR = "1 Hour";
   static const TWO_HOUR = "2 Hour";
@@ -138,6 +140,13 @@ class TableNames {
   static const CLM_HAS_RESIGNED = "has_resigned";
   static const CLM_SELF_PLACE_STATUS = "self_place_company_status";
 
+  static const CLM_WARNING_LETTER_1_FOR_APPLY = "warning_letter_1_for_applying";
+  static const CLM_WARNING_LETTER_2_FOR_APPLY = "warning_letter_2_for_applying";
+  static const CLM_WARNING_LETTER_3_FOR_APPLY = "warning_letter_3_for_applying";
+  static const CLM_WARNING_LETTER_1_FOR_APPEAR = "warning_letter_1_for_appearing";
+  static const CLM_WARNING_LETTER_2_FOR_APPEAR = "warning_letter_2_for_appearing";
+  static const CLM_WARNING_LETTER_3_FOR_APPEAR = "warning_letter_3_for_appearing";
+
   static const CLM_PRESENT_SUBJECT_IDS = "present_subject_id";
   static const CLM_ABSENT_SUBJECT_IDS = "absent_subject_id";
 
@@ -213,6 +222,8 @@ class TableNames {
   static const PERMISSION_ID_ENABLE_SELFPLACE = "DP0424";
   static const PERMISSION_ID_APPROVE_SELF_PLACEMENTS = "DP0425";
   static const PERMISSION_ID_PLACEMENT_DRIVE = "DP0426";
+  static const PERMISSION_ID_APPEAR_FOR_INTERVIEW = "DP0427";
+  static const PERMISSION_ID_ISSUE_WARNING_LETTER = "DP0428";
 
   static const PERMISSION_ID_VIEW_RESUME = "DP0421";
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";

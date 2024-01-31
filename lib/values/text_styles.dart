@@ -202,6 +202,12 @@ const blackTextSemiBold15 = TextStyle(
   color: Colors.black,
 );
 
+const blackTextSemiBold144 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);
+
 
 const linkTextSemiBold14 = TextStyle(
   fontSize: 14,
@@ -232,14 +238,11 @@ const primryTextSemiBold14 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
-
 const primryTextSemiBold13 = TextStyle(
   fontSize: 13,
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
-
-
 
 const grayTextstyle = TextStyle(
   fontSize: 14,
@@ -271,7 +274,7 @@ const errorTextStyle = TextStyle(
   color: colors_name.errorColor,
 );
 
-const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
+const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.darkGrayColor);
 const greyDarkTextStyle12 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
 
 const greyDarkTextStyle12WH = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark,);
@@ -366,7 +369,7 @@ final blueSemiBold14 = titleStyle.copyWith(color: colors_name.blue,fontSize: 14,
 
 final dartGreen14 = titleStyle.copyWith(color: colors_name.presentColor,fontSize: 14, fontWeight: FontWeight.w600,);
 
-const titleStyleWhite = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: colors_name.colorWhite);
+const titleStyleWhite = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colors_name.colorWhite);
 
 var textStyleLightWhite = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorWhite.withOpacity(0.6));
 

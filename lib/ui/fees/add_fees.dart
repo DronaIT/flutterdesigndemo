@@ -452,7 +452,7 @@ class _AddFeesState extends State<AddFees> {
     }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     setState(() {
       isVisible = true;

@@ -133,7 +133,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
     }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await apiRepository.getTicketsApi(query, offset);

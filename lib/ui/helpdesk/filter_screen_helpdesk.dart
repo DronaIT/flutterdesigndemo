@@ -499,7 +499,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
     }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     setState(() {
       isVisible = true;
@@ -542,7 +542,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
   }
 
   void filterData() {
-    print(viewStudent?.length);
+    debugPrint(viewStudent?.length.toString());
 
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
       studentList?.addAll(viewStudent!);

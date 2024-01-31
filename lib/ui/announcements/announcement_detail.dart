@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -194,7 +195,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                 // Utils.showSnackBar(context, strings_name.str_announcement_added);
               },
               child: Container(
-                margin: const EdgeInsets.only(right: 12),
+                margin: EdgeInsets.only(right: 12.w),
                 height: 32.h,
                 width: 32.h,
                 decoration: BoxDecoration(
@@ -221,7 +222,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                 // Utils.showSnackBar(context, strings_name.str_announcement_updated);
               },
               child: Container(
-                margin: const EdgeInsets.only(right: 12),
+                margin: EdgeInsets.only(right: 12.w),
                 height: 32.h,
                 width: 32.h,
                 decoration: BoxDecoration(
@@ -244,18 +245,16 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
               )
             : ListView(
                 children: [
+                  SizedBox(height: 10.h),
                   SizedBox(
-                    height: 10.h,
-                  ),
-                  SizedBox(
-                    height: 180.h,
+                    height: kIsWeb ? MediaQuery.of(context).size.height * 0.35 : 200.h,
                     child: Stack(
                       children: [
                         CachedNetworkImage(
                           imageUrl: widget.announcement.fields?.image ?? '',
                           fit: BoxFit.fill,
                           width: 1.sw,
-                          height: 190.h,
+                          height: kIsWeb ? MediaQuery.of(context).size.height * 0.35 : 200.h,
                           errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                         ),
                         Container(
@@ -266,7 +265,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 10.0, bottom: 16.0, right: 10.0),
+                            padding: EdgeInsets.only(left: 10.w, bottom: 16.h, right: 10.w),
                             child: Text(
                               widget.announcement.fields?.title ?? '',
                               style: whiteTextSemiBold20,
@@ -277,7 +276,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                     child: SelectableLinkify(
                       text: widget.announcement.fields?.description ?? '',
                       style: blackText16,
@@ -289,7 +288,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                   Visibility(
                     visible: widget.announcement.fields?.attachments?.isNotEmpty ?? false,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -314,7 +313,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                   elevation: 5,
                                   child: Container(
                                     color: colors_name.colorWhite,
-                                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                    padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -329,9 +328,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                   ),
                                 );
                               }),
-                          SizedBox(
-                            height: 40.h,
-                          ),
+                          SizedBox(height: 40.h),
                         ],
                       ),
                     ),

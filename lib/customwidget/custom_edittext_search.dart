@@ -37,8 +37,8 @@ class _CustomState extends State<CustomEditTextSearch> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      height: 35.w,
+      margin: EdgeInsets.symmetric(horizontal: 10.w),
+      height: 35.h,
       alignment: Alignment.center,
       child: TextFormField(
           keyboardType: widget.type,
@@ -54,17 +54,14 @@ class _CustomState extends State<CustomEditTextSearch> {
             filled: true,
             fillColor: Colors.black12,
             border: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(10.0),
-              ),
-              borderSide: BorderSide(
+              borderRadius: BorderRadius.all(Radius.circular(10.r)),
+              borderSide: const BorderSide(
                 width: 0,
                 style: BorderStyle.none,
               ),
             ),
             prefixIconColor: Colors.black87,
-            prefixIcon: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-            prefixIconConstraints: BoxConstraints(maxWidth: 35),
+            prefixIcon: const Icon(Icons.search),
             contentPadding: EdgeInsets.zero,
             hintText: widget.hintText,
           )),

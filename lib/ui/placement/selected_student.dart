@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
@@ -33,19 +37,61 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
   String offset = "";
   var controllerSearch = TextEditingController();
 
+  BaseApiResponseWithSerializable<HubResponse>? hubResponse;
+  String hubValue = "";
+  List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
+
   @override
   void initState() {
     super.initState();
+    hubResponseArray = PreferenceUtils.getHubList().records;
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+    }
+    if (hubResponseArray != null) {
+      hubResponse = hubResponseArray?.first;
+      hubValue = hubResponseArray!.first.fields!.hubId!.toString();
+      setState(() {});
+    }
+
     getRecords();
   }
 
   getRecords() async {
-    if(!isVisible) {
+    if (!isVisible) {
       setState(() {
         isVisible = true;
       });
     }
-    var query = "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_interview_scheduled}')";
+    var query =
+        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_interview_scheduled}',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
     try {
       var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
@@ -59,19 +105,19 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
         if (offset.isNotEmpty) {
           getRecords();
         } else {
+          jobOpportunityListMain?.sort((a, b) => a.fields!.companyName!.first.trim().compareTo(b.fields!.companyName!.first.trim()));
+          jobOpportunityList?.sort((a, b) => a.fields!.companyName!.first.trim().compareTo(b.fields!.companyName!.first.trim()));
           setState(() {
-            jobOpportunityListMain?.sort((a, b) => a.fields!.companyName!.first.trim().compareTo(b.fields!.companyName!.first.trim()));
-            jobOpportunityList?.sort((a, b) => a.fields!.companyName!.first.trim().compareTo(b.fields!.companyName!.first.trim()));
             isVisible = false;
           });
         }
       } else {
+        if (offset.isEmpty) {
+          jobOpportunityListMain = [];
+          jobOpportunityList = [];
+        }
         setState(() {
           isVisible = false;
-          if (offset.isEmpty) {
-            jobOpportunityListMain = [];
-            jobOpportunityList = [];
-          }
         });
         offset = "";
       }
@@ -96,35 +142,72 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 8),
-                Visibility(
-                  visible: jobOpportunityListMain != null && jobOpportunityListMain!.isNotEmpty,
-                  child: CustomEditTextSearch(
-                    hintText: "Search by company name..",
-                    type: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    controller: controllerSearch,
-                    onChanges: (value) {
-                      if (value.isEmpty) {
-                        jobOpportunityList = [];
-                        jobOpportunityList = jobOpportunityListMain;
-                        setState(() {});
-                      } else {
-                        jobOpportunityList = [];
-                        for (var i = 0; i < jobOpportunityListMain!.length; i++) {
-                          if (jobOpportunityListMain![i].fields!.companyName!.first.toLowerCase().contains(value.toLowerCase())) {
-                            jobOpportunityList?.add(jobOpportunityListMain![i]);
-                          }
-                        }
-                        setState(() {});
-                      }
+                custom_text(
+                  text: strings_name.str_select_hub,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                  bottomValue: 0,
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.h),
+                  width: MediaQuery.of(context).size.width,
+                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                    value: hubResponse,
+                    elevation: 16,
+                    style: blackText16,
+                    focusColor: Colors.white,
+                    onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                      setState(() {
+                        hubValue = newValue!.fields!.hubId!.toString();
+                        hubResponse = newValue;
+                        getRecords();
+                      });
                     },
+                    items: hubResponseArray
+                        ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                      return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                        value: value,
+                        child: Text(value.fields!.hubName!.toString()),
+                      );
+                    }).toList(),
                   ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 8.h),
+                Visibility(
+                  visible: jobOpportunityListMain != null && jobOpportunityListMain!.isNotEmpty,
+                  child: Column(children: [
+                    CustomEditTextSearch(
+                      hintText: "Search by company name..",
+                      type: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: controllerSearch,
+                      onChanges: (value) {
+                        if (value.isEmpty) {
+                          jobOpportunityList = [];
+                          jobOpportunityList = jobOpportunityListMain;
+                          setState(() {});
+                        } else {
+                          jobOpportunityList = [];
+                          for (var i = 0; i < jobOpportunityListMain!.length; i++) {
+                            if (jobOpportunityListMain![i].fields!.companyName!.first.toLowerCase().contains(value.toLowerCase())) {
+                              jobOpportunityList?.add(jobOpportunityListMain![i]);
+                            }
+                          }
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    custom_text(
+                      text: "Total Jobs: ${jobOpportunityListMain?.length ?? 0}",
+                      textStyles: blackTextSemiBold16,
+                      leftValue: 15.w,
+                      bottomValue: 0,
+                    ),
+                  ]),
+                ),
                 jobOpportunityList != null && jobOpportunityList?.isNotEmpty == true
                     ? Container(
-                        margin: const EdgeInsets.all(10),
+                        margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                         child: ListView.builder(
                             primary: false,
                             shrinkWrap: true,
@@ -140,7 +223,7 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
                                 child: Card(
                                   elevation: 5,
                                   child: Container(
-                                    margin: const EdgeInsets.all(10),
+                                    margin: EdgeInsets.all(10.h),
                                     child: Column(
                                       children: [
                                         custom_text(
@@ -151,8 +234,35 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
                                           bottomValue: 5,
                                           leftValue: 5,
                                         ),
-                                        custom_text(text: "${strings_name.str_job_title_} ${jobOpportunityList?[index].fields!.jobTitle}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                        custom_text(text: "${strings_name.str_city}: ${jobOpportunityList?[index].fields!.city?.first}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                        custom_text(
+                                            text: "${strings_name.str_job_title_} ${jobOpportunityList?[index].fields!.jobTitle}",
+                                            textStyles: blackTextSemiBold144,
+                                            topValue: 0,
+                                            maxLines: 2,
+                                            bottomValue: 5,
+                                            leftValue: 5),
+                                        custom_text(
+                                          text: "Job created on: ${displayDate(jobOpportunityList?[index].fields!.created)}",
+                                          textStyles: blackTextSemiBold12,
+                                          topValue: 0,
+                                          maxLines: 2,
+                                          bottomValue: 5,
+                                          leftValue: 5,
+                                        ),
+                                        custom_text(
+                                            text: "${strings_name.str_job_desc}: ${jobOpportunityList?[index].fields!.jobDescription}",
+                                            textStyles: greyDarkTextStyle,
+                                            topValue: 0,
+                                            maxLines: 5000,
+                                            bottomValue: 5,
+                                            leftValue: 5),
+                                        custom_text(
+                                            text: "${strings_name.str_city}: ${jobOpportunityList?[index].fields!.city?.first}",
+                                            textStyles: blackTextSemiBold12,
+                                            topValue: 0,
+                                            maxLines: 2,
+                                            bottomValue: 5,
+                                            leftValue: 5),
                                       ],
                                     ),
                                   ),
@@ -160,15 +270,31 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
                               );
                             }),
                       )
-                    : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: custom_text(text: strings_name.str_no_jobs, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),
-          Center(
-            child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+          Visibility(
+            visible: isVisible,
+            child: Container(
+              color: colors_name.colorWhite,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: const Center(
+                child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+              ),
+            ),
           )
         ],
       ),
     ));
+  }
+
+  displayDate(String? date) {
+    DateTime? jobCreationDate = DateTime.tryParse(date ?? "");
+    String displayDate = DateFormat("dd MMM, yyyy").format(jobCreationDate!);
+    return displayDate;
   }
 }

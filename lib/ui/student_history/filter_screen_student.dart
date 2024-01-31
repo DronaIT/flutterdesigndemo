@@ -333,8 +333,16 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                     ],
                   ),
                 ),
-                Center(
-                  child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
+                Visibility(
+                  visible: isVisible,
+                  child: Container(
+                    color: colors_name.colorWhite,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+                    ),
+                  ),
                 )
               ],
             )));
@@ -370,7 +378,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   }
 
   Future<void> fetchRecords() async {
-    var query = "AND(${TableNames.CLM_HUB_IDS}='$hubValue'";
+    var query = "AND(SEARCH('${hubResponse?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
 
     if (speValue.isNotEmpty) {
       query += ",${TableNames.CLM_SPE_IDS}='$speValue'";
@@ -383,7 +391,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
     }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     setState(() {
       isVisible = true;

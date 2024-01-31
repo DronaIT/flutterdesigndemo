@@ -113,6 +113,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       alignment: Alignment.topLeft,
                       textStyles: primaryTextSemiBold16,
                       bottomValue: 0,
+                      topValue: 0,
                       leftValue: 10,
                       maxLines: 2,
                     ),
@@ -134,7 +135,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                             alignment:Alignment.topLeft ,
                             margin: EdgeInsets.only(top: 10,bottom: 0,),
                             child: Text(
-                              "${data.records!.first.fields!.mobileNumber!}",
+                              data.records!.first.fields!.mobileNumber!,
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 fontSize: 16,
@@ -214,7 +215,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       leftValue: 10,
                     ),
                     custom_text(
-                      text: "${"${strings_name.str_total_attendance}: " + totalPresentPercentage}%",
+                      text: "${strings_name.str_total_attendance}: $totalPresentPercentage%",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       topValue: 10,
@@ -224,7 +225,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                     const SizedBox(height: 10),
                     GestureDetector(
                       onTap: () {
-                        Get.to(StudentAttendanceHistory(), arguments: data.records?.first.fields);
+                        Get.to(const StudentAttendanceHistory(), arguments: data.records?.first.fields);
                       },
                       child: Card(
                         elevation: 5,
@@ -247,7 +248,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                     const SizedBox(height: 5),
                     GestureDetector(
                       onTap: () {
-                        Get.to(StudentAttendanceHistoryMoreDetail(), arguments: data.records?.first.fields);
+                        Get.to(const StudentAttendanceHistoryMoreDetail(), arguments: data.records?.first.fields);
                       },
                       child: Card(
                         elevation: 5,
@@ -270,7 +271,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                     const SizedBox(height: 5),
                     GestureDetector(
                       onTap: () {
-                        Get.to(StudentPlacementHistory(), arguments: data.records?.first.fields);
+                        Get.to(const StudentPlacementHistory(), arguments: data.records?.first.fields);
                       },
                       child: Card(
                         elevation: 5,

@@ -56,7 +56,7 @@ class _customState extends State<custom_edittext> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.margin ?? EdgeInsets.only(left: 10, right: 10, top: widget.topValue),
+      margin: widget.margin ?? EdgeInsets.only(left: 10.w, right: 10.w, top: widget.topValue.h),
       alignment: widget.alignment,
       child: TextFormField(
         keyboardType: widget.type,
@@ -88,11 +88,11 @@ class _customState extends State<custom_edittext> {
                   )
                 : null,
             border: const OutlineInputBorder(),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: colors_name.textColorGreyLight, width: 1.5),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: colors_name.textColorGreyLight, width: 1.5.w),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: colors_name.colorPrimary, width: 1.5),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: colors_name.colorPrimary, width: 1.5.w),
             ),
             labelText: widget.labelText,
             hintText: widget.hintText,

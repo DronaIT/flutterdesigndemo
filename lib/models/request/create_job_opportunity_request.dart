@@ -23,6 +23,7 @@ class CreateJobOpportunityRequest {
   String? jobApplyEndTime;
   List<String>? sortlisted;
   List<String>? selected;
+  List<String>? appearedForInterview;
   String? interview_datetime;
   String? interview_instruction;
   String? interview_place_address;
@@ -56,6 +57,7 @@ class CreateJobOpportunityRequest {
     this.jobApplyStartTime,
     this.jobApplyEndTime,
     this.sortlisted,
+    this.appearedForInterview,
     this.incentiveStructure,
     this.interview_datetime,
     this.interview_instruction,
@@ -92,6 +94,7 @@ class CreateJobOpportunityRequest {
     jobApplyStartTime = json['job_apply_start_time'];
     jobApplyEndTime = json['job_apply_end_time'];
     sortlisted = json['shortlisted_students']?.cast<String>();
+    appearedForInterview = json['appeared_for_interview']?.cast<String>();
     applied_students = json['applied_students']?.cast<String>();
     placed_students = json['placed_students']?.cast<String>();
 
@@ -130,6 +133,7 @@ class CreateJobOpportunityRequest {
     data['job_apply_start_time'] = this.jobApplyStartTime;
     data['job_apply_end_time'] = this.jobApplyEndTime;
     data['shortlisted_students'] = this.sortlisted;
+    data['appeared_for_interview'] = this.appearedForInterview;
     data['applied_students'] = this.applied_students;
     data['placed_students'] = this.placed_students;
 

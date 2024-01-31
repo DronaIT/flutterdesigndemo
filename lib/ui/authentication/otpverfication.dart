@@ -112,7 +112,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                     },
                     onChanged: (value) {},
                     beforeTextPaste: (text) {
-                      print("Allowing to paste $text");
+                      debugPrint("Allowing to paste $text");
                       //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                       //but you can show anything you want here, like your pop up saying wrong paste format or etc
                       return true;
@@ -124,7 +124,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                 CustomButton(
                     text: strings_name.str_confirm,
                     click: () {
-                      //print("otp=>${_otp}");
+                      //debugPrint("otp=>${_otp}");
                       if (_otp.isEmpty) {
                         Utils.showSnackBar(context, strings_name.str_enter_otp);
                       } else if (counter <= 0) {

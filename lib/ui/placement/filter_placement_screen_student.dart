@@ -42,7 +42,7 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
   List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
   int semesterValue = 1;
 
-  List<String> placedResponseArray = <String>[TableNames.PLACED, TableNames.UNPLACED];
+  List<String> placedResponseArray = <String>[TableNames.PLACED, TableNames.UNPLACED, TableNames.BANNED];
   String placedValue = TableNames.PLACED;
 
   final apiRepository = getIt.get<ApiRepository>();
@@ -289,12 +289,9 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
       query += ",${TableNames.CLM_SPE_IDS}='$speValue'";
     }
     query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
-    // if (placedValue.isNotEmpty) {
-    //   query += ",${TableNames.CLM_DIVISION}='${placedValue.toString()}'";
-    // }
 
     query += ")";
-    print(query);
+    debugPrint(query);
 
     setState(() {
       isVisible = true;
@@ -340,8 +337,12 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
     studentList?.clear();
     if (viewStudent != null && viewStudent?.isNotEmpty == true) {
       for (int i = 0; i < viewStudent!.length; i++) {
-        if (placedValue == TableNames.PLACED) {
-          if (viewStudent?[i].fields?.placedJob != null && viewStudent?[i].fields!.placedJob?.isNotEmpty == true) {
+        if (placedValue == TableNames.BANNED) {
+          if (viewStudent?[i].fields?.is_banned == 1) {
+            studentList?.add(viewStudent![i].fields!);
+          }
+        } else if (placedValue == TableNames.PLACED) {
+          if (viewStudent?[i].fields?.placedJob != null && viewStudent?[i].fields!.placedJob?.isNotEmpty == true && viewStudent?[i].fields?.is_placed_now == "1") {
             studentList?.add(viewStudent![i].fields!);
           }
         } else {
@@ -350,10 +351,10 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
           }
         }
       }
-      // print("test=>${studentList?.length} ==>${viewStudent?.length}");
+      // debugPrint("test=>${studentList?.length} ==>${viewStudent?.length}");
       if (studentList?.isNotEmpty == true) {
         studentList?.sort((a, b) => a.name!.compareTo(b.name!));
-        Get.to(const Placed_unplaced_SList(), arguments: [
+        Get.to(const PlacedUnplacedList(), arguments: [
           {"studentList": studentList},
           {"title": placedValue},
           {"total students": viewStudent?.length.toString()},

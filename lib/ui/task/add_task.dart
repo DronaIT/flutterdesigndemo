@@ -119,7 +119,7 @@ class _AddTaskState extends State<AddTask> {
       if (i + 1 < helpDeskTypeResponse!.assignedMobileNumber!.length) query += ",";
     }
     query += ")";
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await apiRepository.getEmployeeListApi(query, offset);
@@ -171,7 +171,7 @@ class _AddTaskState extends State<AddTask> {
         children: [
           SingleChildScrollView(
             child: Container(
-              margin: const EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
               child: Column(
                 children: [
                   Row(

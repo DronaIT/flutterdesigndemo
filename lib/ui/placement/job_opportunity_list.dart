@@ -84,7 +84,9 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                       ),
                                     ),
                                     Visibility(
-                                        visible: updateJobOppList,
+                                        visible: updateJobOppList &&
+                                            (jobpportunityData.records?[index].fields?.status == strings_name.str_job_status_pending ||
+                                                jobpportunityData.records?[index].fields?.status == strings_name.str_job_status_published),
                                         child: GestureDetector(
                                           child: const Icon(Icons.edit, size: 22, color: Colors.black),
                                           onTap: () {
@@ -96,9 +98,11 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                         ))
                                   ],
                                 ),
-                                jobpportunityData.records?[index].fields!.stipendRangeMin != null && jobpportunityData.records?[index].fields!.stipendRangeMax != null
+                                jobpportunityData.records?[index].fields!.stipendRangeMin != null &&
+                                        jobpportunityData.records?[index].fields!.stipendRangeMax != null
                                     ? custom_text(
-                                        text: "Stipend: ${jobpportunityData.records?[index].fields!.stipendRangeMin} - ${jobpportunityData.records?[index].fields!.stipendRangeMax}",
+                                        text:
+                                            "Stipend: ${jobpportunityData.records?[index].fields!.stipendRangeMin} - ${jobpportunityData.records?[index].fields!.stipendRangeMax}",
                                         textStyles: blackTextSemiBold12,
                                         topValue: 5,
                                         maxLines: 2,
@@ -106,8 +110,21 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                         leftValue: 5,
                                       )
                                     : Container(),
-                                custom_text(text: "Timings: ${jobpportunityData.records?[index].fields!.timingStart} - ${jobpportunityData.records?[index].fields!.timingEnd}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                custom_text(text: "Vacancies: ${jobpportunityData.records?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                custom_text(
+                                    text:
+                                        "Timings: ${jobpportunityData.records?[index].fields!.timingStart} - ${jobpportunityData.records?[index].fields!.timingEnd}",
+                                    textStyles: blackTextSemiBold12,
+                                    topValue: 5,
+                                    maxLines: 2,
+                                    bottomValue: 5,
+                                    leftValue: 5),
+                                custom_text(
+                                    text: "Vacancies: ${jobpportunityData.records?[index].fields!.vacancies}",
+                                    textStyles: blackTextSemiBold12,
+                                    topValue: 5,
+                                    maxLines: 2,
+                                    bottomValue: 5,
+                                    leftValue: 5),
                                 custom_text(
                                   text: "Location: ${jobpportunityData.records?[index].fields!.reportingAddress?.first}",
                                   textStyles: blackTextSemiBold12,
@@ -117,7 +134,8 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                   leftValue: 5,
                                 ),
                                 custom_text(
-                                  text: "Internship : ${jobpportunityData.records?[index].fields!.internshipModes} - ${jobpportunityData.records?[index].fields!.internshipDuration}",
+                                  text:
+                                      "Internship : ${jobpportunityData.records?[index].fields!.internshipModes} - ${jobpportunityData.records?[index].fields!.internshipDuration}",
                                   textStyles: blackTextSemiBold12,
                                   topValue: 5,
                                   maxLines: 2,
@@ -148,7 +166,9 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                         );
                       }),
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_created, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: custom_text(text: strings_name.str_no_jobs_created, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

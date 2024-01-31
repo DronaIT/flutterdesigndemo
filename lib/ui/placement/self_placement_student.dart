@@ -537,6 +537,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
       request.hubIds = jobInfo?.fields?.hubIds;
       request.specializationIds = jobInfo?.fields?.specializationIds;
       request.semester = jobInfo?.fields?.semester;
+      List<String>? placedStudentsMobileNumber = [];
 
       if (selectedAppliedData?.isNotEmpty == true) {
         List<String>? appliedStudents = [];
@@ -549,6 +550,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
         List<String>? placedStudents = [];
         for (int i = 0; i < (selectedPlacedData?.length ?? 0); i++) {
           placedStudents.add(selectedPlacedData?[i].id ?? "");
+          placedStudentsMobileNumber.add(selectedPlacedData?[i].fields?.mobileNumber ?? "");
         }
         request.placed_students = placedStudents;
       }
@@ -569,6 +571,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
               isVisible = false;
             });
             if (PreferenceUtils.getIsLogin() == 2) {
+
               Utils.showSnackBar(context, strings_name.str_job_updated);
             } else {
               Utils.showSnackBar(context, strings_name.str_job_approval_sent);
@@ -616,6 +619,48 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
       }
     } else {
       Utils.showSnackBar(context, strings_name.str_err_company_setup);
+    }
+  }
+
+  Future<void> placeStudent(String studentMobileNumber) async {
+    if (studentMobileNumber.isNotEmpty == true) {
+      setState(() {
+        isVisible = true;
+      });
+      try {
+        var query = "SEARCH('$studentMobileNumber', ${TableNames.TB_USERS_PHONE})";
+        var data = await apiRepository.loginApi(query);
+        if (data.records!.isNotEmpty) {
+          Map<String, dynamic> requestParams = Map();
+          requestParams[TableNames.CLM_IS_PLACED_NOW] = "1";
+          requestParams[TableNames.CLM_HAS_RESIGNED] = 0;
+          if (data.records?.last != null) {
+            if (data.records?.last.fields?.is_banned == 1) {
+              requestParams[TableNames.CLM_BANNED_FROM_PLACEMENT] = 2;
+            }
+          }
+
+          var dataUpdate = await apiRepository.updateStudentDataApi(requestParams, data.records?.first.id ?? "");
+          if (dataUpdate.fields != null) {
+            setState(() {
+              isVisible = false;
+            });
+            Utils.showSnackBar(context, strings_name.str_self_place_job_updated);
+            await Future.delayed(const Duration(milliseconds: 2000));
+            Get.back(closeOverlays: true, result: true);
+          }
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } on DioError catch (e) {
+        setState(() {
+          isVisible = false;
+        });
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        Utils.showSnackBarUsingGet(errorMessage);
+      }
     }
   }
 }

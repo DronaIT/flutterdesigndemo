@@ -18,7 +18,6 @@ import '../../customwidget/custom_edittext.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/add_time_table_response.dart';
 import '../../models/base_api_response.dart';
-import '../../models/base_api_response.dart';
 import '../../models/hub_response.dart';
 import '../../models/request/update_time_table_request.dart';
 import '../../models/specialization_response.dart';
@@ -36,6 +35,7 @@ enum MODE { online, offline }
 
 class AddEditTimeTable extends StatefulWidget {
   final BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
+
   const AddEditTimeTable({super.key, this.timeTableData});
 
   @override
@@ -64,38 +64,26 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   String hubRecordId = "";
   List<String> selectedHubIds = [];
 
-  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>?
-      facultyResponseArray = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? facultyResponseArray = [];
   BaseApiResponseWithSerializable<ViewEmployeeResponse>? facultyResponse;
   String facultyValue = "";
   String facultyRecordId = "";
 
-  List<BaseApiResponseWithSerializable<SpecializationResponse>>?
-      specializationResponseArray = [];
-  BaseApiResponseWithSerializable<SpecializationResponse>?
-      specializationResponse;
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationResponseArray = [];
+  BaseApiResponseWithSerializable<SpecializationResponse>? specializationResponse;
   String specializationValue = "";
   String specializationRecordId = "";
 
   List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
   int semesterValue = -1;
 
-  List<String> divisionResponseArray = <String>[
-    TableNames.DIVISION_A,
-    TableNames.DIVISION_B,
-    TableNames.DIVISION_C,
-    TableNames.DIVISION_D
-  ];
+  List<String> divisionResponseArray = <String>[TableNames.DIVISION_A, TableNames.DIVISION_B, TableNames.DIVISION_C, TableNames.DIVISION_D];
   String divisionValue = "";
 
-  List<String> lectureHourResponseArray = <String>[
-    TableNames.ONE_HOUR,
-    TableNames.TWO_HOUR
-  ];
+  List<String> lectureHourResponseArray = <String>[TableNames.ONE_HOUR, TableNames.TWO_HOUR];
   String lectureValue = "";
 
-  List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectResponseArray =
-      [];
+  List<BaseApiResponseWithSerializable<SubjectResponse>>? subjectResponseArray = [];
   BaseApiResponseWithSerializable<SubjectResponse>? subjectResponse;
   String subjectValue = "";
   String subjectRecordId = "";
@@ -105,8 +93,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   String unitValue = "";
   String unitRecordId = "";
 
-  List<BaseApiResponseWithSerializable<TopicsResponse>>? topicResponseArray =
-      [];
+  List<BaseApiResponseWithSerializable<TopicsResponse>>? topicResponseArray = [];
   BaseApiResponseWithSerializable<TopicsResponse>? topicResponse;
   String topicValue = "";
   String topicRecordId = "";
@@ -123,15 +110,13 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   bool isFacultyLogin = false;
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+    final DateTime? picked =
+        await showDatePicker(context: context, initialDate: selectedDate, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        _tcDate.text = '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year.toString().padLeft(2, '0')}';
+        _tcDate.text =
+            '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year.toString().padLeft(2, '0')}';
       });
     }
   }
@@ -173,8 +158,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
               isAccessible = true;
               break;
             }
-            if (loginData.hubIdFromHubIds?.first ==
-                hubResponseArray![i].fields?.hubId) {
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
               isAccessible = true;
               break;
             }
@@ -186,8 +170,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         }
       } else {
         for (var i = 0; i < hubResponseArray!.length; i++) {
-          if (loginData.hubIdFromHubIds?.first !=
-              hubResponseArray![i].fields?.hubId) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
             hubResponseArray?.removeAt(i);
             i--;
           }
@@ -268,8 +251,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       }
       _tcStartTime.text = timeTableData?.startTime ?? '';
       _tcEndTime.text = timeTableData?.endTime ?? '';
-      if (timeTableData?.mode.toString() ==
-          TableNames.TIMETABLE_MODE_STATUS_ONLINE) {
+      if (timeTableData?.mode.toString() == TableNames.TIMETABLE_MODE_STATUS_ONLINE) {
         selectedMode = MODE.online;
         _tcOnlineClassLink.text = timeTableData?.modeTitle ?? '';
       } else {
@@ -289,8 +271,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       });
       specializationValue = "";
 
-      var query =
-          "FIND('${Utils.getHubIds(hubValue)}',${TableNames.CLM_HUB_IDS}, 0)";
+      var query = "SEARCH('${hubResponse?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}), 0)";
       try {
         var speData = await apiRepository.getSpecializationDetailApi(query);
         setState(() {
@@ -299,8 +280,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           isSpeLoading = false;
         });
         if (speData.records?.isEmpty == true) {
-          Utils.showSnackBar(
-              context, strings_name.str_no_specialization_assigned);
+          Utils.showSnackBar(context, strings_name.str_no_specialization_assigned);
         }
       } on DioError catch (e) {
         setState(() {
@@ -358,21 +338,16 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           facultyResponseArray?.clear();
         }
         if (isFacultyLogin) {
-          for (var faculty in data.records as Iterable<
-              BaseApiResponseWithSerializable<ViewEmployeeResponse>>) {
-            if (faculty.fields?.employeeId.toString() ==
-                employeeId.toString()) {
+          for (var faculty in data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>) {
+            if (faculty.fields?.employeeId.toString() == employeeId.toString()) {
               setState(() {
                 facultyResponseArray?.add(faculty);
               });
             }
           }
-
-        }
-        else {
+        } else {
           setState(() {
-            facultyResponseArray?.addAll(data.records as Iterable<
-                BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+            facultyResponseArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
           });
         }
         offset = data.offset;
@@ -431,8 +406,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       Utils.showSnackBar(context, strings_name.str_empty_end_time_tt);
     } else if (MODE.online == selectedMode && _tcOnlineClassLink.text.isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_meeting_link);
-    } else if (MODE.offline == selectedMode &&
-        _tcClassRoomNumber.text.isEmpty) {
+    } else if (MODE.offline == selectedMode && _tcClassRoomNumber.text.isEmpty) {
       Utils.showSnackBar(context, strings_name.str_empty_class_number);
     } else {
       if (isForAdd) {
@@ -457,21 +431,6 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
     setState(() {
       isLoading = true;
     });
-    // debugPrint('****Add Time Table ****');
-    // debugPrint('../ Date ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}');
-    // debugPrint('../ isHolyDay $isHoliday');
-    // debugPrint('../ holiday des ${_tcHoliday.text}');
-    // debugPrint('../ campus ${hubRecordId}');
-    // debugPrint('../ specialization ${specializationRecordId}');
-    // debugPrint('../ semester ${semesterValue}');
-    // debugPrint('../ divclass ${divisionValue}');
-    // debugPrint('../ subject ${subjectRecordId}');
-    // debugPrint('../ faculty name ${facultyRecordId}');
-    // debugPrint('../ start time ${_tcStartTime.text}');
-    // debugPrint('../ end time ${_tcEndTime.text}');
-    // debugPrint('../ model ${selectedMode.name}');
-    // debugPrint('../ metting link ${_tcOnlineClassLink.text}');
-    // debugPrint('../ class number ${_tcClassRoomNumber.text}');
 
     try {
       String createdBy = PreferenceUtils.getLoginRecordId();
@@ -487,8 +446,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           records: [
             Record(
               fields: AddTimeTable(
-                  date:
-                      '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
+                  date: '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
                   isHoliday: isHoliday,
                   startTime: _tcStartTime.text,
                   endTime: _tcEndTime.text,
@@ -506,9 +464,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                   createdBy: [createdBy],
                   updatedBy: [createdBy],
                   mode: selectedMode.name,
-                  modeTitle: selectedMode == MODE.online
-                      ? _tcOnlineClassLink.text
-                      : _tcClassRoomNumber.text),
+                  modeTitle: selectedMode == MODE.online ? _tcOnlineClassLink.text : _tcClassRoomNumber.text),
             )
           ],
         );
@@ -517,16 +473,13 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           records: [
             Record(
               fields: AddTimeTable(
-                date:
-                    '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
+                date: '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
                 isHoliday: isHoliday,
                 holidayTitle: _tcHoliday.text,
                 startTime: _tcStartTime.text,
                 endTime: _tcEndTime.text,
                 hubId: selectedHubIds,
                 specializationId: [],
-                semester: "",
-                division: "",
                 lectureId: [],
                 subjectId: [],
                 createdBy: [createdBy],
@@ -539,11 +492,11 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         );
       }
 
-      debugPrint(
-          '../ addTimeTableModel ${jsonEncode(addTimeTableModel.toJson())}');
+      var json = addTimeTableModel.toJson();
+      json.removeWhere((key, value) => value == null);
+      debugPrint('../ addTimeTableModel ${json.toString()}');
 
-      var resp =
-          await apiRepository.addTimeTableDataApi(addTimeTableModel.toJson());
+      var resp = await apiRepository.addTimeTableDataApi(json);
 
       if (resp.records?.isNotEmpty ?? false) {
         setState(() {
@@ -565,21 +518,6 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   }
 
   updateData() async {
-    // debugPrint('****update Time Table ****');
-    // debugPrint('../ Date ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}');
-    // debugPrint('../ isHolyDay $isHoliday');
-    // debugPrint('../ holidaydes ${_tcHoliday.text}');
-    // debugPrint('../ campus ${hubRecordId}');
-    // debugPrint('../ specialization ${specializationRecordId}');
-    // debugPrint('../ semester ${semesterValue}');
-    // debugPrint('../ divclass ${divisionValue}');
-    // debugPrint('../ subject ${subjectRecordId}');
-    // debugPrint('../ faculty name ${facultyRecordId}');
-    // debugPrint('../ start time ${_tcStartTime.text}');
-    // debugPrint('../ end time ${_tcEndTime.text}');
-    // debugPrint('../ model ${selectedMode.name}');
-    // debugPrint('../ metting link ${_tcOnlineClassLink.text}');
-    // debugPrint('../ class number ${_tcClassRoomNumber.text}');
     setState(() {
       isLoading = true;
     });
@@ -606,8 +544,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
             UpdateRecord(
               id: widget.timeTableData?.id ?? '',
               fields: UpdateFields(
-                  date:
-                      '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
+                  date: '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
                   isHoliday: isHoliday,
                   startTime: _tcStartTime.text,
                   endTime: _tcEndTime.text,
@@ -625,11 +562,8 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                   createdBy: widget.timeTableData?.fields?.createdBy ?? [],
                   updatedBy: updatedBy,
                   mode: selectedMode.name,
-                  modeTitle: selectedMode == MODE.online
-                      ? _tcOnlineClassLink.text
-                      : _tcClassRoomNumber.text,
-                  isAttendanceTaken:
-                      widget.timeTableData?.fields?.isAttendanceTaken ?? false),
+                  modeTitle: selectedMode == MODE.online ? _tcOnlineClassLink.text : _tcClassRoomNumber.text,
+                  isAttendanceTaken: widget.timeTableData?.fields?.isAttendanceTaken ?? false),
             )
           ],
         );
@@ -641,16 +575,13 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
             UpdateRecord(
               id: widget.timeTableData?.id ?? '',
               fields: UpdateFields(
-                date:
-                    '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
+                date: '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
                 isHoliday: isHoliday,
                 holidayTitle: _tcHoliday.text,
                 startTime: _tcStartTime.text,
                 endTime: _tcEndTime.text,
                 hubId: selectedHubIds,
                 specializationId: [],
-                semester: "",
-                division: "",
                 lectureId: [],
                 subjectId: [],
                 createdBy: widget.timeTableData?.fields?.createdBy ?? [],
@@ -663,11 +594,11 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         );
       }
 
-      debugPrint(
-          '../ updateTimeTableModel ${jsonEncode(updateTimeTableModel.toJson())}');
+      var json = updateTimeTableModel.toJson();
+      json.removeWhere((key, value) => value == null);
+      debugPrint('../ updateTimeTableModel ${jsonEncode(json)}');
 
-      var resp = await apiRepository.updateTimeTableDataApi(
-          updateTimeTableModel.toJson(), widget.timeTableData?.id ?? '');
+      var resp = await apiRepository.updateTimeTableDataApi(json, widget.timeTableData?.id ?? '');
 
       if (resp.records?.isNotEmpty ?? false) {
         setState(() {
@@ -692,9 +623,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   Widget build(BuildContext context) {
     var viewWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(widget.timeTableData == null
-          ? strings_name.str_add_new_time_table
-          : strings_name.str_edit_timetable),
+      appBar: AppWidgets.appBarWithoutBack(widget.timeTableData == null ? strings_name.str_add_new_time_table : strings_name.str_edit_timetable),
       body: isDataLoading
           ? const Center(
               child: CircularProgressIndicator(
@@ -922,12 +851,9 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                       )
                     : CustomButton(
                         click: () async {
-                          checkValidation(
-                              isForAdd: widget.timeTableData == null);
+                          checkValidation(isForAdd: widget.timeTableData == null);
                         },
-                        text: widget.timeTableData == null
-                            ? strings_name.str_add_timetable
-                            : strings_name.str_edit_timetable,
+                        text: widget.timeTableData == null ? strings_name.str_add_timetable : strings_name.str_edit_timetable,
                       ),
                 SizedBox(
                   height: 20.h,
@@ -937,8 +863,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
     );
   }
 
-  ExpansionTileItem customExpansionTileItem(
-      {required String title, required Widget widget, double? listHeight}) {
+  ExpansionTileItem customExpansionTileItem({required String title, required Widget widget, double? listHeight}) {
     return ExpansionTileItem(
       childrenPadding: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -983,10 +908,9 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       if (selectedEndTime.toDateTime().isBefore(selectedStartTime.toDateTime()) && _tcEndTime.text.isNotEmpty) {
         Utils.showSnackBarUsingGet('Start time cannot be after end time.');
         selectedStartTime = TimeOfDay.now();
-      }else {
+      } else {
         setState(() {
-          _tcStartTime.text =
-          '${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}';
+          _tcStartTime.text = '${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}';
           if (_tcStartTime.text == '00:00') {
             _tcStartTime.text = '12:00';
           }
@@ -1011,13 +935,11 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       if (selectedEndTime.toDateTime().isBefore(selectedStartTime.toDateTime()) && _tcStartTime.text.isNotEmpty) {
         Utils.showSnackBarUsingGet('End time cannot be before start time.');
         selectedEndTime = TimeOfDay.now();
-      }else {
+      } else {
         setState(() {
           // selectedEndTime = pickedS;
           debugPrint('selectedEndTime $selectedEndTime');
-          _tcEndTime.text =
-          '${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime
-              .minute.toString().padLeft(2, '0')}';
+          _tcEndTime.text = '${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}';
           if (_tcEndTime.text == '00:00') {
             _tcEndTime.text = '12:00';
           }
@@ -1029,8 +951,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   TextEditingController _tcFacultyName = TextEditingController();
   TextEditingController searchController = TextEditingController();
 
-  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>?
-      filterFacultyResponseArray = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? filterFacultyResponseArray = [];
 
   updateAndBack() {
     Navigator.pop(context);
@@ -1061,12 +982,9 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 ),
                 onChanged: (value) {
                   if (value.isNotEmpty) {
-                    List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>
-                        tempList = [];
+                    List<BaseApiResponseWithSerializable<ViewEmployeeResponse>> tempList = [];
                     facultyResponseArray?.forEach((item) {
-                      if (item.fields!.employeeName!
-                          .toLowerCase()
-                          .contains(value.toLowerCase())) {
+                      if (item.fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
                         tempList.add(item);
                       }
                     });
@@ -1091,16 +1009,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                           var data = facultyResponseArray?[index];
                           return GestureDetector(
                             onTap: () {
-                              facultyValue =
-                                  data!.fields!.employeeId!.toString();
+                              facultyValue = data!.fields!.employeeId!.toString();
                               facultyResponse = data;
                               facultyRecordId = data.id!;
                               updateAndBack();
                             },
-                            child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
-                                child: Text(data?.fields?.employeeName ?? '')),
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(data?.fields?.employeeName ?? '')),
                           );
                         })
                     : ListView.builder(
@@ -1109,16 +1023,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                           var data = filterFacultyResponseArray?[index];
                           return GestureDetector(
                             onTap: () {
-                              facultyValue =
-                                  data!.fields!.employeeId!.toString();
+                              facultyValue = data!.fields!.employeeId!.toString();
                               facultyResponse = data;
                               facultyRecordId = data.id!;
                               updateAndBack();
                             },
-                            child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
-                                child: Text(data?.fields?.employeeName ?? '')),
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(data?.fields?.employeeName ?? '')),
                           );
                         }),
               ),
@@ -1145,14 +1055,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
               fit: FlexFit.loose,
               child: SizedBox(
                 width: viewWidth,
-                child: DropdownButtonFormField<
-                    BaseApiResponseWithSerializable<HubResponse>>(
+                child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
                   elevation: 16,
                   style: blackText16,
                   focusColor: Colors.white,
-                  onChanged:
-                      (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                  onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                     setState(() {
                       hubValue = newValue!.fields!.id!.toString();
                       hubResponse = newValue;
@@ -1160,10 +1068,8 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                       getSpecializations();
                     });
                   },
-                  items: hubResponseArray?.map<
-                          DropdownMenuItem<
-                              BaseApiResponseWithSerializable<HubResponse>>>(
-                      (BaseApiResponseWithSerializable<HubResponse> value) {
+                  items: hubResponseArray
+                      ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                     return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                       value: value,
                       child: Text(value.fields!.hubName!.toString()),
@@ -1190,34 +1096,22 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                     fit: FlexFit.loose,
                     child: SizedBox(
                       width: viewWidth,
-                      child: DropdownButtonFormField<
-                          BaseApiResponseWithSerializable<
-                              SpecializationResponse>>(
+                      child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                         value: specializationResponse,
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,
-                        onChanged: (BaseApiResponseWithSerializable<
-                                SpecializationResponse>?
-                            newValue) {
+                        onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                           setState(() {
-                            specializationValue =
-                                newValue!.fields!.id!.toString();
+                            specializationValue = newValue!.fields!.id!.toString();
                             specializationResponse = newValue;
                             specializationRecordId = newValue.id!;
                             getSubjects();
                           });
                         },
-                        items: specializationResponseArray?.map<
-                                DropdownMenuItem<
-                                    BaseApiResponseWithSerializable<
-                                        SpecializationResponse>>>(
-                            (BaseApiResponseWithSerializable<
-                                    SpecializationResponse>
-                                value) {
-                          return DropdownMenuItem<
-                              BaseApiResponseWithSerializable<
-                                  SpecializationResponse>>(
+                        items: specializationResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
+                            (BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                          return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                             value: value,
                             child: Text(value.fields!.specializationName!.toString()),
                           );
@@ -1252,8 +1146,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                     });
                   },
                   value: semesterValue == -1 ? null : semesterValue,
-                  items: semesterResponseArray
-                      .map<DropdownMenuItem<int>>((int value) {
+                  items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
                     return DropdownMenuItem<int>(
                       value: value,
                       child: Text("Semester $value"),
@@ -1292,8 +1185,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                       });
                     },
                     value: divisionValue == "" ? null : divisionValue,
-                    items: divisionResponseArray
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -1323,30 +1215,22 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 fit: FlexFit.loose,
                 child: SizedBox(
                   width: viewWidth,
-                  child: DropdownButtonFormField<
-                      BaseApiResponseWithSerializable<SubjectResponse>>(
+                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
                     value: subjectResponse,
                     elevation: 16,
                     isExpanded: true,
                     style: blackText16,
                     focusColor: Colors.white,
-                    onChanged:
-                        (BaseApiResponseWithSerializable<SubjectResponse>?
-                            newValue) {
+                    onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {
                       setState(() {
                         subjectValue = newValue!.fields!.ids!.toString();
                         subjectResponse = newValue;
                         subjectRecordId = newValue.id!;
                       });
                     },
-                    items: subjectResponseArray?.map<
-                            DropdownMenuItem<
-                                BaseApiResponseWithSerializable<
-                                    SubjectResponse>>>(
-                        (BaseApiResponseWithSerializable<SubjectResponse>
-                            value) {
-                      return DropdownMenuItem<
-                          BaseApiResponseWithSerializable<SubjectResponse>>(
+                    items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>(
+                        (BaseApiResponseWithSerializable<SubjectResponse> value) {
+                      return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                         value: value,
                         child: Text(value.fields!.subjectTitle!.toString()),
                       );
@@ -1414,7 +1298,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                         controller: _tcFacultyName,
                         readOnly: true,
                         onTap: () {
-                          if(facultyResponseArray?.isNotEmpty??false){
+                          if (facultyResponseArray?.isNotEmpty ?? false) {
                             facultyDropDown();
                           }
                         },
@@ -1427,25 +1311,16 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,
-                        onChanged: (BaseApiResponseWithSerializable<
-                                ViewEmployeeResponse>?
-                            newValue) {
+                        onChanged: (BaseApiResponseWithSerializable<ViewEmployeeResponse>? newValue) {
                           setState(() {
                             facultyValue = newValue!.fields!.employeeId!.toString();
                             facultyResponse = newValue;
                             facultyRecordId = newValue.id!;
                           });
                         },
-                        items: facultyResponseArray?.map<
-                                DropdownMenuItem<
-                                    BaseApiResponseWithSerializable<
-                                        ViewEmployeeResponse>>>(
-                            (BaseApiResponseWithSerializable<
-                                    ViewEmployeeResponse>
-                                value) {
-                          return DropdownMenuItem<
-                              BaseApiResponseWithSerializable<
-                                  ViewEmployeeResponse>>(
+                        items: facultyResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>>(
+                            (BaseApiResponseWithSerializable<ViewEmployeeResponse> value) {
+                          return DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
                             value: value,
                             child: Text(value.fields!.employeeName!.toString()),
                           );
@@ -1471,11 +1346,8 @@ class ModeSelectedCard extends StatelessWidget {
   final String title;
   final bool isSelected;
   final VoidCallback onTap;
-  const ModeSelectedCard(
-      {super.key,
-      required this.title,
-      required this.isSelected,
-      required this.onTap});
+
+  const ModeSelectedCard({super.key, required this.title, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -1485,17 +1357,11 @@ class ModeSelectedCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 4.h),
         decoration: BoxDecoration(
             color: isSelected ? colors_name.colorLightGreen2 : null,
-            border: Border.all(
-                color: isSelected
-                    ? colors_name.presentColor
-                    : colors_name.colorBlack),
+            border: Border.all(color: isSelected ? colors_name.presentColor : colors_name.colorBlack),
             borderRadius: BorderRadius.circular(20.w)),
         child: Text(
           title,
-          style: dartGreen14.copyWith(
-              color: isSelected
-                  ? colors_name.presentColor
-                  : colors_name.colorBlack),
+          style: dartGreen14.copyWith(color: isSelected ? colors_name.presentColor : colors_name.colorBlack),
         ),
       ),
     );

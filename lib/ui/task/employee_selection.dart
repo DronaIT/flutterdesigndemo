@@ -57,7 +57,7 @@ class _EmployeeSelectionState extends State<EmployeeSelection> {
     // query += ")";
 
     var query = "FIND(1,is_working,0)";
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await apiRepository.getEmployeeListApi(query, offset);

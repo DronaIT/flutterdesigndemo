@@ -63,7 +63,7 @@ class _CompanySelectionState extends State<CompanySelection> {
       query = "OR(FIND('${PreferenceUtils.getLoginData().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
       query += ")";
     }
-    print(query);
+    debugPrint(query);
 
     try {
       var data = await apiRepository.getCompanyDetailApi(query, offset);

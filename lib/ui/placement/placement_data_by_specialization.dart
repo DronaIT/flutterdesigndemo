@@ -154,6 +154,13 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
                                           bottomValue: 0,
                                         ),
                                         custom_text(
+                                          text: "${strings_name.str_total_students}: ${speResponseArray![index].fields?.totalStudent}",
+                                          maxLines: 2,
+                                          textStyles: blackTextSemiBold14,
+                                          topValue: 5,
+                                          bottomValue: 0,
+                                        ),
+                                        custom_text(
                                           text: "${strings_name.str_total_students_placed}: ${speResponseArray![index].fields?.totalPlacement}",
                                           textStyles: blackTextSemiBold14,
                                           topValue: 5,
@@ -292,6 +299,7 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
       }
 
       speResponseArray![i].fields?.totalPlacement = totalPlacement;
+      speResponseArray![i].fields?.totalStudent = totalStudent;
       if (totalStudent > 0) {
         speResponseArray![i].fields?.overallPlacement = (totalPlacement * 100) / totalStudent;
       }

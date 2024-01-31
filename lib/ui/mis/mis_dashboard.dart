@@ -563,7 +563,6 @@ class _MISDashboardState extends State<MISDashboard> {
                                           bottomValue: 0,
                                         ),
                                         custom_text(
-                                          // text: "${strings_name.str_total_companies}: ${totalCompanyData.length}",
                                           text: "${strings_name.str_total_companies}: $totalCompany",
                                           maxLines: 2,
                                           textStyles: blackTextSemiBold14,
@@ -571,7 +570,13 @@ class _MISDashboardState extends State<MISDashboard> {
                                           bottomValue: 0,
                                         ),
                                         custom_text(
-                                          // text: "${strings_name.str_total_students_placed}: ${totalPlacedStudentData.length}",
+                                          text: "${strings_name.str_total_students}: $totalStudents",
+                                          maxLines: 2,
+                                          textStyles: blackTextSemiBold14,
+                                          topValue: 5,
+                                          bottomValue: 0,
+                                        ),
+                                        custom_text(
                                           text: "${strings_name.str_total_students_placed}: $totalPlacement",
                                           maxLines: 2,
                                           textStyles: blackTextSemiBold14,
