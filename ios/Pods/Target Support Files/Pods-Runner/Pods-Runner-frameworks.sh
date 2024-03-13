@@ -18,7 +18,7 @@ echo "mkdir -p ${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 
 COCOAPODS_PARALLEL_CODE_SIGN="${COCOAPODS_PARALLEL_CODE_SIGN:-false}"
-SWIFT_STDLIB_PATH="${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}"
+SWIFT_STDLIB_PATH="${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}"
 BCSYMBOLMAP_DIR="BCSymbolMaps"
 
 
@@ -41,7 +41,7 @@ install_framework()
 
   if [ -L "${source}" ]; then
     echo "Symlinked..."
-    source="$(readlink "${source}")"
+    source="$(readlink -f "${source}")"
   fi
 
   if [ -d "${source}/${BCSYMBOLMAP_DIR}" ]; then
@@ -188,9 +188,9 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/device_info/device_info.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/file_picker/file_picker.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/file_selector_ios/file_selector_ios.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/image_picker_ios/image_picker_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/open_filex/open_filex.framework"
@@ -216,9 +216,9 @@ if [[ "$CONFIGURATION" == "Profile" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/device_info/device_info.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/file_picker/file_picker.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/file_selector_ios/file_selector_ios.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/image_picker_ios/image_picker_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/open_filex/open_filex.framework"
@@ -244,9 +244,9 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/device_info/device_info.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/file_picker/file_picker.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/file_selector_ios/file_selector_ios.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/image_picker_ios/image_picker_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/open_filex/open_filex.framework"
