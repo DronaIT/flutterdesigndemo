@@ -79,8 +79,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                               const Text(strings_name.str_company_detail, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                              Icon(canEdit || companyInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right,
-                                  size: 30.h, color: colors_name.colorPrimary),
+                              Icon(canEdit || companyInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
                             ]),
                           ),
                         ),
@@ -105,8 +104,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                               const Text(strings_name.str_internship_detail, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                              Icon(canEdit || jobInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right,
-                                  size: 30.h, color: colors_name.colorPrimary),
+                              Icon(canEdit || jobInfo != null ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
                             ]),
                           ),
                         ),
@@ -129,6 +127,26 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                         },
                       ),
                       Visibility(
+                          visible: canEdit && PreferenceUtils.getIsLogin() == 1,
+                          child: GestureDetector(
+                            child: custom_text(
+                              text: strings_name.str_reset_this_data,
+                              alignment: Alignment.topRight,
+                              textStyles: primaryTextSemiBold15,
+                              bottomValue: 0,
+                              topValue: 8.h,
+                            ),
+                            onTap: () {
+                              companyInfo = null;
+                              jobInfo = null;
+                              companyRecordId = "";
+                              companyRequest = null;
+                              canEdit = false;
+
+                              setState(() {});
+                            },
+                          )),
+                      Visibility(
                         visible: PreferenceUtils.getIsLogin() == 2,
                         child: GestureDetector(
                           child: Card(
@@ -138,8 +156,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                               padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                 const Text(strings_name.str_applied_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                                Icon(canEdit || (selectedAppliedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right,
-                                    size: 30.h, color: colors_name.colorPrimary),
+                                Icon(canEdit || (selectedAppliedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
                               ]),
                             ),
                           ),
@@ -172,8 +189,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                               padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.h),
                               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                 const Text(strings_name.str_placed_student, textAlign: TextAlign.center, style: blackTextSemiBold16),
-                                Icon(canEdit || (selectedPlacedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right,
-                                    size: 30.h, color: colors_name.colorPrimary),
+                                Icon(canEdit || (selectedPlacedData?.length ?? 0) > 0 ? Icons.edit_outlined : Icons.keyboard_arrow_right, size: 30.h, color: colors_name.colorPrimary),
                               ]),
                             ),
                           ),
@@ -212,8 +228,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
                               submitData();
                             }
                           } else if (PreferenceUtils.getIsLogin() == 1) {
-                            BaseApiResponseWithSerializable<LoginFieldsResponse>? studentData =
-                                BaseApiResponseWithSerializable<LoginFieldsResponse>();
+                            BaseApiResponseWithSerializable<LoginFieldsResponse>? studentData = BaseApiResponseWithSerializable<LoginFieldsResponse>();
                             studentData.id = PreferenceUtils.getLoginRecordId();
                             studentData.fields = PreferenceUtils.getLoginData();
 
@@ -300,7 +315,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
     });
     try {
       var loginData = PreferenceUtils.getLoginData();
-      var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+      var query = "AND(${TableNames.TB_USERS_PHONE}='${loginData.mobileNumber.toString()}')";
 
       var data = await apiRepository.loginApi(query);
       if (data.records!.isNotEmpty) {
@@ -309,7 +324,15 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
 
         var lastSelfPlaceCompanyDetail = data.records!.last.fields!.self_place_company_code;
         if (lastSelfPlaceCompanyDetail?.isNotEmpty == true) {
-          fetchCompanyInfo(lastSelfPlaceCompanyDetail!.last);
+          var selfPlaceCompanyName = data.records!.last.fields!.self_place_company_name?.last;
+          var lastPlacedCompanyName = data.records!.last.fields!.company_name_from_placed_job?.last;
+          if (selfPlaceCompanyName != lastPlacedCompanyName) {
+            fetchCompanyInfo(lastSelfPlaceCompanyDetail!.last);
+          } else {
+            setState(() {
+              isVisible = false;
+            });
+          }
         } else {
           setState(() {
             isVisible = false;
@@ -571,7 +594,6 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
               isVisible = false;
             });
             if (PreferenceUtils.getIsLogin() == 2) {
-
               Utils.showSnackBar(context, strings_name.str_job_updated);
             } else {
               Utils.showSnackBar(context, strings_name.str_job_approval_sent);

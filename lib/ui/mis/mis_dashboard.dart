@@ -65,7 +65,7 @@ class _MISDashboardState extends State<MISDashboard> {
   List<BaseApiResponseWithSerializable<MarketingResponse>> marketingData = [];
   int numberOfApproaches = 0, numberOfMeetings = 0, numberOfSeminarArranged = 0, numberOfSeminarsCompleted = 0;
 
-  List<BaseApiResponseWithSerializable<CompanyApprochResponse>> companyApproachData = [];
+  List<BaseApiResponseWithSerializable<CompanyApproachResponse>> companyApproachData = [];
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>> companyData = [];
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>> totalCompanyData = [];
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>> jobsData = [];
@@ -93,6 +93,16 @@ class _MISDashboardState extends State<MISDashboard> {
       if (hubResponse.records!.isNotEmpty) {
         PreferenceUtils.setHubList(hubResponse);
         debugPrint("Hubs ${PreferenceUtils.getHubList().records!.length}");
+
+        for (int i = 0; i < hubResponse.records!.length; i++) {
+          if (hubResponse.records![i].fields?.hubId == TableNames.CANCELLED_HUB_ID) {
+            hubResponse.records?.removeAt(i);
+            i--;
+          } else if (hubResponse.records![i].fields?.hubId == TableNames.SUSPENDED_HUB_ID) {
+            hubResponse.records?.removeAt(i);
+            i--;
+          }
+        }
       }
       var isLogin = PreferenceUtils.getIsLogin();
       if (isLogin == 2) {
@@ -167,8 +177,7 @@ class _MISDashboardState extends State<MISDashboard> {
                         startDate != null && endDate != null
                             ? GestureDetector(
                                 child: custom_text(
-                                  text:
-                                      "${startDate.toString().split(" ").first.replaceAll("-", "/")} - ${endDate.toString().split(" ").first.replaceAll("-", "/")}",
+                                  text: "${startDate.toString().split(" ").first.replaceAll("-", "/")} - ${endDate.toString().split(" ").first.replaceAll("-", "/")}",
                                   alignment: Alignment.topLeft,
                                   textStyles: primaryTextSemiBold16,
                                   topValue: 0,
@@ -195,8 +204,7 @@ class _MISDashboardState extends State<MISDashboard> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                                              child: Image.network(homeModule.records![canShowFees].fields!.moduleImage.toString(),
-                                                  fit: BoxFit.fill, width: 20.w),
+                                              child: Image.network(homeModule.records![canShowFees].fields!.moduleImage.toString(), fit: BoxFit.fill, width: 20.w),
                                             ),
                                             custom_text(
                                               topValue: 0,
@@ -259,8 +267,7 @@ class _MISDashboardState extends State<MISDashboard> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                                              child: Image.network(homeModule.records![canShowPunchLeave].fields!.moduleImage.toString(),
-                                                  fit: BoxFit.fill, width: 20.w),
+                                              child: Image.network(homeModule.records![canShowPunchLeave].fields!.moduleImage.toString(), fit: BoxFit.fill, width: 20.w),
                                             ),
                                             custom_text(
                                               topValue: 0,
@@ -323,8 +330,7 @@ class _MISDashboardState extends State<MISDashboard> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                                              child: Image.network(homeModule.records![canShowAttendance].fields!.moduleImage.toString(),
-                                                  fit: BoxFit.fill, width: 20.w),
+                                              child: Image.network(homeModule.records![canShowAttendance].fields!.moduleImage.toString(), fit: BoxFit.fill, width: 20.w),
                                             ),
                                             custom_text(
                                               topValue: 0,
@@ -393,8 +399,7 @@ class _MISDashboardState extends State<MISDashboard> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                                              child: Image.network(homeModule.records![canShowMarketing].fields!.moduleImage.toString(),
-                                                  fit: BoxFit.fill, width: 20.w),
+                                              child: Image.network(homeModule.records![canShowMarketing].fields!.moduleImage.toString(), fit: BoxFit.fill, width: 20.w),
                                             ),
                                             custom_text(
                                               topValue: 0,
@@ -461,8 +466,7 @@ class _MISDashboardState extends State<MISDashboard> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                                              child: Image.network(homeModule.records![canShowPlacement].fields!.moduleImage.toString(),
-                                                  fit: BoxFit.fill, width: 20.w),
+                                              child: Image.network(homeModule.records![canShowPlacement].fields!.moduleImage.toString(), fit: BoxFit.fill, width: 20.w),
                                             ),
                                             custom_text(
                                               topValue: 0,
@@ -515,8 +519,7 @@ class _MISDashboardState extends State<MISDashboard> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                                              child: Image.network(homeModule.records![canShowPlacement].fields!.moduleImage.toString(),
-                                                  fit: BoxFit.fill, width: 20.w),
+                                              child: Image.network(homeModule.records![canShowPlacement].fields!.moduleImage.toString(), fit: BoxFit.fill, width: 20.w),
                                             ),
                                             custom_text(
                                               topValue: 0,
@@ -699,12 +702,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -791,12 +792,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -889,12 +888,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_EMPLOYEE_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_EMPLOYEE_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_EMPLOYEE_HUB_ID}}),0)";
         }
       }
     }
@@ -989,7 +986,7 @@ class _MISDashboardState extends State<MISDashboard> {
         if (offset.isEmpty) {
           companyApproachData.clear();
         }
-        companyApproachData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyApprochResponse>>);
+        companyApproachData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyApproachResponse>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
           fetchCompanyApproachData();
@@ -1022,12 +1019,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -1085,12 +1080,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -1149,12 +1142,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -1258,12 +1249,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -1311,12 +1300,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -1364,12 +1351,10 @@ class _MISDashboardState extends State<MISDashboard> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }

@@ -14,10 +14,10 @@ class AddSpecializationRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['specialization_name'] = this.specializationName;
-    data['specialization_desc'] = this.specializationDesc;
-    data['TBL_SUBJECT'] = this.tBLSUBJECT;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['specialization_name'] = specializationName;
+    data['specialization_desc'] = specializationDesc;
+    data['TBL_SUBJECT'] = tBLSUBJECT;
     // data['hub_ids'] = this.hubIds;
     return data;
   }

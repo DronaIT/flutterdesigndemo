@@ -13,7 +13,19 @@ class AddEmployeeRequest {
   String? pin_code;
   List<String>? accessible_hub_ids;
 
-  AddEmployeeRequest({this.employee_name, this.city, this.mobileNumber, this.gender, this.email, this.hubIds, this.roleIds, this.address, this.parents_mobile_number, this.spouse_mobile_number, this.pin_code, this.accessible_hub_ids});
+  AddEmployeeRequest(
+      {this.employee_name,
+      this.city,
+      this.mobileNumber,
+      this.gender,
+      this.email,
+      this.hubIds,
+      this.roleIds,
+      this.address,
+      this.parents_mobile_number,
+      this.spouse_mobile_number,
+      this.pin_code,
+      this.accessible_hub_ids});
 
   AddEmployeeRequest.fromJson(Map<String, dynamic> json) {
     employee_name = json['employee_name'];
@@ -31,19 +43,19 @@ class AddEmployeeRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['employee_name'] = this.employee_name;
-    data['city'] = this.city;
-    data['mobile_number'] = this.mobileNumber;
-    data['gender'] = this.gender;
-    data['email'] = this.email;
-    data['hub_ids'] = this.hubIds;
-    data['role_ids'] = this.roleIds;
-    data['address'] = this.address;
-    data['parents_mobile_number'] = this.parents_mobile_number;
-    data['spouse_mobile_number'] = this.spouse_mobile_number;
-    data['pin_code'] = this.pin_code;
-    data['accessible_hub_ids'] = this.accessible_hub_ids;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['employee_name'] = employee_name;
+    data['city'] = city;
+    data['mobile_number'] = mobileNumber;
+    data['gender'] = gender;
+    data['email'] = email;
+    data['hub_ids'] = hubIds;
+    data['role_ids'] = roleIds;
+    data['address'] = address;
+    data['parents_mobile_number'] = parents_mobile_number;
+    data['spouse_mobile_number'] = spouse_mobile_number;
+    data['pin_code'] = pin_code;
+    data['accessible_hub_ids'] = accessible_hub_ids;
     return data;
   }
 }

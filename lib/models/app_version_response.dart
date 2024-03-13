@@ -16,12 +16,12 @@ class AppVersionResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['android_version'] = this.androidVersion;
-    data['ios_version'] = this.iosVersion;
-    data['update_type'] = this.updateType;
-    data['enable_push_notifications'] = this.enablePushNotifications;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['android_version'] = androidVersion;
+    data['ios_version'] = iosVersion;
+    data['update_type'] = updateType;
+    data['enable_push_notifications'] = enablePushNotifications;
     return data;
   }
 }

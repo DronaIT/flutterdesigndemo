@@ -18,11 +18,11 @@ class ViewStudentAttendance {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['subject_id'] = this.subject_id;
-    data['subject_title'] = this.subject_title;
-    data['lecture_date'] = this.lecture_date;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['subject_id'] = subject_id;
+    data['subject_title'] = subject_title;
+    data['lecture_date'] = lecture_date;
+    data['status'] = status;
 
     return data;
   }

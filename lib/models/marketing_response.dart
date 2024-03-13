@@ -39,18 +39,18 @@ class MarketingResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
-    data['number_of_approach'] = this.numberOfApproach;
-    data['number_of_meetings'] = this.numberOfMeetings;
-    data['employee_hub_id'] = this.employeeHubId;
-    data['number_of_seminar_arranged'] = this.numberOfSeminarArranged;
-    data['number_of_seminars_completed'] = this.numberOfSeminarsCompleted;
-    data['entry_date'] = this.entryDate;
-    data['details_added_by'] = this.detailsAddedBy;
-    data['employee_name'] = this.employeeName;
-    data['employee_mobile_number'] = this.employeeMobileNumber;
-    data['remarks'] = this.remarks;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['city'] = city;
+    data['number_of_approach'] = numberOfApproach;
+    data['number_of_meetings'] = numberOfMeetings;
+    data['employee_hub_id'] = employeeHubId;
+    data['number_of_seminar_arranged'] = numberOfSeminarArranged;
+    data['number_of_seminars_completed'] = numberOfSeminarsCompleted;
+    data['entry_date'] = entryDate;
+    data['details_added_by'] = detailsAddedBy;
+    data['employee_name'] = employeeName;
+    data['employee_mobile_number'] = employeeMobileNumber;
+    data['remarks'] = remarks;
     return data;
   }
 }

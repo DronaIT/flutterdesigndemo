@@ -44,7 +44,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>> placedStudentData = [];
   NumberFormat format = NumberFormat.currency(locale: 'HI', symbol: "₹");
 
-  List<BaseApiResponseWithSerializable<CompanyApprochResponse>> companyApproachData = [];
+  List<BaseApiResponseWithSerializable<CompanyApproachResponse>> companyApproachData = [];
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>> companyData = [];
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>> jobsData = [];
 
@@ -52,6 +52,16 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
   void initState() {
     super.initState();
     hubResponseArray?.addAll(PreferenceUtils.getHubList().records!);
+    for (int i = 0; i < (hubResponseArray?.length ?? 0); i++) {
+      if (hubResponseArray![i].fields?.hubId == TableNames.CANCELLED_HUB_ID) {
+        hubResponseArray?.removeAt(i);
+        i--;
+      } else if (hubResponseArray![i].fields?.hubId == TableNames.SUSPENDED_HUB_ID) {
+        hubResponseArray?.removeAt(i);
+        i--;
+      }
+    }
+
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
@@ -137,8 +147,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
               startDate != null && endDate != null && false
                   ? GestureDetector(
                       child: custom_text(
-                        text:
-                            "${startDate.toString().split(" ").first.replaceAll("-", "/")} - ${endDate.toString().split(" ").first.replaceAll("-", "/")}",
+                        text: "${startDate.toString().split(" ").first.replaceAll("-", "/")} - ${endDate.toString().split(" ").first.replaceAll("-", "/")}",
                         alignment: Alignment.topLeft,
                         textStyles: primaryTextSemiBold16,
                         topValue: 0,
@@ -198,8 +207,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
                                         bottomValue: 0,
                                       ),
                                       custom_text(
-                                        text:
-                                            "${strings_name.str_number_of_new_self_placed_students}: ${hubResponseArray![index].fields?.newSelfPlaced}",
+                                        text: "${strings_name.str_number_of_new_self_placed_students}: ${hubResponseArray![index].fields?.newSelfPlaced}",
                                         textStyles: blackTextSemiBold14,
                                         topValue: 5,
                                         bottomValue: 0,
@@ -226,8 +234,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
                                         bottomValue: 0,
                                       ),
                                       custom_text(
-                                        text:
-                                            "${strings_name.str_overall_student_placement}: ${hubResponseArray![index].fields?.overallPlacement.toStringAsFixed(2)}%",
+                                        text: "${strings_name.str_overall_student_placement}: ${hubResponseArray![index].fields?.overallPlacement.toStringAsFixed(2)}%",
                                         textStyles: blackTextSemiBold14,
                                         topValue: 5,
                                         bottomValue: 0,
@@ -260,9 +267,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
                             }),
                       ),
                     )
-                  : Container(
-                      margin: const EdgeInsets.only(top: 100),
-                      child: custom_text(text: strings_name.str_no_hub, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                  : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_hub, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             ],
           ),
         ),
@@ -310,12 +315,10 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -404,7 +407,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
       int newVacancies = 0;
       for (int j = 0; j < (jobsData.length ?? 0); j++) {
         if (hubResponseArray![i].fields?.hubId == jobsData[j].fields?.hubIdFromHubIds?.last) {
-          if(jobsData[j].fields?.is_self_place != 1){
+          if (jobsData[j].fields?.is_self_place != 1) {
             newJobs += 1;
             newVacancies += jobsData[j].fields?.vacancies ?? 0;
           }

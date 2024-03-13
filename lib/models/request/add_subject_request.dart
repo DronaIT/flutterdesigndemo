@@ -18,13 +18,13 @@ class AddSubjectRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['subject_title'] = this.subjectTitle;
-    data['subject_code'] = this.code;
-    data['subject_credit'] = this.credit;
-    data['semester'] = this.semester;
-    data['specialization_ids'] = this.specializationIds;
-    data['TBL_UNITS'] = this.tBLUNITS;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['subject_title'] = subjectTitle;
+    data['subject_code'] = code;
+    data['subject_credit'] = credit;
+    data['semester'] = semester;
+    data['specialization_ids'] = specializationIds;
+    data['TBL_UNITS'] = tBLUNITS;
     return data;
   }
 }

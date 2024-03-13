@@ -14,11 +14,11 @@ class AddHubRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['hub_name'] = this.hub_name;
-    data['city'] = this.city;
-    data['address'] = this.address;
-    data['TBL_SPECIALIZATION'] = this.tBLSPECIALIZATION;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['hub_name'] = hub_name;
+    data['city'] = city;
+    data['address'] = address;
+    data['TBL_SPECIALIZATION'] = tBLSPECIALIZATION;
     return data;
   }
 }

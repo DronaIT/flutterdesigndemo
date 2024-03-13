@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutterdesigndemo/ui/announcements/all_announcements.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
@@ -84,9 +83,7 @@ class PushNotificationService {
       importance: Importance.high,
     );
     // This creates the channel on the device and if a channel with an id already exists, it will be updated
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+    await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
     //This is used to display the foreground notification
     var notificationType = message.data["type"] as String?;
     debugPrint("Notification Type in showNotification $notificationType");
@@ -135,7 +132,7 @@ class PushNotificationService {
   }
 
   static void sendNotificationToMultipleDevices(List<String> deviceTokens, String title, String body) async {
-    if(PreferenceUtils.getIsPushEnabled() == "1") {
+    if (PreferenceUtils.getIsPushEnabled() == "1") {
       final Map<String, dynamic> notification = {
         'title': title,
         'body': body,

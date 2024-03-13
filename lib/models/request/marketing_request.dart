@@ -8,13 +8,7 @@ class MarketingRequest {
   List<String>? detailsAddedBy;
   String remarks = "";
 
-  MarketingRequest(
-      {this.city,
-      this.numberOfApproach,
-      this.numberOfMeetings,
-      this.numberOfSeminarArranged,
-      this.numberOfSeminarsCompleted,
-      this.detailsAddedBy});
+  MarketingRequest({this.city, this.numberOfApproach, this.numberOfMeetings, this.numberOfSeminarArranged, this.numberOfSeminarsCompleted, this.detailsAddedBy});
 
   MarketingRequest.fromJson(Map<String, dynamic> json) {
     city = json['city'];
@@ -27,14 +21,14 @@ class MarketingRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
-    data['number_of_approach'] = this.numberOfApproach;
-    data['number_of_meetings'] = this.numberOfMeetings;
-    data['number_of_seminar_arranged'] = this.numberOfSeminarArranged;
-    data['number_of_seminars_completed'] = this.numberOfSeminarsCompleted;
-    data['details_added_by'] = this.detailsAddedBy;
-    data['remarks'] = this.remarks;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['city'] = city;
+    data['number_of_approach'] = numberOfApproach;
+    data['number_of_meetings'] = numberOfMeetings;
+    data['number_of_seminar_arranged'] = numberOfSeminarArranged;
+    data['number_of_seminars_completed'] = numberOfSeminarsCompleted;
+    data['details_added_by'] = detailsAddedBy;
+    data['remarks'] = remarks;
     return data;
   }
 }

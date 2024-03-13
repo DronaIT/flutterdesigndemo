@@ -39,8 +39,8 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
   String speValue = "";
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? speResponseArray = [];
 
-  List<int> semesterResponseArray = <int>[1, 2, 3, 4, 5, 6];
-  int semesterValue = 1;
+  List<int> semesterResponseArray = <int>[-1, 1, 2, 3, 4, 5, 6];
+  int semesterValue = -1;
 
   List<String> placedResponseArray = <String>[TableNames.PLACED, TableNames.UNPLACED, TableNames.BANNED];
   String placedValue = TableNames.PLACED;
@@ -55,9 +55,29 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
   @override
   void initState() {
     super.initState();
+    getHubs();
+  }
 
+  Future<void> getHubs() async {
+    try {
+      setState(() {
+        isVisible = true;
+      });
+      var hubResponse = await apiRepository.getHubApi();
+      if (hubResponse.records!.isNotEmpty) {
+        PreferenceUtils.setHubList(hubResponse);
+        debugPrint("Hubs ${PreferenceUtils.getHubList().records!.length}");
+      }
+      setHubData();
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+      setHubData();
+    }
+  }
+
+  setHubData() {
     hubResponseArray = PreferenceUtils.getHubList().records;
-
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
@@ -88,8 +108,10 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
         }
       }
     }
-
     // getSpecializations();
+    setState(() {
+      isVisible = false;
+    });
   }
 
   getSpecializations() {
@@ -158,8 +180,7 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
                             }
                             setState(() {});
                           },
-                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
-                              (BaseApiResponseWithSerializable<HubResponse> value) {
+                          items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                               value: value,
                               child: Text(value.fields!.hubName!.toString()),
@@ -188,8 +209,7 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
                               speResponse = newValue;
                             });
                           },
-                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
-                              (BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                          items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
                             return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                               value: value,
                               child: Text(value.fields!.specializationName.toString()),
@@ -220,7 +240,7 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
                           items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
                             return DropdownMenuItem<int>(
                               value: value,
-                              child: Text("Semester $value"),
+                              child: Text(value == -1 ? "Select semester" : "Semester $value"),
                             );
                           }).toList(),
                         ),
@@ -275,9 +295,17 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
                     ],
                   ),
                 ),
-                Center(
-                  child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
-                )
+                Visibility(
+                  visible: isVisible,
+                  child: Container(
+                    color: colors_name.colorWhite,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+                    ),
+                  ),
+                ),
               ],
             )));
   }
@@ -288,7 +316,18 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
     if (speValue.isNotEmpty) {
       query += ",${TableNames.CLM_SPE_IDS}='$speValue'";
     }
-    query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+
+    if (semesterValue != -1) {
+      query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+    }
+
+    if (placedValue == TableNames.PLACED) {
+      query += ",${TableNames.CLM_IS_PLACED_NOW}='1'";
+    } else if (placedValue == TableNames.UNPLACED) {
+      query += ",${TableNames.CLM_IS_PLACED_NOW}='0'";
+    } else if (placedValue == TableNames.BANNED) {
+      query += ",OR(${TableNames.CLM_BANNED_FROM_PLACEMENT}=1,${TableNames.CLM_BANNED_FROM_PLACEMENT}=2)";
+    }
 
     query += ")";
     debugPrint(query);
@@ -345,19 +384,22 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
           if (viewStudent?[i].fields?.placedJob != null && viewStudent?[i].fields!.placedJob?.isNotEmpty == true && viewStudent?[i].fields?.is_placed_now == "1") {
             studentList?.add(viewStudent![i].fields!);
           }
-        } else {
-          if (viewStudent?[i].fields?.placedJob == null) {
+        } else if (placedValue == TableNames.UNPLACED) {
+          if (viewStudent?[i].fields?.placedJob == null || viewStudent?[i].fields?.is_placed_now == "0") {
             studentList?.add(viewStudent![i].fields!);
           }
         }
       }
+
+      countTotalStudents();
+
       // debugPrint("test=>${studentList?.length} ==>${viewStudent?.length}");
       if (studentList?.isNotEmpty == true) {
         studentList?.sort((a, b) => a.name!.compareTo(b.name!));
         Get.to(const PlacedUnplacedList(), arguments: [
           {"studentList": studentList},
           {"title": placedValue},
-          {"total students": viewStudent?.length.toString()},
+          {"total students": countTotalStudents()},
         ])?.then((result) {
           if (result != null && result) {
             // Get.back(closeOverlays: true);
@@ -367,5 +409,27 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
         Utils.showSnackBarUsingGet(strings_name.str_no_students);
       }
     }
+  }
+
+  int countTotalStudents() {
+    if (hubResponse != null && hubResponse?.fields != null) {
+      int totalStudent = hubResponse?.fields?.tblStudent?.length ?? 0;
+      if (speValue.isNotEmpty) {
+        for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
+          if (speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
+            totalStudent -= 1;
+          }
+        }
+      }
+      if (semesterValue != -1) {
+        for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
+          if (semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
+            totalStudent -= 1;
+          }
+        }
+      }
+      return totalStudent;
+    }
+    return 0;
   }
 }

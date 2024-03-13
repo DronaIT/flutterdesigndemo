@@ -397,7 +397,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
       isVisible = true;
     });
     try {
-      var data = await apiRepository.loginApi(query, offset);
+      var data = await apiRepository.studentListApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           viewStudent?.clear();

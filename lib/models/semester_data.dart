@@ -9,8 +9,8 @@ class SemesterData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['semester'] = this.semester;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['semester'] = semester;
     return data;
   }
 }

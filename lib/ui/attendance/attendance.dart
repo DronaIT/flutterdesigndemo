@@ -6,7 +6,6 @@ import 'package:flutterdesigndemo/ui/attendance/attendance_history.dart';
 import 'package:flutterdesigndemo/ui/attendance/attendance_report_day.dart';
 import 'package:flutterdesigndemo/ui/attendance/myattendance.dart';
 import 'package:flutterdesigndemo/ui/attendance/take_attendance.dart';
-import 'package:flutterdesigndemo/ui/attendance/filter_screen.dart';
 import 'package:flutterdesigndemo/ui/attendance/take_attendance_for_predefined_lec.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';

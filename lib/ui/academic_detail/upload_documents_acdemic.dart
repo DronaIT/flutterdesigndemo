@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
@@ -15,7 +14,6 @@ import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
 import '../../models/login_fields_response.dart';
-import '../../models/specialization_response.dart';
 import '../../models/subject_response.dart';
 import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
@@ -49,22 +47,18 @@ class _UploadDocumentsAcademicState extends State<UploadDocumentsAcademic> {
     callSubjectData();
   }
 
-
-
   callSubjectData() async {
     setState(() {
       isVisible = true;
     });
     try {
+      //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
 
-        //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
-
-        // var data = await apiRepository.getSubjectsApi(query);
-        // if (data.records?.isNotEmpty == true) {
-        //   data.records?.sort((a, b) => a.fields!.subjectTitle!.toLowerCase().compareTo(b.fields!.subjectTitle!.toLowerCase()));
-        //   subjectData = data.records;
-        // }
-
+      // var data = await apiRepository.getSubjectsApi(query);
+      // if (data.records?.isNotEmpty == true) {
+      //   data.records?.sort((a, b) => a.fields!.subjectTitle!.toLowerCase().compareTo(b.fields!.subjectTitle!.toLowerCase()));
+      //   subjectData = data.records;
+      // }
     } on DioError catch (e) {
       setState(() {
         isVisible = false;

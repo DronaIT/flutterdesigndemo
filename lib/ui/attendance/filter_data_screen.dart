@@ -134,9 +134,9 @@ class _FilterDataState extends State<FilterData> {
       );
       myData.add(responseValue);
     }
-    myData.forEach((row) {
+    for (var row in myData) {
       sheet.appendRow([row.name, row.email, row.enrollmentNumber, row.mobileNumber, row.address, row.city, row.division, row.gender, row.joiningYear, row.semester, row.hub, row.specialization, row.subject]);
-    });
+    }
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
     var file = File("${appDocumentsDirectory.path}/Student_Report.xlsx");

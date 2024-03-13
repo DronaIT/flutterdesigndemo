@@ -3,9 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 
-import '../values/text_styles.dart';
-
-// ignore: must_be_immutable
 class CustomEditTextSearch extends StatefulWidget {
   final String hintText;
   final Color color;

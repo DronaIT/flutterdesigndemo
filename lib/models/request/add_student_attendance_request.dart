@@ -48,21 +48,21 @@ class AddStudentAttendanceRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['employee_id'] = this.employeeId;
-    data['hub_id'] = this.hubId;
-    data['specialization_id'] = this.specializationId;
-    data['subject_id'] = this.subjectId;
-    data['unit_id'] = this.unitId;
-    data['topic_id'] = this.topicId;
-    data['division'] = this.division;
-    data['lecture_date'] = this.lectureDate;
-    data['student_ids'] = this.studentIds;
-    data['present_ids'] = this.presentIds;
-    data['absent_ids'] = this.absentIds;
-    data['lecture_time'] = this.lectureTime;
-    data['lecture_duration'] = this.lecture_duration;
-    data['semester_by_student'] = this.semesterByStudent;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['employee_id'] = employeeId;
+    data['hub_id'] = hubId;
+    data['specialization_id'] = specializationId;
+    data['subject_id'] = subjectId;
+    data['unit_id'] = unitId;
+    data['topic_id'] = topicId;
+    data['division'] = division;
+    data['lecture_date'] = lectureDate;
+    data['student_ids'] = studentIds;
+    data['present_ids'] = presentIds;
+    data['absent_ids'] = absentIds;
+    data['lecture_time'] = lectureTime;
+    data['lecture_duration'] = lecture_duration;
+    data['semester_by_student'] = semesterByStudent;
     return data;
   }
 }

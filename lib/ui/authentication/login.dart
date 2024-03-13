@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/ui/authentication/forgotpassword.dart';
+import 'package:flutterdesigndemo/ui/authentication/login_company.dart';
 import 'package:flutterdesigndemo/ui/authentication/register.dart';
 import 'package:flutterdesigndemo/ui/home.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -58,11 +59,13 @@ class _LoginState extends State<Login> {
                       text: strings_name.str_lest_started,
                       alignment: Alignment.topLeft,
                       textStyles: centerTextStyle30,
+                      bottomValue: 10.h,
                     ),
                     custom_text(
                       text: strings_name.str_select_login_role,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
+                      bottomValue: 5.h,
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 0),
@@ -85,8 +88,24 @@ class _LoginState extends State<Login> {
                         }).toList(),
                       ),
                     ),
+                    loginValue == TableNames.LOGIN_ROLE_ORGANIZATION
+                        ? GestureDetector(
+                            child: custom_text(
+                              text: strings_name.str_login_with_otp,
+                              alignment: Alignment.topRight,
+                              textStyles: primaryTextSemiBold15,
+                              bottomValue: 0,
+                              topValue: 8.h,
+                            ),
+                            onTap: () {
+                              Get.to(const LoginCompany());
+                            },
+                          )
+                        : Container(),
                     SizedBox(height: 10.h),
                     custom_text(
+                      topValue: 5.h,
+                      bottomValue: 1.h,
                       text: strings_name.str_phone,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
@@ -117,13 +136,21 @@ class _LoginState extends State<Login> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 10.h),
                     custom_text(
+                      topValue: 0,
+                      bottomValue: 1.h,
                       text: strings_name.str_password,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                     ),
-                    custom_edittext(type: TextInputType.visiblePassword, textInputAction: TextInputAction.next, controller: passController, obscure: true, isPassword: true),
+                    custom_edittext(
+                      type: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.next,
+                      controller: passController,
+                      obscure: true,
+                      isPassword: true,
+                    ),
                     SizedBox(height: 8.h),
                     GestureDetector(
                       child: custom_text(
@@ -198,7 +225,8 @@ class _LoginState extends State<Login> {
                               isVisible = true;
                             });
 
-                            var query = "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
+                            var query =
+                                "OR(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',AND(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
                             try {
                               if (loginValue == TableNames.LOGIN_ROLE_STUDENT) {
                                 var data = await loginRepository.loginApi(query);
@@ -261,7 +289,8 @@ class _LoginState extends State<Login> {
                                   Utils.showSnackBar(context, strings_name.str_something_wrong);
                                 }
                               } else if (loginValue == TableNames.LOGIN_ROLE_ORGANIZATION) {
-                                var queryOrg = "OR(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',AND(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
+                                var queryOrg =
+                                    "OR(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',AND(${TableNames.TB_CONTACT_NUMBER}='${phoneController.text.toString()}',${TableNames.TB_USERS_PASSWORD}='${passController.text.toString()}'))";
                                 var dataOrg = await loginRepository.getCompanyDetailApi(queryOrg);
                                 if (dataOrg.records!.isNotEmpty) {
                                   setState(() {

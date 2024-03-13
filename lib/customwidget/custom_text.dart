@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../values/text_styles.dart';
 
@@ -19,8 +18,9 @@ class custom_text extends StatefulWidget {
   final TextAlign textAlign;
   final EdgeInsetsGeometry? margin;
 
-  custom_text(
-      {required this.text,
+  const custom_text(
+      {super.key,
+      required this.text,
       this.color = Colors.black,
       this.size = 30,
       this.fontWeight = FontWeight.bold,
@@ -35,10 +35,10 @@ class custom_text extends StatefulWidget {
       this.margin});
 
   @override
-  State<custom_text> createState() => _custom_textState();
+  State<custom_text> createState() => CustomTextState();
 }
 
-class _custom_textState extends State<custom_text> {
+class CustomTextState extends State<custom_text> {
   @override
   Widget build(BuildContext context) {
     return Container(

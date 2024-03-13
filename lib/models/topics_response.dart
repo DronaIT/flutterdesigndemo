@@ -17,12 +17,12 @@ class TopicsResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['unit_ids'] = this.unitIds;
-    data['ids'] = this.ids;
-    data['topic_title'] = this.topicTitle;
-    data['topic_id'] = this.topicId;
-    data['unit_id (from unit_ids)'] = this.unitIdFromUnitIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unit_ids'] = unitIds;
+    data['ids'] = ids;
+    data['topic_title'] = topicTitle;
+    data['topic_id'] = topicId;
+    data['unit_id (from unit_ids)'] = unitIdFromUnitIds;
     return data;
   }
 }

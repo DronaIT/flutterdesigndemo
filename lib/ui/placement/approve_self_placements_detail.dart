@@ -7,14 +7,12 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
-import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/company_detail_response.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/request/create_company_det_req.dart';
-import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
@@ -507,7 +505,7 @@ class _ApproveSelfPlacementDetailState extends State<ApproveSelfPlacementDetail>
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           custom_text(
-            text: 'Provide rejection reason',
+            text: strings_name.str_provide_rejection_reason,
             textStyles: primaryTextSemiBold16,
             maxLines: 2,
           ),

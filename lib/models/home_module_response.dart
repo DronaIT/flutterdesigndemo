@@ -16,12 +16,12 @@ class homeModuleResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['role_ids'] = this.roleIds;
-    data['module_id'] = this.moduleId;
-    data['module_title'] = this.moduleTitle;
-    data['module_image'] = this.moduleImage;
-    data['role_id (from role_ids)'] = this.roleIdFromRoleIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['role_ids'] = roleIds;
+    data['module_id'] = moduleId;
+    data['module_title'] = moduleTitle;
+    data['module_image'] = moduleImage;
+    data['role_id (from role_ids)'] = roleIdFromRoleIds;
     return data;
   }
 }

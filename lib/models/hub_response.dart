@@ -91,28 +91,28 @@ class HubResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['hub_name'] = this.hubName;
-    data['city'] = this.city;
-    data['hub_id'] = this.hubId;
-    data['address'] = this.address;
-    data['TBL_STUDENT'] = this.tblStudent;
-    data['student_specialization_ids'] = this.studentSpecializationIds;
-    data['student_mobile_number'] = this.studentMobileNumber;
-    data['student_name'] = this.studentName;
-    data['student_email'] = this.studentEmail;
-    data['student_semester'] = this.studentSemester;
-    data['student_division'] = this.studentDivision;
-    data['student_gender'] = this.studentGender;
-    data['admission_batch_start'] = this.admissionBatchStart;
-    data['admission_batch_end'] = this.admissionBatchEnd;
-    data['warning_letter_1_issued'] = this.warningLetter1Issued;
-    data['warning_letter_2_issued'] = this.warningLetter2Issued;
-    data['warning_letter_3_issued'] = this.warningLetter3Issued;
-    data['is_placed_now_data'] = this.isPlacedNow;
-    data['TBL_COMPANY'] = this.tblCompany;
-    data['working_employees'] = this.workingEmployees;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['hub_name'] = hubName;
+    data['city'] = city;
+    data['hub_id'] = hubId;
+    data['address'] = address;
+    data['TBL_STUDENT'] = tblStudent;
+    data['student_specialization_ids'] = studentSpecializationIds;
+    data['student_mobile_number'] = studentMobileNumber;
+    data['student_name'] = studentName;
+    data['student_email'] = studentEmail;
+    data['student_semester'] = studentSemester;
+    data['student_division'] = studentDivision;
+    data['student_gender'] = studentGender;
+    data['admission_batch_start'] = admissionBatchStart;
+    data['admission_batch_end'] = admissionBatchEnd;
+    data['warning_letter_1_issued'] = warningLetter1Issued;
+    data['warning_letter_2_issued'] = warningLetter2Issued;
+    data['warning_letter_3_issued'] = warningLetter3Issued;
+    data['is_placed_now_data'] = isPlacedNow;
+    data['TBL_COMPANY'] = tblCompany;
+    data['working_employees'] = workingEmployees;
     return data;
   }
 }

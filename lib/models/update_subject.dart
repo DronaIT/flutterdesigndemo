@@ -1,4 +1,3 @@
-import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 
 class UpdateSubject {
@@ -11,15 +10,15 @@ class UpdateSubject {
   UpdateSubject.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdTime = json['createdTime'];
-    fields = json['fields'] != null ? new SubjectResponse.fromJson(json['fields']) : null;
+    fields = json['fields'] != null ? SubjectResponse.fromJson(json['fields']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdTime'] = this.createdTime;
-    if (this.fields != null) {
-      data['fields'] = this.fields!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdTime'] = createdTime;
+    if (fields != null) {
+      data['fields'] = fields!.toJson();
     }
     return data;
   }

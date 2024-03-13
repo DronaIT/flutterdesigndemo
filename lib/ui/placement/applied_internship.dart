@@ -11,6 +11,7 @@ import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
+import 'package:get/get.dart';
 
 import '../../api/dio_exception.dart';
 import '../../utils/utils.dart';
@@ -28,9 +29,23 @@ class _AppliedInternshipState extends State<AppliedInternship> {
 
   BaseLoginResponse<JobOpportunityResponse> jobOpportunityData = BaseLoginResponse();
 
+  /*
+  *   argument value = 0 > Regular Internship
+  *   argument value = 1 > Final Placement
+  */
+  int jobType = 0;
+  String jobValue = strings_name.str_job_type_regular_internship;
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments != null) {
+      if (Get.arguments[0]["placementType"] != null) {
+        jobType = Get.arguments[0]["placementType"];
+      }
+    }
+    jobValue = jobType == 0 ? strings_name.str_job_type_regular_internship : strings_name.str_job_type_final_placement;
+
     getRecords();
   }
 
@@ -38,7 +53,7 @@ class _AppliedInternshipState extends State<AppliedInternship> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_APPLIED_STUDENTS}, 0)";
+    var query = "AND(${TableNames.CLM_JOB_TYPE}='$jobValue',FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_APPLIED_STUDENTS}, 0))";
     try {
       jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
       setState(() {
@@ -57,7 +72,7 @@ class _AppliedInternshipState extends State<AppliedInternship> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_applied_jobs),
+      appBar: AppWidgets.appBarWithoutBack(jobType == 0 ? strings_name.str_applied_jobs : strings_name.str_applied_job),
       body: Stack(
         children: [
           jobOpportunityData.records != null && jobOpportunityData.records!.isNotEmpty
@@ -141,7 +156,7 @@ class _AppliedInternshipState extends State<AppliedInternship> {
                         );
                       }),
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_applied, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: jobType == 0 ? strings_name.str_no_jobs_applied : strings_name.str_no_job_applied, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )

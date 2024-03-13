@@ -58,24 +58,24 @@ class HelpDeskRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Notes'] = this.Notes;
-    data['ticket_type_id'] = this.ticket_type_id;
-    data['field_type'] = this.field_type;
-    data['assigned_to'] = this.assigned_to;
-    data['authority_of'] = this.authority_of;
-    data['attachments'] = this.attachments;
-    data['created_by_student'] = this.createdByStudent;
-    data['created_by_employee'] = this.createdByEmployee;
-    data['created_by_organization'] = this.createdByOrganization;
-    data['deadline'] = this.deadline;
-    data['required_time'] = this.required_time;
-    data['actual_time_taken'] = this.actual_time_taken;
-    data['actual_finished_on'] = this.actual_finished_on;
-    data['Status'] = this.Status;
-    data['resolution_remark'] = this.remarks;
-    data['status_updated_by'] = this.status_updated_by;
-    data['task_importance'] = this.task_importance;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Notes'] = Notes;
+    data['ticket_type_id'] = ticket_type_id;
+    data['field_type'] = field_type;
+    data['assigned_to'] = assigned_to;
+    data['authority_of'] = authority_of;
+    data['attachments'] = attachments;
+    data['created_by_student'] = createdByStudent;
+    data['created_by_employee'] = createdByEmployee;
+    data['created_by_organization'] = createdByOrganization;
+    data['deadline'] = deadline;
+    data['required_time'] = required_time;
+    data['actual_time_taken'] = actual_time_taken;
+    data['actual_finished_on'] = actual_finished_on;
+    data['Status'] = Status;
+    data['resolution_remark'] = remarks;
+    data['status_updated_by'] = status_updated_by;
+    data['task_importance'] = task_importance;
     return data;
   }
 }

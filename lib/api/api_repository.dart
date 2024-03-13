@@ -6,9 +6,12 @@ import 'package:flutterdesigndemo/models/fees_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
 import 'package:flutterdesigndemo/models/marketing_response.dart';
+import 'package:flutterdesigndemo/models/marks_response.dart';
 import 'package:flutterdesigndemo/models/permission_response.dart';
 import 'package:flutterdesigndemo/models/punch_data_response.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
+import 'package:flutterdesigndemo/models/request/add_placement_attendance_response.dart';
+import 'package:flutterdesigndemo/models/request/add_placement_marks_request.dart';
 import 'package:flutterdesigndemo/models/request/add_punch_request.dart';
 import 'package:flutterdesigndemo/models/request/add_student_attendance_request.dart';
 import 'package:flutterdesigndemo/models/request/add_employee_request.dart';
@@ -43,6 +46,7 @@ import 'package:flutterdesigndemo/models/update_topics.dart';
 import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
+import 'package:flutterdesigndemo/ui/placement/add_placement_marks.dart';
 
 import '../models/App_data_response.dart';
 import '../models/add_announcement_response.dart';
@@ -62,6 +66,16 @@ class ApiRepository {
 
   ApiRepository(this.userApi);
 
+  Future<BaseLoginResponse<LoginFieldsResponse>> studentListApi(String query, [String offset = ""]) async {
+    try {
+      final response = await userApi.studentListApi(query, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
   Future<BaseLoginResponse<LoginFieldsResponse>> loginApi(String query, [String offset = ""]) async {
     try {
       final response = await userApi.loginRegisterApi(query, offset);
@@ -72,7 +86,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<LoginEmployeResponse>> loginEmployeeApi(String query) async {
+  Future<BaseLoginResponse<LoginEmployeeResponse>> loginEmployeeApi(String query) async {
     try {
       final response = await userApi.loginRegisterEmployeeApi(query);
       return response;
@@ -92,7 +106,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<LoginEmployeResponse>> registerEmployeeApi(String query) async {
+  Future<BaseLoginResponse<LoginEmployeeResponse>> registerEmployeeApi(String query) async {
     try {
       final response = await userApi.loginRegisterEmployeeApi(query);
       return response;
@@ -142,7 +156,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<CompanyApprochResponse>> creCompanyApprochApi(List<Map<String, CreateCompanyaRequest>> createCompFormula) async {
+  Future<BaseLoginResponse<CompanyApproachResponse>> creCompanyApprochApi(List<Map<String, CreateCompanyApproveRequest>> createCompFormula) async {
     try {
       final response = await userApi.createCompanyApproachApi(createCompFormula);
       return response;
@@ -182,7 +196,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<CompanyApprochResponse>> getCompanyApproachApi(String formula, [String offset = ""]) async {
+  Future<BaseLoginResponse<CompanyApproachResponse>> getCompanyApproachApi(String formula, [String offset = ""]) async {
     try {
       final response = await userApi.getCompanyApproachApi(formula, offset);
       return response;
@@ -212,7 +226,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<TypeOfsectoreResponse>> getSectorApi() async {
+  Future<BaseLoginResponse<TypeOfSectorResponse>> getSectorApi() async {
     try {
       final response = await userApi.getSectorsApi();
       return response;
@@ -222,7 +236,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseApiResponseWithSerializable<LoginEmployeResponse>> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
+  Future<BaseApiResponseWithSerializable<LoginEmployeeResponse>> addEmployeeApi(AddEmployeeRequest addEmployeeFormula) async {
     try {
       final response = await userApi.addEmployeeApi(addEmployeeFormula);
       return response;
@@ -562,9 +576,29 @@ class ApiRepository {
     }
   }
 
+  Future<BaseLoginResponse<AddPlacementAttendanceResponse>> getPlacementInfoApi(String dataFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getPlacementInfoApi(dataFormula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
   Future<BaseApiResponseWithSerializable<AddPlacementAttendanceData>> updatePlacementInfoApi(Map<String, dynamic> request) async {
     try {
       final response = await userApi.updatePlacementInfoApi(request);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AddPlacementAttendanceData>> updatePlacementInfoDataApi(Map<String, dynamic> data, String recordId) async {
+    try {
+      final response = await userApi.updatePlacementInfoDataApi(data, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -632,7 +666,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<LoginEmployeResponse>> addTokenEmployee(Map<String, dynamic> data, String recordId) async {
+  Future<BaseLoginResponse<LoginEmployeeResponse>> addTokenEmployee(Map<String, dynamic> data, String recordId) async {
     try {
       final response = await userApi.addTokenEmployee(data, recordId);
       return response;
@@ -865,6 +899,26 @@ class ApiRepository {
   Future<BaseApiResponseWithSerializable<PunchDataResponse>> updatePunchRecord(Map<String, dynamic> punchFormula, String recordId) async {
     try {
       final response = await userApi.updatePunchRecord(punchFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<MarksResponse>> getMarksApi(String formula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getMarksApi(formula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<MarksResponse>> addPlacementMarksApi(AddPlacementMarksRequest marksReq) async {
+    try {
+      final response = await userApi.addPlacementMarksApi(marksReq);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

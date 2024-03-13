@@ -10,15 +10,15 @@ class UpdateStudentAttendance {
   UpdateStudentAttendance.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdTime = json['createdTime'];
-    fields = json['fields'] != null ? new StudentAttendanceResponse.fromJson(json['fields']) : null;
+    fields = json['fields'] != null ? StudentAttendanceResponse.fromJson(json['fields']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdTime'] = this.createdTime;
-    if (this.fields != null) {
-      data['fields'] = this.fields!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdTime'] = createdTime;
+    if (fields != null) {
+      data['fields'] = fields!.toJson();
     }
     return data;
   }

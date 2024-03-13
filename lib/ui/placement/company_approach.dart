@@ -33,10 +33,10 @@ class _CompanyApproachState extends State<CompanyApproach> {
   TextEditingController contactPnumberController = TextEditingController();
   TextEditingController contactPWanumberController = TextEditingController();
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
-  BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
-  List<Map<String, CreateCompanyaRequest>> list = [];
-  String typeofValue = "1";
+  List<BaseApiResponseWithSerializable<TypeOfSectorResponse>>? typeofResponseArray = [];
+  BaseApiResponseWithSerializable<TypeOfSectorResponse>? typeOfResponse;
+  List<Map<String, CreateCompanyApproveRequest>> list = [];
+  String typeofValue = "";
   final companyaRepository = getIt.get<ApiRepository>();
 
   @override
@@ -90,19 +90,19 @@ class _CompanyApproachState extends State<CompanyApproach> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                         width: viewWidth,
-                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>(
+                        child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                           elevation: 16,
                           style: blackText16,
                           value: typeOfResponse,
                           focusColor: Colors.white,
-                          onChanged: (BaseApiResponseWithSerializable<TypeOfsectoreResponse>? newValue) {
+                          onChanged: (BaseApiResponseWithSerializable<TypeOfSectorResponse>? newValue) {
                             setState(() {
                               typeofValue = newValue!.id!;
                               typeOfResponse = newValue;
                             });
                           },
-                          items: typeofResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>>((BaseApiResponseWithSerializable<TypeOfsectoreResponse> value) {
-                            return DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>(
+                          items: typeofResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfSectorResponse>>>((BaseApiResponseWithSerializable<TypeOfSectorResponse> value) {
+                            return DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                               value: value,
                               child: Text(value.fields!.sectorTitle!.toString()),
                             );
@@ -171,13 +171,13 @@ class _CompanyApproachState extends State<CompanyApproach> {
                         setState(() {
                           isVisible = true;
                         });
-                        CreateCompanyaRequest response = CreateCompanyaRequest();
+                        CreateCompanyApproveRequest response = CreateCompanyApproveRequest();
                         response.company_name = nameofCompanyController.text.trim().toString();
                         response.contact_person_name = nameOfContactPController.text.trim().toString();
                         response.contact_person_no = contactPnumberController.text.trim().toString();
                         response.contact_person_whatsapp_no = contactPWanumberController.text.trim().toString();
                         response.type_of_industory = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
-                        Map<String, CreateCompanyaRequest> map = Map();
+                        Map<String, CreateCompanyApproveRequest> map = Map();
                         map["fields"] = response;
                         list.add(map);
                         try {

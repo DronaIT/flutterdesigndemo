@@ -31,9 +31,23 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityList = [];
   String offset = "";
 
+  /*
+  *   argument value = 0 > Regular Internship
+  *   argument value = 1 > Final Placement
+  */
+  int jobType = 0;
+  String jobValue = strings_name.str_job_type_regular_internship;
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments != null) {
+      if (Get.arguments[0]["placementType"] != null) {
+        jobType = Get.arguments[0]["placementType"];
+      }
+    }
+    jobValue = jobType == 0 ? strings_name.str_job_type_regular_internship : strings_name.str_job_type_final_placement;
+
     getRecords();
   }
 
@@ -45,7 +59,7 @@ class _ApplyForInternshipState extends State<ApplyForInternship> {
         });
       }
       var loginData = PreferenceUtils.getLoginData();
-      var query = "AND(";
+      var query = "AND(${TableNames.CLM_JOB_TYPE}='$jobValue',";
       query += "FIND('${strings_name.str_job_status_published}',${TableNames.CLM_STATUS}, 0)";
       query += ",FIND('1',${TableNames.CLM_DISPLAY_INTERNSHIP})";
       query += ")";

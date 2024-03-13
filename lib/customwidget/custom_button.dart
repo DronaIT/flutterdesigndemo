@@ -12,6 +12,7 @@ class CustomButton extends StatefulWidget {
   final Function() click;
 
   const CustomButton({
+    super.key,
     required this.text,
     required this.click,
     this.fontSize = 20,
@@ -35,7 +36,7 @@ class _CustomButtonState extends State<CustomButton> {
       child: ElevatedButton(
         onPressed: widget.click,
         style: ElevatedButton.styleFrom(
-          primary: colors_name.colorPrimary,
+          backgroundColor: colors_name.colorPrimary,
           padding: EdgeInsets.all(10.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -61,7 +62,15 @@ class CustomButtonOutline extends StatefulWidget {
   final TextAlign textAlign;
   final Function() click;
 
-  const CustomButtonOutline({super.key, required this.text, required this.click, this.fontSize = 20, this.bWidth = 0, this.color = colors_name.colorPrimary, this.textAlign = TextAlign.center, this.fontWeight = FontWeight.w700});
+  const CustomButtonOutline(
+      {super.key,
+      required this.text,
+      required this.click,
+      this.fontSize = 20,
+      this.bWidth = 0,
+      this.color = colors_name.colorPrimary,
+      this.textAlign = TextAlign.center,
+      this.fontWeight = FontWeight.w700});
 
   @override
   State<CustomButtonOutline> createState() => _CustomButtonOutlineState();
@@ -77,7 +86,7 @@ class _CustomButtonOutlineState extends State<CustomButtonOutline> {
       child: ElevatedButton(
         onPressed: widget.click,
         style: ElevatedButton.styleFrom(
-          primary: colors_name.colorWhite,
+          backgroundColor: colors_name.colorWhite,
           padding: EdgeInsets.all(10.h),
           side: BorderSide(color: colors_name.colorPrimary, width: 2.w),
           shape: RoundedRectangleBorder(

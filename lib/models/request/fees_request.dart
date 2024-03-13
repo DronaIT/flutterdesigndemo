@@ -21,12 +21,12 @@ class FeesRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['student_id'] = this.studentId;
-    data['fees_paid'] = this.feesPaid;
-    data['proof_of_payment'] = this.proofOfPayment;
-    data['fees_by_semester'] = this.feesBySemester;
-    data['remarks'] = this.remarks;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['student_id'] = studentId;
+    data['fees_paid'] = feesPaid;
+    data['proof_of_payment'] = proofOfPayment;
+    data['fees_by_semester'] = feesBySemester;
+    data['remarks'] = remarks;
     return data;
   }
 }

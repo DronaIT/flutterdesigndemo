@@ -10,9 +10,9 @@ class AddTopicsRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['topic_title'] = this.topicTitle;
-    data['unit_ids'] = this.unitIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['topic_title'] = topicTitle;
+    data['unit_ids'] = unitIds;
     return data;
   }
 }

@@ -28,6 +28,8 @@ import 'home.dart';
 import 'welcome.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   State<StatefulWidget> createState() => StartState();
 }
@@ -74,7 +76,7 @@ class StartState extends State<SplashScreen> {
       } else {
         await getRecords();
         Future.delayed(const Duration(seconds: 2), () async {
-          if (isLogin == 1 || isLogin == 2) {
+          if (isLogin == 1 || isLogin == 2 || isLogin == 3) {
             doLogin();
           } else {
             Get.to(const Welcome());
@@ -84,7 +86,7 @@ class StartState extends State<SplashScreen> {
     } else {
       await getRecords();
       Future.delayed(const Duration(seconds: 2), () async {
-        if (isLogin == 1 || isLogin == 2) {
+        if (isLogin == 1 || isLogin == 2 || isLogin == 3) {
           doLogin();
         } else {
           Get.to(const Welcome());
@@ -119,7 +121,7 @@ class StartState extends State<SplashScreen> {
       }
     } else if (isLogin == 2) {
       var loginData = PreferenceUtils.getLoginDataEmployee();
-      var query = "FIND('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE}, 0)";
+      var query = "SEARCH('${loginData.mobileNumber.toString()}', ${TableNames.TB_USERS_PHONE})";
       try {
         var dataEmployee = await apiRepository.loginEmployeeApi(query);
         if (dataEmployee.records!.isNotEmpty) {
@@ -142,7 +144,7 @@ class StartState extends State<SplashScreen> {
       }
     } else if (isLogin == 3) {
       var loginData = PreferenceUtils.getLoginDataOrganization();
-      var query = "FIND('${loginData.contactNumber.toString()}', ${TableNames.TB_CONTACT_NUMBER}, 0)";
+      var query = "AND(${TableNames.TB_CONTACT_NUMBER}='${loginData.contactNumber.toString()}')";
       try {
         var dataOrganization = await apiRepository.getCompanyDetailApi(query);
         if (dataOrganization.records!.isNotEmpty) {
@@ -266,7 +268,7 @@ class StartState extends State<SplashScreen> {
                     onPressed: () async {
                       Navigator.pop(context);
                       await getRecords();
-                      if (isLogin == 1 || isLogin == 2) {
+                      if (isLogin == 1 || isLogin == 2 || isLogin == 3) {
                         doLogin();
                       } else {
                         Get.to(const Welcome());

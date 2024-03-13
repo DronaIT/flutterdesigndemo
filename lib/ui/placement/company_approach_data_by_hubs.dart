@@ -39,7 +39,7 @@ class _CompanyApproachDataByHubsState extends State<CompanyApproachDataByHubs> {
   DateTime? startDate = DateTime.now().add(const Duration(days: -1));
   DateTime? endDate = DateTime.now();
 
-  List<BaseApiResponseWithSerializable<CompanyApprochResponse>> companyApproachData = [];
+  List<BaseApiResponseWithSerializable<CompanyApproachResponse>> companyApproachData = [];
   List<BaseApiResponseWithSerializable<CompanyDetailResponse>> companyData = [];
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>> jobsData = [];
 

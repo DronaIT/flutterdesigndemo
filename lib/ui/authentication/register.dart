@@ -18,7 +18,6 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import '../../api/dio_exception.dart';
 
@@ -61,8 +60,7 @@ class _RegisterState extends State<Register> {
                         )),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: AppImage.load(AppImage.ic_launcher,
-                          width: 80.w, height: 80.h),
+                      child: AppImage.load(AppImage.ic_launcher, width: 80.w, height: 80.h),
                     ),
                     custom_text(
                       text: strings_name.str_lest_setup,
@@ -105,71 +103,58 @@ class _RegisterState extends State<Register> {
                     CustomButton(
                         text: strings_name.str_verify,
                         click: () async {
-                          var phone = FormValidator.validatePhone(
-                              phoneController.text.toString().trim());
+                          var phone = FormValidator.validatePhone(phoneController.text.toString().trim());
                           if (phone.isNotEmpty) {
                             Utils.showSnackBar(context, phone);
                           } else {
                             setState(() {
                               isVisible = true;
                             });
-                            var query =
-                                "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
+                            var query = "(${TableNames.TB_USERS_PHONE}='${phoneController.text.toString()}')";
                             try {
-                              var data =
-                                  await registerRepository.registerApi(query);
+                              var data = await registerRepository.registerApi(query);
                               if (data.records!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                if (data.records!.first.fields?.password ==
-                                    null) {
+                                if (data.records!.first.fields?.password == null) {
                                   sendOTP(phoneController.text, false);
                                 } else {
-                                  Utils.showSnackBar(context,
-                                      strings_name.str_user_already_verified);
+                                  Utils.showSnackBar(context, strings_name.str_user_already_verified);
                                 }
                               } else if (data.records!.length == 0) {
-                                var dataEmployee = await registerRepository
-                                    .registerEmployeeApi(query);
+                                var dataEmployee = await registerRepository.registerEmployeeApi(query);
                                 if (dataEmployee.records!.isNotEmpty) {
                                   setState(() {
                                     isVisible = false;
                                   });
-                                  if (dataEmployee
-                                          .records!.first.fields?.password ==
-                                      null) {
+                                  if (dataEmployee.records!.first.fields?.password == null) {
                                     sendOTP(phoneController.text, true);
                                   } else {
-                                    Utils.showSnackBar(context,
-                                        strings_name.str_user_already_verified);
+                                    Utils.showSnackBar(context, strings_name.str_user_already_verified);
                                   }
                                 } else if (dataEmployee.records!.length == 0) {
                                   setState(() {
                                     isVisible = false;
                                   });
-                                  Utils.showSnackBar(
-                                      context, strings_name.str_user_not_found);
+                                  Utils.showSnackBar(context, strings_name.str_user_not_found);
                                 } else {
                                   setState(() {
                                     isVisible = false;
                                   });
-                                  Utils.showSnackBar(context,
-                                      strings_name.str_something_wrong);
+                                  Utils.showSnackBar(context, strings_name.str_something_wrong);
                                 }
                               } else {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                Utils.showSnackBar(
-                                    context, strings_name.str_something_wrong);
+                                Utils.showSnackBar(context, strings_name.str_something_wrong);
                               }
                             } on DioError catch (e) {
                               setState(() {
                                 isVisible = false;
                               });
-                              final errorMessage =
-                                  DioExceptions.fromDioError(e).toString();
+                              final errorMessage = DioExceptions.fromDioError(e).toString();
                               Utils.showSnackBarUsingGet(errorMessage);
                             }
                           }
@@ -180,10 +165,7 @@ class _RegisterState extends State<Register> {
             ),
           ),
           Center(
-            child: Visibility(
-                child: const CircularProgressIndicator(
-                    strokeWidth: 5.0, color: colors_name.colorPrimary),
-                visible: isVisible),
+            child: Visibility(child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary), visible: isVisible),
           )
         ],
       ),
@@ -193,19 +175,14 @@ class _RegisterState extends State<Register> {
   Future<void> sendOTP(String phone, bool fromEmployee) async {
     try {
       var otp = Random().nextInt(900000) + 100000;
-      var headers = {
-        'Content-Type': 'application/json',
-        'api-key': TableNames.KALEYRA_APIKEY
-      };
-      var request = http.MultipartRequest('POST',
-          Uri.parse('https://api.kaleyra.io/v1/HXIN1756562868IN/messages'));
+      var headers = {'Content-Type': 'application/json', 'api-key': TableNames.KALEYRA_APIKEY};
+      var request = http.MultipartRequest('POST', Uri.parse('https://api.kaleyra.io/v1/HXIN1756562868IN/messages'));
       request.fields.addAll({
         'to': '+91${phoneController.text.trim()}',
         'type': 'OTP',
         'sender': TableNames.KALEYRA_SENDER,
         'template': TableNames.TEMPLATE_ID_SIGNUP,
-        'body':
-            'Your OTP for Drona Foundation Mobile App login is $otp. The OTP is valid for 5 minutes.'
+        'body': 'Your OTP for Drona Foundation Mobile App login is $otp. The OTP is valid for 5 minutes.'
       });
 
       request.headers.addAll(headers);

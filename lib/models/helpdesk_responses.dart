@@ -87,7 +87,7 @@ class HelpdeskResponses {
     if (json['attachments'] != null) {
       attachments = <DocumentResponse>[];
       json['attachments'].forEach((v) {
-        attachments!.add(new DocumentResponse.fromJson(v));
+        attachments!.add(DocumentResponse.fromJson(v));
       });
     }
   }
@@ -131,50 +131,50 @@ class HelpdeskResponses {
       });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ticket_id'] = this.ticketId;
-    data['Notes'] = this.notes;
-    data['ticket_type_id'] = this.ticketTypeId;
-    data['Status'] = this.status;
-    data['task_importance'] = this.task_importance;
-    data['ticket_title'] = this.ticketTitle;
-    data['assigned_to'] = this.assignedTo;
-    data['assigned_employee_name'] = this.assignedEmployeeName;
-    data['assigned_mobile_number'] = this.assignedMobileNumber;
-    data['assigned_to_token'] = this.assignedToToken;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ticket_id'] = ticketId;
+    data['Notes'] = notes;
+    data['ticket_type_id'] = ticketTypeId;
+    data['Status'] = status;
+    data['task_importance'] = task_importance;
+    data['ticket_title'] = ticketTitle;
+    data['assigned_to'] = assignedTo;
+    data['assigned_employee_name'] = assignedEmployeeName;
+    data['assigned_mobile_number'] = assignedMobileNumber;
+    data['assigned_to_token'] = assignedToToken;
 
-    data['created_by_employee'] = this.createdByEmployee;
-    data['created_by_employee_token'] = this.createdByEmployeeToken;
-    data['employee_role_title'] = this.employeeRoleTitle;
-    data['employee_name'] = this.employeeName;
-    data['employee_mobile_number'] = this.employeeMobileNumber;
+    data['created_by_employee'] = createdByEmployee;
+    data['created_by_employee_token'] = createdByEmployeeToken;
+    data['employee_role_title'] = employeeRoleTitle;
+    data['employee_name'] = employeeName;
+    data['employee_mobile_number'] = employeeMobileNumber;
 
-    data['created_by_student'] = this.createdByStudent;
-    data['created_by_student_token'] = this.createdByStudentToken;
-    data['student_name'] = this.studentName;
-    data['student_hub_name'] = this.studentHubName;
-    data['student_specialization_name'] = this.studentSpecializationName;
-    data['student_mobile_number'] = this.studentMobileNumber;
+    data['created_by_student'] = createdByStudent;
+    data['created_by_student_token'] = createdByStudentToken;
+    data['student_name'] = studentName;
+    data['student_hub_name'] = studentHubName;
+    data['student_specialization_name'] = studentSpecializationName;
+    data['student_mobile_number'] = studentMobileNumber;
 
-    data['created_by_organization'] = this.createdByOrganization;
-    data['created_by_organization_token'] = this.createdByOrganizationToken;
-    data['company_name'] = this.companyName;
-    data['company_contact_number'] = this.companyContactNumber;
+    data['created_by_organization'] = createdByOrganization;
+    data['created_by_organization_token'] = createdByOrganizationToken;
+    data['company_name'] = companyName;
+    data['company_contact_number'] = companyContactNumber;
 
-    data['created_on'] = this.createdOn;
-    data['resolution_remark'] = this.resolutionRemark;
-    data['field_type'] = this.fieldType;
+    data['created_on'] = createdOn;
+    data['resolution_remark'] = resolutionRemark;
+    data['field_type'] = fieldType;
 
-    data['deadline'] = this.deadline;
-    data['required_time'] = this.required_time;
-    data['actual_time_taken'] = this.actual_time_taken;
-    data['actual_finished_on'] = this.actual_finished_on;
+    data['deadline'] = deadline;
+    data['required_time'] = required_time;
+    data['actual_time_taken'] = actual_time_taken;
+    data['actual_finished_on'] = actual_finished_on;
 
-    data['status_updated_by'] = this.status_updated_by;
-    data['status_updated_by_employee_name'] = this.status_updated_by_employee_name;
+    data['status_updated_by'] = status_updated_by;
+    data['status_updated_by_employee_name'] = status_updated_by_employee_name;
 
-    if (this.attachments != null) {
-      data['attachments'] = this.attachments!.map((v) => v.toJson()).toList();
+    if (attachments != null) {
+      data['attachments'] = attachments!.map((v) => v.toJson()).toList();
     }
 
     return data;

@@ -16,12 +16,12 @@ class SpecializationData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['specialization_id'] = this.specializationId;
-    data['specialization_name'] = this.specializationName;
-    data['hub_ids'] = this.hubIds;
-    data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
-    data['specialization_desc'] = this.specializationDesc;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['specialization_id'] = specializationId;
+    data['specialization_name'] = specializationName;
+    data['hub_ids'] = hubIds;
+    data['hub_id (from hub_ids)'] = hubIdFromHubIds;
+    data['specialization_desc'] = specializationDesc;
     return data;
   }
 }

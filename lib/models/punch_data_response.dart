@@ -43,19 +43,19 @@ class PunchDataResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['employee_id'] = this.employeeId;
-    data['punch_date'] = this.punchDate;
-    data['punch_in_time'] = this.punchInTime;
-    data['punch_out_time'] = this.punchOutTime;
-    data['attendance_type'] = this.attendanceType;
-    data['reason_for_leave'] = this.reasonForLeave;
-    data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
-    data['employee_name'] = this.employeeName;
-    data['employee_mobile_number'] = this.employeeMobileNumber;
-    data['actual_out_time'] = this.actualOutTime;
-    data['actual_in_time'] = this.actualInTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['employee_id'] = employeeId;
+    data['punch_date'] = punchDate;
+    data['punch_in_time'] = punchInTime;
+    data['punch_out_time'] = punchOutTime;
+    data['attendance_type'] = attendanceType;
+    data['reason_for_leave'] = reasonForLeave;
+    data['hub_id (from hub_ids)'] = hubIdFromHubIds;
+    data['employee_name'] = employeeName;
+    data['employee_mobile_number'] = employeeMobileNumber;
+    data['actual_out_time'] = actualOutTime;
+    data['actual_in_time'] = actualInTime;
     return data;
   }
 }

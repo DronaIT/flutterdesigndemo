@@ -496,11 +496,11 @@ class _HelpdeskDetailState extends State<HelpdeskDetail> {
                           List<String> authority_of = [];
                           var hubName = PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0];
 
-                          if (helpDeskTypeSelected!.fields!.centerAutority != null) {
-                            for (int j = 0; j < helpDeskTypeSelected!.fields!.centerAutority!.length; j++) {
+                          if (helpDeskTypeSelected!.fields!.centerAuthority != null) {
+                            for (int j = 0; j < helpDeskTypeSelected!.fields!.centerAuthority!.length; j++) {
                               if (helpDeskTypeSelected!.fields!.centerAuthorityHubId![j] == hubName) {
-                                if (authority_of.isEmpty || !authority_of.contains(helpDeskTypeSelected!.fields!.centerAutority![j])) {
-                                  authority_of.add(helpDeskTypeSelected!.fields!.centerAutority![j]);
+                                if (authority_of.isEmpty || !authority_of.contains(helpDeskTypeSelected!.fields!.centerAuthority![j])) {
+                                  authority_of.add(helpDeskTypeSelected!.fields!.centerAuthority![j]);
                                 }
                               }
                             }

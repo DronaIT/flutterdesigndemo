@@ -44,7 +44,7 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
+    var query = "SEARCH('$jobId', ${TableNames.CLM_JOB_CODE}, 0)";
     try{
       jobpportunityData = await apiRepository.getJobOppoApi(query);
       int completion = 0;

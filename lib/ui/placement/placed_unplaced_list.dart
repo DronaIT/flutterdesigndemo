@@ -9,6 +9,7 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
+import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -86,7 +87,7 @@ class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                 Get.to(const StudentHistory(), arguments: studentList[index].mobileNumber);
+                                Get.to(const StudentHistory(), arguments: studentList[index].mobileNumber);
                               },
                               child: Card(
                                 elevation: 5,
@@ -98,15 +99,21 @@ class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
                                     children: [
                                       custom_text(
                                         text: "${studentList[index].name}",
-                                        textStyles: primaryTextSemiBold16,
+                                        textStyles: linkTextSemiBold16,
                                         bottomValue: 5,
                                       ),
                                       Visibility(
                                         visible: studentList[index].company_name_from_placed_job != null,
-                                        child: custom_text(topValue: 0, bottomValue: 5, maxLines: 2, text: "Company name: ${studentList[index].company_name_from_placed_job?.last}", textStyles: blackTextSemiBold15),
+                                        child: custom_text(
+                                            topValue: 0, bottomValue: 5, maxLines: 2, text: "Company name: ${studentList[index].company_name_from_placed_job?.last}", textStyles: blackTextSemiBold15),
                                       ),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Enrollment No: ${studentList[index].enrollmentNumber}", textStyles: blackTextSemiBold14),
-                                      custom_text(topValue: 0, bottomValue: 5, maxLines: 2, text: "Specialization: ${Utils.getSpecializationName(studentList[index].specializationIds![0])}", textStyles: blackTextSemiBold14),
+                                      custom_text(
+                                          topValue: 0,
+                                          bottomValue: 5,
+                                          maxLines: 2,
+                                          text: "Specialization: ${Utils.getSpecializationName(studentList[index].specializationIds![0])}",
+                                          textStyles: blackTextSemiBold14),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Semester: ${studentList[index].semester}", textStyles: blackTextSemiBold14),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Mobile No: ${studentList[index].mobileNumber}", textStyles: blackTextSemiBold14),
                                       custom_text(topValue: 0, bottomValue: 5, text: "Email: ${studentList[index].email}", textStyles: blackTextSemiBold14),
@@ -133,9 +140,17 @@ class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
             ),
           ],
         ),
-        Center(
-          child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
-        )
+        Visibility(
+          visible: isVisible,
+          child: Container(
+            color: colors_name.colorWhite,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary),
+            ),
+          ),
+        ),
       ]),
     ));
   }
@@ -146,14 +161,22 @@ class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'Enrollment Number', 'Mobile Number', 'Company Name']);
+    sheet.appendRow(['Name', 'Email', 'Specialization', 'Semester', 'Enrollment Number', 'Mobile Number', title == TableNames.PLACED ? 'Company Name' : '']);
 
-    studentList.forEach((row) {
-      sheet.appendRow([row.name, row.email, Utils.getSpecializationName(row.specializationIds![0]), row.semester, row.enrollmentNumber, row.mobileNumber, row.company_name_from_placed_job?.last ?? ""]);
-    });
+    for (var row in studentList) {
+      sheet.appendRow([
+        row.name,
+        row.email,
+        Utils.getSpecializationName(row.specializationIds![0]),
+        row.semester,
+        row.enrollmentNumber,
+        row.mobileNumber,
+        title == TableNames.PLACED ? (row.company_name_from_placed_job?.last ?? "") : ''
+      ]);
+    }
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();
-    var file = File("${appDocumentsDirectory.path}/PlacedUnPlacedData.xlsx");
+    var file = File("${appDocumentsDirectory.path}/${title}Data.xlsx");
     await file.writeAsBytes(excel.encode()!);
     try {
       await OpenFilex.open(file.path);

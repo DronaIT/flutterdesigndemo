@@ -68,7 +68,7 @@ class _ViewSubjectsState extends State<ViewSubjects> {
       roleId = loginData.roleIdFromRoleIds!.join(',');
     }
 
-    var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {

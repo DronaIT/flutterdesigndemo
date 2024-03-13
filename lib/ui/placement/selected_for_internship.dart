@@ -32,9 +32,23 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
 
   BaseLoginResponse<JobOpportunityResponse> jobOpportunityData = BaseLoginResponse();
 
+  /*
+  *   argument value = 0 > Regular Internship
+  *   argument value = 1 > Final Placement
+  */
+  int jobType = 0;
+  String jobValue = strings_name.str_job_type_regular_internship;
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments != null) {
+      if (Get.arguments[0]["placementType"] != null) {
+        jobType = Get.arguments[0]["placementType"];
+      }
+    }
+    jobValue = jobType == 0 ? strings_name.str_job_type_regular_internship : strings_name.str_job_type_final_placement;
+
     getRecords();
   }
 
@@ -42,7 +56,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
     setState(() {
       isVisible = true;
     });
-    var query = "FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_SELECTED_STUDENTS}, 0)";
+    var query = "AND(${TableNames.CLM_JOB_TYPE}='$jobValue',FIND('${PreferenceUtils.getLoginData().mobileNumber}', ${TableNames.CLM_SELECTED_STUDENTS}, 0))";
     try {
       jobOpportunityData = await apiRepository.getJobOpportunityApi(query);
       setState(() {
@@ -61,7 +75,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_selected_for_jobs),
+      appBar: AppWidgets.appBarWithoutBack(jobType == 0 ? strings_name.str_selected_for_jobs : strings_name.str_selected_for_job),
       body: Stack(
         children: [
           jobOpportunityData.records != null && jobOpportunityData.records!.isNotEmpty

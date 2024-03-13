@@ -152,11 +152,36 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                                                   Get.to(const StudentHistory(), arguments: studentResponse[index].applied_students_number);
                                                 },
                                               ),
-                                              custom_text(text: "${strings_name.str_specializations}: ${studentResponse[index].applied_students_specialization}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
-                                              custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
-                                              custom_text(text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                              custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                              custom_text(text: "${strings_name.str_semester}: ${studentResponse[index].applied_students_semester}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(
+                                                  text: "${strings_name.str_specializations}: ${studentResponse[index].applied_students_specialization}",
+                                                  textStyles: blackTextSemiBold12,
+                                                  topValue: 5,
+                                                  maxLines: 2,
+                                                  bottomValue: 0,
+                                                  leftValue: 5),
+                                              custom_text(
+                                                  text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}",
+                                                  textStyles: blackTextSemiBold12,
+                                                  topValue: 5,
+                                                  maxLines: 2,
+                                                  bottomValue: 0,
+                                                  leftValue: 5),
+                                              custom_text(
+                                                  text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              custom_text(
+                                                  text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}",
+                                                  textStyles: blackTextSemiBold12,
+                                                  topValue: 0,
+                                                  maxLines: 2,
+                                                  bottomValue: 5,
+                                                  leftValue: 5),
+                                              custom_text(
+                                                  text: "${strings_name.str_semester}: ${studentResponse[index].applied_students_semester}",
+                                                  textStyles: blackTextSemiBold12,
+                                                  topValue: 0,
+                                                  maxLines: 2,
+                                                  bottomValue: 5,
+                                                  leftValue: 5),
                                             ],
                                           ),
                                         ),
@@ -170,7 +195,7 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      margin: const EdgeInsets.only(top: 5),
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: () {
@@ -249,7 +274,15 @@ class _ShortListedStudentDetailState extends State<ShortListedStudentDetail> {
     }
 
     myData.forEach((row) {
-      sheet.appendRow([row.applied_students_name, row.applied_students_email, row.applied_students_specialization, row.applied_students_semester, row.applied_students_enrollment_number, row.applied_students_number, row.applied_students_resume]);
+      sheet.appendRow([
+        row.applied_students_name,
+        row.applied_students_email,
+        row.applied_students_specialization,
+        row.applied_students_semester,
+        row.applied_students_enrollment_number,
+        row.applied_students_number,
+        row.applied_students_resume
+      ]);
     });
 
     var appDocumentsDirectory = await getApplicationDocumentsDirectory();

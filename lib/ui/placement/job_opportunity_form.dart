@@ -59,6 +59,13 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   List<String> preferredGenderArr = <String>[strings_name.str_both, strings_name.str_male, strings_name.str_female];
   String preferredGenderValue = strings_name.str_both;
 
+  List<String> jobTypeArr = <String>[
+    strings_name.str_select_category,
+    strings_name.str_job_type_regular_internship,
+    strings_name.str_job_type_final_placement,
+  ];
+  String jobTypeValue = strings_name.str_select_category;
+
   List<String> internshipDurationArr = <String>[
     strings_name.str_month_6,
     strings_name.str_month_12,
@@ -69,12 +76,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
   ];
   String internshipDurationValue = strings_name.str_month_6;
 
-  List<String> internshipModeArr = <String>[
-    strings_name.str_mode_work_from_office,
-    strings_name.str_mode_work_from_home,
-    strings_name.str_mode_remote_work,
-    strings_name.str_mode_project_based_work
-  ];
+  List<String> internshipModeArr = <String>[strings_name.str_mode_work_from_office, strings_name.str_mode_work_from_home, strings_name.str_mode_remote_work, strings_name.str_mode_project_based_work];
   String internshipModeValue = strings_name.str_mode_work_from_office;
 
   bool isVisible = false;
@@ -129,6 +131,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
           preferredGenderValue = jobData?.gender ?? strings_name.str_both;
           internshipModeValue = jobData?.internshipModes ?? strings_name.str_mode_work_from_office;
           internshipDurationValue = jobData?.internshipDuration ?? strings_name.str_month_6;
+          jobTypeValue = jobData?.jobType ?? strings_name.str_job_type_regular_internship;
 
           companyId = jobData?.companyId?.first ?? "";
 
@@ -202,15 +205,12 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
       if (kIsWeb) {
         CloudinaryResponse response = await cloudinary.uploadFile(
           CloudinaryFile.fromByteData(Utils.uint8ListToByteData(incentiveStructureData.bytes!),
-              resourceType: CloudinaryResourceType.Auto,
-              folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE,
-              identifier: incentiveStructureData.name),
+              resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE, identifier: incentiveStructureData.name),
         );
         incentivePath = response.secureUrl;
       } else {
         CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(incentiveStructureFilePath,
-              resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE),
+          CloudinaryFile.fromFile(incentiveStructureFilePath, resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_COMPANY_INCENTIVE_STRUCTURE),
         );
         incentivePath = response.secureUrl;
       }
@@ -241,7 +241,10 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
     request.timingEnd = endTimeController.text.trim().toString();
     request.internshipModes = internshipModeValue.trim().toString();
     request.internshipDuration = internshipDurationValue.trim().toString();
-    request.status = strings_name.str_job_status_pending;
+    request.jobType = jobTypeValue.trim().toString();
+    if (!fromEdit) {
+      request.status = strings_name.str_job_status_pending;
+    }
 
     if (bondPath.isNotEmpty) {
       Map<String, dynamic> map = Map();
@@ -451,6 +454,41 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     )),
                 SizedBox(height: 5.h),
                 custom_text(
+                  text: strings_name.str_job_type,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                        width: viewWidth,
+                        child: DropdownButtonFormField<String>(
+                          elevation: 16,
+                          value: jobTypeValue,
+                          style: blackText16,
+                          focusColor: Colors.white,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              jobTypeValue = newValue!;
+                            });
+                          },
+                          items: jobTypeArr.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5.h),
+                custom_text(
                   text: "${strings_name.str_vacancy}*",
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
@@ -503,9 +541,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                      child: Text("${specializationData![index].fields!.specializationName}",
-                                          textAlign: TextAlign.start, style: blackText16)),
+                                  Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)),
                                   const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
                                 ],
                               ),
@@ -644,9 +680,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     ),
                   ],
                 ),
-                Visibility(
-                    visible: bondFilePath.isNotEmpty,
-                    child: custom_text(text: bondFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                Visibility(visible: bondFilePath.isNotEmpty, child: custom_text(text: bondFilePath, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: strings_name.str_preferred_gender,
@@ -822,8 +856,7 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                     ? SizedBox()
                     : Visibility(
                         visible: incentiveStructureData != null,
-                        child: custom_text(
-                            text: incentiveStructureData.name, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
+                        child: custom_text(text: incentiveStructureData.name, alignment: Alignment.topLeft, textStyles: grayTextstyle, topValue: 0, bottomValue: 0)),
                 SizedBox(height: 5.h),
                 custom_text(
                   text: strings_name.str_internship_mode,
@@ -906,6 +939,8 @@ class _JobOpportunityFormState extends State<JobOpportunityForm> {
                       Utils.showSnackBar(context, strings_name.str_empty_stipend_amount);
                     } else if (stipendType == strings_name.str_amount_type_range && minRangeController.text.toString().trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_min_range);
+                    } else if (jobTypeValue.toString() == strings_name.str_select_category) {
+                      Utils.showSnackBar(context, strings_name.str_empty_job_type);
                     } else if (vacancyController.text.toString().trim().isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_vacancies);
                     } else if (startTimeController.text.toString().trim().isEmpty) {

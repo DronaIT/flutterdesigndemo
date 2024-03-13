@@ -1,4 +1,4 @@
-class Attachment_response {
+class AttachmentResponse {
   String? id;
   String? url;
   String? filename;
@@ -6,7 +6,7 @@ class Attachment_response {
   String? type;
   Thumbnails? thumbnails;
 
-  Attachment_response(
+  AttachmentResponse(
       {this.id,
       this.url,
       this.filename,
@@ -14,26 +14,26 @@ class Attachment_response {
       this.type,
       this.thumbnails});
 
-  Attachment_response.fromJson(Map<String, dynamic> json) {
+  AttachmentResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     url = json['url'];
     filename = json['filename'];
     size = json['size'];
     type = json['type'];
     thumbnails = json['thumbnails'] != null
-        ? new Thumbnails.fromJson(json['thumbnails'])
+        ? Thumbnails.fromJson(json['thumbnails'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['url'] = this.url;
-    data['filename'] = this.filename;
-    data['size'] = this.size;
-    data['type'] = this.type;
-    if (this.thumbnails != null) {
-      data['thumbnails'] = this.thumbnails!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['url'] = url;
+    data['filename'] = filename;
+    data['size'] = size;
+    data['type'] = type;
+    if (thumbnails != null) {
+      data['thumbnails'] = thumbnails!.toJson();
     }
     return data;
   }
@@ -46,17 +46,17 @@ class Thumbnails {
   Thumbnails({this.small, this.large});
 
   Thumbnails.fromJson(Map<String, dynamic> json) {
-    small = json['small'] != null ? new Small.fromJson(json['small']) : null;
-    large = json['large'] != null ? new Small.fromJson(json['large']) : null;
+    small = json['small'] != null ? Small.fromJson(json['small']) : null;
+    large = json['large'] != null ? Small.fromJson(json['large']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.small != null) {
-      data['small'] = this.small!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (small != null) {
+      data['small'] = small!.toJson();
     }
-    if (this.large != null) {
-      data['large'] = this.large!.toJson();
+    if (large != null) {
+      data['large'] = large!.toJson();
     }
     return data;
   }
@@ -76,10 +76,10 @@ class Small {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['width'] = this.width;
-    data['height'] = this.height;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['width'] = width;
+    data['height'] = height;
     return data;
   }
 }

@@ -10,7 +10,7 @@ class FeesResponse {
   List<String>? studentMobileNumber;
   String? remarks;
   String? feesBySemester;
-  List<Attachment_response>? proofOfPayment;
+  List<AttachmentResponse>? proofOfPayment;
 
   FeesResponse({
     this.id,
@@ -36,26 +36,26 @@ class FeesResponse {
     remarks = json['remarks'];
     feesBySemester = json['fees_by_semester'];
     if (json['proof_of_payment'] != null) {
-      proofOfPayment = <Attachment_response>[];
+      proofOfPayment = <AttachmentResponse>[];
       json['proof_of_payment'].forEach((v) {
-        proofOfPayment!.add(new Attachment_response.fromJson(v));
+        proofOfPayment!.add(AttachmentResponse.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['fees_paid'] = this.feesPaid;
-    data['student_id'] = this.studentId;
-    data['student_name'] = this.studentName;
-    data['hub_id (from hub_ids)'] = this.studentHubId;
-    data['student_specialization_id'] = this.studentSpecializationId;
-    data['student_mobile_number'] = this.studentMobileNumber;
-    data['remarks'] = this.remarks;
-    data['fees_by_semester'] = this.feesBySemester;
-    if (this.proofOfPayment != null) {
-      data['proof_of_payment'] = this.proofOfPayment!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['fees_paid'] = feesPaid;
+    data['student_id'] = studentId;
+    data['student_name'] = studentName;
+    data['hub_id (from hub_ids)'] = studentHubId;
+    data['student_specialization_id'] = studentSpecializationId;
+    data['student_mobile_number'] = studentMobileNumber;
+    data['remarks'] = remarks;
+    data['fees_by_semester'] = feesBySemester;
+    if (proofOfPayment != null) {
+      data['proof_of_payment'] = proofOfPayment!.map((v) => v.toJson()).toList();
     }
     return data;
   }

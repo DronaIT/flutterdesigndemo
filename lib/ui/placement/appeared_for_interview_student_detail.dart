@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -58,6 +59,7 @@ class _AppearedForInterviewStudentDetailState extends State<AppearedForInterview
                 applied_students_email: jobOpportunityData.records![i].fields!.shortlisted_students_email![j],
                 applied_students_enrollment_number: jobOpportunityData.records![i].fields!.shortlisted_students_enrollment_number![j],
                 applied_students_name: jobOpportunityData.records![i].fields!.shortlisted_students_name![j],
+                applied_students_number: jobOpportunityData.records![i].fields!.shortlisted_students_number![j],
                 applied_students: jobOpportunityData.records![i].fields!.shortlistedStudents![j]);
             studentResponse.add(jobModuleResponse);
           }
@@ -120,13 +122,19 @@ class _AppearedForInterviewStudentDetailState extends State<AppearedForInterview
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              custom_text(
+                                              GestureDetector(
+                                                child: custom_text(
                                                   text: "${studentResponse[index].applied_students_name}",
-                                                  textStyles: centerTextStyle14,
+                                                  textStyles: linkTextSemiBold14,
                                                   topValue: 0,
                                                   maxLines: 2,
                                                   bottomValue: 5,
-                                                  leftValue: 5),
+                                                  leftValue: 5,
+                                                ),
+                                                onTap: () {
+                                                  Get.to(const StudentHistory(), arguments: studentResponse[index].applied_students_number);
+                                                },
+                                              ),
                                               custom_text(
                                                   text: "${studentResponse[index].applied_students_email}",
                                                   textStyles: blackTextSemiBold12,

@@ -8,7 +8,7 @@ class BaseLoginResponse<T> {
     if (json['records'] != null) {
       records = <BaseApiResponseWithSerializable<T>>[];
       json['records'].forEach((v) {
-        records!.add(new BaseApiResponseWithSerializable<T>.fromJson(v, create));
+        records!.add(BaseApiResponseWithSerializable<T>.fromJson(v, create));
       });
     }
     if (json['offset'] != null && json['offset'].toString().isNotEmpty){
@@ -17,7 +17,7 @@ class BaseLoginResponse<T> {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (this.records != null) {
       data['records'] = this.records!.map((v) => v.toJson()).toList();
     }

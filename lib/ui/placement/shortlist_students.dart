@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -41,9 +44,25 @@ class _ShortListStudentState extends State<ShortListStudent> {
   String hubValue = "";
   List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
 
+  /*
+  *   argument value = 0 > Regular Internship
+  *   argument value = 1 > Final Placement
+  */
+  int jobType = 0;
+  String jobValue = strings_name.str_job_type_regular_internship;
+
+  TextEditingController reasonController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments != null) {
+      if (Get.arguments[0]["placementType"] != null) {
+        jobType = Get.arguments[0]["placementType"];
+      }
+    }
+    jobValue = jobType == 0 ? strings_name.str_job_type_regular_internship : strings_name.str_job_type_final_placement;
+
     hubResponseArray = PreferenceUtils.getHubList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -91,7 +110,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
       });
     }
     var query =
-        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}',${TableNames.CLM_DISPLAY_INTERNSHIP}='2',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
+        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}',${TableNames.CLM_JOB_TYPE}='$jobValue',${TableNames.CLM_DISPLAY_INTERNSHIP}='2',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
     try {
       var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
@@ -163,8 +182,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
                         getRecords();
                       });
                     },
-                    items: hubResponseArray
-                        ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                    items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                       return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                         value: value,
                         child: Text(value.fields!.hubName!.toString()),
@@ -264,6 +282,26 @@ class _ShortListStudentState extends State<ShortListStudent> {
                                             maxLines: 2,
                                             bottomValue: 5,
                                             leftValue: 5),
+                                        custom_text(
+                                            text: "${strings_name.str_total_students_applied}: ${jobOpportunityList?[index].fields!.appliedStudents?.length ?? 0}",
+                                            textStyles: blackTextSemiBold12,
+                                            topValue: 0,
+                                            maxLines: 2,
+                                            bottomValue: 5,
+                                            leftValue: 5),
+                                        GestureDetector(
+                                          onTap: () {
+                                            reasonController.text = "";
+                                            closeConfirmationDialog(jobOpportunityList![index]);
+                                          },
+                                          child: const custom_text(
+                                            text: strings_name.str_complete_jobs,
+                                            textStyles: primaryTextSemiBold14,
+                                            alignment: Alignment.centerRight,
+                                            topValue: 10,
+                                            bottomValue: 0,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -271,9 +309,7 @@ class _ShortListStudentState extends State<ShortListStudent> {
                               );
                             }),
                       )
-                    : Container(
-                        margin: EdgeInsets.only(top: 10.h),
-                        child: custom_text(text: strings_name.str_no_jobs, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: EdgeInsets.only(top: 10.h), child: custom_text(text: strings_name.str_no_jobs, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),
@@ -297,5 +333,92 @@ class _ShortListStudentState extends State<ShortListStudent> {
     DateTime? jobCreationDate = DateTime.tryParse(date ?? "");
     String displayDate = DateFormat("dd MMM, yyyy").format(jobCreationDate!);
     return displayDate;
+  }
+
+  Future<void> closeConfirmationDialog(BaseApiResponseWithSerializable<JobOpportunityResponse> jobData) async {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          custom_text(text: 'Please Confirm Job Detail', textStyles: boldTitlePrimaryColorStyle),
+          SizedBox(height: 5.h),
+          custom_text(
+            text: 'Company Name : ${jobData.fields?.companyName?.first.toString()}',
+            textStyles: blackTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          custom_text(
+            text: 'Position : ${jobData.fields?.jobTitle}',
+            textStyles: blackTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          SizedBox(height: 5.h),
+          const custom_text(
+            text: strings_name.str_provide_completion_reason,
+            alignment: Alignment.topLeft,
+            maxLines: 2,
+            textStyles: blackTextSemiBold16,
+            bottomValue: 5,
+          ),
+          custom_edittext(
+            type: TextInputType.multiline,
+            textInputAction: TextInputAction.newline,
+            controller: reasonController,
+            minLines: 3,
+            maxLines: 3,
+            maxLength: 50000,
+            topValue: 0,
+          ),
+          CustomButton(
+              text: strings_name.str_submit,
+              click: () {
+                if (reasonController.text.trim().isEmpty) {
+                  Utils.showSnackBar(context, strings_name.str_rejection_reason);
+                } else {
+                  Get.back(closeOverlays: true);
+                  updateJobStatus(jobData);
+                }
+              })
+        ],
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+  void updateJobStatus(BaseApiResponseWithSerializable<JobOpportunityResponse> jobData) async {
+    setState(() {
+      isVisible = true;
+    });
+
+    CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
+    request.status = strings_name.str_job_status_process_complete;
+    request.jobRejectionReason = reasonController.text.trim().toString();
+
+    var json = request.toJson();
+    json.removeWhere((key, value) => value == null);
+    try {
+      var resp = await apiRepository.updateJobOpportunityApi(json, jobData.id.toString());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_job_approved);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true, result: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 }

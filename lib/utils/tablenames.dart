@@ -2,10 +2,13 @@ class TableNames {
   static const APIENDPOINTS = "https://api.airtable.com/v0/appwU8yBYoG1yhBXx/";
   // static const APIKEY = "keyszHTHXMxxKKs9b";
   static const APIKEY = "patEzmE9EqSF6g5vZ.fbe52a8008b23423f0e7e384deb4d141a81dbea18b2ac13ea6f71a622e697846";
+  static const APIKEY_READ = "pathLy8cdV4Y3auWd.c8342e85cf07e427a2dea73eb8b132a77edee5b0cc289338d41e94498e29b810";
+  static const APIKEY_WRITE = "patb8qy6BeLuRCSnC.cedb77896ae1aad5a1923bfcaf5398ca307a5f8fa1028bf7d57aef4b3dd43be3";
   static const PROJECTBASE = "appwU8yBYoG1yhBXx";
 
   // Kaleyra keys
-  static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
+  // static const KALEYRA_APIKEY = "A4891d5ab18c09cb1b402a5f1c13f1b14";
+  static const KALEYRA_APIKEY = "A51b59808f4c6fb19b20f75647d520815";
   static const KALEYRA_SENDER = "DFBVOC";
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
   static const TEMPLATE_ID_FORGOT_PASSWORD = "1007956316471143887";
@@ -20,6 +23,7 @@ class TableNames {
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
   static const CLOUDARY_FOLDER_HELP_DESK= "HelpDesk";
   static const CLOUDARY_FOLDER_COMPANY_LOC = "CompanyLOC";
+  static const CLOUDARY_FOLDER_WORKBOOK = "Workbook";
   static const CLOUDARY_FOLDER_APP_ASSETS = "AppAssets";
   static const CLOUDARY_FOLDER_STUDENT_RESUME = "student_resume";
   static const CLOUDARY_FOLDER_ACADEMIC_MATERIAL = "academic_material";
@@ -29,6 +33,9 @@ class TableNames {
   static const CLOUDARY_FOLDER_ANNOUNCEMENT = "Announcement";
   static const CLOUDARY_FOLDER_PROFILE_PIC = "ProfilePic";
   static const CLOUDARY_FOLDER_PROOF_OF_FEES = "ProofOfFees";
+
+  static const CANCELLED_HUB_ID = "DC09";
+  static const SUSPENDED_HUB_ID = "DC10";
 
   static const STUDENT_ROLE_ID = "DR09";
   static const ORGANIZATION_ROLE_ID = "DR24";
@@ -63,6 +70,10 @@ class TableNames {
   static const PLACED = "Placed";
   static const UNPLACED = "UnPlaced";
   static const BANNED = "Banned";
+  static const ATTENDANCE_SHEET_RECEIVED = "Attendance Sheet Received";
+  static const ATTENDANCE_SHEET_PENDING = "Attendance Sheet Pending";
+  static const LOC_RECEIVED = "LOC Received";
+  static const LOC_PENDING = "LOC Pending";
 
   static const ONE_HOUR = "1 Hour";
   static const TWO_HOUR = "2 Hour";
@@ -94,6 +105,7 @@ class TableNames {
   static const TBL_MARKETING = "TBL_MARKETING";
   static const TBL_FEES = "TBL_FEES";
   static const TBL_PUNCH_DATA = "TBL_PUNCH_DATA";
+  static const TBL_PLACEMENT_MARKS = "TBL_PLACEMENT_MARKS";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -122,6 +134,13 @@ class TableNames {
   static const CLM_FATHER_NUMBERS = "father_numbers";
   static const CLM_COMPANY_ID = "company_id";
   static const CLM_STATUS = "status";
+  static const CLM_STUDENT_MOBILE_NUMBER = "student_mobile_number";
+
+  static const CLM_PLACEMENT_ATTENDANCE_STATUS = "placement_attendance_status";
+  static const CLM_PLACEMENT_COMPANY_LOC_STATUS = "placement_company_loc_status";
+  static const CLM_PLACEMENT_WORKBOOK_STATUS = "placement_workbook_status";
+
+  static const CLM_JOB_TYPE = "job_type";
   /*
       0 => Job apply time is yet to come (Now < start time)
       1 => Job apply time is running (start time < Now < end time)
@@ -208,10 +227,10 @@ class TableNames {
   static const PERMISSION_ID_EDIT_COMPANY_DETAIL = "DP0407";
   static const PERMISSION_ID_VIEWJOBS = "DP0408";
   static const PERMISSION_ID_EDITJOBS = "DP0409";
-  static const PERMISSION_ID_PUBLISHED_INTERSHIP = "DP0412";
   static const PERMISSION_ID_APPROVED_INTERSHIP = "DP0411";
-  static const PERMISSION_ID_SHORTlIST_STUDENTS = "DP0413";
+  static const PERMISSION_ID_PUBLISHED_INTERSHIP = "DP0412";
   static const PERMISSION_ID_SELECTED_STUDENT = "DP0415";
+  static const PERMISSION_ID_SHORTlIST_STUDENTS = "DP0413";
   static const PERMISSION_ID_APPLIED_INTERNSHIP = "DP0416";
   static const PERMISSION_ID_SHORT_LISTED_INTERNSHIP = "DP0417";
   static const PERMISSION_ID_SELECTED_INTERNSHIP = "DP0418";
@@ -224,6 +243,22 @@ class TableNames {
   static const PERMISSION_ID_PLACEMENT_DRIVE = "DP0426";
   static const PERMISSION_ID_APPEAR_FOR_INTERVIEW = "DP0427";
   static const PERMISSION_ID_ISSUE_WARNING_LETTER = "DP0428";
+
+  static const PERMISSION_ID_APPROVED_INTERSHIP_FINAL = "DP0429";
+  static const PERMISSION_ID_PUBLISHED_INTERSHIP_FINAL = "DP0430";
+  static const PERMISSION_ID_SHORTlIST_STUDENTS_FINAL = "DP0431";
+  static const PERMISSION_ID_APPEAR_FOR_INTERVIEW_FINAL = "DP0432";
+  static const PERMISSION_ID_SELECTED_STUDENT_FINAL = "DP0433";
+  static const PERMISSION_ID_COMPLETED_INTERNSHIP_FINAL = "DP0434";
+
+  static const PERMISSION_ID_APPLY_INTERNSHIP_FINAL = "DP0435";
+  static const PERMISSION_ID_APPLIED_INTERNSHIP_FINAL = "DP0436";
+  static const PERMISSION_ID_SHORT_LISTED_INTERNSHIP_FINAL = "DP0437";
+  static const PERMISSION_ID_SELECTED_INTERNSHIP_FINAL = "DP0438";
+
+  static const PERMISSION_ID_APPROVE_PLACEMENT_ATTENDANCE_DATA = "DP0439";
+  static const PERMISSION_ID_ADD_PLACEMENT_MARKS = "DP0440";
+  static const PERMISSION_ID_PLACEMENT_ATTENDANCE_DATA_REPORTS = "DP0441";
 
   static const PERMISSION_ID_VIEW_RESUME = "DP0421";
   static const PERMISSION_ID_VIEW_DOCUMENTS = "DP0602";
@@ -308,4 +343,6 @@ class TableNames {
   static const ATTENDANCE_TYPE_FIRST_HALF_LEAVE = "FIRST HALF LEAVE";
   static const ATTENDANCE_TYPE_SECOND_HALF_LEAVE = "SECOND HALF LEAVE";
 
+  static const JOB_TYPE_REGULAR = "Regular Internship";
+  static const JOB_TYPE_FINAL_PLACEMENT = "Final Placement";
 }

@@ -14,13 +14,11 @@ import '../../api/api_repository.dart';
 import '../../api/dio_exception.dart';
 import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
-import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
 import '../../models/base_api_response.dart';
 import '../../utils/tablenames.dart';
 import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
-import '../placement/upload_documents_placement.dart';
 
 class StudentHistory extends StatefulWidget {
   const StudentHistory({Key? key}) : super(key: key);
@@ -74,7 +72,7 @@ class _StudentHistoryState extends State<StudentHistory> {
   void checkPresentAbsentDetailBySubject() {
     if (data.records != null) {
       if (data.records!.first.fields!.lectureSubjectId?.isNotEmpty == true) {
-        if(data.records!.first.fields!.presentLectureIds != null){
+        if (data.records!.first.fields!.presentLectureIds != null) {
           for (var i = 0; i < data.records!.first.fields!.presentLectureIds!.length; i++) {
             if (data.records!.first.fields!.presentSemesterByStudent![i] == data.records!.first.fields?.semester) {
               total_present += 1;
@@ -82,7 +80,7 @@ class _StudentHistoryState extends State<StudentHistory> {
             }
           }
         }
-        if(data.records!.first.fields!.absentLectureIds != null){
+        if (data.records!.first.fields!.absentLectureIds != null) {
           for (var i = 0; i < data.records!.first.fields!.absentLectureIds!.length; i++) {
             if (data.records!.first.fields!.absentSemesterByStudent![i] == data.records!.first.fields?.semester) {
               total_absent += 1;
@@ -90,7 +88,6 @@ class _StudentHistoryState extends State<StudentHistory> {
             }
           }
         }
-
       }
       totalPresentPercentage = ((total_present * 100) / total_lecture).toStringAsFixed(2);
     }
@@ -128,12 +125,12 @@ class _StudentHistoryState extends State<StudentHistory> {
                           leftValue: 10,
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             _launchCaller(data.records!.first.fields!.mobileNumber ?? "");
                           },
                           child: Container(
-                            alignment:Alignment.topLeft ,
-                            margin: EdgeInsets.only(top: 10,bottom: 0,),
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.only(top: 10, bottom: 0),
                             child: Text(
                               data.records!.first.fields!.mobileNumber!,
                               style: TextStyle(
@@ -313,10 +310,9 @@ class _StudentHistoryState extends State<StudentHistory> {
                         ),
                       ),
                     ),
-
                     GestureDetector(
                       onTap: () {
-                        Get.to(() => const ViewResumePlacement(),arguments: data.records?.first.fields);
+                        Get.to(() => const ViewResumePlacement(), arguments: data.records?.first.fields);
                       },
                       child: Card(
                         elevation: 5,
@@ -345,6 +341,7 @@ class _StudentHistoryState extends State<StudentHistory> {
             ),
     ));
   }
+
   _launchCaller(String mobile) async {
     try {
       await launchUrl(Uri.parse("tel:$mobile"), mode: LaunchMode.externalApplication);

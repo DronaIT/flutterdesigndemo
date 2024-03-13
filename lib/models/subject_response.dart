@@ -10,7 +10,7 @@ class SubjectResponse {
   String? subjectCredit;
   String? semester;
   bool selected = false;
-  List<Attachment_response>? material;
+  List<AttachmentResponse>? material;
 
   SubjectResponse({this.subjectTitle, this.specializationIds, this.ids, this.material, this.specializationIdFromSpecializationIds, this.subjectId, this.subjectCode, this.subjectCredit, this.semester});
 
@@ -24,9 +24,9 @@ class SubjectResponse {
     subjectCredit = json['subject_credit'] ?? "";
     semester = json['semester'];
     if (json['material'] != null) {
-      material = <Attachment_response>[];
+      material = <AttachmentResponse>[];
       json['material'].forEach((v) {
-        material!.add(Attachment_response.fromJson(v));
+        material!.add(AttachmentResponse.fromJson(v));
       });
     }
   }

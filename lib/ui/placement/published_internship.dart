@@ -40,9 +40,23 @@ class _PublishedInternshipState extends State<PublishedInternship> {
   String hubValue = "";
   List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
 
+  /*
+  *   argument value = 0 > Regular Internship
+  *   argument value = 1 > Final Placement
+  */
+  int jobType = 0;
+  String jobValue = strings_name.str_job_type_regular_internship;
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments != null) {
+      if (Get.arguments[0]["placementType"] != null) {
+        jobType = Get.arguments[0]["placementType"];
+      }
+    }
+    jobValue = jobType == 0 ? strings_name.str_job_type_regular_internship : strings_name.str_job_type_final_placement;
+
     hubResponseArray = PreferenceUtils.getHubList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -90,11 +104,12 @@ class _PublishedInternshipState extends State<PublishedInternship> {
       });
     }
     var query =
-        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}',${TableNames.CLM_DISPLAY_INTERNSHIP}='1',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
+        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_published}', ${TableNames.CLM_JOB_TYPE}='$jobValue', ${TableNames.CLM_DISPLAY_INTERNSHIP}='1',SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
     try {
       var data = await apiRepository.getJobOppoApi(query, offset);
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
+          jobOpportunityListMain?.clear();
           jobOpportunityList?.clear();
         }
         jobOpportunityListMain?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<JobOpportunityResponse>>);
@@ -132,7 +147,7 @@ class _PublishedInternshipState extends State<PublishedInternship> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_published_internship),
+      appBar: AppWidgets.appBarWithoutBack(jobType == 0 ? strings_name.str_published_internship : strings_name.str_published_jobs),
       body: Stack(
         children: [
           SingleChildScrollView(

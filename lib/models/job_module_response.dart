@@ -32,15 +32,15 @@ class JobModuleResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['applied_students'] = this.applied_students;
-    data['applied_students_name'] = this.applied_students_name;
-    data['applied_students_email'] = this.applied_students_email;
-    data['applied_students_enrollment_number'] = this.applied_students_enrollment_number;
-    data['applied_students_number'] = this.applied_students_number;
-    data['applied_students_resume'] = this.applied_students_resume;
-    data['applied_students_specialization'] = this.applied_students_specialization;
-    data['applied_students_semester'] = this.applied_students_semester;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['applied_students'] = applied_students;
+    data['applied_students_name'] = applied_students_name;
+    data['applied_students_email'] = applied_students_email;
+    data['applied_students_enrollment_number'] = applied_students_enrollment_number;
+    data['applied_students_number'] = applied_students_number;
+    data['applied_students_resume'] = applied_students_resume;
+    data['applied_students_specialization'] = applied_students_specialization;
+    data['applied_students_semester'] = applied_students_semester;
     return data;
   }
 }

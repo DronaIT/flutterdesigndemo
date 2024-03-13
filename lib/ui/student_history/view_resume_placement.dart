@@ -1,24 +1,14 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../api/api_repository.dart';
-import '../../api/dio_exception.dart';
-import '../../api/service_locator.dart';
 import '../../customwidget/app_widgets.dart';
-import '../../customwidget/custom_button.dart';
 import '../../customwidget/custom_text.dart';
-import '../../models/App_data_response.dart';
-import '../../models/base_api_response.dart';
 import '../../models/login_fields_response.dart';
-import '../../utils/preference.dart';
 import '../../utils/tablenames.dart';
-import '../../utils/utils.dart';
 import '../../values/text_styles.dart';
 
 class ViewResumePlacement extends StatefulWidget {

@@ -1,4 +1,4 @@
-class LoginEmployeResponse {
+class LoginEmployeeResponse {
   String? gender;
   int? employeeId;
   String? city;
@@ -29,7 +29,7 @@ class LoginEmployeResponse {
   List<String>? hub_id_from_lecture;
   String? token;
 
-  LoginEmployeResponse(
+  LoginEmployeeResponse(
       {this.gender,
       this.employeeId,
       this.city,
@@ -57,7 +57,7 @@ class LoginEmployeResponse {
       this.token,
       this.specialization_name,});
 
-  LoginEmployeResponse.fromJson(Map<String, dynamic> json) {
+  LoginEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
     employeeId = json['employee_id'];
     city = json['city'];
@@ -89,34 +89,34 @@ class LoginEmployeResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['gender'] = this.gender;
-    data['employee_id'] = this.employeeId;
-    data['city'] = this.city;
-    data['role_ids'] = this.roleIds;
-    data['employee_name'] = this.employeeName;
-    data['hub_ids'] = this.hubIds;
-    data['role_id (from role_ids)'] = this.roleIdFromRoleIds;
-    data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
-    data['employee_code'] = this.employeeCode;
-    data['mobile_number'] = this.mobileNumber;
-    data['password'] = this.password;
-    data['email'] = this.email;
-    data['address'] = this.address;
-    data['lecture_ids'] = this.lectureIds;
-    data['lecture_date'] = this.lectureDate;
-    data['unit_title'] = this.unitTitle;
-    data['semester'] = this.semester;
-    data['subject_title'] = this.subjectTitle;
-    data['division'] = this.division;
-    data['parents_mobile_number'] = this.parents_mobile_number;
-    data['spouse_mobile_number'] = this.spouse_mobile_number;
-    data['pin_code'] = this.pin_code;
-    data['accessible_hub_ids'] = this.accessible_hub_ids;
-    data['accessible_hub_ids_code'] = this.accessible_hub_ids_code;
-    data['hub_id_from_lecture'] = this.hub_id_from_lecture;
-    data['token'] = this.token;
-    data['specialization_name'] = this.specialization_name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['gender'] = gender;
+    data['employee_id'] = employeeId;
+    data['city'] = city;
+    data['role_ids'] = roleIds;
+    data['employee_name'] = employeeName;
+    data['hub_ids'] = hubIds;
+    data['role_id (from role_ids)'] = roleIdFromRoleIds;
+    data['hub_id (from hub_ids)'] = hubIdFromHubIds;
+    data['employee_code'] = employeeCode;
+    data['mobile_number'] = mobileNumber;
+    data['password'] = password;
+    data['email'] = email;
+    data['address'] = address;
+    data['lecture_ids'] = lectureIds;
+    data['lecture_date'] = lectureDate;
+    data['unit_title'] = unitTitle;
+    data['semester'] = semester;
+    data['subject_title'] = subjectTitle;
+    data['division'] = division;
+    data['parents_mobile_number'] = parents_mobile_number;
+    data['spouse_mobile_number'] = spouse_mobile_number;
+    data['pin_code'] = pin_code;
+    data['accessible_hub_ids'] = accessible_hub_ids;
+    data['accessible_hub_ids_code'] = accessible_hub_ids_code;
+    data['hub_id_from_lecture'] = hub_id_from_lecture;
+    data['token'] = token;
+    data['specialization_name'] = specialization_name;
 
     return data;
   }

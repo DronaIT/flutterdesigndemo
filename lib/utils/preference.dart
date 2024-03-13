@@ -70,9 +70,9 @@ class PreferenceUtils {
     return BaseLoginResponse<HubResponse>.fromJson(jsonDecode(_preferences.getString(_keyHubList)!), (response) => HubResponse.fromJson(response));
   }
 
-  static Future setLoginDataEmployee(LoginEmployeResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
+  static Future setLoginDataEmployee(LoginEmployeeResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
 
-  static LoginEmployeResponse getLoginDataEmployee() => LoginEmployeResponse.fromJson(jsonDecode(_preferences.getString(_keyLoginData)!));
+  static LoginEmployeeResponse getLoginDataEmployee() => LoginEmployeeResponse.fromJson(jsonDecode(_preferences.getString(_keyLoginData)!));
 
   static Future setLoginDataOrganization(CompanyDetailResponse user) async => await _preferences.setString(_keyLoginData, jsonEncode(user));
 
@@ -84,10 +84,10 @@ class PreferenceUtils {
     return BaseLoginResponse<SpecializationResponse>.fromJson(jsonDecode(_preferences.getString(_keySpecializationList)!), (response) => SpecializationResponse.fromJson(response));
   }
 
-  static Future setTypeofList(BaseLoginResponse<TypeOfsectoreResponse> typeofResponse) async => await _preferences.setString(_keySectoreList, jsonEncode(typeofResponse));
+  static Future setTypeofList(BaseLoginResponse<TypeOfSectorResponse> typeofResponse) async => await _preferences.setString(_keySectoreList, jsonEncode(typeofResponse));
 
-  static BaseLoginResponse<TypeOfsectoreResponse> getTypeOFSectoreList() {
-    return BaseLoginResponse<TypeOfsectoreResponse>.fromJson(jsonDecode(_preferences.getString(_keySectoreList)!), (response) => TypeOfsectoreResponse.fromJson(response));
+  static BaseLoginResponse<TypeOfSectorResponse> getTypeOFSectoreList() {
+    return BaseLoginResponse<TypeOfSectorResponse>.fromJson(jsonDecode(_preferences.getString(_keySectoreList)!), (response) => TypeOfSectorResponse.fromJson(response));
   }
 
   static Future setLoginRecordId(String recordId) async => await _preferences.setString(_keyLoginRecordId, recordId);

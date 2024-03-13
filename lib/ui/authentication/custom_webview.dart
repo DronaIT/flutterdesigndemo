@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
-import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

@@ -1,6 +1,5 @@
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterdesigndemo/values/strings_name.dart';
 
 const centerTextStyle = TextStyle(
   fontSize: 28,
@@ -50,7 +49,6 @@ const centerTextStylblack20 = TextStyle(
   color: Colors.black,
 );
 
-
 const centerTextStyle24 = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
@@ -76,6 +74,12 @@ const centerTextStylePrimary18 = TextStyle(
 
 const blackText14 = TextStyle(
   fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+
+const blackText15 = TextStyle(
+  fontSize: 15,
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
@@ -141,29 +145,24 @@ const coffeeTextSemiBold16 = TextStyle(
   color: colors_name.coffee,
 );
 
-const lightBlackText16 = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w400,
-  color: colors_name.textColorBlack,
-  height: 1.4
-);
+const lightBlackText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: colors_name.textColorBlack, height: 1.4);
 
 const coffeeText14 = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: colors_name.coffee,
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: colors_name.coffee,
 );
 
 const greenText14 = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: colors_name.green,
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: colors_name.green,
 );
 
 const greenText16 = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    color: colors_name.green,
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: colors_name.green,
 );
 
 const whiteText12 = TextStyle(
@@ -207,7 +206,6 @@ const blackTextSemiBold144 = TextStyle(
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );
-
 
 const linkTextSemiBold14 = TextStyle(
   fontSize: 14,
@@ -268,6 +266,12 @@ const primaryTextSemiBold14 = TextStyle(
   color: colors_name.colorPrimary,
 );
 
+const greenTextSemiBold14 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: colors_name.green,
+);
+
 const errorTextStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,
@@ -277,7 +281,11 @@ const errorTextStyle = TextStyle(
 const greyDarkTextStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.darkGrayColor);
 const greyDarkTextStyle12 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark, height: 1.45);
 
-const greyDarkTextStyle12WH = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors_name.textColorGreyDark,);
+const greyDarkTextStyle12WH = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: colors_name.textColorGreyDark,
+);
 
 const primaryColorSubtitleStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: colors_name.colorPrimary, height: 1.45);
 
@@ -363,11 +371,23 @@ const settingsItemStyle = TextStyle(
 
 final cardTagStyle = titleStyle.copyWith(color: colors_name.textColorGreyDark);
 
-final lightGrey14 = titleStyle.copyWith(color: colors_name.darkGrayColor,fontSize: 14, fontWeight: FontWeight.w600,);
+final lightGrey14 = titleStyle.copyWith(
+  color: colors_name.darkGrayColor,
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+);
 
-final blueSemiBold14 = titleStyle.copyWith(color: colors_name.blue,fontSize: 14, fontWeight: FontWeight.w600,);
+final blueSemiBold14 = titleStyle.copyWith(
+  color: colors_name.blue,
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+);
 
-final dartGreen14 = titleStyle.copyWith(color: colors_name.presentColor,fontSize: 14, fontWeight: FontWeight.w600,);
+final dartGreen14 = titleStyle.copyWith(
+  color: colors_name.presentColor,
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+);
 
 const titleStyleWhite = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colors_name.colorWhite);
 

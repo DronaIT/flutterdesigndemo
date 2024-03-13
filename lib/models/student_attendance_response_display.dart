@@ -16,14 +16,13 @@ class StudentAttendanceResponseDisplay {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
-    data['student_ids'] = this.studentIds;
-    data['present_ids'] = this.presentIds;
-
-    data['enrollment_numbers'] = this.enrollmentNumberFromStudentIds;
-    data['name (from student_ids)'] = this.nameFromStudentIds;
-    data['absent_ids'] = this.absent_ids;
+    data['student_ids'] = studentIds;
+    data['present_ids'] = presentIds;
+    data['enrollment_numbers'] = enrollmentNumberFromStudentIds;
+    data['name (from student_ids)'] = nameFromStudentIds;
+    data['absent_ids'] = absent_ids;
 
     return data;
   }

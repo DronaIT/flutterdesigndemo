@@ -190,7 +190,7 @@ class _HelpDeskState extends State<HelpDesk> {
 
   createTicket() async {
     authority_of.clear();
-    if (helpDeskTypeResponses!.fields!.centerAutority != null) {
+    if (helpDeskTypeResponses!.fields!.centerAuthority != null) {
       await getEmployeeData(1);
     }
 

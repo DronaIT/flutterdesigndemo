@@ -12,6 +12,7 @@ class CreateJobOpportunityRequest {
   int? minimumAge;
   String? timingStart;
   String? timingEnd;
+  String? jobType;
   String? internshipModes;
   String? internshipDuration;
   List<String>? specializationIds;
@@ -19,6 +20,7 @@ class CreateJobOpportunityRequest {
   List<String>? hubIds;
   List<Map<String, dynamic>>? bondStructure;
   List<Map<String, dynamic>>? incentiveStructure;
+  String? jobRejectionReason;
   String? jobApplyStartTime;
   String? jobApplyEndTime;
   List<String>? sortlisted;
@@ -48,12 +50,14 @@ class CreateJobOpportunityRequest {
     this.minimumAge,
     this.timingStart,
     this.timingEnd,
+    this.jobType,
     this.internshipModes,
     this.internshipDuration,
     this.specializationIds,
     this.semester,
     this.hubIds,
     this.bondStructure,
+    this.jobRejectionReason,
     this.jobApplyStartTime,
     this.jobApplyEndTime,
     this.sortlisted,
@@ -84,6 +88,7 @@ class CreateJobOpportunityRequest {
     minimumAge = json['minimum_age'];
     timingStart = json['timing_start'];
     timingEnd = json['timing_end'];
+    jobType = json['job_type'];
     internshipModes = json['internship_modes'];
     internshipDuration = json['internship_duration'];
     specializationIds = json['specialization_ids']?.cast<String>();
@@ -91,6 +96,7 @@ class CreateJobOpportunityRequest {
     hubIds = json['hub_ids']?.cast<String>();
     bondStructure = json['bond_structure']?.cast<Map<String, dynamic>>();
     incentiveStructure = json['incentive_structure']?.cast<Map<String, dynamic>>();
+    jobRejectionReason = json['job_rejection_reason'];
     jobApplyStartTime = json['job_apply_start_time'];
     jobApplyEndTime = json['job_apply_end_time'];
     sortlisted = json['shortlisted_students']?.cast<String>();
@@ -109,42 +115,44 @@ class CreateJobOpportunityRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['job_title'] = this.jobTitle;
-    data['status'] = this.status;
-    data['company_id'] = this.companyId;
-    data['job_description'] = this.jobDescription;
-    data['specific_requirements'] = this.specificRequirements;
-    data['stipend_type'] = this.stipendType;
-    data['stipend_range_min'] = this.stipendRangeMin;
-    data['stipend_range_max'] = this.stipendRangeMax;
-    data['vacancies'] = this.vacancies;
-    data['gender'] = this.gender;
-    data['minimum_age'] = this.minimumAge;
-    data['timing_start'] = this.timingStart;
-    data['timing_end'] = this.timingEnd;
-    data['internship_modes'] = this.internshipModes;
-    data['internship_duration'] = this.internshipDuration;
-    data['specialization_ids'] = this.specializationIds;
-    data['semester'] = this.semester;
-    data['hub_ids'] = this.hubIds;
-    data['bond_structure'] = this.bondStructure;
-    data['incentive_structure'] = this.incentiveStructure;
-    data['job_apply_start_time'] = this.jobApplyStartTime;
-    data['job_apply_end_time'] = this.jobApplyEndTime;
-    data['shortlisted_students'] = this.sortlisted;
-    data['appeared_for_interview'] = this.appearedForInterview;
-    data['applied_students'] = this.applied_students;
-    data['placed_students'] = this.placed_students;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['job_title'] = jobTitle;
+    data['status'] = status;
+    data['company_id'] = companyId;
+    data['job_description'] = jobDescription;
+    data['specific_requirements'] = specificRequirements;
+    data['stipend_type'] = stipendType;
+    data['stipend_range_min'] = stipendRangeMin;
+    data['stipend_range_max'] = stipendRangeMax;
+    data['vacancies'] = vacancies;
+    data['gender'] = gender;
+    data['minimum_age'] = minimumAge;
+    data['timing_start'] = timingStart;
+    data['timing_end'] = timingEnd;
+    data['job_type'] = jobType;
+    data['internship_modes'] = internshipModes;
+    data['internship_duration'] = internshipDuration;
+    data['specialization_ids'] = specializationIds;
+    data['semester'] = semester;
+    data['hub_ids'] = hubIds;
+    data['bond_structure'] = bondStructure;
+    data['incentive_structure'] = incentiveStructure;
+    data['job_rejection_reason'] = jobRejectionReason;
+    data['job_apply_start_time'] = jobApplyStartTime;
+    data['job_apply_end_time'] = jobApplyEndTime;
+    data['shortlisted_students'] = sortlisted;
+    data['appeared_for_interview'] = appearedForInterview;
+    data['applied_students'] = applied_students;
+    data['placed_students'] = placed_students;
 
-    data['selected_students'] = this.selected;
-    data['interview_datetime'] = this.interview_datetime;
-    data['interview_instruction'] = this.interview_instruction;
-    data['interview_place_address'] = this.interview_place_address;
-    data['interview_place_url'] = this.interview_place_url;
-    data['coordinator_mobile_number'] = this.coordinator_mobile_number;
-    data['coordinator_name'] = this.coordinator_name;
-    data['joining_date'] = this.joining_date;
+    data['selected_students'] = selected;
+    data['interview_datetime'] = interview_datetime;
+    data['interview_instruction'] = interview_instruction;
+    data['interview_place_address'] = interview_place_address;
+    data['interview_place_url'] = interview_place_url;
+    data['coordinator_mobile_number'] = coordinator_mobile_number;
+    data['coordinator_name'] = coordinator_name;
+    data['joining_date'] = joining_date;
     return data;
   }
 }

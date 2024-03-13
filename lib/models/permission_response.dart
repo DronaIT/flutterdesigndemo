@@ -18,13 +18,13 @@ class PermissionResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['role_ids'] = this.roleIds;
-    data['permission_id'] = this.permissionId;
-    data['permission_title'] = this.permissionTitle;
-    data['module_ids'] = this.moduleIds;
-    data['module_id (from module_ids)'] = this.moduleIdFromModuleIds;
-    data['role_id (from role_ids)'] = this.roleIdFromRoleIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['role_ids'] = roleIds;
+    data['permission_id'] = permissionId;
+    data['permission_title'] = permissionTitle;
+    data['module_ids'] = moduleIds;
+    data['module_id (from module_ids)'] = moduleIdFromModuleIds;
+    data['role_id (from role_ids)'] = roleIdFromRoleIds;
     return data;
   }
 }

@@ -73,29 +73,29 @@ class TimeTableResponseClass {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['date'] = this.date;
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
-    data['mode'] = this.mode;
-    data['mode_title'] = this.modeTitle;
-    data['hub_id'] = this.hubId;
-    data['hub_id (from hub_id)'] = this.hubIdFromHubId;
-    data['specialization_id'] = this.specializationId;
-    data['specialization_id (from specialization_id)'] = this.specializationIdFromSpecializationId;
-    data['semester'] = this.semester;
-    data['division'] = this.division;
-    data['lecture_id'] = this.lectureId;
-    data['employee_name (from lecture_id)'] = this.employeeNameFromLectureId;
-    data['subject_id'] = this.subjectId;
-    data['subject_id (from subject_id)'] = this.subjectIdFromSubjectId;
-    data['subject_title (from subject_id)'] = this.subjectTitleFromSubjectId;
-    data['created_by'] = this.createdBy;
-    data['updated_by'] = this.updatedBy;
-    data["is_holiday"] = this.isHoliday;
-    data["holiday_title"] = this.holidayTitle;
-    data["is_attendance_taken"] = this.isAttendanceTaken;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['date'] = date;
+    data['start_time'] = startTime;
+    data['end_time'] = endTime;
+    data['mode'] = mode;
+    data['mode_title'] = modeTitle;
+    data['hub_id'] = hubId;
+    data['hub_id (from hub_id)'] = hubIdFromHubId;
+    data['specialization_id'] = specializationId;
+    data['specialization_id (from specialization_id)'] = specializationIdFromSpecializationId;
+    data['semester'] = semester;
+    data['division'] = division;
+    data['lecture_id'] = lectureId;
+    data['employee_name (from lecture_id)'] = employeeNameFromLectureId;
+    data['subject_id'] = subjectId;
+    data['subject_id (from subject_id)'] = subjectIdFromSubjectId;
+    data['subject_title (from subject_id)'] = subjectTitleFromSubjectId;
+    data['created_by'] = createdBy;
+    data['updated_by'] = updatedBy;
+    data["is_holiday"] = isHoliday;
+    data["holiday_title"] = holidayTitle;
+    data["is_attendance_taken"] = isAttendanceTaken;
     return data;
   }
 }

@@ -25,13 +25,13 @@ class AddPunchRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['employee_id'] = this.employeeId;
-    data['punch_date'] = this.punch_date;
-    data['punch_in_time'] = this.punch_in_time;
-    data['punch_out_time'] = this.punch_out_time;
-    data['attendance_type'] = this.attendance_type;
-    data['reason_for_leave'] = this.reason_for_leave;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['employee_id'] = employeeId;
+    data['punch_date'] = punch_date;
+    data['punch_in_time'] = punch_in_time;
+    data['punch_out_time'] = punch_out_time;
+    data['attendance_type'] = attendance_type;
+    data['reason_for_leave'] = reason_for_leave;
     return data;
   }
 }

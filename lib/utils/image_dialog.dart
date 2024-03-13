@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -8,7 +7,7 @@ import '../values/app_images.dart';
 class ImageDialog extends StatefulWidget {
   final String image;
 
-  const ImageDialog({required this.image});
+  const ImageDialog({super.key, required this.image});
 
   @override
   ImageDialogState createState() => ImageDialogState();

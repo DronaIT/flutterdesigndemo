@@ -43,29 +43,28 @@ class _HubSelectionState extends State<HubSelection> {
       isVisible = true;
     });
 
-    try{
+    try {
       var data = await apiRepository.getHubApi();
       if (data.records?.isNotEmpty == true) {
-        setState(() {
-          hubData = data.records;
-          for (var i = 0; i < selectedData!.length; i++) {
-            for (var j = 0; j < hubData!.length; j++) {
-              if (hubData![j].fields!.hubId == selectedData[i].fields!.hubId) {
-                hubData![j].fields!.selected = true;
-                break;
-              }
+        hubData = data.records;
+        for (var i = 0; i < selectedData!.length; i++) {
+          for (var j = 0; j < hubData!.length; j++) {
+            if (hubData![j].fields!.hubId == selectedData[i].fields!.hubId) {
+              hubData![j].fields!.selected = true;
+              break;
             }
           }
-        });
+        }
+        hubData?.sort((a, b) => a.fields!.hubName!.trim().compareTo(b.fields!.hubName!.trim()));
+        setState(() {});
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
 
     setState(() {
       isVisible = false;
@@ -91,9 +90,10 @@ class _HubSelectionState extends State<HubSelection> {
                             child: Container(
                               color: colors_name.colorWhite,
                               padding: const EdgeInsets.all(15),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [Expanded(child: Text("${hubData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackTextSemiBold16)), if (hubData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)]),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                Expanded(child: Text("${hubData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
+                                if (hubData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)
+                              ]),
                             ),
                             onTap: () {
                               setState(() {

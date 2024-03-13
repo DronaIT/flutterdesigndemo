@@ -83,32 +83,32 @@ class ViewEmployeeResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['gender'] = this.gender;
-    data['employee_id'] = this.employeeId;
-    data['city'] = this.city;
-    data['email'] = this.email;
-    data['address'] = this.address;
-    data['role_ids'] = this.roleIds;
-    data['mobile_number'] = this.mobileNumber;
-    data['employee_name'] = this.employeeName;
-    data['password'] = this.password;
-    data['token'] = this.token;
-    data['hub_ids'] = this.hubIds;
-    data['role_id (from role_ids)'] = this.roleIdFromRoleIds;
-    data['hub_id (from hub_ids)'] = this.hubIdFromHubIds;
-    data['role_title (from role_ids)'] = this.roleTitleFromRoleIds;
-    data['employee_code'] = this.employeeCode;
-    data['created_on'] = this.createdOn;
-    data['updated_on'] = this.updatedOn;
-    data['parents_mobile_number'] = this.parents_mobile_number;
-    data['spouse_mobile_number'] = this.spouse_mobile_number;
-    data['pin_code'] = this.pin_code;
-    data['accessible_hub_ids'] = this.accessible_hub_ids;
-    data['accessible_hub_ids_code'] = this.accessible_hub_codes;
-    data['is_working'] = this.is_working;
-    data['actual_in_time'] = this.actual_in_time;
-    data['actual_out_time'] = this.actual_out_time;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['gender'] = gender;
+    data['employee_id'] = employeeId;
+    data['city'] = city;
+    data['email'] = email;
+    data['address'] = address;
+    data['role_ids'] = roleIds;
+    data['mobile_number'] = mobileNumber;
+    data['employee_name'] = employeeName;
+    data['password'] = password;
+    data['token'] = token;
+    data['hub_ids'] = hubIds;
+    data['role_id (from role_ids)'] = roleIdFromRoleIds;
+    data['hub_id (from hub_ids)'] = hubIdFromHubIds;
+    data['role_title (from role_ids)'] = roleTitleFromRoleIds;
+    data['employee_code'] = employeeCode;
+    data['created_on'] = createdOn;
+    data['updated_on'] = updatedOn;
+    data['parents_mobile_number'] = parents_mobile_number;
+    data['spouse_mobile_number'] = spouse_mobile_number;
+    data['pin_code'] = pin_code;
+    data['accessible_hub_ids'] = accessible_hub_ids;
+    data['accessible_hub_ids_code'] = accessible_hub_codes;
+    data['is_working'] = is_working;
+    data['actual_in_time'] = actual_in_time;
+    data['actual_out_time'] = actual_out_time;
     return data;
   }
 }

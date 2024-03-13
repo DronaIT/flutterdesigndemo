@@ -14,11 +14,11 @@ class RoleResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['role_title'] = this.roleTitle;
-    data['role_authority'] = this.roleAuthority;
-    data['role_id'] = this.roleId;
-    data['is_active'] = this.isActive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['role_title'] = roleTitle;
+    data['role_authority'] = roleAuthority;
+    data['role_id'] = roleId;
+    data['is_active'] = isActive;
     return data;
   }
 }

@@ -76,30 +76,30 @@ class StudentAttendanceResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lecture_id'] = this.lectureId;
-    data['employee_id'] = this.employeeId;
-    data['hub_id'] = this.hubId;
-    data['specialization_id'] = this.specializationId;
-    data['subject_id'] = this.subjectId;
-    data['unit_id'] = this.unitId;
-    data['topic_id'] = this.topicId;
-    data['division'] = this.division;
-    data['lecture_date'] = this.lectureDate;
-    data['lecture_time'] = this.lectureTime;
-    data['student_ids'] = this.studentIds;
-    data['present_ids'] = this.presentIds;
-    data['subject_title (from subject_id)'] = this.subjectTitleFromSubjectId;
-    data['unit_title (from unit_id)'] = this.unitTitleFromUnitId;
-    data['semester (from subject_id)'] = this.semesterFromSubjectId;
-    data['employee_name (from employee_id)'] = this.employeeNameFromEmployeeId;
-    data['hub_name (from hub_id)'] = this.hubNameFromHubId;
-    data['specialization_name (from specialization_id)'] = this.specializationNameFromSpecializationId;
-    data['topic_title (from topic_id)'] = this.topicTitleFromTopicId;
-    data['enrollment_numbers'] = this.enrollmentNumberFromStudentIds;
-    data['name (from student_ids)'] = this.nameFromStudentIds;
-    data['absent_ids'] = this.absent_ids;
-    data['lecture_duration'] = this.lecture_duration;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['lecture_id'] = lectureId;
+    data['employee_id'] = employeeId;
+    data['hub_id'] = hubId;
+    data['specialization_id'] = specializationId;
+    data['subject_id'] = subjectId;
+    data['unit_id'] = unitId;
+    data['topic_id'] = topicId;
+    data['division'] = division;
+    data['lecture_date'] = lectureDate;
+    data['lecture_time'] = lectureTime;
+    data['student_ids'] = studentIds;
+    data['present_ids'] = presentIds;
+    data['subject_title (from subject_id)'] = subjectTitleFromSubjectId;
+    data['unit_title (from unit_id)'] = unitTitleFromUnitId;
+    data['semester (from subject_id)'] = semesterFromSubjectId;
+    data['employee_name (from employee_id)'] = employeeNameFromEmployeeId;
+    data['hub_name (from hub_id)'] = hubNameFromHubId;
+    data['specialization_name (from specialization_id)'] = specializationNameFromSpecializationId;
+    data['topic_title (from topic_id)'] = topicTitleFromTopicId;
+    data['enrollment_numbers'] = enrollmentNumberFromStudentIds;
+    data['name (from student_ids)'] = nameFromStudentIds;
+    data['absent_ids'] = absent_ids;
+    data['lecture_duration'] = lecture_duration;
     return data;
   }
 }

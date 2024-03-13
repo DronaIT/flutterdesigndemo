@@ -12,10 +12,10 @@ class AddUnitsRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['unit_title'] = this.unitTitle;
-    data['TBL_TOPICS'] = this.tBLTOPICS;
-    data['subject_ids'] = this.subjectIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unit_title'] = unitTitle;
+    data['TBL_TOPICS'] = tBLTOPICS;
+    data['subject_ids'] = subjectIds;
     return data;
   }
 }

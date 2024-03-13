@@ -82,32 +82,32 @@ class CreateStudentRequest {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
-    data['joining_year'] = this.joiningYear;
-    data['password'] = this.password;
-    data['name'] = this.name;
-    data['address'] = this.address;
-    data['mobile_number'] = this.mobileNumber;
-    data['gender'] = this.gender;
-    data['hub_ids'] = this.hubIds;
-    data['email'] = this.email;
-    data['semester'] = this.semester;
-    data['division'] = this.division;
-    data['passed_out_year'] = this.passed_out_year;
-    data['specialization_ids'] = this.specializationIds;
-    data['batch'] = this.batch;
-    data['pin_code'] = this.pinCode;
-    data['sr_number'] = this.srNumber;
-    data['birthdate'] = this.birthdate;
-    data['aadhar_card_number'] = this.aadharCardNumber;
-    data['caste'] = this.caste;
-    data['hsc_school'] = this.hscSchool;
-    data['hsc_school_city'] = this.hscSchoolCity;
-    data['hsc_percentage'] = this.hscPercentage;
-    data['mother_name'] = this.motherName;
-    data['mother_number'] = this.motherNumber;
-    data['father_number'] = this.fatherNumber;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['city'] = city;
+    data['joining_year'] = joiningYear;
+    data['password'] = password;
+    data['name'] = name;
+    data['address'] = address;
+    data['mobile_number'] = mobileNumber;
+    data['gender'] = gender;
+    data['hub_ids'] = hubIds;
+    data['email'] = email;
+    data['semester'] = semester;
+    data['division'] = division;
+    data['passed_out_year'] = passed_out_year;
+    data['specialization_ids'] = specializationIds;
+    data['batch'] = batch;
+    data['pin_code'] = pinCode;
+    data['sr_number'] = srNumber;
+    data['birthdate'] = birthdate;
+    data['aadhar_card_number'] = aadharCardNumber;
+    data['caste'] = caste;
+    data['hsc_school'] = hscSchool;
+    data['hsc_school_city'] = hscSchoolCity;
+    data['hsc_percentage'] = hscPercentage;
+    data['mother_name'] = motherName;
+    data['mother_number'] = motherNumber;
+    data['father_number'] = fatherNumber;
     return data;
   }
 }

@@ -45,8 +45,8 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
   TextEditingController reportBranchController = TextEditingController();
   TextEditingController reportAddressController = TextEditingController();
   bool isVisible = false;
-  List<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>? typeofResponseArray = [];
-  BaseApiResponseWithSerializable<TypeOfsectoreResponse>? typeOfResponse;
+  List<BaseApiResponseWithSerializable<TypeOfSectorResponse>>? typeofResponseArray = [];
+  BaseApiResponseWithSerializable<TypeOfSectorResponse>? typeOfResponse;
   String typeofValue = "1";
   String path = "", title = "";
   var logoData, loiData;
@@ -205,19 +205,19 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                         child: Container(
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                           width: viewWidth,
-                          child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>(
+                          child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                             elevation: 16,
                             style: blackText16,
                             value: typeOfResponse,
                             focusColor: Colors.white,
-                            onChanged: (BaseApiResponseWithSerializable<TypeOfsectoreResponse>? newValue) {
+                            onChanged: (BaseApiResponseWithSerializable<TypeOfSectorResponse>? newValue) {
                               setState(() {
                                 typeofValue = newValue!.id!;
                                 typeOfResponse = newValue;
                               });
                             },
-                            items: typeofResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>>((BaseApiResponseWithSerializable<TypeOfsectoreResponse> value) {
-                              return DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfsectoreResponse>>(
+                            items: typeofResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfSectorResponse>>>((BaseApiResponseWithSerializable<TypeOfSectorResponse> value) {
+                              return DropdownMenuItem<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                                 value: value,
                                 child: Text(value.fields!.sectorTitle!.toString()),
                               );
@@ -530,26 +530,26 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                           response.hubIds = hubRecordId.split(",");
 
                           if (updatedPath.isNotEmpty) {
-                            Attachment_response attachment = Attachment_response();
+                            AttachmentResponse attachment = AttachmentResponse();
                             attachment.url = updatedPath;
                             attachment.filename = title;
-                            List<Attachment_response> listData = [];
+                            List<AttachmentResponse> listData = [];
                             listData.add(attachment);
                             response.company_logo = listData;
                           }
 
                           if (loiFilePath.isNotEmpty) {
-                            Attachment_response attachment = Attachment_response();
+                            AttachmentResponse attachment = AttachmentResponse();
                             attachment.url = loiFilePath;
                             attachment.filename = loiTitle;
-                            List<Attachment_response> listData = [];
+                            List<AttachmentResponse> listData = [];
                             listData.add(attachment);
                             response.company_loi = listData;
                           } else {
-                            Attachment_response attachment = Attachment_response();
+                            AttachmentResponse attachment = AttachmentResponse();
                             attachment.url = loiPath;
                             attachment.filename = loiTitle;
-                            List<Attachment_response> listData = [];
+                            List<AttachmentResponse> listData = [];
                             listData.add(attachment);
                             response.company_loi = listData;
                           }

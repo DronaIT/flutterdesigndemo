@@ -60,7 +60,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       roleId = loginData.roleIdFromRoleIds!.join(',');
     }
-    var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_ACADEMIC_DETAIL}')";
     try {
       var data = await apiRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
@@ -97,7 +97,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
     //query = "AND(FIND('${Get.arguments}',${TableNames.CLM_SPE_ID}) 0 ,1='${TableNames.MODULE_ATTENDANCE}')";
     //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
 
-    debugPrint("test=>${query}");
+    debugPrint("test=>$query");
     try {
       var data = await apiRepository.getSpecializationDetailApi(query);
       if (data.records?.isNotEmpty == true) {
@@ -127,9 +127,9 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
         //var query = "AND(FIND('${Get.arguments}', ${TableNames.CLM_SPE_ID}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
         if (PreferenceUtils.getIsLogin() == 1) {
           semesterValue = PreferenceUtils.getLoginData().semester!;
-          query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+          query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('$semesterValue',${TableNames.CLM_SEMESTER}, 0))";
         } else {
-          query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('${semesterValue}',${TableNames.CLM_SEMESTER}, 0))";
+          query = "AND(FIND('${specializationData![0].fields!.id}', ${TableNames.CLM_SPE_IDS}, 0),FIND('$semesterValue',${TableNames.CLM_SEMESTER}, 0))";
         }
         var data = await apiRepository.getSubjectsApi(query);
         if (data.records?.isNotEmpty == true) {

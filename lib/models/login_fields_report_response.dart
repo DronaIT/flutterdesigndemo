@@ -50,22 +50,22 @@ class LoginFieldsReportResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
-    data['joining_year'] = this.joiningYear;
-    data['name'] = this.name;
-    data['address'] = this.address;
-    data['mobile_number'] = this.mobileNumber;
-    data['email'] = this.email;
-    data['gender'] = this.gender;
-    data['enrollment_number'] = this.enrollmentNumber;
-    data['division'] = this.division;
-    data['semester'] = this.semester;
-    data['birthdate'] = this.birthdate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['city'] = city;
+    data['joining_year'] = joiningYear;
+    data['name'] = name;
+    data['address'] = address;
+    data['mobile_number'] = mobileNumber;
+    data['email'] = email;
+    data['gender'] = gender;
+    data['enrollment_number'] = enrollmentNumber;
+    data['division'] = division;
+    data['semester'] = semester;
+    data['birthdate'] = birthdate;
 
-    data['subject'] = this.subject;
-    data['specialization'] = this.specialization;
-    data['hub'] = this.hub;
+    data['subject'] = subject;
+    data['specialization'] = specialization;
+    data['hub'] = hub;
 
     return data;
   }

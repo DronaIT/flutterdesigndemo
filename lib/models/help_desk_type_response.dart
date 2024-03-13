@@ -1,19 +1,19 @@
 class HelpDeskTypeResponse {
   int? id;
   String? title;
-  List<String>? centerAutority;
+  List<String>? centerAuthority;
   List<String>? centerAuthorityMobileNumber;
   List<String>? concernPerson;
   List<String>? concernPersonMobileNumber;
   List<String>? centerAuthorityHubId;
   List<String>? concernPersonHubId;
 
-  HelpDeskTypeResponse({this.id, this.title, this.centerAutority, this.centerAuthorityMobileNumber, this.concernPerson, this.concernPersonMobileNumber, this.centerAuthorityHubId, this.concernPersonHubId});
+  HelpDeskTypeResponse({this.id, this.title, this.centerAuthority, this.centerAuthorityMobileNumber, this.concernPerson, this.concernPersonMobileNumber, this.centerAuthorityHubId, this.concernPersonHubId});
 
   HelpDeskTypeResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    centerAutority = json['center_autority']?.cast<String>();
+    centerAuthority = json['center_autority']?.cast<String>();
     centerAuthorityMobileNumber = json['center_authority_mobile_number']?.cast<String>();
     concernPerson = json['concern_person']?.cast<String>();
     concernPersonMobileNumber = json['concern_person_mobile_number']?.cast<String>();
@@ -22,15 +22,15 @@ class HelpDeskTypeResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['center_autority'] = this.centerAutority;
-    data['center_authority_mobile_number'] = this.centerAuthorityMobileNumber;
-    data['concern_person'] = this.concernPerson;
-    data['concern_person_mobile_number'] = this.concernPersonMobileNumber;
-    data['center_authority_hub_id'] = this.centerAuthorityHubId;
-    data['concern_person_hub_id'] = this.concernPersonHubId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['center_autority'] = centerAuthority;
+    data['center_authority_mobile_number'] = centerAuthorityMobileNumber;
+    data['concern_person'] = concernPerson;
+    data['concern_person_mobile_number'] = concernPersonMobileNumber;
+    data['center_authority_hub_id'] = centerAuthorityHubId;
+    data['concern_person_hub_id'] = concernPersonHubId;
     return data;
   }
 }

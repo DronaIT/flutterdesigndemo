@@ -29,7 +29,7 @@ class AttendanceHistory extends StatefulWidget {
 }
 
 class _AttendanceHistoryState extends State<AttendanceHistory> {
-  BaseLoginResponse<LoginEmployeResponse> data = BaseLoginResponse();
+  BaseLoginResponse<LoginEmployeeResponse> data = BaseLoginResponse();
   bool isVisible = false;
   final apiRepository = getIt.get<ApiRepository>();
   String phone = "";

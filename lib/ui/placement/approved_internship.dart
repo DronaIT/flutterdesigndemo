@@ -19,6 +19,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/dio_exception.dart';
 import '../../customwidget/custom_edittext_search.dart';
@@ -33,6 +34,7 @@ class ApprovedInternship extends StatefulWidget {
 class _ApprovedInternshipState extends State<ApprovedInternship> {
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
+  TextEditingController rejectionReasonController = TextEditingController();
 
   String startDateVal = "", endDateVal = "";
 
@@ -48,9 +50,23 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   String hubValue = "";
   List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
 
+  /*
+  *   argument value = 0 > Regular Internship
+  *   argument value = 1 > Final Placement
+  */
+  int jobType = 0;
+  String jobValue = strings_name.str_job_type_regular_internship;
+
   @override
   void initState() {
     super.initState();
+    if (Get.arguments != null) {
+      if (Get.arguments[0]["placementType"] != null) {
+        jobType = Get.arguments[0]["placementType"];
+      }
+    }
+    jobValue = jobType == 0 ? strings_name.str_job_type_regular_internship : strings_name.str_job_type_final_placement;
+
     hubResponseArray = PreferenceUtils.getHubList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -88,6 +104,9 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       setState(() {});
     }
 
+    jobOpportunityListMain?.clear();
+    jobOpportunityList?.clear();
+
     getRecords();
   }
 
@@ -98,7 +117,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       });
     }
     var query =
-        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}', SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
+        "AND(${TableNames.CLM_STATUS}='${strings_name.str_job_status_pending}', ${TableNames.CLM_JOB_TYPE}='$jobValue', SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
     debugPrint(query);
     try {
       var data = await apiRepository.getJobOppoApi(query, offset);
@@ -155,6 +174,8 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                 alignment: Alignment.topLeft,
                 textStyles: blackTextSemiBold16,
                 bottomValue: 0,
+                leftValue: 10.w,
+                rightValue: 10.w,
               ),
               Container(
                 margin: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.h),
@@ -168,11 +189,13 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                     setState(() {
                       hubValue = newValue!.fields!.hubId!.toString();
                       hubResponse = newValue;
+                      jobOpportunityListMain?.clear();
+                      jobOpportunityList?.clear();
+
                       getRecords();
                     });
                   },
-                  items: hubResponseArray
-                      ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                  items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                     return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                       value: value,
                       child: Text(value.fields!.hubName!.toString()),
@@ -180,7 +203,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                   }).toList(),
                 ),
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 5.h),
               Visibility(
                 visible: jobOpportunityListMain != null && jobOpportunityListMain!.isNotEmpty,
                 child: Column(children: [
@@ -208,7 +231,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                   custom_text(
                     text: "Total Jobs: ${jobOpportunityListMain?.length ?? 0}",
                     textStyles: blackTextSemiBold16,
-                    leftValue: 15.w,
+                    leftValue: 12.w,
                     bottomValue: 0,
                   ),
                 ]),
@@ -251,11 +274,9 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                     bottomValue: 5,
                                     leftValue: 5,
                                   ),
-                                  jobOpportunityList?[index].fields!.stipendRangeMin != null &&
-                                          jobOpportunityList?[index].fields!.stipendRangeMax != null
+                                  jobOpportunityList?[index].fields!.stipendRangeMin != null && jobOpportunityList?[index].fields!.stipendRangeMax != null
                                       ? custom_text(
-                                          text:
-                                              "Stipend: ${jobOpportunityList?[index].fields!.stipendRangeMin} - ${jobOpportunityList?[index].fields!.stipendRangeMax}",
+                                          text: "Stipend: ${jobOpportunityList?[index].fields!.stipendRangeMin} - ${jobOpportunityList?[index].fields!.stipendRangeMax}",
                                           textStyles: blackTextSemiBold12,
                                           topValue: 5,
                                           maxLines: 2,
@@ -264,20 +285,14 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                         )
                                       : Container(),
                                   custom_text(
-                                      text:
-                                          "Timings: ${jobOpportunityList?[index].fields!.timingStart} - ${jobOpportunityList?[index].fields!.timingEnd}",
+                                      text: "Timings: ${jobOpportunityList?[index].fields!.timingStart} - ${jobOpportunityList?[index].fields!.timingEnd}",
                                       textStyles: blackTextSemiBold12,
                                       topValue: 5,
                                       maxLines: 2,
                                       bottomValue: 5,
                                       leftValue: 5),
                                   custom_text(
-                                      text: "Vacancies: ${jobOpportunityList?[index].fields!.vacancies}",
-                                      textStyles: blackTextSemiBold12,
-                                      topValue: 5,
-                                      maxLines: 2,
-                                      bottomValue: 5,
-                                      leftValue: 5),
+                                      text: "Vacancies: ${jobOpportunityList?[index].fields!.vacancies}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
                                   custom_text(
                                     text: jobOpportunityList?[index].fields?.reportingAddress?.first != null
                                         ? "Location: ${jobOpportunityList?[index].fields?.reportingAddress?.first.toString().trim()} ${jobOpportunityList?[index].fields!.city?.first}"
@@ -289,8 +304,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                     leftValue: 5,
                                   ),
                                   custom_text(
-                                    text:
-                                        "Internship : ${jobOpportunityList?[index].fields!.internshipModes} - ${jobOpportunityList?[index].fields!.internshipDuration}",
+                                    text: "Internship : ${jobOpportunityList?[index].fields!.internshipModes} - ${jobOpportunityList?[index].fields!.internshipDuration}",
                                     textStyles: blackTextSemiBold12,
                                     topValue: 5,
                                     maxLines: 2,
@@ -315,17 +329,52 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                           leftValue: 5,
                                         )
                                       : Container(),
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    margin: const EdgeInsets.only(right: 10),
-                                    child: Visibility(
-                                      child: ElevatedButton(
+                                  Row(children: [
+                                    custom_text(
+                                      text: "${strings_name.str_letter_of_intent} : ",
+                                      textStyles: blackTextSemiBold12,
+                                      topValue: 5,
+                                      maxLines: 2,
+                                      bottomValue: 5,
+                                      leftValue: 5,
+                                      rightValue: 5,
+                                    ),
+                                    GestureDetector(
+                                        onTap: () async {
+                                          await launchUrl(Uri.parse(jobOpportunityList![index].fields?.company_loi?.last.url ?? ""), mode: LaunchMode.externalApplication);
+                                        },
+                                        child: custom_text(text: "Show", textStyles: primaryTextSemiBold14, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 0)),
+                                  ]),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          rejectionConfirmationDialog(jobOpportunityList![index]);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: colors_name.colorPrimary,
+                                          padding: const EdgeInsets.only(top: 5, bottom: 5, left: 22, right: 22),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          elevation: 5.0,
+                                        ),
+                                        child: const Text(
+                                          strings_name.str_reject,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
+                                      SizedBox(width: 5.w),
+                                      ElevatedButton(
                                         onPressed: () {
                                           confirmationDialog(jobOpportunityList![index]);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          primary: colors_name.presentColor,
-                                          padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+                                          backgroundColor: colors_name.presentColor,
+                                          padding: const EdgeInsets.only(top: 5, bottom: 5, left: 20, right: 20),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
@@ -337,17 +386,19 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                           style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   )
                                 ],
                               ),
                             ),
                           );
                         })
-                    : Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        child: custom_text(
-                            text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : custom_text(
+                        text: strings_name.str_no_jobs_approval_pending,
+                        textStyles: centerTextStyleBlack18,
+                        alignment: Alignment.center,
+                        topValue: 20.h,
+                      ),
               )
             ],
           )),
@@ -379,11 +430,13 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
             text: 'Company Name : ${jobData.fields?.companyName?.first.toString()}',
             textStyles: blackTextSemiBold14,
             maxLines: 2,
+            bottomValue: 0,
           ),
           custom_text(
             text: 'Position : ${jobData.fields?.jobTitle}',
             textStyles: blackTextSemiBold14,
             maxLines: 2,
+            bottomValue: 0,
           ),
           SizedBox(height: 5.h),
           custom_text(
@@ -485,7 +538,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                   Utils.showSnackBar(context, strings_name.str_empty_job_apply_end_time);
                 } else {
                   Get.back(closeOverlays: true);
-                  approveNow(jobData);
+                  updateJobStatus(jobData, true);
                 }
               })
         ],
@@ -494,15 +547,72 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
     showDialog(context: context, builder: (BuildContext context) => errorDialog);
   }
 
-  void approveNow(BaseApiResponseWithSerializable<JobOpportunityResponse> jobData) async {
+  Future<void> rejectionConfirmationDialog(BaseApiResponseWithSerializable<JobOpportunityResponse> jobData) async {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          custom_text(text: 'Please confirm the rejection', textStyles: boldTitlePrimaryColorStyle),
+          SizedBox(height: 5.h),
+          custom_text(
+            text: 'Company Name : ${jobData.fields?.companyName?.first.toString()}',
+            textStyles: blackTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          custom_text(
+            text: 'Position : ${jobData.fields?.jobTitle}',
+            textStyles: blackTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          SizedBox(height: 5.h),
+          custom_text(
+            text: strings_name.str_provide_rejection_reason,
+            alignment: Alignment.topLeft,
+            textStyles: blackTextSemiBold16,
+            bottomValue: 5,
+          ),
+          custom_edittext(
+            type: TextInputType.multiline,
+            textInputAction: TextInputAction.newline,
+            controller: rejectionReasonController,
+            minLines: 3,
+            maxLines: 3,
+            maxLength: 50000,
+            topValue: 0,
+          ),
+          CustomButton(
+              text: strings_name.str_submit,
+              click: () {
+                if (rejectionReasonController.text.trim().isEmpty) {
+                  Utils.showSnackBar(context, strings_name.str_rejection_reason);
+                } else {
+                  Get.back(closeOverlays: true);
+                  updateJobStatus(jobData, false);
+                }
+              })
+        ],
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+  void updateJobStatus(BaseApiResponseWithSerializable<JobOpportunityResponse> jobData, bool isApproved) async {
     setState(() {
       isVisible = true;
     });
 
     CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
-    request.status = strings_name.str_job_status_published;
-    request.jobApplyStartTime = startTimeController.text.trim().toString();
-    request.jobApplyEndTime = endTimeController.text.trim().toString();
+    if (isApproved) {
+      request.status = strings_name.str_job_status_published;
+      request.jobApplyStartTime = startTimeController.text.trim().toString();
+      request.jobApplyEndTime = endTimeController.text.trim().toString();
+    } else {
+      request.status = strings_name.str_job_status_rejected;
+      request.jobRejectionReason = rejectionReasonController.text.trim().toString();
+    }
 
     var json = request.toJson();
     json.removeWhere((key, value) => value == null);

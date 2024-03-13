@@ -378,7 +378,7 @@ class _AddStudent extends State<CreateStudent> {
             try {
               var checkMobile = await createStudentRepository.loginApi(query);
               if (checkMobile.records?.isEmpty == true) {
-                Map<String, CreateStudentRequest> map = Map();
+                Map<String, CreateStudentRequest> map = {};
                 map["fields"] = request;
                 list.add(map);
               }
