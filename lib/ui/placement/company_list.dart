@@ -308,7 +308,7 @@ class _CompanyListState extends State<CompanyList> {
                                                 ]);
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: colors_name.presentColor,
+                                                backgroundColor: colors_name.presentColor,
                                                 padding: const EdgeInsets.all(10),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8),
@@ -334,7 +334,7 @@ class _CompanyListState extends State<CompanyList> {
                                                 ]);
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: colors_name.presentColor,
+                                                backgroundColor: colors_name.presentColor,
                                                 padding: const EdgeInsets.all(10),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8),

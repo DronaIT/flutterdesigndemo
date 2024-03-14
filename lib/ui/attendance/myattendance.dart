@@ -409,7 +409,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          primary: totalPresentPercentage >= 75 ? colors_name.presentColor : colors_name.errorColor,
+                          backgroundColor: totalPresentPercentage >= 75 ? colors_name.presentColor : colors_name.errorColor,
                           padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.r),
@@ -465,7 +465,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                                       child: ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          primary: studentAttendanceArray![index].status == 1 ? colors_name.presentColor : colors_name.errorColor,
+                                          backgroundColor: studentAttendanceArray![index].status == 1 ? colors_name.presentColor : colors_name.errorColor,
                                           padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),
@@ -545,7 +545,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                                           child: ElevatedButton(
                                             onPressed: () {},
                                             style: ElevatedButton.styleFrom(
-                                              primary: ((studentAttendanceBySubjectArray![index].present_lectures * 100) /
+                                              backgroundColor: ((studentAttendanceBySubjectArray![index].present_lectures * 100) /
                                                           studentAttendanceBySubjectArray![index].total_lectures) >=
                                                       75
                                                   ? colors_name.presentColor

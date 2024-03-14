@@ -224,7 +224,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
             placedUnplacedList = true;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_PLACEMENT_ATTENDANCE_DATA_REPORTS) {
-            placementAttendanceDataReports = true;
+            placementAttendanceDataReports = false;
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ENABLE_SELFPLACE) {
             selfPlacement = true;

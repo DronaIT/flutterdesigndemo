@@ -167,7 +167,7 @@ class _StudentAttendanceHistoryState extends State<StudentAttendanceHistory> {
                                               child: ElevatedButton(
                                                 onPressed: () {},
                                                 style: ElevatedButton.styleFrom(
-                                                  primary: ((attendanceList[index].present_lectures * 100) / attendanceList[index].total_lectures) >= 75 ? colors_name.presentColor : colors_name.errorColor,
+                                                  backgroundColor: ((attendanceList[index].present_lectures * 100) / attendanceList[index].total_lectures) >= 75 ? colors_name.presentColor : colors_name.errorColor,
                                                   padding: const EdgeInsets.all(6),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8),

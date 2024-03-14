@@ -126,7 +126,7 @@ class _CompletedStudentDetailState extends State<CompletedStudentDetail> {
                                     child: ElevatedButton(
                                       onPressed: () {},
                                       style: ElevatedButton.styleFrom(
-                                        primary: studentResponse[index].completionStatus == 1 || studentResponse[index].completionStatus == 0 ? colors_name.presentColor : colors_name.errorColor,
+                                        backgroundColor: studentResponse[index].completionStatus == 1 || studentResponse[index].completionStatus == 0 ? colors_name.presentColor : colors_name.errorColor,
                                         padding: const EdgeInsets.all(10),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8),

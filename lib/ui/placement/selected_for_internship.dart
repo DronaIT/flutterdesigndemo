@@ -154,7 +154,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
                                         // performAction(true, jobOpportunityData.records![index].id.toString());
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: colors_name.presentColor,
+                                        backgroundColor: colors_name.presentColor,
                                         padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8),
@@ -176,7 +176,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
                                         rejectionDialog(jobOpportunityData.records![index].id.toString());
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: colors_name.errorColor,
+                                        backgroundColor: colors_name.errorColor,
                                         padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8),

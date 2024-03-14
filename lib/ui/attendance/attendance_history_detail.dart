@@ -177,7 +177,7 @@ class _AttendanceHistoryDetailState extends State<AttendanceHistoryDetail> {
                                       child: ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          primary: dataMain.fields!.presentIds != null && dataMain.fields!.presentIds!.contains(data[index].studentIds) ? colors_name.presentColor : colors_name.errorColor,
+                                          backgroundColor: dataMain.fields!.presentIds != null && dataMain.fields!.presentIds!.contains(data[index].studentIds) ? colors_name.presentColor : colors_name.errorColor,
                                           padding: const EdgeInsets.all(10),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),

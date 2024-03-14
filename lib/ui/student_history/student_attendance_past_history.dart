@@ -108,7 +108,7 @@ class _StudentAttendancePastHistoryState extends State<StudentAttendancePastHist
                                           child: ElevatedButton(
                                             onPressed: () {},
                                             style: ElevatedButton.styleFrom(
-                                              primary: studentList[index].present_lectures == 1 ? colors_name.presentColor : colors_name.errorColor,
+                                              backgroundColor: studentList[index].present_lectures == 1 ? colors_name.presentColor : colors_name.errorColor,
                                               padding: const EdgeInsets.all(6),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8),
@@ -121,7 +121,6 @@ class _StudentAttendancePastHistoryState extends State<StudentAttendancePastHist
                                             ),
                                           ),
                                         )
-
                                       ],
                                     ),
                                   ],
