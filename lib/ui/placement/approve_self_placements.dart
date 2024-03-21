@@ -57,17 +57,17 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
 
     var query = "AND(";
     query += "OR(FIND('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",FIND('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
+          query += ",FIND('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}))";
         }
       }
     }
-    query +=
-        "), ${TableNames.CLM_IS_PLACED_NOW}='0', OR(${TableNames.CLM_SELF_PLACE_STATUS}='${TableNames.SELFPLACE_STATUS_PENDING}', ${TableNames.CLM_SELF_PLACE_STATUS}='${TableNames.SELFPLACE_STATUS_REJECTED}'))";
+    query += "), ${TableNames.CLM_IS_PLACED_NOW}='0', OR("
+        "FIND('${TableNames.SELFPLACE_STATUS_PENDING}', ARRAYJOIN({${TableNames.CLM_SELF_PLACE_STATUS}})),"
+        "FIND('${TableNames.SELFPLACE_STATUS_REJECTED}', ARRAYJOIN({${TableNames.CLM_SELF_PLACE_STATUS}}))"
+        "))";
     debugPrint(query);
 
     try {
@@ -76,6 +76,13 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
         if (offset.isEmpty) {
           mainStudentData?.clear();
         }
+        for (int i = 0; i < (data.records?.length ?? 0); i++) {
+          if (data.records![i].fields?.is_placed_now == "1" || data.records![i].fields?.self_place_company_status?.last == TableNames.SELFPLACE_STATUS_APPROVED) {
+            data.records!.removeAt(i);
+            i--;
+          }
+        }
+
         mainStudentData?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
         offset = data.offset;
         if (offset.isNotEmpty) {
@@ -125,35 +132,40 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 8.h,
-              ),
+              SizedBox(height: 8.h),
               Visibility(
                 visible: mainStudentData != null && mainStudentData!.isNotEmpty,
-                child: CustomEditTextSearch(
-                  type: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  controller: controllerSearch,
-                  onChanges: (value) {
-                    if (value.isEmpty) {
-                      studentData = [];
-                      studentData = mainStudentData;
-                      setState(() {});
-                    } else {
-                      studentData = [];
-                      for (var i = 0; i < mainStudentData!.length; i++) {
-                        if (mainStudentData![i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
-                          studentData?.add(mainStudentData![i]);
+                child: Column(children: [
+                  CustomEditTextSearch(
+                    type: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    controller: controllerSearch,
+                    onChanges: (value) {
+                      if (value.isEmpty) {
+                        studentData = [];
+                        studentData = mainStudentData;
+                        setState(() {});
+                      } else {
+                        studentData = [];
+                        for (var i = 0; i < mainStudentData!.length; i++) {
+                          if (mainStudentData![i].fields!.name!.toLowerCase().contains(value.toLowerCase())) {
+                            studentData?.add(mainStudentData![i]);
+                          }
                         }
+                        setState(() {});
                       }
-                      setState(() {});
-                    }
-                  },
-                ),
+                    },
+                  ),
+                  custom_text(
+                    text: "Total students: ${mainStudentData?.length ?? 0}",
+                    textStyles: blackTextSemiBold16,
+                    leftValue: 12.w,
+                    bottomValue: 0,
+                  ),
+                ]),
               ),
-              SizedBox(height: 5.h),
               Container(
-                margin: const EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                 child: studentData != null && studentData!.isNotEmpty
                     ? ListView.builder(
                         primary: false,
@@ -163,36 +175,13 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                           return Card(
                             elevation: 5,
                             child: Container(
-                              margin: const EdgeInsets.all(10),
+                              margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                               child: Column(
                                 children: [
-                                  custom_text(
-                                      text: "${studentData?[index].fields!.name}",
-                                      textStyles: centerTextStyle16,
-                                      topValue: 0,
-                                      maxLines: 2,
-                                      bottomValue: 5,
-                                      leftValue: 5),
-                                  custom_text(
-                                      topValue: 0,
-                                      bottomValue: 5,
-                                      maxLines: 2,
-                                      leftValue: 5,
-                                      text: "Specialization: ${Utils.getSpecializationName(studentData?[index].fields?.specializationIds![0])}",
-                                      textStyles: blackTextSemiBold14),
-                                  custom_text(
-                                      topValue: 0,
-                                      bottomValue: 5,
-                                      leftValue: 5,
-                                      text: "Semester: ${studentData?[index].fields?.semester}",
-                                      textStyles: blackTextSemiBold14),
-                                  custom_text(
-                                      topValue: 0,
-                                      text: "Company name: ${studentData?[index].fields!.self_place_company_name?.first}",
-                                      textStyles: blackTextSemiBold14,
-                                      maxLines: 2,
-                                      bottomValue: 5,
-                                      leftValue: 5),
+                                  custom_text(text: "${studentData?[index].fields!.name}", textStyles: centerTextStyle16, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                  custom_text(topValue: 0, bottomValue: 5, maxLines: 2, leftValue: 5, text: "Specialization: ${Utils.getSpecializationName(studentData?[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
+                                  custom_text(topValue: 0, bottomValue: 5, leftValue: 5, text: "Semester: ${studentData?[index].fields?.semester}", textStyles: blackTextSemiBold14),
+                                  custom_text(topValue: 0, text: "Company name: ${studentData?[index].fields!.self_place_company_name?.first}", textStyles: blackTextSemiBold14, maxLines: 2, bottomValue: 5, leftValue: 5),
                                   custom_text(
                                     text: "Job title: ${studentData?[index].fields!.applied_self_place_job_title?.first}",
                                     textStyles: blackTextSemiBold14,
@@ -281,10 +270,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                             ),
                           );
                         })
-                    : Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        child: custom_text(
-                            text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               )
             ],
           )),
@@ -484,8 +470,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     }
   }
 
-  Future<void> createCompanyRequest(
-      BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+  Future<void> createCompanyRequest(BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
     var companyRequest = CreateCompanyDetailRequest();
     companyRequest.company_name = companyInfo?.fields?.companyName?.trim() ?? "";
     companyRequest.company_identity_number = companyInfo?.fields?.companyIdentityNumber?.trim() ?? "";
@@ -546,8 +531,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     }
   }
 
-  Future<void> createJobOpportunityRequest(
-      BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+  Future<void> createJobOpportunityRequest(BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
     if (companyInfo?.id?.trim().isNotEmpty == true) {
       CreateJobOpportunityRequest request = CreateJobOpportunityRequest();
       request.companyId = companyInfo?.id?.trim().split(" ") ?? [];
@@ -632,8 +616,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     }
   }
 
-  Future<void> placeStudent(
-      BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
+  Future<void> placeStudent(BaseApiResponseWithSerializable<CompanyDetailResponse>? companyInfo, BaseApiResponseWithSerializable<JobOpportunityResponse>? jobInfo) async {
     if (jobInfo?.fields?.placedStudents?.last.isNotEmpty == true) {
       setState(() {
         isVisible = true;

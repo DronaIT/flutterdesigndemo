@@ -18,7 +18,13 @@ class HubResponse {
   List<String>? warningLetter2Issued;
   List<String>? warningLetter3Issued;
   List<String>? isPlacedNow;
+
   List<String>? tblCompany;
+  List<String>? companyName;
+  List<String>? companyContactName;
+  List<String>? companyCity;
+  List<int>? isCompanyAssigned;
+
   List<String>? workingEmployees;
   bool selected = false;
 
@@ -63,6 +69,10 @@ class HubResponse {
     this.warningLetter3Issued,
     this.isPlacedNow,
     this.tblCompany,
+    this.companyName,
+    this.companyContactName,
+    this.companyCity,
+    this.isCompanyAssigned,
     this.workingEmployees,
   });
 
@@ -87,6 +97,10 @@ class HubResponse {
     warningLetter3Issued = json['warning_letter_3_issued']?.cast<String>();
     isPlacedNow = json['is_placed_now_data']?.cast<String>();
     tblCompany = json['TBL_COMPANY']?.cast<String>();
+    companyName = json['company_name']?.cast<String>();
+    companyContactName = json['company_contact_name']?.cast<String>();
+    companyCity = json['company_city']?.cast<String>();
+    isCompanyAssigned = json['is_company_assigned']?.cast<int>();
     workingEmployees = json['working_employees']?.cast<String>();
   }
 
@@ -112,6 +126,10 @@ class HubResponse {
     data['warning_letter_3_issued'] = warningLetter3Issued;
     data['is_placed_now_data'] = isPlacedNow;
     data['TBL_COMPANY'] = tblCompany;
+    data['company_name'] = companyName;
+    data['company_contact_name'] = companyContactName;
+    data['company_city'] = companyCity;
+    data['is_company_assigned'] = isCompanyAssigned;
     data['working_employees'] = workingEmployees;
     return data;
   }

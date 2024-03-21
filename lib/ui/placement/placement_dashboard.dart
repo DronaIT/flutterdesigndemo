@@ -5,6 +5,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/ui/placement/assign_placement_executive.dart';
 import 'package:flutterdesigndemo/ui/placement/job_opportunity_form.dart';
 import 'package:flutterdesigndemo/ui/placement/job_opportunity_list.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_attendance_data_reports.dart';
@@ -66,7 +67,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
   bool placedUnplacedList = false, placementAttendanceDataReports = false;
 
   // For employees and company
-  bool addPlacementMarks = false;
+  bool addPlacementMarks = false, assignPlacementExecutives = false;
 
   // For student
   bool applyInternship = false, appliedInternship = false;
@@ -243,6 +244,9 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
           }
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_PLACEMENT_MARKS) {
             addPlacementMarks = true;
+          }
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ASSIGN_PLACEMENT_EXECUTIVE) {
+            assignPlacementExecutives = true;
           }
         }
         setState(() {});
@@ -1231,6 +1235,29 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                               {"companyCode": companyData.company_code},
                               {"companyId": PreferenceUtils.getLoginRecordId()},
                             ]);
+                          }
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: assignPlacementExecutives,
+                      child: GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings_name.str_assign_placement_executive, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          if (PreferenceUtils.getIsLogin() == 2) {
+                            Get.to(() => const AssignPlacementExecutive());
                           }
                         },
                       ),

@@ -87,6 +87,7 @@ class LoginFieldsResponse {
   List<String>? applied_self_place_job_title;
   List<String>? placed_self_place_job;
   List<String>? placed_self_place_job_title;
+  List<String>? self_place_company_status;
 
   String? token;
   String? warning_letter_1_for_applying;
@@ -185,6 +186,7 @@ class LoginFieldsResponse {
     this.applied_self_place_job_title,
     this.placed_self_place_job,
     this.placed_self_place_job_title,
+    this.self_place_company_status,
     this.job_title_selected_job,
     this.company_name_from_selected_job,
     this.contact_name_from_selected_job,
@@ -256,6 +258,7 @@ class LoginFieldsResponse {
     applied_self_place_job_title = json['applied_self_place_job_title']?.cast<String>();
     placed_self_place_job = json['placed_self_place_job']?.cast<String>();
     placed_self_place_job_title = json['placed_self_place_job_title']?.cast<String>();
+    self_place_company_status = json['self_place_company_status']?.cast<String>();
 
     lecture_subject_title = json['lecture_subject_title']?.cast<String>();
     city = json['city'];
@@ -369,6 +372,7 @@ class LoginFieldsResponse {
     data['applied_self_place_job_title'] = applied_self_place_job_title;
     data['placed_self_place_job'] = placed_self_place_job;
     data['placed_self_place_job_title'] = placed_self_place_job_title;
+    data['self_place_company_status'] = self_place_company_status;
 
     data['semester_by_student'] = semesterByStudent;
     data['present_semester_by_student'] = presentSemesterByStudent;

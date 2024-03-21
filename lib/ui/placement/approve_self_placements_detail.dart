@@ -484,7 +484,7 @@ class _ApproveSelfPlacementDetailState extends State<ApproveSelfPlacementDetail>
 
       var data = await apiRepository.getSelfPlaceJobDetailApi(query);
       if (data.records!.isNotEmpty) {
-        jobInfo = data.records!.first;
+        jobInfo = data.records!.last;
       }
       setState(() {
         isVisible = false;

@@ -720,7 +720,8 @@ class strings_name {
   static const String str_empty_placed_students = "Please select placed students";
   static const String str_empty_select_student = "Please select student";
   static const String str_empty_company = "Please select company";
-  static const String str_select_company = "Select company";
+  static const String str_select_company = "Select Company";
+  static const String str_selected_company = "Selected Company";
 
   static const String str_err_company_setup = "Error in setting up the company";
   static const String str_select_company_option = "Please select";
@@ -930,5 +931,7 @@ class strings_name {
 
   static const String str_reset_this_data = "Reset Details";
   static const String str_placement_attendance_data_reports = "Placement Attendance Data Report";
+  static const String str_assign_placement_executive = "Assign Placement Executives";
 
+  static const String str_assign_to = "Assigned to";
 }

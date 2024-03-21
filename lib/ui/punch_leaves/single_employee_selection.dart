@@ -46,19 +46,19 @@ class _SingleEmployeeSelectionState extends State<SingleEmployeeSelection> {
   }
 
   getRecords() async {
-    setState(() {
-      if (!isVisible) isVisible = true;
-    });
+    if (!isVisible) {
+      setState(() {
+        isVisible = true;
+      });
+    }
 
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-          ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -165,29 +165,24 @@ class _SingleEmployeeSelectionState extends State<SingleEmployeeSelection> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Expanded(
-                                              child: Text("${employeeData![index].fields!.employeeName}",
-                                                  textAlign: TextAlign.start, style: blackTextSemiBold16)),
-                                          if (employeeData![index].fields!.selected)
-                                            const Icon(Icons.check, size: 20, color: colors_name.colorPrimary),
+                                          Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
+                                          if (employeeData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary),
                                         ],
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        employeeData![index].fields!.selected = !employeeData![index].fields!.selected;
-                                        for (int i = 0; i < mainEmployeeData!.length; i++) {
-                                          if (employeeData![index].fields!.mobileNumber != mainEmployeeData![i].fields!.mobileNumber) {
-                                            mainEmployeeData![i].fields!.selected = false;
-                                          }
+                                      employeeData![index].fields!.selected = !employeeData![index].fields!.selected;
+                                      for (int i = 0; i < mainEmployeeData!.length; i++) {
+                                        if (employeeData![index].fields!.mobileNumber != mainEmployeeData![i].fields!.mobileNumber) {
+                                          mainEmployeeData![i].fields!.selected = false;
                                         }
-                                        for (int i = 0; i < mainEmployeeData!.length; i++) {
-                                          if (employeeData![index].fields!.mobileNumber != mainEmployeeData![i].fields!.mobileNumber) {
-                                            mainEmployeeData![i].fields!.selected = false;
-                                          }
+                                      }
+                                      for (int i = 0; i < mainEmployeeData!.length; i++) {
+                                        if (employeeData![index].fields!.mobileNumber != mainEmployeeData![i].fields!.mobileNumber) {
+                                          mainEmployeeData![i].fields!.selected = false;
                                         }
-                                        setState(() {});
-                                      });
+                                      }
+                                      setState(() {});
                                     },
                                   ),
                                 );
@@ -213,9 +208,7 @@ class _SingleEmployeeSelectionState extends State<SingleEmployeeSelection> {
                   },
                 )
               ])
-            : Container(
-                margin: EdgeInsets.only(top: 100),
-                child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            : Container(margin: EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         Center(
           child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
         )
