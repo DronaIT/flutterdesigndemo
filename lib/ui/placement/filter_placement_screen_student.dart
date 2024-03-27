@@ -391,8 +391,6 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
         }
       }
 
-      countTotalStudents();
-
       // debugPrint("test=>${studentList?.length} ==>${viewStudent?.length}");
       if (studentList?.isNotEmpty == true) {
         studentList?.sort((a, b) => a.name!.compareTo(b.name!));
@@ -414,18 +412,11 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
   int countTotalStudents() {
     if (hubResponse != null && hubResponse?.fields != null) {
       int totalStudent = hubResponse?.fields?.tblStudent?.length ?? 0;
-      if (speValue.isNotEmpty) {
-        for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
-          if (speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
-            totalStudent -= 1;
-          }
-        }
-      }
-      if (semesterValue != -1) {
-        for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
-          if (semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
-            totalStudent -= 1;
-          }
+      for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
+        if (speValue.isNotEmpty && speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
+          totalStudent -= 1;
+        } else if (semesterValue != -1 && semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
+          totalStudent -= 1;
         }
       }
       return totalStudent;

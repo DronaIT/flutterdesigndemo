@@ -181,9 +181,9 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                                   custom_text(text: "${studentData?[index].fields!.name}", textStyles: centerTextStyle16, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
                                   custom_text(topValue: 0, bottomValue: 5, maxLines: 2, leftValue: 5, text: "Specialization: ${Utils.getSpecializationName(studentData?[index].fields?.specializationIds![0])}", textStyles: blackTextSemiBold14),
                                   custom_text(topValue: 0, bottomValue: 5, leftValue: 5, text: "Semester: ${studentData?[index].fields?.semester}", textStyles: blackTextSemiBold14),
-                                  custom_text(topValue: 0, text: "Company name: ${studentData?[index].fields!.self_place_company_name?.first}", textStyles: blackTextSemiBold14, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                  custom_text(topValue: 0, text: "Company name: ${studentData?[index].fields!.self_place_company_name?.last}", textStyles: blackTextSemiBold14, maxLines: 2, bottomValue: 5, leftValue: 5),
                                   custom_text(
-                                    text: "Job title: ${studentData?[index].fields!.applied_self_place_job_title?.first}",
+                                    text: "Job title: ${studentData?[index].fields!.applied_self_place_job_title?.last}",
                                     textStyles: blackTextSemiBold14,
                                     topValue: 0,
                                     maxLines: 2,

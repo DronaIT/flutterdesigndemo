@@ -1205,7 +1205,8 @@ class TimeTableCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    (timeTable?.createdBy?.contains(createdBy) ?? false) && canUpdateTimeTable
+                    // (timeTable?.createdBy?.contains(createdBy) ?? false) && canUpdateTimeTable
+                    canUpdateTimeTable
                         ? GestureDetector(
                             onTap: canUpdateTimeTable ? onEdit : null,
                             child: Container(
@@ -1293,7 +1294,8 @@ class TimeTableCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            (timeTable?.createdBy?.contains(createdBy) ?? false) && canUpdateTimeTable
+                            // (timeTable?.createdBy?.contains(createdBy) ?? false) && canUpdateTimeTable
+                            canUpdateTimeTable
                                 ? GestureDetector(
                                     onTap: canUpdateTimeTable ? onEdit : null,
                                     child: Container(

@@ -30,7 +30,7 @@ class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
   List<LoginFieldsResponse> studentList = [];
   bool isVisible = false;
   String title = "";
-  String totalStudents = "";
+  int totalStudents = 0;
   List<LoginFieldsResponse> test = [];
 
   var controllerSearch = TextEditingController();
@@ -55,7 +55,7 @@ class _PlacedUnplacedListState extends State<PlacedUnplacedList> {
         Column(
           children: [
             SizedBox(height: 5.h),
-            custom_text(text: "Total Students: $totalStudents", textStyles: primaryTextSemiBold16, bottomValue: 5),
+            custom_text(text: "Total Students: $totalStudents", textStyles: primaryTextSemiBold16, bottomValue: 0),
             custom_text(text: "Total $title Students: ${test.length}", textStyles: primaryTextSemiBold16),
             SizedBox(height: 10.h),
             CustomEditTextSearch(

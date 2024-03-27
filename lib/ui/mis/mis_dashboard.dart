@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -1213,23 +1215,30 @@ class _MISDashboardState extends State<MISDashboard> {
     totalCompany = 0;
     totalPlacement = 0;
     overallPlacement = 0;
+    HashSet<String> companySet = HashSet<String>();
 
     for (int i = 0; i < (hubResponse.records?.length ?? 0); i++) {
       if (hubResponse.records![i].fields?.hubId == PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds?.last) {
-        totalStudents += hubResponse.records![i].fields?.tblStudent?.length ?? 0;
         totalCompany += hubResponse.records![i].fields?.tblCompany?.length ?? 0;
+        companySet.addAll(hubResponse.records![i].fields?.tblCompany?.toSet() ?? []);
         for (int j = 0; j < (hubResponse.records![i].fields?.isPlacedNow?.length ?? 0); j++) {
-          if (hubResponse.records![i].fields?.isPlacedNow![j] == "1") {
-            totalPlacement += 1;
+          if (hubResponse.records![i].fields?.studentSemester![j] != "7") {
+            totalStudents += 1;
+            if (hubResponse.records![i].fields?.isPlacedNow![j] == "1") {
+              totalPlacement += 1;
+            }
           }
         }
       } else if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true &&
           PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.contains(hubResponse.records![i].fields?.hubId) == true) {
-        totalStudents += hubResponse.records![i].fields?.tblStudent?.length ?? 0;
         totalCompany += hubResponse.records![i].fields?.tblCompany?.length ?? 0;
+        companySet.addAll(hubResponse.records![i].fields?.tblCompany?.toSet() ?? []);
         for (int j = 0; j < (hubResponse.records![i].fields?.isPlacedNow?.length ?? 0); j++) {
-          if (hubResponse.records![i].fields?.isPlacedNow![j] == "1") {
-            totalPlacement += 1;
+          if (hubResponse.records![i].fields?.studentSemester![j] != "7") {
+            totalStudents += 1;
+            if (hubResponse.records![i].fields?.isPlacedNow![j] == "1") {
+              totalPlacement += 1;
+            }
           }
         }
       }
@@ -1237,6 +1246,10 @@ class _MISDashboardState extends State<MISDashboard> {
 
     if (totalStudents > 0) {
       overallPlacement = (totalPlacement * 100) / totalStudents;
+    }
+
+    if (companySet.isNotEmpty) {
+      totalCompany = companySet.length;
     }
   }
 
