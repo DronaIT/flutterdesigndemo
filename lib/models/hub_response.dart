@@ -37,6 +37,7 @@ class HubResponse {
 
   int newPlaced = 0;
   int newSelfPlaced = 0;
+  int totalStudents = 0;
   int totalPlacement = 0;
   double overallPlacement = 0;
 

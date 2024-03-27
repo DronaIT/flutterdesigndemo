@@ -220,7 +220,7 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
                                         bottomValue: 0,
                                       ),
                                       custom_text(
-                                        text: "${strings_name.str_total_students}: ${hubResponseArray![index].fields?.tblStudent!.length}",
+                                        text: "${strings_name.str_total_students}: ${hubResponseArray![index].fields?.totalStudents}",
                                         maxLines: 2,
                                         textStyles: blackTextSemiBold14,
                                         topValue: 5,
@@ -370,15 +370,20 @@ class _PlacementDataByHubsState extends State<PlacementDataByHubs> {
   combineData() {
     for (int i = 0; i < (hubResponseArray?.length ?? 0); i++) {
       int totalPlacement = 0;
-      for (int j = 0; j < (hubResponseArray![i].fields?.isPlacedNow?.length ?? 0); j++) {
-        if (hubResponseArray![i].fields?.isPlacedNow![j] == "1") {
-          totalPlacement += 1;
+      int totalStudents = 0;
+      for (int j = 0; j < (hubResponseArray![i].fields?.tblStudent?.length ?? 0); j++) {
+        if (hubResponseArray![i].fields?.studentSemester![j] != "7") {
+          totalStudents += 1;
+          if (hubResponseArray![i].fields?.isPlacedNow![j] == "1") {
+            totalPlacement += 1;
+          }
         }
       }
 
       hubResponseArray![i].fields?.totalPlacement = totalPlacement;
+      hubResponseArray![i].fields?.totalStudents = totalStudents;
       if (hubResponseArray![i].fields!.tblStudent?.isNotEmpty == true) {
-        hubResponseArray![i].fields?.overallPlacement = (totalPlacement * 100) / hubResponseArray![i].fields!.tblStudent!.length;
+        hubResponseArray![i].fields?.overallPlacement = (totalPlacement * 100) / totalStudents;
       }
 
       int newPlaced = 0;

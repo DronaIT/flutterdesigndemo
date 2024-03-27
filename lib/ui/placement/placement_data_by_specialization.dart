@@ -69,7 +69,7 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
           }
         }
       }
-      if(speResponseArray?.isNotEmpty == true){
+      if (speResponseArray?.isNotEmpty == true) {
         speResponseArray?.sort((a, b) => a.fields!.specializationName!.compareTo(b.fields!.specializationName!));
       }
 
@@ -103,12 +103,10 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
                 topValue: 0,
                 bottomValue: 5,
               ),
-
               startDate != null && endDate != null && false
                   ? GestureDetector(
                       child: custom_text(
-                        text:
-                            "${startDate.toString().split(" ").first.replaceAll("-", "/")} - ${endDate.toString().split(" ").first.replaceAll("-", "/")}",
+                        text: "${startDate.toString().split(" ").first.replaceAll("-", "/")} - ${endDate.toString().split(" ").first.replaceAll("-", "/")}",
                         alignment: Alignment.topLeft,
                         textStyles: primaryTextSemiBold16,
                         topValue: 0,
@@ -167,8 +165,7 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
                                           bottomValue: 0,
                                         ),
                                         custom_text(
-                                          text:
-                                              "${strings_name.str_overall_student_placement}: ${speResponseArray![index].fields?.overallPlacement.toStringAsFixed(2)}%",
+                                          text: "${strings_name.str_overall_student_placement}: ${speResponseArray![index].fields?.overallPlacement.toStringAsFixed(2)}%",
                                           textStyles: blackTextSemiBold14,
                                           topValue: 5,
                                           bottomValue: 0,
@@ -181,9 +178,7 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
                             }),
                       ),
                     )
-                  : Container(
-                      margin: const EdgeInsets.only(top: 100),
-                      child: custom_text(text: strings_name.str_no_hub, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                  : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_hub, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             ],
           ),
         ),
@@ -231,12 +226,10 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
     var query = "AND(";
 
     query += "OR(SEARCH('${PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null &&
-        PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
+    if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code != null && PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.isNotEmpty == true) {
       for (int i = 0; i < PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code!.length; i++) {
         if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i] != PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds![0]) {
-          query +=
-              ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+          query += ",SEARCH('${PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code![i]}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
         }
       }
     }
@@ -291,9 +284,11 @@ class _PlacementDataBySpecializationState extends State<PlacementDataBySpecializ
       int totalStudent = 0;
       for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
         if (speResponseArray![i].fields?.specializationId == hubResponse?.fields?.studentSpecializationIds![j]) {
-          totalStudent += 1;
-          if (hubResponse?.fields?.isPlacedNow![j] == "1") {
-            totalPlacement += 1;
+          if (hubResponse?.fields?.studentSemester![j] != "7") {
+            totalStudent += 1;
+            if (hubResponse?.fields?.isPlacedNow![j] == "1") {
+              totalPlacement += 1;
+            }
           }
         }
       }
