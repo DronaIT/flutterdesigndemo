@@ -174,32 +174,34 @@ class _AddTaskState extends State<AddTask> {
               margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      custom_text(
-                        text: strings_name.str_assigned_to,
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
-                      ),
-                      GestureDetector(
-                        child: custom_text(
-                          text: employeeData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
-                          alignment: Alignment.topLeft,
-                          textStyles: primaryTextSemiBold16,
+                  PreferenceUtils.getIsLogin() == 2 && PreferenceUtils.getLoginDataEmployee().mobileNumber == "8735943527"
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            custom_text(
+                              text: strings_name.str_assigned_to,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                            ),
+                            GestureDetector(
+                              child: custom_text(
+                                text: employeeData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                                alignment: Alignment.topLeft,
+                                textStyles: primaryTextSemiBold16,
+                              ),
+                              onTap: () {
+                                Get.to(const EmployeeSelection(), arguments: employeeData)?.then((result) {
+                                  if (result != null) {
+                                    setState(() {
+                                      employeeData = result;
+                                    });
+                                  }
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        onTap: () {
-                          Get.to(const EmployeeSelection(), arguments: employeeData)?.then((result) {
-                            if (result != null) {
-                              setState(() {
-                                employeeData = result;
-                              });
-                            }
-                          });
-                        },
-                      ),
-                    ],
-                  ),
                   employeeData!.isNotEmpty
                       ? ListView.builder(
                           shrinkWrap: true,
@@ -214,9 +216,7 @@ class _AddTaskState extends State<AddTask> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                          child:
-                                              Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)),
+                                      Expanded(child: Text("${employeeData![index].fields!.employeeName}", textAlign: TextAlign.start, style: blackText16)),
                                       const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
                                     ],
                                   ),
@@ -287,8 +287,7 @@ class _AddTaskState extends State<AddTask> {
                         DateTime time = DateFormat("hh:mm aa").parse(deadlineController.text);
                         timeSelected = TimeOfDay.fromDateTime(time);
                       }
-                      showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100))
-                          .then((pickedDate) {
+                      showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime.now(), lastDate: DateTime(2100)).then((pickedDate) {
                         if (pickedDate == null) {
                           return;
                         }
@@ -390,8 +389,7 @@ class _AddTaskState extends State<AddTask> {
                                   DateTime time = DateFormat("hh:mm aa").parse(actualFinishedOnController.text);
                                   timeSelected = TimeOfDay.fromDateTime(time);
                                 }
-                                showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime(2005), lastDate: DateTime(2100))
-                                    .then((pickedDate) {
+                                showDatePicker(context: context, initialDate: dateSelected, firstDate: DateTime(2005), lastDate: DateTime(2100)).then((pickedDate) {
                                   if (pickedDate == null) {
                                     return;
                                   }
@@ -425,24 +423,25 @@ class _AddTaskState extends State<AddTask> {
                         )
                       : Container(),
                   SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      custom_text(
-                        text: strings_name.str_attachments,
-                        alignment: Alignment.topLeft,
-                        textStyles: blackTextSemiBold16,
-                        leftValue: 10,
-                      ),
-                      GestureDetector(
-                        child: Container(
-                            margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
-                        onTap: () {
-                          picLOIFile();
-                        },
-                      ),
-                    ],
-                  ),
+                  PreferenceUtils.getIsLogin() == 2 && PreferenceUtils.getLoginDataEmployee().mobileNumber == "8735943527"
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            custom_text(
+                              text: strings_name.str_attachments,
+                              alignment: Alignment.topLeft,
+                              textStyles: blackTextSemiBold16,
+                              leftValue: 10,
+                            ),
+                            GestureDetector(
+                              child: Container(margin: const EdgeInsets.only(right: 10), child: const Icon(Icons.upload_file_rounded, size: 30, color: Colors.black)),
+                              onTap: () {
+                                picLOIFile();
+                              },
+                            ),
+                          ],
+                        ),
                   Visibility(
                     visible: taskFileTitle.isNotEmpty,
                     child: Column(

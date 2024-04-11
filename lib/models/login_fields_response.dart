@@ -106,6 +106,7 @@ class LoginFieldsResponse {
 
   List<String>? admission_batch_start;
   List<String>? admission_batch_end;
+  List<String>? last_company_name;
 
   List<AttachmentResponse>? resume;
   List<AttachmentResponse>? profile_pic;
@@ -205,6 +206,7 @@ class LoginFieldsResponse {
     this.absent_specialization_id,
     this.admission_batch_start,
     this.admission_batch_end,
+    this.last_company_name,
     this.resume,
     this.profile_pic,
     this.father_full_name,
@@ -227,6 +229,7 @@ class LoginFieldsResponse {
 
     admission_batch_start = json['admission_batch_start']?.cast<String>();
     admission_batch_end = json['admission_batch_end']?.cast<String>();
+    last_company_name = json['last_company_name']?.cast<String>();
 
     job_title_from_applied_job = json['job_title_from_applied_job']?.cast<String>();
     company_name_from_applied_job = json['company_name_from_applied_job']?.cast<String>();
@@ -431,6 +434,7 @@ class LoginFieldsResponse {
 
     data['admission_batch_start'] = admission_batch_start;
     data['admission_batch_end'] = admission_batch_end;
+    data['last_company_name'] = last_company_name;
 
     data['placement_attendance_form'] = placement_attendance_form;
     data['applied_job'] = appliedJob;

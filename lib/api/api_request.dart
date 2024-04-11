@@ -28,6 +28,7 @@ import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/request/fees_request.dart';
 import 'package:flutterdesigndemo/models/request/marketing_request.dart';
+import 'package:flutterdesigndemo/models/request/student_referral_request.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
@@ -37,6 +38,7 @@ import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/student_attendance_response.dart';
+import 'package:flutterdesigndemo/models/student_referral_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
@@ -1040,6 +1042,41 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.post(TableNames.TBL_PLACEMENT_MARKS, options: Options(headers: header), data: jsonEncode(someMap));
       return BaseApiResponseWithSerializable<MarksResponse>.fromJson(response.data, (response) => MarksResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<StudentReferralResponse>> addStudentReferralApi(StudentReferralRequest referralReq) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": referralReq};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_STUDENT_REFERRALS, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<StudentReferralResponse>.fromJson(response.data, (response) => StudentReferralResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<StudentReferralResponse>> getStudentReferralDataApi(String updateFormula, [String offset = ""]) async {
+    try {
+      Map<String, String> someMap = {"filterByFormula": updateFormula, if (offset.isNotEmpty) "offset": offset};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_STUDENT_REFERRALS, options: Options(headers: header), queryParameters: someMap);
+      return BaseLoginResponse<StudentReferralResponse>.fromJson(response.data, (response) => StudentReferralResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<StudentReferralResponse>> updateStudentReferralStatusApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch("${TableNames.TBL_STUDENT_REFERRALS}/$recordId", options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<StudentReferralResponse>.fromJson(response, (response) => StudentReferralResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

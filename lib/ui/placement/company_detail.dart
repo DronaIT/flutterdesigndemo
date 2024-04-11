@@ -66,6 +66,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
 
   var cloudinary;
 
+  List<String> companyIdentificationTypeArr = <String>[
+    strings_name.str_identification_type,
+    strings_name.str_type_pan_number,
+    strings_name.str_type_gst_number,
+  ];
+  String companyIdentificationTypeValue = strings_name.str_identification_type;
+
   @override
   void initState() {
     super.initState();
@@ -204,8 +211,38 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                          width: viewWidth,
+                          child: DropdownButtonFormField<String>(
+                            elevation: 16,
+                            value: companyIdentificationTypeValue,
+                            style: blackText16,
+                            focusColor: Colors.white,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                companyIdentificationTypeValue = newValue!;
+                              });
+                            },
+                            items: companyIdentificationTypeArr.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   custom_edittext(
                     type: TextInputType.text,
+                    capitalization: TextCapitalization.characters,
                     textInputAction: TextInputAction.next,
                     controller: companyIdnoController,
                     topValue: 5,
@@ -525,10 +562,15 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       text: strings_name.str_submit,
                       click: () async {
                         var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
+                        var cinNumber = FormValidator.validateCompanyNumber(companyIdnoController.text.toString().trim().toUpperCase(), companyIdentificationTypeValue);
                         if (nameofCompanyController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_company_name);
+                        } else if (companyIdentificationTypeValue == strings_name.str_identification_type) {
+                          Utils.showSnackBar(context, strings_name.str_identification_type);
                         } else if (companyIdnoController.text.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_company_id_no);
+                        } else if (cinNumber.isNotEmpty) {
+                          Utils.showSnackBar(context, cinNumber);
                         } else if (typeofValue.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_type_of);
                         // } else if (hubValue.toString().trim().isEmpty) {
@@ -585,7 +627,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           }
                           CreateCompanyDetailRequest response = CreateCompanyDetailRequest();
                           response.company_name = nameofCompanyController.text.trim().toString();
-                          response.company_identity_number = companyIdnoController.text.trim().toString();
+                          response.company_identity_number = companyIdnoController.text.trim().toUpperCase().toString();
                           response.company_sector = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
                           response.contact_name = nameOfContactPController.text.trim().toString();
                           response.contact_designation = contactPdesiController.text.trim().toString();

@@ -37,7 +37,11 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
               Column(
                 children: [
                   SizedBox(height: 5.h),
-                  custom_text(text: fields?.appliedJob != null && fields!.appliedJob!.isNotEmpty ? "Applied jobs : ${fields?.appliedJob!.length}" : "Applied in jobs : 0", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 0),
+                  custom_text(
+                      text: fields?.appliedJob != null && fields!.appliedJob!.isNotEmpty ? "Applied jobs : ${fields?.appliedJob!.length}" : "Applied in jobs : 0",
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextbold14,
+                      bottomValue: 0),
                   fields?.appliedJob != null && fields!.appliedJob!.isNotEmpty
                       ? Container(
                           margin: const EdgeInsets.all(10),
@@ -55,7 +59,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                       padding: const EdgeInsets.all(10),
                                       child: Column(children: [
                                         custom_text(
-                                          text: fields!.company_name_from_applied_job?[index] ?? " ",
+                                          text: fields!.company_name_from_applied_job?[index] ?? "",
                                           textStyles: primaryTextSemiBold14,
                                           maxLines: 2,
                                           topValue: 0,
@@ -63,7 +67,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Job title: ${fields!.job_title_from_applied_job?[index] ?? " "}",
+                                          text: "Job title: ${fields!.job_title_from_applied_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 10,
@@ -71,7 +75,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Job description: ${fields!.job_description_from_applied_job?[index] ?? " "}",
+                                          text: "Job description: ${fields!.job_description_from_applied_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 5,
                                           topValue: 5,
@@ -79,7 +83,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Contact person name: ${fields!.contact_name_from_applied_job?[index].trim() ?? " "}",
+                                          text: "Contact person name: ${fields!.contact_name_from_applied_job?[index].trim() ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 5,
@@ -93,7 +97,11 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                               }),
                         )
                       : Container(margin: const EdgeInsets.only(top: 5), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
-                  custom_text(text: fields?.selectedJob != null && fields!.selectedJob!.isNotEmpty ? "Selected in jobs : ${fields?.selectedJob!.length}" : "Selected in jobs : 0", alignment: Alignment.topLeft, textStyles: blackTextbold14, bottomValue: 0),
+                  custom_text(
+                      text: fields?.selectedJob != null && fields!.selectedJob!.isNotEmpty ? "Selected in jobs : ${fields?.selectedJob!.length}" : "Selected in jobs : 0",
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextbold14,
+                      bottomValue: 0),
                   fields?.selectedJob != null && fields!.selectedJob!.isNotEmpty
                       ? Container(
                           margin: const EdgeInsets.all(10),
@@ -111,7 +119,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                       padding: const EdgeInsets.all(10),
                                       child: Column(children: [
                                         custom_text(
-                                          text: fields!.company_name_from_selected_job?[index] ?? " ",
+                                          text: fields!.company_name_from_selected_job?[index] ?? "",
                                           textStyles: primaryTextSemiBold14,
                                           maxLines: 2,
                                           topValue: 0,
@@ -119,7 +127,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Job title: ${fields!.job_title_selected_job?[index] ?? " "}",
+                                          text: "Job title: ${fields!.job_title_selected_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 10,
@@ -127,7 +135,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Job description: ${fields!.job_description_from_selected_job?[index] ?? " "}",
+                                          text: "Job description: ${fields!.job_description_from_selected_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 5,
                                           topValue: 5,
@@ -135,7 +143,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Contact person name: ${fields!.contact_name_from_selected_job?[index].trim() ?? " "}",
+                                          text: "Contact person name: ${fields!.contact_name_from_selected_job?[index].trim() ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 5,
@@ -143,7 +151,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Job location: ${fields!.city_from_selected_job?[index] ?? " "}",
+                                          text: "Job location: ${fields!.city_from_selected_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 5,
@@ -181,7 +189,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                       padding: const EdgeInsets.all(10),
                                       child: Column(children: [
                                         custom_text(
-                                          text: fields!.company_name_from_placed_job?[index] ?? " ",
+                                          text: fields!.company_name_from_placed_job?[index] ?? "",
                                           textStyles: primaryTextSemiBold14,
                                           maxLines: 2,
                                           topValue: 0,
@@ -189,7 +197,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Placed job title: ${fields!.job_title_from_placed_job?[index] ?? " "}",
+                                          text: "Placed job title: ${fields!.job_title_from_placed_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 10,
@@ -197,13 +205,23 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Placed job description: ${fields!.job_description_from_placed_job?[index] ?? " "}",
+                                          text: "Placed job description: ${fields!.job_description_from_placed_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 5,
                                           topValue: 5,
                                           bottomValue: 0,
                                           leftValue: 5,
                                         ),
+                                        fields!.is_placed_now == "1" && fields!.company_name_from_placed_job?[index] == fields!.last_company_name?[0]
+                                            ? const custom_text(
+                                                text: "Currently working Here",
+                                                textStyles: primryTextSemiBold14,
+                                                maxLines: 2,
+                                                topValue: 10,
+                                                bottomValue: 0,
+                                                leftValue: 5,
+                                              )
+                                            : Container(),
                                       ]),
                                     ),
                                   ),
@@ -235,7 +253,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                       padding: const EdgeInsets.all(10),
                                       child: Column(children: [
                                         custom_text(
-                                          text: fields!.company_name_from_rejected_job?[index] ?? " ",
+                                          text: fields!.company_name_from_rejected_job?[index] ?? "",
                                           textStyles: primaryTextSemiBold14,
                                           maxLines: 2,
                                           topValue: 0,
@@ -243,7 +261,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Placed job title: ${fields!.job_title_from_rejected_job?[index] ?? " "}",
+                                          text: "Placed job title: ${fields!.job_title_from_rejected_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 2,
                                           topValue: 10,
@@ -251,7 +269,7 @@ class _StudentPlacementHistoryState extends State<StudentPlacementHistory> {
                                           leftValue: 5,
                                         ),
                                         custom_text(
-                                          text: "Placed job description: ${fields!.job_description_from_rejected_job?[index] ?? " "}",
+                                          text: "Placed job description: ${fields!.job_description_from_rejected_job?[index] ?? ""}",
                                           textStyles: primryTextSemiBold13,
                                           maxLines: 5,
                                           topValue: 5,

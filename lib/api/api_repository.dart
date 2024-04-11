@@ -25,6 +25,7 @@ import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/request/fees_request.dart';
 import 'package:flutterdesigndemo/models/request/marketing_request.dart';
+import 'package:flutterdesigndemo/models/request/student_referral_request.dart';
 import 'package:flutterdesigndemo/models/role_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/login_employee_response.dart';
@@ -34,6 +35,7 @@ import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/createpasswordemployee.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/student_attendance_response.dart';
+import 'package:flutterdesigndemo/models/student_referral_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
 import 'package:flutterdesigndemo/models/topics_response.dart';
 import 'package:flutterdesigndemo/models/typeofsectoreresponse.dart';
@@ -919,6 +921,36 @@ class ApiRepository {
   Future<BaseApiResponseWithSerializable<MarksResponse>> addPlacementMarksApi(AddPlacementMarksRequest marksReq) async {
     try {
       final response = await userApi.addPlacementMarksApi(marksReq);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<StudentReferralResponse>> addStudentReferralApi(StudentReferralRequest referralReq) async {
+    try {
+      final response = await userApi.addStudentReferralApi(referralReq);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<StudentReferralResponse>> getStudentReferralDataApi(String formula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getStudentReferralDataApi(formula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<StudentReferralResponse>> updateStudentReferralStatusApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateStudentReferralStatusApi(updateFormula, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

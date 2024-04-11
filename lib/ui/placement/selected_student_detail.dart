@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
+import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
@@ -62,6 +63,8 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
                 applied_students_email: jobpportunityData.records![i].fields!.appeared_for_interview_email![j],
                 applied_students_enrollment_number: jobpportunityData.records![i].fields!.appeared_for_interview_enrollment_number![j],
                 applied_students_name: jobpportunityData.records![i].fields!.appeared_for_interview_name![j],
+                applied_students_is_placed_now: jobpportunityData.records![i].fields!.appeared_for_interview_is_placed_now![j],
+                applied_students_number: jobpportunityData.records![i].fields!.appeared_for_interview_mobile_number![j],
                 applied_students: jobpportunityData.records![i].fields!.appearedForInterview![j]);
             studentResponse.add(jobModuleResponse);
           }
@@ -124,10 +127,44 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              custom_text(text: "${studentResponse[index].applied_students_name}", textStyles: centerTextStyle14, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                              //custom_text(text: "${strings_name.str_phone}: ${studentResponse[index].applied_students_number}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 0, leftValue: 5),
-                                              custom_text(text: "${studentResponse[index].applied_students_email}", textStyles: blackTextSemiBold12, topValue: 5, maxLines: 2, bottomValue: 5, leftValue: 5),
-                                              custom_text(text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}", textStyles: blackTextSemiBold12, topValue: 0, maxLines: 2, bottomValue: 5, leftValue: 5),
+                                              GestureDetector(
+                                                child: custom_text(
+                                                  text: "${studentResponse[index].applied_students_name}",
+                                                  textStyles: linkTextSemiBold14,
+                                                  topValue: 0,
+                                                  maxLines: 2,
+                                                  bottomValue: 5,
+                                                  leftValue: 5,
+                                                ),
+                                                onTap: () {
+                                                  Get.to(const StudentHistory(), arguments: studentResponse[index].applied_students_number);
+                                                },
+                                              ),
+                                              custom_text(
+                                                text: "${studentResponse[index].applied_students_email}",
+                                                textStyles: blackTextSemiBold12,
+                                                topValue: 5,
+                                                maxLines: 2,
+                                                bottomValue: 5,
+                                                leftValue: 5,
+                                              ),
+                                              custom_text(
+                                                  text: "${strings_name.str_enrollment} ${studentResponse[index].applied_students_enrollment_number}",
+                                                  textStyles: blackTextSemiBold12,
+                                                  topValue: 0,
+                                                  maxLines: 2,
+                                                  bottomValue: 5,
+                                                  leftValue: 5),
+                                              studentResponse[index].applied_students_is_placed_now == "1"
+                                                  ? const custom_text(
+                                                      text: strings_name.str_already_placed,
+                                                      textStyles: blackTextSemiBold12,
+                                                      topValue: 0,
+                                                      maxLines: 2,
+                                                      bottomValue: 5,
+                                                      leftValue: 5,
+                                                    )
+                                                  : Container(),
                                             ],
                                           ),
                                         ),
@@ -148,7 +185,9 @@ class _SelectedStudentDetailState extends State<SelectedStudentDetail> {
                     ),
                   ],
                 )
-              : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_student_appeared_for_interview, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+              : Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: custom_text(text: strings_name.str_no_student_appeared_for_interview, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
           Center(
             child: Visibility(visible: isVisible, child: const CircularProgressIndicator(strokeWidth: 5.0, color: colors_name.colorPrimary)),
           )
