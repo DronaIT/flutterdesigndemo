@@ -106,7 +106,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                   children: [
                     const SizedBox(height: 8),
                     custom_text(
-                      text: "${strings_name.str_name}: ${data.records!.first.fields!.name!}",
+                      text: data.records!.first.fields!.name!,
                       alignment: Alignment.topLeft,
                       textStyles: primaryTextSemiBold16,
                       bottomValue: 0,
@@ -116,7 +116,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                     ),
                     Row(
                       children: [
-                        custom_text(
+                        const custom_text(
                           text: "${strings_name.str_phone}:",
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -130,15 +130,10 @@ class _StudentHistoryState extends State<StudentHistory> {
                           },
                           child: Container(
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.only(top: 10, bottom: 0),
+                            margin: const EdgeInsets.only(top: 10, bottom: 0),
                             child: Text(
                               data.records!.first.fields!.mobileNumber!,
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent,
-                              ),
+                              style: linkTextSemiBold16,
                             ),
                           ),
                         )
@@ -164,6 +159,14 @@ class _StudentHistoryState extends State<StudentHistory> {
                     ),
                     custom_text(
                       text: "${strings_name.str_code}: ${data.records!.first.fields!.enrollmentNumber!}",
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                      topValue: 10,
+                      bottomValue: 0,
+                      leftValue: 10,
+                    ),
+                    custom_text(
+                      text: "${strings_name.str_university_number}: ${data.records!.first.fields!.sr_number!}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       topValue: 10,
@@ -231,7 +234,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           color: colors_name.colorPrimary,
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
-                          child: custom_text(
+                          child: const custom_text(
                             text: strings_name.str_attendance,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,
@@ -254,7 +257,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           color: colors_name.colorPrimary,
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
-                          child: custom_text(
+                          child: const custom_text(
                             text: strings_name.str_viewothers_attendance,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,
@@ -277,7 +280,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           color: colors_name.colorPrimary,
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
-                          child: custom_text(
+                          child: const custom_text(
                             text: strings_name.str_placement,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,
@@ -290,7 +293,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(StudentAttendancePastHistory(), arguments: data.records?.first.fields);
+                        Get.to(const StudentAttendancePastHistory(), arguments: data.records?.first.fields);
                       },
                       child: Card(
                         elevation: 5,
@@ -299,7 +302,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           color: colors_name.colorPrimary,
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
-                          child: custom_text(
+                          child: const custom_text(
                             text: strings_name.str_past_history,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,
@@ -321,7 +324,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                           color: colors_name.colorPrimary,
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.all(5),
-                          child: custom_text(
+                          child: const custom_text(
                             text: strings_name.str_view_resume,
                             alignment: Alignment.centerLeft,
                             textStyles: whiteTextSemiBold16,

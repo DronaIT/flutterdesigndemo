@@ -35,11 +35,11 @@ class PunchDataResponse {
     punchOutTime = json['punch_out_time'];
     attendanceType = json['attendance_type'];
     reasonForLeave = json['reason_for_leave'];
-    hubIdFromHubIds = json['hub_id (from hub_ids)'].cast<String>();
-    employeeName = json['employee_name'].cast<String>();
-    employeeMobileNumber = json['employee_mobile_number'].cast<String>();
-    actualOutTime = json['actual_out_time'].cast<String>();
-    actualInTime = json['actual_in_time'].cast<String>();
+    hubIdFromHubIds = json['hub_id (from hub_ids)']?.cast<String>();
+    employeeName = json['employee_name']?.cast<String>();
+    employeeMobileNumber = json['employee_mobile_number']?.cast<String>();
+    actualOutTime = json['actual_out_time']?.cast<String>();
+    actualInTime = json['actual_in_time']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

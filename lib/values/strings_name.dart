@@ -51,10 +51,11 @@ class strings_name {
   static const String str_update_details = "Update Details";
   static const String str_update_details_successfully = "Details updated successfully";
 
-  static const String str_view_students = "View students";
-  static const String str_add_employee = "Add employee";
-  static const String str_view_employee = "View employee";
-  static const String str_update_employee = "Update employee";
+  static const String str_view_students = "View Students";
+  static const String str_add_employee = "Add Employee";
+  static const String str_view_employee = "View Employee";
+  static const String str_update_employee = "Update Employee";
+  static const String str_assign_mentor = "Assign Mentor to Students";
 
   static const String str_employee_name = "Employee name*";
   static const String str_phone_number = "Phone number*";
@@ -178,7 +179,8 @@ class strings_name {
   static const String str_name = "Name";
   static const String str_role = "Role";
   static const String str_student = "Student";
-  static const String str_code = "Code";
+  static const String str_code = "Drona Enroll No";
+  static const String str_university_number = "University Enroll No";
   static const String str_specilization = "Specialization name";
   static const String str_hubs = "Hubs";
   static const String str_units = "Units";
@@ -510,6 +512,7 @@ class strings_name {
 
   static const String str_terms_privacy_policy = "I hereby accept the Terms & condition and Privacy policy.";
   static const String str_accept_terms = "Please accept Terms & Condition and Privacy Policy";
+  static const String str_accept_terms_only = "Please accept Terms & Condition";
 
   static const String str_sure_want_delete = "Are you sure want to DELETE ACCOUNT?";
   static const String str_otp_expired = "OTP expired, please try again.";
@@ -934,4 +937,34 @@ class strings_name {
   static const String str_assign_placement_executive = "Assign Placement Executives";
 
   static const String str_assign_to = "Assigned to";
+
+  static const String str_identification_type = "Select Identification Number Type";
+  static const String str_type_pan_number = "PAN Number of Company";
+  static const String str_type_gst_number = "GSTIN Number";
+  static const String str_invalid_gst_number = "Please enter valid GSTIN Number";
+  static const String str_invalid_pan_number = "Please enter valid PAN Number of company";
+  static const String str_already_placed = "This student is already placed to another company.";
+
+  static const String str_referral_name = "Referral Name";
+  static const String str_empty_referral_name = "Please enter referral name";
+  static const String str_student_referral = "Student Referral";
+  static const String str_student_referral_tnc = "Student Referral Terms";
+
+  static const String str_select_state = "Select State";
+  static const String str_select_city = "Select City";
+  static const String str_empty_select_state = "Please Select State";
+  static const String str_empty_select_city = "Please Select City";
+  static const String str_student_referral_added = "Student referral is added successfully.";
+  static const String str_student_referral_already_exist = "This student referral is already added in our system.";
+  static const String str_student_referral_tnc_agreed = "You have agreed to Terms & Condition of Drona Foundation Referral Program.";
+  static const String str_my_referrals = "My Referrals";
+
+  static const String str_referral_status_pending = "Pending";
+  static const String str_referral_status_approved = "Approved";
+  static const String str_referral_status_rejected = "Rejected";
+
+  static const String str_no_referrals = "No referrals added";
+  static const String str_no_referrals_hub = "No referrals added for this Hub";
+  static const String str_referral_updated = "Referral status updated successfully.";
+  static const String str_mentor_assigned = "Students assigned to mentors successfully.";
 }

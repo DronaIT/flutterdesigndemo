@@ -12,6 +12,7 @@ class TableNames {
   static const KALEYRA_SENDER = "DFBVOC";
   static const TEMPLATE_ID_SIGNUP = "1007956316471143887";
   static const TEMPLATE_ID_FORGOT_PASSWORD = "1007956316471143887";
+  static const TEMPLATE_ID_VERIFICATION = "1007956316471143887";
 
   // FCM Details
   static const FCM_KEY = "AAAAoZqBw4M:APA91bEtTRpbCXGa_hffoFkrDrUueNPyOlP3pEeKWrCOoNotzovGkejCozJfJqyhFGhM-vcmmzRTHAzpLgfAK269CzVmetr9EEXgs0X-GmmN-J0XLN1W9hAeihr-MCWsuLskqSK20GOz";
@@ -57,6 +58,7 @@ class TableNames {
   static const MODULE_FEES = "DM14";
   static const MODULE_PUNCH_LEAVES = "DM15";
   static const MODULE_MIS = "DM16";
+  static const MODULE_STUDENT_REFERRAL = "DM17";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -106,6 +108,7 @@ class TableNames {
   static const TBL_FEES = "TBL_FEES";
   static const TBL_PUNCH_DATA = "TBL_PUNCH_DATA";
   static const TBL_PLACEMENT_MARKS = "TBL_PLACEMENT_MARKS";
+  static const TBL_STUDENT_REFERRALS = "TBL_STUDENT_REFERRALS";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -197,6 +200,7 @@ class TableNames {
   static const PERMISSION_ID_ADD_STUDENT = "DP0104";
   static const PERMISSION_ID_VIEW_STUDENT = "DP0105";
   static const PERMISSION_ID_UPDATE_STUDENT = "DP0106";
+  static const PERMISSION_ID_ASSIGN_MENTOR = "DP0107";
 
   static const PERMISSION_ID_ADD_HUB = "DP0201";
   static const PERMISSION_ID_UPDATE_HUB = "DP0202";

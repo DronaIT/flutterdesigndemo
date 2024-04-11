@@ -43,6 +43,24 @@ class FormValidator {
     if (value.length < 10) return strings_name.str_phone_length;
     return "";
   }
+
+  static String validateCompanyNumber(String? value, String type) {
+    if (value!.isEmpty) return strings_name.str_empty_company_id_no;
+    if (type == strings_name.str_identification_type) {
+      return strings_name.str_identification_type;
+    } else if (type == strings_name.str_type_gst_number) {
+      var regex = "^[0-9]{2}[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}\$";
+      if (!RegExp(regex).hasMatch(value)) {
+        return strings_name.str_invalid_gst_number;
+      }
+    } else if (type == strings_name.str_type_pan_number) {
+      var regex = "^[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}\$";
+      if (!RegExp(regex).hasMatch(value)) {
+        return strings_name.str_invalid_pan_number;
+      }
+    }
+    return "";
+  }
 }
 
 class Utils {

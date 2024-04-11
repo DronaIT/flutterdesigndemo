@@ -58,9 +58,9 @@ class AddPlacementAttendanceResponse {
     resignation_reason = json['resignation_reason'];
     notice_period_end_date = json['notice_period_end_date'];
     uploadedOn = json['uploaded_on'];
-    placement_attendance_status = json['attendance_status'];
-    placement_company_loc_status = json['company_loc_status'];
-    placement_workbook_status = json['workbook_status'];
+    placement_attendance_status = json['placement_attendance_status'];
+    placement_company_loc_status = json['placement_company_loc_status'];
+    placement_workbook_status = json['placement_workbook_status'];
     attendance_rejection_reason = json['attendance_rejection_reason'];
     company_loc_rejection_reason = json['company_loc_rejection_reason'];
     workbook_rejection_reason = json['workbook_rejection_reason'];
@@ -104,9 +104,9 @@ class AddPlacementAttendanceResponse {
     data['resignation_reason'] = resignation_reason;
     data['notice_period_end_date'] = notice_period_end_date;
     data['uploaded_on'] = uploadedOn;
-    data['attendance_status'] = placement_attendance_status;
-    data['company_loc_status'] = placement_company_loc_status;
-    data['workbook_status'] = placement_workbook_status;
+    data['placement_attendance_status'] = placement_attendance_status;
+    data['placement_company_loc_status'] = placement_company_loc_status;
+    data['placement_workbook_status'] = placement_workbook_status;
     data['attendance_rejection_reason'] = attendance_rejection_reason;
     data['company_loc_rejection_reason'] = company_loc_rejection_reason;
     data['workbook_rejection_reason'] = workbook_rejection_reason;

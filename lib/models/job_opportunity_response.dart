@@ -70,6 +70,8 @@ class JobOpportunityResponse {
   List<String>? appeared_for_interview_email;
   List<String>? appeared_for_interview_enrollment_number;
   List<String>? appeared_for_interview_name;
+  List<String>? appeared_for_interview_is_placed_now;
+  List<String>? appeared_for_interview_mobile_number;
 
   List<DocumentResponse>? company_loi;
   List<DocumentResponse>? bond_structure;
@@ -143,6 +145,8 @@ class JobOpportunityResponse {
     this.appeared_for_interview_name,
     this.appeared_for_interview_email,
     this.appeared_for_interview_enrollment_number,
+    this.appeared_for_interview_is_placed_now,
+    this.appeared_for_interview_mobile_number,
     this.company_loi,
     this.bond_structure,
     this.incentive_structure,
@@ -216,6 +220,8 @@ class JobOpportunityResponse {
     appeared_for_interview_email = json['appeared_for_interview_email']?.cast<String>();
     appeared_for_interview_enrollment_number = json['appeared_for_interview_enrollment_number']?.cast<String>();
     appeared_for_interview_name = json['appeared_for_interview_name']?.cast<String>();
+    appeared_for_interview_is_placed_now = json['appeared_for_interview_is_placed_now']?.cast<String>();
+    appeared_for_interview_mobile_number = json['appeared_for_interview_mobile_number']?.cast<String>();
 
     rejected_students = json['rejected_students']?.cast<String>();
     is_self_place = json['is_self_place'];
@@ -311,6 +317,8 @@ class JobOpportunityResponse {
     data['appeared_for_interview_email'] = appeared_for_interview_email;
     data['appeared_for_interview_enrollment_number'] = appeared_for_interview_enrollment_number;
     data['appeared_for_interview_name'] = appeared_for_interview_name;
+    data['appeared_for_interview_is_placed_now'] = appeared_for_interview_is_placed_now;
+    data['appeared_for_interview_mobile_number'] = appeared_for_interview_mobile_number;
 
     data['selected_students_email'] = selected_students_email;
     data['selected_students_enrollment_number'] = selected_students_enrollment_number;

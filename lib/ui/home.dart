@@ -14,6 +14,8 @@ import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
 import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
+import 'package:flutterdesigndemo/ui/student_referral/my_referrals.dart';
+import 'package:flutterdesigndemo/ui/student_referral/referral_terms.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/fees/fees_dashboard.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
@@ -28,6 +30,8 @@ import 'package:flutterdesigndemo/ui/profile.dart';
 import 'package:flutterdesigndemo/ui/punch_leaves/punch_dashboard.dart';
 import 'package:flutterdesigndemo/ui/settings_screen.dart';
 import 'package:flutterdesigndemo/ui/student_history/filter_screen_student.dart';
+import 'package:flutterdesigndemo/ui/student_referral/add_student_referral.dart';
+import 'package:flutterdesigndemo/ui/student_referral/student_referrals.dart';
 import 'package:flutterdesigndemo/ui/task/task_dashboard.dart';
 import 'package:flutterdesigndemo/ui/time_table/time_table_list.dart';
 import 'package:flutterdesigndemo/ui/upload_documents.dart';
@@ -189,8 +193,7 @@ class _HomeState extends State<Home> {
     try {
       var query =
           "AND(AND(IS_AFTER({created_on},DATETIME_PARSE(DATETIME_FORMAT(DATEADD(NOW(),-1,'day'),'YYYY-MM-DDTHH:mm:ss.SSSZ'),'YYYY-MM-DDTHH:mm:ss.SSSZ')),IS_BEFORE({created_on},DATETIME_PARSE(DATETIME_FORMAT(NOW(),'YYYY-MM-DDTHH:mm:ss.SSSZ'),'YYYY-MM-DDTHH:mm:ss.SSSZ'))),";
-      query +=
-          "OR(${TableNames.ANNOUNCEMENT_ROLE_EMPLOYEE == loginType ? '{created_by} = $loginId,' : ''}{for}=\"everyone\",AND({for}=\"$loginType\",{is_all}=1),AND({for}=\"$loginType\",{is_all}=0,";
+      query += "OR(${TableNames.ANNOUNCEMENT_ROLE_EMPLOYEE == loginType ? '{created_by} = $loginId,' : ''}{for}=\"everyone\",AND({for}=\"$loginType\",{is_all}=1),AND({for}=\"$loginType\",{is_all}=0,";
       query += "OR(";
       if (isLogin == 1) {
         if (loginData.semester != null) {
@@ -281,11 +284,7 @@ class _HomeState extends State<Home> {
                   }
                 }
                 if (!removed && announcement[i].fields?.specializationIdFromSpecializationIds?.isNotEmpty == true) {
-                  if (announcement[i]
-                          .fields
-                          ?.specializationIdFromSpecializationIds
-                          ?.contains(loginData.specializationIdFromSpecializationIds?.last) !=
-                      true) {
+                  if (announcement[i].fields?.specializationIdFromSpecializationIds?.contains(loginData.specializationIdFromSpecializationIds?.last) != true) {
                     announcement.removeAt(i);
                     i--;
                     removed = true;
@@ -510,7 +509,8 @@ class _HomeState extends State<Home> {
                                           Expanded(
                                             child: Padding(
                                               padding: EdgeInsets.all(10.h),
-                                              child: Image.network(homeModule.records![index].fields!.moduleImage.toString(), fit: BoxFit.fill, errorBuilder: (context, url, error) => const Center(child: Icon(Icons.error))),
+                                              child: Image.network(homeModule.records![index].fields!.moduleImage.toString(),
+                                                  fit: BoxFit.fill, errorBuilder: (context, url, error) => const Center(child: Icon(Icons.error))),
                                             ),
                                           ),
                                           custom_text(
@@ -569,6 +569,12 @@ class _HomeState extends State<Home> {
                                           Get.to(const PunchDashboard());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_MIS) {
                                           Get.to(const MISDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_REFERRAL) {
+                                          if (PreferenceUtils.getIsLogin() == 1) {
+                                            Get.to(const MyReferrals());
+                                          }else if (PreferenceUtils.getIsLogin() == 2) {
+                                            Get.to(const StudentReferrals());
+                                          }
                                         }
                                       },
                                     ),
@@ -665,8 +671,7 @@ class _HomeState extends State<Home> {
                         margin: EdgeInsets.symmetric(horizontal: 10.w),
                         data: item,
                         onTap: () async {
-                          var result = await Get.to(AnnouncementDetail(
-                              announcement: item, isEdit: canEditAnnouncements && item.fields!.employeeIdFromCreatedBy.contains(employeeId)));
+                          var result = await Get.to(AnnouncementDetail(announcement: item, isEdit: canEditAnnouncements && item.fields!.employeeIdFromCreatedBy.contains(employeeId)));
                           if (result == 'updateAnnouncement') {
                             Utils.showSnackBar(context, strings_name.str_announcement_updated);
                             announcement.clear();

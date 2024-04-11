@@ -10,7 +10,6 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
-import 'package:flutterdesigndemo/models/request/add_placement_attendance_data.dart';
 import 'package:flutterdesigndemo/models/request/add_placement_attendance_response.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
