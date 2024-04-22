@@ -6,6 +6,7 @@ import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/ui/placement/assign_placement_executive.dart';
+import 'package:flutterdesigndemo/ui/placement/assign_placement_executive_new.dart';
 import 'package:flutterdesigndemo/ui/placement/job_opportunity_form.dart';
 import 'package:flutterdesigndemo/ui/placement/job_opportunity_list.dart';
 import 'package:flutterdesigndemo/ui/placement/placement_attendance_data_reports.dart';
@@ -1257,7 +1258,7 @@ class _PlacementDashboardState extends State<PlacementDashboard> {
                         ),
                         onTap: () {
                           if (PreferenceUtils.getIsLogin() == 2) {
-                            Get.to(() => const AssignPlacementExecutive());
+                            Get.to(() => const AssignPlacementExecutiveNew());
                           }
                         },
                       ),

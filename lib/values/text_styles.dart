@@ -272,6 +272,12 @@ const greenTextSemiBold14 = TextStyle(
   color: colors_name.green,
 );
 
+const greenTextSemiBold15 = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+  color: colors_name.green,
+);
+
 const errorTextStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,

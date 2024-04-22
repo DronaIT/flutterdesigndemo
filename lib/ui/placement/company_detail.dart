@@ -351,27 +351,30 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   ),
                   accessibleHubsData!.isNotEmpty
                       ? ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: accessibleHubsData?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          child: GestureDetector(
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Expanded(child: Text("${accessibleHubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: accessibleHubsData?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 5,
+                              child: GestureDetector(
+                                child: Container(
+                                  color: colors_name.colorWhite,
+                                  padding: const EdgeInsets.all(15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(child: Text("${accessibleHubsData![index].fields!.hubName}", textAlign: TextAlign.start, style: blackText16)),
+                                      const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  // Get.to(const (), arguments: unitsData![index].fields?.ids);
+                                },
                               ),
-                            ),
-                            onTap: () {
-                              // Get.to(const (), arguments: unitsData![index].fields?.ids);
-                            },
-                          ),
-                        );
-                      })
+                            );
+                          })
                       : Container(),
                   SizedBox(height: 5.h),
                   custom_text(
@@ -573,7 +576,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           Utils.showSnackBar(context, cinNumber);
                         } else if (typeofValue.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_type_of);
-                        // } else if (hubValue.toString().trim().isEmpty) {
+                          // } else if (hubValue.toString().trim().isEmpty) {
                         } else if (accessibleHubsData!.isEmpty == true) {
                           Utils.showSnackBar(context, strings_name.str_empty_hub);
                         } else if (nameOfContactPController.text.trim().isEmpty) {
@@ -680,9 +683,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
                                 setState(() {
                                   isVisible = false;
                                 });
-                                Utils.showSnackBar(context, strings_name.str_company_det_added);
-                                await Future.delayed(const Duration(milliseconds: 2000));
-                                Get.back(closeOverlays: true);
+                                if (resp.records?.last.id?.isNotEmpty == true) {
+                                  assignCompany(resp.records?.last.id ?? "");
+                                } else {
+                                  Utils.showSnackBar(context, strings_name.str_company_det_added);
+                                  await Future.delayed(const Duration(milliseconds: 2000));
+                                  Get.back(closeOverlays: true);
+                                }
                               } else {
                                 setState(() {
                                   isVisible = false;
@@ -779,6 +786,40 @@ class _CompanyDetailState extends State<CompanyDetail> {
       } else {
         Utils.showSnackBar(context, strings_name.str_file_size_limit);
       }
+    }
+  }
+
+  assignCompany(String id) async {
+    try {
+      setState(() {
+        isVisible = true;
+      });
+      List<String> studentData = [];
+      studentData.addAll(PreferenceUtils.getLoginDataEmployee().assigned_company ?? []);
+      if (id.isNotEmpty) {
+        studentData.add(id);
+      }
+
+      Map<String, dynamic> mapRequest = {"assigned_company": studentData};
+      var resp = await companyDetailRepository.updateEmployeeApi(mapRequest, PreferenceUtils.getLoginRecordId());
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isVisible = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_company_det_added);
+        await Future.delayed(const Duration(milliseconds: 2000));
+        Get.back(closeOverlays: true);
+      } else {
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
     }
   }
 }

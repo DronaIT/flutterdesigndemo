@@ -28,34 +28,37 @@ class LoginEmployeeResponse {
   List<String>? accessible_hub_ids_code;
   List<String>? hub_id_from_lecture;
   String? token;
+  List<String>? assigned_company;
 
-  LoginEmployeeResponse(
-      {this.gender,
-      this.employeeId,
-      this.city,
-      this.roleIds,
-      this.employeeName,
-      this.hubIds,
-      this.roleIdFromRoleIds,
-      this.hubIdFromHubIds,
-      this.employeeCode,
-      this.mobileNumber,
-      this.email,
-      this.password,
-      this.lectureIds,
-      this.lectureDate,
-      this.unitTitle,
-      this.semester,
-      this.subjectTitle,
-      this.division,
-      this.parents_mobile_number,
-      this.spouse_mobile_number,
-      this.pin_code,
-      this.accessible_hub_ids,
-      this.accessible_hub_ids_code,
-      this.hub_id_from_lecture,
-      this.token,
-      this.specialization_name,});
+  LoginEmployeeResponse({
+    this.gender,
+    this.employeeId,
+    this.city,
+    this.roleIds,
+    this.employeeName,
+    this.hubIds,
+    this.roleIdFromRoleIds,
+    this.hubIdFromHubIds,
+    this.employeeCode,
+    this.mobileNumber,
+    this.email,
+    this.password,
+    this.lectureIds,
+    this.lectureDate,
+    this.unitTitle,
+    this.semester,
+    this.subjectTitle,
+    this.division,
+    this.parents_mobile_number,
+    this.spouse_mobile_number,
+    this.pin_code,
+    this.accessible_hub_ids,
+    this.accessible_hub_ids_code,
+    this.hub_id_from_lecture,
+    this.token,
+    this.specialization_name,
+    this.assigned_company,
+  });
 
   LoginEmployeeResponse.fromJson(Map<String, dynamic> json) {
     gender = json['gender'];
@@ -86,6 +89,7 @@ class LoginEmployeeResponse {
     accessible_hub_ids_code = json['accessible_hub_ids_code']?.cast<String>();
     hub_id_from_lecture = json['hub_id_from_lecture']?.cast<String>();
     token = json['token'];
+    assigned_company = json['assigned_company']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -117,7 +121,7 @@ class LoginEmployeeResponse {
     data['hub_id_from_lecture'] = hub_id_from_lecture;
     data['token'] = token;
     data['specialization_name'] = specialization_name;
-
+    data['assigned_company'] = assigned_company;
     return data;
   }
 }

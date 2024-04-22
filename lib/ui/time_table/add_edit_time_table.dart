@@ -34,8 +34,9 @@ enum MODE { online, offline }
 
 class AddEditTimeTable extends StatefulWidget {
   final BaseApiResponseWithSerializable<TimeTableResponseClass>? timeTableData;
+  final bool? isProxy;
 
-  const AddEditTimeTable({super.key, this.timeTableData});
+  const AddEditTimeTable({super.key, this.timeTableData, this.isProxy});
 
   @override
   State<AddEditTimeTable> createState() => _AddEditTimeTableState();
@@ -53,7 +54,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
 
   DateTime selectedDate = DateTime.now();
 
-  bool isHoliday = false;
+  bool isHoliday = false, isProxyTick = false;
 
   MODE selectedMode = MODE.online;
 
@@ -67,6 +68,16 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   BaseApiResponseWithSerializable<ViewEmployeeResponse>? facultyResponse;
   String facultyValue = "";
   String facultyRecordId = "";
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? proxyMakerArray = [];
+  BaseApiResponseWithSerializable<ViewEmployeeResponse>? proxyMakerResponse;
+  String proxyMakerValue = "";
+  String proxyMakerRecordId = "";
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? proxyTakerArray = [];
+  BaseApiResponseWithSerializable<ViewEmployeeResponse>? proxyTakerResponse;
+  String proxyTakerValue = "";
+  String proxyTakerRecordId = "";
 
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationResponseArray = [];
   BaseApiResponseWithSerializable<SpecializationResponse>? specializationResponse;
@@ -109,13 +120,11 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   bool isFacultyLogin = false;
 
   Future<void> _selectDate() async {
-    final DateTime? picked =
-        await showDatePicker(context: context, initialDate: selectedDate, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
+    final DateTime? picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        _tcDate.text =
-            '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year.toString().padLeft(2, '0')}';
+        _tcDate.text = '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year.toString().padLeft(2, '0')}';
       });
     }
   }
@@ -248,6 +257,37 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           }
         }
       }
+
+      if(timeTableData?.proxy_maker?.isNotEmpty == true){
+        for (var fac in proxyMakerArray ?? []) {
+          for (var data in timeTableData!.proxy_maker ?? []) {
+            if (fac.id.toString() == data.toString()) {
+              proxyMakerValue = fac!.fields!.employeeId!.toString();
+              proxyMakerResponse = fac;
+              proxyMakerRecordId = fac.id!;
+
+              isProxyTick = true;
+              if (!isFacultyLogin) {
+                _tcProxyMakerName.text = proxyMakerResponse?.fields?.employeeName ?? '';
+              }
+            }
+          }
+        }
+      }
+      if(timeTableData?.proxy_taker?.isNotEmpty == true){
+        for (var fac in proxyTakerArray ?? []) {
+          for (var data in timeTableData!.proxy_taker ?? []) {
+            if (fac.id.toString() == data.toString()) {
+              proxyTakerValue = fac!.fields!.employeeId!.toString();
+              proxyTakerResponse = fac;
+              proxyTakerRecordId = fac.id!;
+              if (!isFacultyLogin) {
+                _tcProxyTakerName.text = proxyTakerResponse?.fields?.employeeName ?? '';
+              }
+            }
+          }
+        }
+      }
       _tcStartTime.text = timeTableData?.startTime ?? '';
       _tcEndTime.text = timeTableData?.endTime ?? '';
       if (timeTableData?.mode.toString() == TableNames.TIMETABLE_MODE_STATUS_ONLINE) {
@@ -300,8 +340,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       unitValue = "";
       topicValue = "";
 
-      var query =
-          "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
 
       try {
         var data = await apiRepository.getSubjectsApi(query);
@@ -335,25 +374,31 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       if (data.records!.isNotEmpty) {
         if (offset.isEmpty) {
           facultyResponseArray?.clear();
+          proxyMakerArray?.clear();
+          proxyTakerArray?.clear();
         }
         if (isFacultyLogin) {
           for (var faculty in data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>) {
             if (faculty.fields?.employeeId.toString() == employeeId.toString()) {
-              setState(() {
-                facultyResponseArray?.add(faculty);
-              });
+              facultyResponseArray?.add(faculty);
+              proxyMakerArray?.add(faculty);
+              proxyTakerArray?.add(faculty);
             }
           }
+          setState(() {});
         } else {
-          setState(() {
-            facultyResponseArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
-          });
+          facultyResponseArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+          proxyMakerArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+          proxyTakerArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+          setState(() {});
         }
         offset = data.offset;
         if (offset.isNotEmpty) {
           fetchFaculty();
         }
         facultyResponseArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+        proxyMakerArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+        proxyTakerArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -411,6 +456,17 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
       if (isForAdd) {
         addData();
       } else {
+        if (widget.timeTableData != null && widget.isProxy == true) {
+          if (isProxyTick) {
+            if (proxyMakerValue.trim().isEmpty) {
+              Utils.showSnackBar(context, strings_name.str_empty_original_proxy_maker);
+            } else if (proxyTakerValue.trim().isEmpty) {
+              Utils.showSnackBar(context, strings_name.str_empty_proxy_taker);
+            }
+          } else if (proxyTakerValue.trim().isEmpty) {
+            Utils.showSnackBar(context, strings_name.str_empty_proxy_taker);
+          }
+        }
         updateData();
       }
     }
@@ -562,7 +618,10 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                   updatedBy: updatedBy,
                   mode: selectedMode.name,
                   modeTitle: selectedMode == MODE.online ? _tcOnlineClassLink.text : _tcClassRoomNumber.text,
-                  isAttendanceTaken: widget.timeTableData?.fields?.isAttendanceTaken ?? false),
+                  isAttendanceTaken: widget.timeTableData?.fields?.isAttendanceTaken ?? false,
+                  proxy_maker: (widget.timeTableData != null && widget.isProxy == true) ? (isProxyTick ? [proxyMakerRecordId] : []) : [],
+                  proxy_taker: (widget.timeTableData != null && widget.isProxy == true) ? [proxyTakerRecordId] : [],
+                  status: (widget.timeTableData != null && widget.isProxy == true) ? strings_name.str_status_proxy_added : ""),
             )
           ],
         );
@@ -622,7 +681,8 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   Widget build(BuildContext context) {
     var viewWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(widget.timeTableData == null ? strings_name.str_add_new_time_table : strings_name.str_edit_timetable),
+      appBar: AppWidgets.appBarWithoutBack(
+          widget.timeTableData == null ? strings_name.str_add_new_time_table : (widget.isProxy == true ? strings_name.str_proxy_lecture : strings_name.str_edit_timetable)),
       body: isDataLoading
           ? const Center(
               child: CircularProgressIndicator(
@@ -635,7 +695,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 SizedBox(
                   height: 10.h,
                 ),
-                custom_text(
+                const custom_text(
                   text: strings_name.str_date_r,
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
@@ -646,7 +706,9 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                   child: TextFormField(
                     controller: _tcDate,
                     onTap: () {
-                      _selectDate();
+                      if (widget.timeTableData == null) {
+                        _selectDate();
+                      }
                     },
                     readOnly: true,
                     decoration: const InputDecoration(
@@ -657,32 +719,34 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 6.h,
-                ),
+                SizedBox(height: 6.h),
                 Row(
                   children: [
                     Checkbox(
                       visualDensity: VisualDensity.compact,
                       value: isHoliday,
-                      onChanged: (value) {
-                        setState(() {
-                          isHoliday = value ?? false;
-                        });
-                      },
+                      onChanged: widget.timeTableData == null
+                          ? (value) {
+                              setState(() {
+                                isHoliday = value ?? false;
+                              });
+                            }
+                          : null,
                     ),
                     GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isHoliday = !isHoliday;
-                          });
-                        },
+                        onTap: widget.timeTableData == null
+                            ? () {
+                                setState(() {
+                                  isHoliday = !isHoliday;
+                                });
+                              }
+                            : null,
                         child: const Text(strings_name.str_holiday))
                   ],
                 ),
                 Visibility(
                   visible: isHoliday,
-                  child: custom_text(
+                  child: const custom_text(
                     text: strings_name.str_holiday_title,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -692,15 +756,14 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 Visibility(
                   visible: isHoliday,
                   child: custom_edittext(
+                    enabled: widget.timeTableData == null,
                     margin: EdgeInsets.zero,
                     type: TextInputType.multiline,
                     textInputAction: TextInputAction.newline,
                     controller: _tcHoliday,
                   ),
                 ),
-                SizedBox(
-                  height: 12.h,
-                ),
+                SizedBox(height: 12.h),
                 Visibility(
                   visible: isHoliday,
                   child: customExpansionTileItem(
@@ -712,25 +775,25 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                           var data = hubResponseArray![index];
                           return CustomCheckListTile(
                             title: data.fields?.hubName ?? "",
-                            onChanged: (bool? value) {
-                              setState(() {
-                                data.fields?.selected = value!;
-                              });
-                            },
+                            onChanged: widget.timeTableData == null
+                                ? (bool? value) {
+                                    setState(() {
+                                      data.fields?.selected = value!;
+                                    });
+                                  }
+                                : null,
                             isSelected: data.fields!.selected,
                           );
                         }),
                   ),
                 ),
-                SizedBox(
-                  height: 6.h,
-                ),
+                SizedBox(height: 6.h),
                 Visibility(
                   visible: !isHoliday,
                   child: Column(
                     children: [
                       renderDropDown(),
-                      custom_text(
+                      const custom_text(
                         text: '${strings_name.str_timings}:',
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
@@ -747,13 +810,9 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                               readOnly: true,
                             ),
                           ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
+                          SizedBox(width: 20.w),
                           const Text(strings_name.str_to),
-                          SizedBox(
-                            width: 20.w,
-                          ),
+                          SizedBox(width: 20.w),
                           Expanded(
                             child: TextFormField(
                               controller: _tcEndTime,
@@ -765,12 +824,10 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                           )
                         ],
                       ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
+                      SizedBox(height: 20.h),
                       Row(
                         children: [
-                          custom_text(
+                          const custom_text(
                             text: strings_name.str_mode,
                             alignment: Alignment.topLeft,
                             textStyles: blackTextSemiBold16,
@@ -783,9 +840,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                               onChangeMode(MODE.online);
                             },
                           ),
-                          SizedBox(
-                            width: 8.w,
-                          ),
+                          SizedBox(width: 8.w),
                           ModeSelectedCard(
                             title: strings_name.str_offline,
                             isSelected: MODE.offline == selectedMode,
@@ -795,12 +850,10 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 6.h,
-                      ),
+                      SizedBox(height: 6.h),
                       Visibility(
                         visible: selectedMode == MODE.online,
-                        child: custom_text(
+                        child: const custom_text(
                           text: strings_name.str_meeting_link_r,
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -819,7 +872,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                       ),
                       Visibility(
                         visible: selectedMode == MODE.offline,
-                        child: custom_text(
+                        child: const custom_text(
                           text: strings_name.str_class_room_number,
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -839,9 +892,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 14.h,
-                ),
+                SizedBox(height: 14.h),
                 isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
@@ -854,9 +905,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                         },
                         text: widget.timeTableData == null ? strings_name.str_add_timetable : strings_name.str_edit_timetable,
                       ),
-                SizedBox(
-                  height: 20.h,
-                ),
+                SizedBox(height: 20.h),
               ],
             ),
     );
@@ -948,13 +997,19 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
   }
 
   TextEditingController _tcFacultyName = TextEditingController();
+  TextEditingController _tcProxyMakerName = TextEditingController();
+  TextEditingController _tcProxyTakerName = TextEditingController();
   TextEditingController searchController = TextEditingController();
 
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? filterFacultyResponseArray = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? filterProxyMakerArray = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? filterProxyTakerArray = [];
 
   updateAndBack() {
     Navigator.pop(context);
     _tcFacultyName.text = facultyResponse?.fields?.employeeName ?? '';
+    _tcProxyMakerName.text = proxyMakerResponse?.fields?.employeeName ?? '';
+    _tcProxyTakerName.text = proxyTakerResponse?.fields?.employeeName ?? '';
     setState(() {});
   }
 
@@ -1036,16 +1091,173 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         });
   }
 
+  proxyMakerDropDown() {
+    searchController.clear();
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: TextFormField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search Original Proxy Maker',
+                  suffixIcon: searchController.text.isEmpty
+                      ? null
+                      : IconButton(
+                          onPressed: () {
+                            searchController.clear();
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
+                ),
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    List<BaseApiResponseWithSerializable<ViewEmployeeResponse>> tempList = [];
+                    proxyMakerArray?.forEach((item) {
+                      if (item.fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
+                        tempList.add(item);
+                      }
+                    });
+                    setState(() {
+                      filterProxyMakerArray?.clear();
+                      filterProxyMakerArray?.addAll(tempList);
+                    });
+                  } else {
+                    setState(() {
+                      filterProxyMakerArray?.clear();
+                      filterProxyMakerArray?.addAll(proxyMakerArray!);
+                    });
+                  }
+                },
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: searchController.text.isEmpty
+                    ? ListView.builder(
+                        itemCount: proxyMakerArray?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var data = proxyMakerArray?[index];
+                          return GestureDetector(
+                            onTap: () {
+                              proxyMakerValue = data!.fields!.employeeId!.toString();
+                              proxyMakerResponse = data;
+                              proxyMakerRecordId = data.id!;
+                              updateAndBack();
+                            },
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(data?.fields?.employeeName ?? '')),
+                          );
+                        })
+                    : ListView.builder(
+                        itemCount: filterProxyMakerArray?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var data = filterProxyMakerArray?[index];
+                          return GestureDetector(
+                            onTap: () {
+                              proxyMakerValue = data!.fields!.employeeId!.toString();
+                              proxyMakerResponse = data;
+                              proxyMakerRecordId = data.id!;
+                              updateAndBack();
+                            },
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(data?.fields?.employeeName ?? '')),
+                          );
+                        }),
+              ),
+            );
+          });
+        });
+  }
+
+  proxyTakerDropDown() {
+    searchController.clear();
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: TextFormField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search Proxy Taker',
+                  suffixIcon: searchController.text.isEmpty
+                      ? null
+                      : IconButton(
+                          onPressed: () {
+                            searchController.clear();
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
+                ),
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    List<BaseApiResponseWithSerializable<ViewEmployeeResponse>> tempList = [];
+                    proxyTakerArray?.forEach((item) {
+                      if (item.fields!.employeeName!.toLowerCase().contains(value.toLowerCase())) {
+                        tempList.add(item);
+                      }
+                    });
+                    setState(() {
+                      filterProxyTakerArray?.clear();
+                      filterProxyTakerArray?.addAll(tempList);
+                    });
+                  } else {
+                    setState(() {
+                      filterProxyTakerArray?.clear();
+                      filterProxyTakerArray?.addAll(proxyTakerArray!);
+                    });
+                  }
+                },
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: searchController.text.isEmpty
+                    ? ListView.builder(
+                        itemCount: proxyTakerArray?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var data = proxyTakerArray?[index];
+                          return GestureDetector(
+                            onTap: () {
+                              proxyTakerValue = data!.fields!.employeeId!.toString();
+                              proxyTakerResponse = data;
+                              proxyTakerRecordId = data.id!;
+                              updateAndBack();
+                            },
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(data?.fields?.employeeName ?? '')),
+                          );
+                        })
+                    : ListView.builder(
+                        itemCount: filterProxyTakerArray?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var data = filterProxyTakerArray?[index];
+                          return GestureDetector(
+                            onTap: () {
+                              proxyTakerValue = data!.fields!.employeeId!.toString();
+                              proxyTakerResponse = data;
+                              proxyTakerRecordId = data.id!;
+                              updateAndBack();
+                            },
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(data?.fields?.employeeName ?? '')),
+                          );
+                        }),
+              ),
+            );
+          });
+        });
+  }
+
   Widget renderDropDown() {
     var viewWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        custom_text(
+        const custom_text(
           text: strings_name.str_campus_r,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
           leftValue: 0,
+          bottomValue: 5,
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -1059,16 +1271,17 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                   elevation: 16,
                   style: blackText16,
                   focusColor: Colors.white,
-                  onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                    setState(() {
-                      hubValue = newValue!.fields!.id!.toString();
-                      hubResponse = newValue;
-                      hubRecordId = newValue.id!;
-                      getSpecializations();
-                    });
-                  },
-                  items: hubResponseArray
-                      ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                  onChanged: widget.timeTableData == null
+                      ? (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                          setState(() {
+                            hubValue = newValue!.fields!.id!.toString();
+                            hubResponse = newValue;
+                            hubRecordId = newValue.id!;
+                            getSpecializations();
+                          });
+                        }
+                      : null,
+                  items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                     return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                       value: value,
                       child: Text(value.fields!.hubName!.toString()),
@@ -1080,11 +1293,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           ],
         ),
         SizedBox(height: 10.h),
-        custom_text(
+        const custom_text(
           text: strings_name.str_specialization_r,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
           leftValue: 0,
+          bottomValue: 5,
         ),
         isSpeLoading
             ? progressIndicator()
@@ -1100,16 +1314,18 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,
-                        onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
-                          setState(() {
-                            specializationValue = newValue!.fields!.id!.toString();
-                            specializationResponse = newValue;
-                            specializationRecordId = newValue.id!;
-                            getSubjects();
-                          });
-                        },
-                        items: specializationResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
-                            (BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                        onChanged: widget.timeTableData == null
+                            ? (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
+                                setState(() {
+                                  specializationValue = newValue!.fields!.id!.toString();
+                                  specializationResponse = newValue;
+                                  specializationRecordId = newValue.id!;
+                                  getSubjects();
+                                });
+                              }
+                            : null,
+                        items: specializationResponseArray
+                            ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
                           return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                             value: value,
                             child: Text(value.fields!.specializationName!.toString()),
@@ -1121,11 +1337,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 ],
               ),
         SizedBox(height: 10.h),
-        custom_text(
+        const custom_text(
           text: strings_name.str_semester_r,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
           leftValue: 0,
+          bottomValue: 5,
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -1138,12 +1355,14 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                   elevation: 16,
                   style: blackText16,
                   focusColor: Colors.white,
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      semesterValue = newValue!;
-                      getSubjects();
-                    });
-                  },
+                  onChanged: widget.timeTableData == null
+                      ? (int? newValue) {
+                          setState(() {
+                            semesterValue = newValue!;
+                            getSubjects();
+                          });
+                        }
+                      : null,
                   value: semesterValue == -1 ? null : semesterValue,
                   items: semesterResponseArray.map<DropdownMenuItem<int>>((int value) {
                     return DropdownMenuItem<int>(
@@ -1157,12 +1376,13 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           ],
         ),
         SizedBox(height: 10.h),
-        Visibility(
+        const Visibility(
           child: custom_text(
             text: strings_name.str_division_r,
             alignment: Alignment.topLeft,
             textStyles: blackTextSemiBold16,
             leftValue: 0,
+            bottomValue: 5,
           ),
         ),
         Visibility(
@@ -1177,12 +1397,14 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                     elevation: 16,
                     style: blackText16,
                     focusColor: Colors.white,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        divisionValue = newValue!;
-                        getSubjects();
-                      });
-                    },
+                    onChanged: widget.timeTableData == null
+                        ? (String? newValue) {
+                            setState(() {
+                              divisionValue = newValue!;
+                              getSubjects();
+                            });
+                          }
+                        : null,
                     value: divisionValue == "" ? null : divisionValue,
                     items: divisionResponseArray.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -1199,11 +1421,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         SizedBox(height: 10.h),
         isSubLoading
             ? progressIndicator()
-            : custom_text(
+            : const custom_text(
                 text: strings_name.str_subject_r,
                 alignment: Alignment.topLeft,
                 textStyles: blackTextSemiBold16,
                 leftValue: 0,
+                bottomValue: 5,
               ),
         Visibility(
           visible: !isSubLoading,
@@ -1227,8 +1450,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                         subjectRecordId = newValue.id!;
                       });
                     },
-                    items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>(
-                        (BaseApiResponseWithSerializable<SubjectResponse> value) {
+                    items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
                       return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                         value: value,
                         child: Text(value.fields!.subjectTitle!.toString()),
@@ -1242,49 +1464,12 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         ),
         SizedBox(height: 10.h),
         custom_text(
-          text: strings_name.str_faculty_name,
+          text: widget.timeTableData == null ? strings_name.str_select_faculty_name : strings_name.str_faculty_name,
           alignment: Alignment.topLeft,
           textStyles: blackTextSemiBold16,
           leftValue: 0,
+          bottomValue: 5,
         ),
-        // Row(
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Flexible(
-        //       fit: FlexFit.loose,
-        //       child: SizedBox(
-        //         width: viewWidth,
-        //         child: DropdownButtonFormField<
-        //             BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
-        //           value: facultyResponse,
-        //           elevation: 16,
-        //           style: blackText16,
-        //           focusColor: Colors.white,
-        //           onChanged:
-        //               (BaseApiResponseWithSerializable<ViewEmployeeResponse>?
-        //                   newValue) {
-        //             setState(() {
-        //               facultyValue = newValue!.fields!.employeeId!.toString();
-        //               facultyResponse = newValue;
-        //               facultyRecordId = newValue.id!;
-        //             });
-        //           },
-        //           items: facultyResponseArray?.map<
-        //                   DropdownMenuItem<
-        //                       BaseApiResponseWithSerializable<
-        //                           ViewEmployeeResponse>>>(
-        //               (BaseApiResponseWithSerializable<ViewEmployeeResponse>
-        //                   value) {
-        //             return DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
-        //               value: value,
-        //               child: Text(value.fields!.employeeName!.toString()),
-        //             );
-        //           }).toList(),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -1295,12 +1480,15 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 child: !isFacultyLogin
                     ? TextFormField(
                         controller: _tcFacultyName,
+                        enabled: widget.timeTableData == null,
                         readOnly: true,
-                        onTap: () {
-                          if (facultyResponseArray?.isNotEmpty ?? false) {
-                            facultyDropDown();
-                          }
-                        },
+                        onTap: widget.timeTableData == null
+                            ? () {
+                                if (facultyResponseArray?.isNotEmpty ?? false) {
+                                  facultyDropDown();
+                                }
+                              }
+                            : null,
                         decoration: const InputDecoration(
                           suffixIcon: Icon(Icons.arrow_drop_down_sharp),
                         ),
@@ -1310,15 +1498,16 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,
-                        onChanged: (BaseApiResponseWithSerializable<ViewEmployeeResponse>? newValue) {
-                          setState(() {
-                            facultyValue = newValue!.fields!.employeeId!.toString();
-                            facultyResponse = newValue;
-                            facultyRecordId = newValue.id!;
-                          });
-                        },
-                        items: facultyResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>>(
-                            (BaseApiResponseWithSerializable<ViewEmployeeResponse> value) {
+                        onChanged: widget.timeTableData == null
+                            ? (BaseApiResponseWithSerializable<ViewEmployeeResponse>? newValue) {
+                                setState(() {
+                                  facultyValue = newValue!.fields!.employeeId!.toString();
+                                  facultyResponse = newValue;
+                                  facultyRecordId = newValue.id!;
+                                });
+                              }
+                            : null,
+                        items: facultyResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>>((BaseApiResponseWithSerializable<ViewEmployeeResponse> value) {
                           return DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
                             value: value,
                             child: Text(value.fields!.employeeName!.toString()),
@@ -1330,6 +1519,100 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           ],
         ),
         SizedBox(height: 10.h),
+        widget.timeTableData != null && widget.isProxy == true
+            ? Column(children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Checkbox(
+                      visualDensity: VisualDensity.compact,
+                      value: isProxyTick,
+                      onChanged: (value) {
+                        setState(() {
+                          isProxyTick = value ?? false;
+                        });
+                      },
+                    ),
+                    const Expanded(
+                      child: custom_text(
+                        text: strings_name.str_proxy_selection,
+                        maxLines: 5,
+                        leftValue: 0,
+                        textStyles: primaryTextSemiBold14,
+                      ),
+                    )
+                  ],
+                ),
+                isProxyTick
+                    ? Column(
+                        children: [
+                          SizedBox(height: 10.h),
+                          const custom_text(
+                            text: strings_name.str_original_proxy_maker,
+                            alignment: Alignment.topLeft,
+                            textStyles: blackTextSemiBold16,
+                            leftValue: 0,
+                            bottomValue: 5,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: SizedBox(
+                                  width: viewWidth,
+                                  child: TextFormField(
+                                    controller: _tcProxyMakerName,
+                                    readOnly: true,
+                                    onTap: () {
+                                      if (proxyMakerArray?.isNotEmpty ?? false) {
+                                        proxyMakerDropDown();
+                                      }
+                                    },
+                                    decoration: const InputDecoration(
+                                      suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : Container(),
+                SizedBox(height: 10.h),
+                const custom_text(
+                  text: strings_name.str_proxy_taker,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                  leftValue: 0,
+                  bottomValue: 5,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: SizedBox(
+                        width: viewWidth,
+                        child: TextFormField(
+                          controller: _tcProxyTakerName,
+                          readOnly: true,
+                          onTap: () {
+                            if (proxyTakerArray?.isNotEmpty ?? false) {
+                              proxyTakerDropDown();
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ])
+            : Container(),
       ],
     );
   }

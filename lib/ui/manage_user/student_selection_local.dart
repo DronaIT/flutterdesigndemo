@@ -196,7 +196,7 @@ class _StudentSelectionLocalState extends State<StudentSelectionLocal> {
     var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      appBar: AppWidgets.appBarWithoutBack(strings_name.str_select_company),
+      appBar: AppWidgets.appBarWithoutBack(strings_name.str_select_student),
       body: Stack(children: [
         SingleChildScrollView(
             child: Column(children: [

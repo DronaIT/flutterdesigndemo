@@ -167,6 +167,12 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
         var data = await apiRepository.fetchTimeTablesListApi(query, offset);
         if (data.records!.isNotEmpty) {
           timeTables.addAll(data.records as Iterable<BaseApiResponseWithSerializable<TimeTableResponseClass>>);
+          for (int i = 0; i < timeTables.length; i++) {
+            if (timeTables[i].fields?.status == strings_name.str_status_lecture_cancelled) {
+              timeTables.removeAt(i);
+              i--;
+            }
+          }
           offset = data.offset;
           if (offset.isNotEmpty) {
             fetchTimeTable();
@@ -637,7 +643,10 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
                                     data: timeTables[index],
                                     onTap: () {
                                       debugPrint('../ timeTables ${timeTables[index].fields?.toJson()}');
-                                      if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) || (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false)) {
+                                      if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) ||
+                                          (timeTables[index].fields?.proxy_taker?.isNotEmpty == true
+                                              ? (timeTables[index].fields?.proxy_taker?.contains(createdBy) ?? false)
+                                              : (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false))) {
                                         if (timeTables[index].fields?.isAttendanceTaken ?? false) {
                                           Utils.showSnackBarUsingGet(strings_name.str_attendance_already_taken);
                                         } else {

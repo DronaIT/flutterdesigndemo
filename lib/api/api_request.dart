@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/App_data_response.dart';
+import 'package:flutterdesigndemo/models/add_timetable_model.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
 import 'package:flutterdesigndemo/models/fees_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
@@ -653,6 +654,17 @@ class ApiRequest {
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       Map<String, dynamic> response = await dioClient.patch(TableNames.TBL_TIMETABLE, options: Options(headers: header), data: jsonEncode(updateFormula));
       return AddTimeTableResponse.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AddTimeTable>> cancelTimeTableApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      Map<String, dynamic> response = await dioClient.patch("${TableNames.TBL_TIMETABLE}/$recordId", options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<AddTimeTable>.fromJson(response, (response) => AddTimeTable.fromJson(response));
     } catch (e) {
       rethrow;
     }

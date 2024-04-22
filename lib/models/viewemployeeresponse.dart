@@ -26,6 +26,7 @@ class ViewEmployeeResponse {
   String? actual_in_time = "";
   String? actual_out_time = "";
   List<String>? assigned_students;
+  List<String>? assigned_company;
 
   ViewEmployeeResponse({
     this.gender,
@@ -54,6 +55,7 @@ class ViewEmployeeResponse {
     this.actual_in_time,
     this.actual_out_time,
     this.assigned_students,
+    this.assigned_company,
   });
 
   ViewEmployeeResponse.fromJson(Map<String, dynamic> json) {
@@ -80,6 +82,7 @@ class ViewEmployeeResponse {
     accessible_hub_ids = json['accessible_hub_ids']?.cast<String>();
     accessible_hub_codes = json['accessible_hub_ids_code']?.cast<String>();
     assigned_students = json['assigned_students']?.cast<String>();
+    assigned_company = json['assigned_company']?.cast<String>();
     is_working = json['is_working'];
     actual_in_time = json['actual_in_time'];
     actual_out_time = json['actual_out_time'];
@@ -110,6 +113,7 @@ class ViewEmployeeResponse {
     data['accessible_hub_ids'] = accessible_hub_ids;
     data['accessible_hub_ids_code'] = accessible_hub_codes;
     data['assigned_students'] = assigned_students;
+    data['assigned_company'] = assigned_company;
     data['is_working'] = is_working;
     data['actual_in_time'] = actual_in_time;
     data['actual_out_time'] = actual_out_time;

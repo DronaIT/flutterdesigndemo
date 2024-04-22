@@ -16,36 +16,46 @@ class TimeTableResponseClass {
   List<String>? hubIdFromHubId;
   List<String>? specializationIdFromSpecializationId;
   List<String>? employeeNameFromLectureId;
+  List<String>? proxy_taker_employee_name;
+  List<String>? proxy_maker_employee_name;
+  List<String>? proxy_maker;
+  List<String>? proxy_taker;
   List<String>? subjectTitleFromSubjectId;
   bool? isHoliday;
   String? holidayTitle;
   List<int>? subjectIdFromSubjectId;
   bool? isAttendanceTaken;
+  String? status;
 
-  TimeTableResponseClass(
-      {this.id,
-      this.modeTitle,
-      this.hubId,
-      this.specializationId,
-      this.semester,
-      this.division,
-      this.createdBy,
-      this.updatedBy,
-      this.date,
-      this.mode,
-      this.startTime,
-      this.endTime,
-      this.lectureId,
-      this.subjectId,
-      this.hubIdFromHubId,
-      this.specializationIdFromSpecializationId,
-      this.employeeNameFromLectureId,
-      this.subjectTitleFromSubjectId,
-      this.isHoliday,
-      this.holidayTitle,
-      this.subjectIdFromSubjectId,
-      this.isAttendanceTaken,
-    });
+  TimeTableResponseClass({
+    this.id,
+    this.modeTitle,
+    this.hubId,
+    this.specializationId,
+    this.semester,
+    this.division,
+    this.createdBy,
+    this.updatedBy,
+    this.date,
+    this.mode,
+    this.startTime,
+    this.endTime,
+    this.lectureId,
+    this.subjectId,
+    this.hubIdFromHubId,
+    this.specializationIdFromSpecializationId,
+    this.employeeNameFromLectureId,
+    this.proxy_taker_employee_name,
+    this.proxy_maker_employee_name,
+    this.proxy_maker,
+    this.proxy_taker,
+    this.subjectTitleFromSubjectId,
+    this.isHoliday,
+    this.holidayTitle,
+    this.subjectIdFromSubjectId,
+    this.isAttendanceTaken,
+    this.status,
+  });
 
   TimeTableResponseClass.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -62,6 +72,10 @@ class TimeTableResponseClass {
     division = json['division'];
     lectureId = json['lecture_id']?.cast<String>();
     employeeNameFromLectureId = json['employee_name (from lecture_id)']?.cast<String>();
+    proxy_taker_employee_name = json['proxy_taker_employee_name']?.cast<String>();
+    proxy_maker_employee_name = json['proxy_maker_employee_name']?.cast<String>();
+    proxy_maker = json['proxy_maker']?.cast<String>();
+    proxy_taker = json['proxy_taker']?.cast<String>();
     subjectId = json['subject_id']?.cast<String>();
     subjectIdFromSubjectId = json['subject_id (from subject_id)']?.cast<int>();
     subjectTitleFromSubjectId = json['subject_title (from subject_id)']?.cast<String>();
@@ -70,6 +84,7 @@ class TimeTableResponseClass {
     isHoliday = json["is_holiday"];
     holidayTitle = json["holiday_title"];
     isAttendanceTaken = json["is_attendance_taken"];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -88,6 +103,10 @@ class TimeTableResponseClass {
     data['division'] = division;
     data['lecture_id'] = lectureId;
     data['employee_name (from lecture_id)'] = employeeNameFromLectureId;
+    data['proxy_taker_employee_name'] = proxy_taker_employee_name;
+    data['proxy_maker_employee_name'] = proxy_maker_employee_name;
+    data['proxy_maker'] = proxy_maker;
+    data['proxy_taker'] = proxy_taker;
     data['subject_id'] = subjectId;
     data['subject_id (from subject_id)'] = subjectIdFromSubjectId;
     data['subject_title (from subject_id)'] = subjectTitleFromSubjectId;
@@ -96,6 +115,7 @@ class TimeTableResponseClass {
     data["is_holiday"] = isHoliday;
     data["holiday_title"] = holidayTitle;
     data["is_attendance_taken"] = isAttendanceTaken;
+    data['status'] = status;
     return data;
   }
 }

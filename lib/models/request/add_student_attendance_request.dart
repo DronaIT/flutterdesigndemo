@@ -13,22 +13,25 @@ class AddStudentAttendanceRequest {
   List<String>? absentIds;
   String? lecture_duration;
   String? semesterByStudent;
+  String? lecture_type;
 
-  AddStudentAttendanceRequest(
-      {this.employeeId,
-      this.hubId,
-      this.specializationId,
-      this.subjectId,
-      this.unitId,
-      this.topicId,
-      this.division,
-      this.lectureDate,
-      this.studentIds,
-      this.presentIds,
-      this.absentIds,
-      this.lectureTime,
-      this.lecture_duration,
-      this.semesterByStudent});
+  AddStudentAttendanceRequest({
+    this.employeeId,
+    this.hubId,
+    this.specializationId,
+    this.subjectId,
+    this.unitId,
+    this.topicId,
+    this.division,
+    this.lectureDate,
+    this.studentIds,
+    this.presentIds,
+    this.absentIds,
+    this.lectureTime,
+    this.lecture_duration,
+    this.semesterByStudent,
+    this.lecture_type,
+  });
 
   AddStudentAttendanceRequest.fromJson(Map<String, dynamic> json) {
     employeeId = json['employee_id']?.cast<String>();
@@ -45,6 +48,7 @@ class AddStudentAttendanceRequest {
     lectureTime = json['lecture_time'];
     lecture_duration = json['lecture_duration'];
     semesterByStudent = json['semester_by_student']?.cast<String>();
+    lecture_type = json['lecture_type']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +67,7 @@ class AddStudentAttendanceRequest {
     data['lecture_time'] = lectureTime;
     data['lecture_duration'] = lecture_duration;
     data['semester_by_student'] = semesterByStudent;
+    data['lecture_type'] = lecture_type;
     return data;
   }
 }

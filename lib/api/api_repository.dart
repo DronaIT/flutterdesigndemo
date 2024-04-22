@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
+import 'package:flutterdesigndemo/models/add_timetable_model.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
 import 'package:flutterdesigndemo/models/fees_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
@@ -561,6 +562,16 @@ class ApiRepository {
   Future<AddTimeTableResponse> updateTimeTableDataApi(Map<String, dynamic> loginFormula, String recordId) async {
     try {
       final response = await userApi.updateTimeTableApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AddTimeTable>> cancelTimeTableDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.cancelTimeTableApi(loginFormula, recordId);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
