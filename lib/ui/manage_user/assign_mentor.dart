@@ -11,7 +11,6 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/student_response.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/manage_user/student_selection_local.dart';
-import 'package:flutterdesigndemo/ui/placement/company_selection_local.dart';
 import 'package:flutterdesigndemo/ui/punch_leaves/single_employee_selection.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';

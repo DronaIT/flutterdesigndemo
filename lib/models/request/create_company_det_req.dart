@@ -3,6 +3,7 @@ class CreateCompanyDetailRequest {
   String? company_name;
   String? contact_name;
   String? contact_number;
+  int? probable_vacancy;
   String? contact_whatsapp_number;
   String? contact_designation;
   String? company_landline;
@@ -20,6 +21,7 @@ class CreateCompanyDetailRequest {
   String? rejection_reason;
   List<Map<String, dynamic>>? company_logo;
   List<Map<String, dynamic>>? company_loi;
+  String? existing_slab;
 
   CreateCompanyDetailRequest({
     this.company_identity_number,
@@ -28,6 +30,7 @@ class CreateCompanyDetailRequest {
     this.company_name,
     this.contact_name,
     this.contact_number,
+    this.probable_vacancy,
     this.contact_whatsapp_number,
     this.company_sector,
     this.contact_designation,
@@ -42,6 +45,7 @@ class CreateCompanyDetailRequest {
     this.rejection_reason,
     this.company_logo,
     this.company_loi,
+    this.existing_slab,
   });
 
   CreateCompanyDetailRequest.fromJson(Map<String, dynamic> json) {
@@ -52,6 +56,7 @@ class CreateCompanyDetailRequest {
     created_by_student = json['created_by_student']?.cast<String>();
 
     contact_number = json['contact_number'];
+    probable_vacancy = json['probable_vacancy'];
     contact_whatsapp_number = json['contact_whatsapp_number'];
     company_sector = json['company_sector']?.cast<String>();
     contact_designation = json['contact_designation'];
@@ -67,6 +72,7 @@ class CreateCompanyDetailRequest {
     rejection_reason = json['rejection_reason'];
     company_logo = json['company_logo']?.cast<Map<String, dynamic>>();
     company_loi = json['company_loi']?.cast<Map<String, dynamic>>();
+    existing_slab = json['existing_slab'];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +84,7 @@ class CreateCompanyDetailRequest {
     data['company_name'] = company_name;
     data['contact_name'] = contact_name;
     data['contact_number'] = contact_number;
+    data['probable_vacancy'] = probable_vacancy;
     data['contact_whatsapp_number'] = contact_whatsapp_number;
     data['company_sector'] = company_sector;
     data['contact_designation'] = contact_designation;
@@ -92,6 +99,7 @@ class CreateCompanyDetailRequest {
     data['company_landline'] = company_landline;
     data['company_logo'] = company_logo;
     data['company_loi'] = company_loi;
+    data['existing_slab'] = existing_slab;
     return data;
   }
 }

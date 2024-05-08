@@ -5,6 +5,7 @@ class CompanyDetailResponse {
   String? companyName;
   String? contactName;
   String? contactNumber;
+  int? probable_vacancy;
   String? contactWhatsappNumber;
   String? contactDesignation;
   String? contactEmail;
@@ -34,6 +35,8 @@ class CompanyDetailResponse {
   List<String>? placed_students_is_placed_now;
   List<String>? placed_student_mobile_number;
   List<String>? placed_student_name;
+  String? existing_slab;
+
   bool selected = false;
 
   CompanyDetailResponse({
@@ -41,6 +44,7 @@ class CompanyDetailResponse {
     this.companyName,
     this.contactName,
     this.contactNumber,
+    this.probable_vacancy,
     this.contactWhatsappNumber,
     this.contactDesignation,
     this.contactEmail,
@@ -70,6 +74,7 @@ class CompanyDetailResponse {
     this.placed_student_mobile_number,
     this.self_job,
     this.self_job_code,
+    this.existing_slab,
   });
 
   CompanyDetailResponse.fromJson(Map<String, dynamic> json) {
@@ -79,6 +84,7 @@ class CompanyDetailResponse {
     companyName = json['company_name'];
     contactName = json['contact_name'];
     contactNumber = json['contact_number'];
+    probable_vacancy = json['probable_vacancy'];
     contactWhatsappNumber = json['contact_whatsapp_number'];
     contactDesignation = json['contact_designation'];
     contactEmail = json['contact_email'];
@@ -104,6 +110,7 @@ class CompanyDetailResponse {
     placed_student_mobile_number = json['placed_student_mobile_number']?.cast<String>();
     self_job = json['self_job']?.cast<String>();
     self_job_code = json['self_job_code']?.cast<String>();
+    existing_slab = json['existing_slab'];
     if (json['company_loi'] != null) {
       company_loi = <AttachmentResponse>[];
       json['company_loi'].forEach((v) {
@@ -126,6 +133,7 @@ class CompanyDetailResponse {
     data['hub_id (from hub_ids)'] = hubIdFromHubIds;
     data['contact_name'] = contactName;
     data['contact_number'] = contactNumber;
+    data['probable_vacancy'] = probable_vacancy;
     data['contact_whatsapp_number'] = contactWhatsappNumber;
     data['company_code'] = company_code;
     data['company_landline'] = company_landline;
@@ -151,6 +159,7 @@ class CompanyDetailResponse {
     data['placed_student_mobile_number'] = placed_student_mobile_number;
     data['self_job'] = self_job;
     data['self_job_code'] = self_job_code;
+    data['existing_slab'] = existing_slab;
     if (company_loi != null) {
       data['company_loi'] = company_loi!.map((v) => v.toJson()).toList();
     }

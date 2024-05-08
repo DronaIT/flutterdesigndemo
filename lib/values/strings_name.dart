@@ -988,4 +988,22 @@ class strings_name {
   static const String str_status_lecture_cancelled = "Lecture Cancelled";
 
   static const String str_lecture_cancelled_success = "Lecture cancelled successfully.";
+
+  static const String str_company_size = "Company Size";
+  static const String str_empty_company_size = "Please select company size";
+  static const String str_probable_vacancy = "Probable Vacancy";
+  static const String str_empty_probable_vacancy = "Please enter probable vacancy";
+
+  static const String str_job_category = "Select Job Category";
+  static const String str_empty_job_category = "Please select Job Category";
+
+  static const String str_select_mentor = "Select mentor";
+  static const String str_empty_mentor_hub = "Please select hub or mentor";
+
+  static const String str_ask = "ASK";
+  static const String str_ask_dashboard = "ASK Dashboard";
+  static const String str_levels_management = "Levels Management";
+  static const String str_add_ask_levels = "+ Add ASK Levels";
+  static const String str_add_ask_parameters = "+ Add ASK Parameters";
+  static const String str_new_evaluation = "+ New Evaluation";
 }

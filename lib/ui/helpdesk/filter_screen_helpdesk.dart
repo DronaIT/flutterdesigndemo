@@ -555,6 +555,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
           {"specialization": speResponse?.fields?.specializationName},
           {"hub": hubResponse?.fields?.hubName},
           {"subjectid": subjectResponse?.id},
+          {"mentor": " "},
         ])?.then((result) {
           if (result != null && result) {
             // Get.back(closeOverlays: true);

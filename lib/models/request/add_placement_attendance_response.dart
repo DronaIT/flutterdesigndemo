@@ -5,6 +5,7 @@ class AddPlacementAttendanceResponse {
   List<String>? job_id;
   List<String>? job_title;
   List<String>? company_name;
+  List<String>? student_name;
 
   List<DocumentResponse>? attendance_form;
   List<DocumentResponse>? company_loc;
@@ -29,6 +30,7 @@ class AddPlacementAttendanceResponse {
     this.job_id,
     this.job_title,
     this.company_name,
+    this.student_name,
 
     this.attendance_form,
     this.company_loc,
@@ -54,6 +56,7 @@ class AddPlacementAttendanceResponse {
     job_id = json['job_id']?.cast<String>();
     job_title = json['job_title']?.cast<String>();
     company_name = json['company_name']?.cast<String>();
+    student_name = json['student_name']?.cast<String>();
 
     resignation_reason = json['resignation_reason'];
     notice_period_end_date = json['notice_period_end_date'];
@@ -100,6 +103,7 @@ class AddPlacementAttendanceResponse {
     data['job_id'] = job_id;
     data['job_title'] = job_title;
     data['company_name'] = company_name;
+    data['student_name'] = student_name;
 
     data['resignation_reason'] = resignation_reason;
     data['notice_period_end_date'] = notice_period_end_date;

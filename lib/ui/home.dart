@@ -13,6 +13,7 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/home_module_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
+import 'package:flutterdesigndemo/ui/ask/ask_dashboard.dart';
 import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
 import 'package:flutterdesigndemo/ui/student_referral/my_referrals.dart';
 import 'package:flutterdesigndemo/ui/student_referral/referral_terms.dart';
@@ -575,6 +576,8 @@ class _HomeState extends State<Home> {
                                           }else if (PreferenceUtils.getIsLogin() == 2) {
                                             Get.to(const StudentReferrals());
                                           }
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ASK_MODULE) {
+                                          Get.to(const AskDashboard());
                                         }
                                       },
                                     ),

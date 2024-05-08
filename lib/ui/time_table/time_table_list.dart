@@ -608,7 +608,8 @@ class _TimeTableListState extends State<TimeTableList> {
           ),
           SizedBox(height: 5.h),
           custom_text(
-            text: '${strings_name.str_faculty}: ${timetableData.fields?.proxy_taker_employee_name?.isNotEmpty == true ? timetableData.fields!.proxy_taker_employee_name!.last : (timetableData.fields?.employeeNameFromLectureId?.isEmpty ?? true ? '' : timetableData.fields?.employeeNameFromLectureId?.first ?? '')}',
+            text:
+                '${strings_name.str_faculty}: ${timetableData.fields?.proxy_taker_employee_name?.isNotEmpty == true ? timetableData.fields!.proxy_taker_employee_name!.last : (timetableData.fields?.employeeNameFromLectureId?.isEmpty ?? true ? '' : timetableData.fields?.employeeNameFromLectureId?.first ?? '')}',
             textStyles: blackTextSemiBold14,
             maxLines: 2,
             bottomValue: 0,
@@ -833,7 +834,7 @@ class _TimeTableListState extends State<TimeTableList> {
 
                   AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
                   // request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
-                  request.employeeId = timeTableData.fields!.lectureId;
+                  request.employeeId = timeTableData.fields?.proxy_taker?.isNotEmpty == true ? timeTableData.fields?.proxy_taker : timeTableData.fields!.lectureId;
                   request.hubId = timeTableData.fields!.hubId!;
                   request.specializationId = timeTableData.fields!.specializationId!;
                   request.division = '${timeTableData.fields?.division}';

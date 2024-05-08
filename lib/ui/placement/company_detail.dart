@@ -37,15 +37,16 @@ class _CompanyDetailState extends State<CompanyDetail> {
   TextEditingController nameofCompanyController = TextEditingController();
   TextEditingController companyIdnoController = TextEditingController();
   TextEditingController nameOfContactPController = TextEditingController();
-  TextEditingController contactPnumberController = TextEditingController();
-  TextEditingController contactPWanumberController = TextEditingController();
+  TextEditingController contactPerNumberController = TextEditingController();
+  TextEditingController contactPerWANumberController = TextEditingController();
   TextEditingController contactPdesiController = TextEditingController();
   TextEditingController companyLandlineController = TextEditingController();
-  TextEditingController emailContactperController = TextEditingController();
+  TextEditingController emailContactPerController = TextEditingController();
   TextEditingController companyWebsiteController = TextEditingController();
   TextEditingController cityController = TextEditingController();
   TextEditingController reportBranchController = TextEditingController();
   TextEditingController reportAddressController = TextEditingController();
+  TextEditingController probableVacancyController = TextEditingController();
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<TypeOfSectorResponse>>? typeofResponseArray = [];
   BaseApiResponseWithSerializable<TypeOfSectorResponse>? typeOfResponse;
@@ -56,7 +57,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
   List<Map<String, CreateCompanyDetailRequest>> list = [];
   final companyDetailRepository = getIt.get<ApiRepository>();
   bool fromEdit = false;
-  List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? compnayDetailData = [];
+  List<BaseApiResponseWithSerializable<CompanyDetailResponse>>? companyDetailData = [];
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
   String hubValue = "";
   String hubRecordId = "";
@@ -72,6 +73,15 @@ class _CompanyDetailState extends State<CompanyDetail> {
     strings_name.str_type_gst_number,
   ];
   String companyIdentificationTypeValue = strings_name.str_identification_type;
+
+  List<String> companySlabArr = <String>[
+    TableNames.COMPANY_SLAB_20,
+    TableNames.COMPANY_SLAB_40,
+    TableNames.COMPANY_SLAB_60,
+    TableNames.COMPANY_SLAB_80,
+    TableNames.COMPANY_SLAB_100,
+  ];
+  String companySlabValue = TableNames.COMPANY_SLAB_20;
 
   @override
   void initState() {
@@ -124,28 +134,30 @@ class _CompanyDetailState extends State<CompanyDetail> {
           setState(() {
             fromEdit = true;
           });
-          compnayDetailData = data.records;
-          if (compnayDetailData?.isNotEmpty == true) {
+          companyDetailData = data.records;
+          if (companyDetailData?.isNotEmpty == true) {
             setState(() {
-              nameofCompanyController.text = compnayDetailData![0].fields!.companyName.toString();
-              companyIdnoController.text = compnayDetailData![0].fields!.companyIdentityNumber.toString();
-              nameOfContactPController.text = compnayDetailData![0].fields!.contactName.toString();
-              contactPdesiController.text = compnayDetailData![0].fields!.contactDesignation.toString();
-              contactPnumberController.text = compnayDetailData![0].fields!.contactNumber.toString();
-              contactPWanumberController.text = compnayDetailData![0].fields!.contactWhatsappNumber.toString();
-              companyLandlineController.text = compnayDetailData![0].fields!.company_landline.toString();
-              emailContactperController.text = compnayDetailData![0].fields!.contactEmail.toString();
-              companyWebsiteController.text = compnayDetailData![0].fields!.companyWebsite.toString();
-              reportBranchController.text = compnayDetailData![0].fields!.reporting_branch.toString();
-              reportAddressController.text = compnayDetailData![0].fields!.reporting_address.toString();
-              cityController.text = compnayDetailData![0].fields!.city.toString();
-              if (compnayDetailData![0].fields!.company_loi != null) {
-                loiPath = compnayDetailData![0].fields!.company_loi!.first.url!;
-                loiTitle = compnayDetailData![0].fields!.company_loi!.first.filename!;
+              nameofCompanyController.text = companyDetailData![0].fields!.companyName.toString();
+              companyIdnoController.text = companyDetailData![0].fields!.companyIdentityNumber.toString();
+              nameOfContactPController.text = companyDetailData![0].fields!.contactName.toString();
+              contactPdesiController.text = companyDetailData![0].fields!.contactDesignation.toString();
+              contactPerNumberController.text = companyDetailData![0].fields!.contactNumber.toString();
+              contactPerWANumberController.text = companyDetailData![0].fields!.contactWhatsappNumber.toString();
+              companyLandlineController.text = companyDetailData![0].fields!.company_landline.toString();
+              emailContactPerController.text = companyDetailData![0].fields!.contactEmail.toString();
+              companyWebsiteController.text = companyDetailData![0].fields!.companyWebsite.toString();
+              reportBranchController.text = companyDetailData![0].fields!.reporting_branch.toString();
+              reportAddressController.text = companyDetailData![0].fields!.reporting_address.toString();
+              cityController.text = companyDetailData![0].fields!.city.toString();
+              companySlabValue = companyDetailData![0].fields!.existing_slab ?? TableNames.COMPANY_SLAB_20;
+              probableVacancyController.text = companyDetailData![0].fields!.probable_vacancy.toString();
+              if (companyDetailData![0].fields!.company_loi != null) {
+                loiPath = companyDetailData![0].fields!.company_loi!.first.url!;
+                loiTitle = companyDetailData![0].fields!.company_loi!.first.filename!;
               }
 
               for (var i = 0; i < typeofResponseArray!.length; i++) {
-                if (compnayDetailData![0].fields!.companySector?.first == typeofResponseArray![i].id) {
+                if (companyDetailData![0].fields!.companySector?.first == typeofResponseArray![i].id) {
                   setState(() {
                     typeOfResponse = typeofResponseArray![i];
                     typeofValue = typeofResponseArray![i].id!.toString();
@@ -154,7 +166,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                 }
               }
               for (var i = 0; i < hubResponseArray!.length; i++) {
-                if (compnayDetailData![0].fields!.hubIds?.contains(hubResponseArray![i].id) == true) {
+                if (companyDetailData![0].fields!.hubIds?.contains(hubResponseArray![i].id) == true) {
                   // setState(() {
                   //   hubResponse = hubResponseArray![i];
                   //   hubValue = hubResponseArray![i].fields!.hubId.toString();
@@ -193,8 +205,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 10.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_name_of_company,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -206,7 +217,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_company_id_no,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -248,7 +259,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_type_of_industry,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -284,11 +295,59 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     ],
                   ),
                   SizedBox(height: 5.h),
+                  const custom_text(
+                    text: strings_name.str_company_size,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                          width: viewWidth,
+                          child: DropdownButtonFormField<String>(
+                            elevation: 16,
+                            value: companySlabValue,
+                            style: blackText16,
+                            focusColor: Colors.white,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                companySlabValue = newValue!;
+                              });
+                            },
+                            items: companySlabArr.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 3.h),
+                  const custom_text(
+                    text: strings_name.str_probable_vacancy,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  custom_edittext(
+                    type: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                    controller: probableVacancyController,
+                    maxLength: 5,
+                    topValue: 5,
+                  ),
+                  SizedBox(height: 5.h),
                   Visibility(
                     visible: false,
                     child: Column(
                       children: [
-                        custom_text(
+                        const custom_text(
                           text: strings_name.str_select_hub,
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -325,7 +384,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        custom_text(
+                        const custom_text(
                           text: strings_name.str_select_hub,
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -377,7 +436,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           })
                       : Container(),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -389,7 +448,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_designation,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -401,7 +460,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_number,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -409,12 +468,12 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   custom_edittext(
                     type: TextInputType.phone,
                     textInputAction: TextInputAction.next,
-                    controller: contactPnumberController,
+                    controller: contactPerNumberController,
                     maxLength: 10,
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_wanumber,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -423,11 +482,11 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     type: TextInputType.phone,
                     maxLength: 10,
                     textInputAction: TextInputAction.next,
-                    controller: contactPWanumberController,
+                    controller: contactPerWANumberController,
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_company_lan_num,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -439,7 +498,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_email,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -447,11 +506,11 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   custom_edittext(
                     type: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
-                    controller: emailContactperController,
+                    controller: emailContactPerController,
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_company_website,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -463,7 +522,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_reporting_branch,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -475,7 +534,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_reporting_address,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -488,7 +547,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_city,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -503,7 +562,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      custom_text(
+                      const custom_text(
                         text: strings_name.str_logo_of_company,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
@@ -530,7 +589,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      custom_text(
+                      const custom_text(
                         text: strings_name.str_letter_of_intent,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
@@ -553,7 +612,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       ],
                     ),
                   ),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_file_size_limit,
                     alignment: Alignment.topLeft,
                     maxLines: 3,
@@ -564,7 +623,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                   CustomButton(
                       text: strings_name.str_submit,
                       click: () async {
-                        var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
+                        var phone = FormValidator.validatePhone(contactPerNumberController.text.toString().trim());
                         var cinNumber = FormValidator.validateCompanyNumber(companyIdnoController.text.toString().trim().toUpperCase(), companyIdentificationTypeValue);
                         if (nameofCompanyController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_company_name);
@@ -576,7 +635,11 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           Utils.showSnackBar(context, cinNumber);
                         } else if (typeofValue.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_type_of);
+                        } else if (companySlabValue.toString().trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_company_size);
                           // } else if (hubValue.toString().trim().isEmpty) {
+                        } else if (probableVacancyController.text.toString().trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_probable_vacancy);
                         } else if (accessibleHubsData!.isEmpty == true) {
                           Utils.showSnackBar(context, strings_name.str_empty_hub);
                         } else if (nameOfContactPController.text.trim().isEmpty) {
@@ -585,7 +648,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           Utils.showSnackBar(context, strings_name.str_empaty_contact_desi);
                         } else if (phone.isNotEmpty) {
                           Utils.showSnackBar(context, phone);
-                        } else if (emailContactperController.text.trim().isEmpty) {
+                        } else if (emailContactPerController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_company_email);
                         } else if (reportBranchController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_reporting_branch);
@@ -634,14 +697,16 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           response.company_sector = Utils.getTypeOfIndustryId(typeofValue)!.split(",");
                           response.contact_name = nameOfContactPController.text.trim().toString();
                           response.contact_designation = contactPdesiController.text.trim().toString();
-                          response.contact_number = contactPnumberController.text.trim().toString();
-                          response.contact_whatsapp_number = contactPWanumberController.text.trim().toString();
+                          response.contact_number = contactPerNumberController.text.trim().toString();
+                          response.contact_whatsapp_number = contactPerWANumberController.text.trim().toString();
                           response.company_landline = companyLandlineController.text.trim().toString();
-                          response.contact_email = emailContactperController.text.trim().toString();
+                          response.contact_email = emailContactPerController.text.trim().toString();
                           response.company_website = companyWebsiteController.text.trim().toString();
                           response.reporting_branch = reportBranchController.text.trim().toString();
                           response.reporting_address = reportAddressController.text.trim().toString();
                           response.city = cityController.text.trim().toString();
+                          response.existing_slab = companySlabValue.trim().toString();
+                          response.probable_vacancy = int.parse(probableVacancyController.text.trim().toString());
                           // response.hub_id = hubRecordId.split(",");
 
                           List<String> accessibleHubList = [];
@@ -707,7 +772,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                               var json = response.toJson();
                               json.removeWhere((key, value) => value == null);
 
-                              var resp = await companyDetailRepository.updateCompanyDetailApi(json, compnayDetailData![0].id.toString());
+                              var resp = await companyDetailRepository.updateCompanyDetailApi(json, companyDetailData![0].id.toString());
                               if (resp.id!.isNotEmpty) {
                                 setState(() {
                                   isVisible = false;

@@ -32,10 +32,10 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
   bool canUpdateDetails = false;
   bool isVisible = false;
   String helpPath = "", helpTitle = "";
-  late PlatformFile helpAttechmentData;
+  late PlatformFile helpAttachmentData;
 
   TextEditingController birthdateController = TextEditingController();
-  TextEditingController fathernameController = TextEditingController();
+  TextEditingController fatherNameController = TextEditingController();
 
   String formattedDate = "";
   var cloudinary;
@@ -56,7 +56,7 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
         formattedDate = loginData.birthdate ?? "";
       }
       if (loginData.father_full_name?.isNotEmpty == true) {
-        fathernameController.text = loginData.father_full_name ?? "";
+        fatherNameController.text = loginData.father_full_name ?? "";
       }
     }
   }
@@ -161,7 +161,7 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
                                   custom_edittext(
                                     type: TextInputType.text,
                                     textInputAction: TextInputAction.next,
-                                    controller: fathernameController,
+                                    controller: fatherNameController,
                                     maxLength: 1000,
                                     topValue: 2,
                                   ),
@@ -176,7 +176,7 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
                               Utils.showSnackBar(context, strings_name.str_empty_profile_pic);
                             } else if (canUpdateDetails && birthdateController.text.trim().toString().isEmpty) {
                               Utils.showSnackBar(context, strings_name.str_empty_brithdate);
-                            } else if (canUpdateDetails && fathernameController.text.trim().toString().isEmpty) {
+                            } else if (canUpdateDetails && fatherNameController.text.trim().toString().isEmpty) {
                               Utils.showSnackBar(context, strings_name.str_empty_father_name);
                             } else {
                               uploadData();
@@ -201,7 +201,7 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
         helpTitle = result.files.single.name;
         if (kIsWeb) {
           helpPath = result.files.single.bytes.toString();
-          helpAttechmentData = result.files.single;
+          helpAttachmentData = result.files.single;
         } else {
           helpPath = result.files.single.path!;
         }
@@ -224,7 +224,7 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
       } else {
         try {
           CloudinaryResponse response = await cloudinary.uploadFile(
-            CloudinaryFile.fromByteData(uint8ListToByteData(helpAttechmentData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_PROFILE_PIC, identifier: helpAttechmentData.name.toString()),
+            CloudinaryFile.fromByteData(uint8ListToByteData(helpAttachmentData.bytes!), resourceType: CloudinaryResourceType.Auto, folder: TableNames.CLOUDARY_FOLDER_PROFILE_PIC, identifier: helpAttachmentData.name.toString()),
           );
           path = response.secureUrl;
         } catch (e) {
@@ -241,7 +241,7 @@ class _StudentExtraDetailState extends State<StudentExtraDetail> {
         listData.add(map);
         Map<String, dynamic> query = {"profile_pic": listData};
         query.addIf(birthdateController.text.trim().isNotEmpty, "birthdate", birthdateController.text.trim());
-        query.addIf(fathernameController.text.trim().isNotEmpty, "father_full_name", fathernameController.text.trim());
+        query.addIf(fatherNameController.text.trim().isNotEmpty, "father_full_name", fatherNameController.text.trim());
 
         var resp = await apiRepository.updateStudentDataApi(query, PreferenceUtils.getLoginRecordId());
         if (resp != null) {

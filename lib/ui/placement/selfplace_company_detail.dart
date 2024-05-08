@@ -63,6 +63,22 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
 
   var cloudinary;
 
+  List<String> companyIdentificationTypeArr = <String>[
+    strings_name.str_identification_type,
+    strings_name.str_type_pan_number,
+    strings_name.str_type_gst_number,
+  ];
+  String companyIdentificationTypeValue = strings_name.str_identification_type;
+
+  List<String> companySlabArr = <String>[
+    TableNames.COMPANY_SLAB_20,
+    TableNames.COMPANY_SLAB_40,
+    TableNames.COMPANY_SLAB_60,
+    TableNames.COMPANY_SLAB_80,
+    TableNames.COMPANY_SLAB_100,
+  ];
+  String companySlabValue = TableNames.COMPANY_SLAB_20;
+
   @override
   void initState() {
     super.initState();
@@ -124,6 +140,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
         reportBranchController.text = companyDetailData![0].fields!.reporting_branch.toString();
         reportAddressController.text = companyDetailData![0].fields!.reporting_address.toString();
         cityController.text = companyDetailData![0].fields!.city.toString();
+        companySlabValue = companyDetailData![0].fields!.existing_slab ?? TableNames.COMPANY_SLAB_20;
         if (companyDetailData![0].fields!.company_loi != null) {
           loiPath = companyDetailData![0].fields!.company_loi!.first.url!;
           loiTitle = companyDetailData![0].fields!.company_loi!.first.filename!;
@@ -168,7 +185,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
               child: Column(
                 children: [
                   SizedBox(height: 10.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_name_of_company,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -180,19 +197,49 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_company_id_no,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
                   ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                          width: viewWidth,
+                          child: DropdownButtonFormField<String>(
+                            elevation: 16,
+                            value: companyIdentificationTypeValue,
+                            style: blackText16,
+                            focusColor: Colors.white,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                companyIdentificationTypeValue = newValue!;
+                              });
+                            },
+                            items: companyIdentificationTypeArr.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   custom_edittext(
                     type: TextInputType.text,
+                    capitalization: TextCapitalization.characters,
                     textInputAction: TextInputAction.next,
                     controller: companyIdnoController,
                     topValue: 5,
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_type_of_industry,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -227,12 +274,47 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                       ),
                     ],
                   ),
+                  const custom_text(
+                    text: strings_name.str_company_size,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                          width: viewWidth,
+                          child: DropdownButtonFormField<String>(
+                            elevation: 16,
+                            value: companySlabValue,
+                            style: blackText16,
+                            focusColor: Colors.white,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                companySlabValue = newValue!;
+                              });
+                            },
+                            items: companySlabArr.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
                   Visibility(
                     visible: PreferenceUtils.getIsLogin() != 1,
                     child: Column(
                       children: [
                         SizedBox(height: 5.h),
-                        custom_text(
+                        const custom_text(
                           text: strings_name.str_select_hub,
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -265,7 +347,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     ),
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -277,7 +359,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_designation,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -289,7 +371,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_number,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -302,7 +384,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_wanumber,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -315,7 +397,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_company_lan_num,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -327,7 +409,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_contact_person_email,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -339,7 +421,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_company_website,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -351,7 +433,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_reporting_branch,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -363,7 +445,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_reporting_address,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -376,7 +458,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                     topValue: 5,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_city,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -391,7 +473,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      custom_text(
+                      const custom_text(
                         text: strings_name.str_logo_of_company,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
@@ -418,7 +500,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      custom_text(
+                      const custom_text(
                         text: strings_name.str_letter_of_intent,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
@@ -441,7 +523,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                       ],
                     ),
                   ),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_file_size_limit,
                     alignment: Alignment.topLeft,
                     maxLines: 3,
@@ -453,10 +535,17 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                       text: strings_name.str_save,
                       click: () async {
                         var phone = FormValidator.validatePhone(contactPnumberController.text.toString().trim());
+                        var cinNumber = FormValidator.validateCompanyNumber(companyIdnoController.text.toString().trim().toUpperCase(), companyIdentificationTypeValue);
                         if (nameofCompanyController.text.trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_company_name);
+                        } else if (companyIdentificationTypeValue == strings_name.str_identification_type) {
+                          Utils.showSnackBar(context, strings_name.str_identification_type);
                         } else if (companyIdnoController.text.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_company_id_no);
+                        } else if (cinNumber.isNotEmpty) {
+                          Utils.showSnackBar(context, cinNumber);
+                        } else if (companySlabValue.toString().trim().isEmpty) {
+                          Utils.showSnackBar(context, strings_name.str_empty_company_size);
                         } else if (typeofValue.toString().trim().isEmpty) {
                           Utils.showSnackBar(context, strings_name.str_empty_type_of);
                         } else if (hubRecordId.isEmpty) {
@@ -527,6 +616,8 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                           response.reporting_branch = reportBranchController.text.trim().toString();
                           response.reporting_address = reportAddressController.text.trim().toString();
                           response.city = cityController.text.trim().toString();
+                          response.existing_slab = companySlabValue.trim().toString();
+                          response.probable_vacancy = 1;
                           response.hubIds = hubRecordId.split(",");
 
                           if (updatedPath.isNotEmpty) {

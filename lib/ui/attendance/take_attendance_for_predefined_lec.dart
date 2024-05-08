@@ -277,7 +277,7 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
 
                   AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
                   // request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
-                  request.employeeId = timeTableData.fields!.lectureId;
+                  request.employeeId = timeTableData.fields!.proxy_taker?.isNotEmpty == true ? timeTableData.fields?.proxy_taker : timeTableData.fields!.lectureId;
                   request.hubId = timeTableData.fields!.hubId!;
                   request.specializationId = timeTableData.fields!.specializationId!;
                   request.division = '${timeTableData.fields?.division}';

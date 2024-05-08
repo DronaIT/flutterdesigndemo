@@ -12,6 +12,7 @@ import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/subject_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -59,10 +60,16 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   List<BaseApiResponseWithSerializable<LoginFieldsResponse>>? studentList = [];
   String title = strings_name.str_filter;
 
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mentorMainArray = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mentorArray = [];
+  BaseApiResponseWithSerializable<ViewEmployeeResponse>? mentorResponse;
+  String mentorValue = "";
+
+  bool canViewMentors = false;
+
   @override
   void initState() {
     super.initState();
-
     hubResponseArray = PreferenceUtils.getHubList().records;
     var isLogin = PreferenceUtils.getIsLogin();
     if (isLogin == 2) {
@@ -94,6 +101,45 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
         }
       }
     }
+
+    getPermission();
+  }
+
+  Future<void> getPermission() async {
+    setState(() {
+      isVisible = true;
+    });
+    var loginData = PreferenceUtils.getLoginDataEmployee();
+    var query = "AND(FIND('${loginData.roleIdFromRoleIds!.join(',')}',role_ids)>0,module_ids='${TableNames.MODULE_STUDENT_DIRECTORY}')";
+    debugPrint(query);
+    try {
+      var data = await apiRepository.getPermissionsApi(query);
+      if (data.records!.isNotEmpty) {
+        for (var i = 0; i < data.records!.length; i++) {
+          if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_MENTORS) {
+            canViewMentors = true;
+          }
+        }
+        if (canViewMentors) {
+          fetchFaculty();
+        } else {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } else {
+        Utils.showSnackBar(context, strings_name.str_something_wrong);
+        setState(() {
+          isVisible = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isVisible = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   getSpecializations() {
@@ -115,6 +161,75 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
     }
   }
 
+  fetchFaculty() async {
+    var query = "AND({is_working} = 1, {assigned_students}!='')";
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      var data = await apiRepository.getEmployeeListApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          mentorArray?.clear();
+          mentorMainArray?.clear();
+        }
+        mentorMainArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          fetchFaculty();
+        } else {
+          mentorMainArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+          updateMentor();
+
+          setState(() {
+            isVisible = false;
+          });
+        }
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    } catch (e) {
+      final errorMessage = e.toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  updateMentor() {
+    mentorValue = "";
+    mentorResponse = null;
+    mentorArray?.clear();
+
+    for (int i = 0; i < (mentorMainArray?.length ?? 0); i++) {
+      bool contains = false;
+      if (hubValue.isEmpty) {
+        for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+          if (mentorMainArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+            contains = true;
+            break;
+          } else if (mentorMainArray![i].fields!.accessible_hub_codes?.contains(hubResponseArray![j].fields?.hubId) == true) {
+            contains = true;
+            break;
+          }
+        }
+      } else {
+        if (mentorMainArray![i].fields!.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) == true) {
+          contains = true;
+        } else if (mentorMainArray![i].fields!.accessible_hub_codes?.contains(hubResponse?.fields?.hubId) == true) {
+          contains = true;
+        }
+      }
+      if (contains) {
+        mentorArray?.add(mentorMainArray![i]);
+      }
+    }
+
+    mentorArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+    setState(() {
+      isVisible = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var viewWidth = MediaQuery.of(context).size.width;
@@ -128,7 +243,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                     children: [
                       SizedBox(height: 10.h),
                       custom_text(
-                        text: strings_name.str_select_hub_r,
+                        text: strings_name.str_select_hub,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
                         bottomValue: 0,
@@ -146,6 +261,9 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                               hubValue = newValue!.fields!.id!.toString();
                               hubResponse = newValue;
 
+                              if (canViewMentors) {
+                                updateMentor();
+                              }
                               getSpecializations();
                               if (hubValue.trim().isNotEmpty) {
                                 for (int i = 0; i < speResponseArray!.length; i++) {
@@ -176,6 +294,43 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                           }).toList(),
                         ),
                       ),
+                      canViewMentors
+                          ? Column(
+                              children: [
+                                SizedBox(height: 5.h),
+                                custom_text(
+                                  text: strings_name.str_select_mentor,
+                                  alignment: Alignment.topLeft,
+                                  textStyles: blackTextSemiBold16,
+                                  bottomValue: 0,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                  width: viewWidth,
+                                  child: DropdownButtonFormField<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
+                                    value: mentorResponse,
+                                    elevation: 16,
+                                    style: blackText16,
+                                    focusColor: Colors.white,
+                                    onChanged: (BaseApiResponseWithSerializable<ViewEmployeeResponse>? newValue) {
+                                      setState(() {
+                                        mentorValue = newValue!.id!.toString();
+                                        mentorResponse = newValue;
+
+                                        setState(() {});
+                                      });
+                                    },
+                                    items: mentorArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>>((BaseApiResponseWithSerializable<ViewEmployeeResponse> value) {
+                                      return DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
+                                        value: value,
+                                        child: Text(value.fields!.employeeName!.toString()),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
                       SizedBox(height: 5.h),
                       custom_text(
                         text: strings_name.str_select_specialization,
@@ -301,7 +456,8 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                                               // getUnits();
                                             });
                                           },
-                                          items: subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
+                                          items:
+                                              subjectResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>>((BaseApiResponseWithSerializable<SubjectResponse> value) {
                                             return DropdownMenuItem<BaseApiResponseWithSerializable<SubjectResponse>>(
                                               value: value,
                                               child: Text(value.fields!.subjectTitle!.toString(), overflow: TextOverflow.visible),
@@ -318,8 +474,12 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                       SizedBox(height: 10.h),
                       CustomButton(
                         click: () async {
-                          if (hubValue.isEmpty) {
-                            Utils.showSnackBar(context, strings_name.str_empty_hub);
+                          if (hubValue.isEmpty && mentorValue.isEmpty) {
+                            if (canViewMentors) {
+                              Utils.showSnackBar(context, strings_name.str_empty_mentor_hub);
+                            } else {
+                              Utils.showSnackBar(context, strings_name.str_empty_hub);
+                            }
                           } else {
                             viewStudent = [];
                             studentList = [];
@@ -378,13 +538,25 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
   }
 
   Future<void> fetchRecords() async {
-    var query = "AND(SEARCH('${hubResponse?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+    var query = "AND(";
+    if (mentorValue.isNotEmpty) {
+      query += "last_mentor='${mentorResponse?.fields?.mobileNumber}'";
+    }
+
+    if (hubValue.isNotEmpty) {
+      if (mentorValue.isNotEmpty) {
+        query += ",";
+      }
+      query += "SEARCH('${hubResponse?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
+    }
 
     if (speValue.isNotEmpty) {
       query += ",${TableNames.CLM_SPE_IDS}='$speValue'";
     }
     if (semesterValue != -1) {
       query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+    } else {
+      query += ",${TableNames.CLM_SEMESTER}!='7'";
     }
     if (divisionValue.isNotEmpty) {
       query += ",${TableNames.CLM_DIVISION}='${divisionValue.toString()}'";
@@ -445,6 +617,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
           {"specialization": speResponse?.fields?.specializationName},
           {"hub": hubResponse?.fields?.hubName},
           {"subjectid": subjectResponse?.id},
+          {"mentor": canViewMentors ? mentorResponse?.fields?.employeeName : " "},
         ])?.then((result) {
           if (result != null && result) {
             // Get.back(closeOverlays: true);
