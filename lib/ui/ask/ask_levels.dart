@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AddAskLevels extends StatefulWidget {
-  const AddAskLevels({super.key});
+class AskLevels extends StatefulWidget {
+  const AskLevels({super.key});
 
   @override
-  State<AddAskLevels> createState() => _AddAskLevelsState();
+  State<AskLevels> createState() => _AskLevelsState();
 }
 
-class _AddAskLevelsState extends State<AddAskLevels> {
+class _AskLevelsState extends State<AskLevels> {
 
   @override
   void initState() {

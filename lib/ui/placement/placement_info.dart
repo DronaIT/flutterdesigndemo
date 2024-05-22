@@ -18,6 +18,7 @@ import 'package:flutterdesigndemo/ui/placement/apply_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/leave_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/selected_for_internship.dart';
 import 'package:flutterdesigndemo/ui/placement/shortlisted_for_internship.dart';
+import 'package:flutterdesigndemo/ui/placement/upload_documents_placement.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -48,6 +49,7 @@ class _PlacementInfoState extends State<PlacementInfo> {
   var cloudinary;
   bool canEnableResignationPermission = false, finalPlacementProcessVisible = false;
   bool applyInternshipFinal = false, appliedInternshipFinal = false, shortListedInternshipFinal = false, selectedInternshipFinal = false;
+  bool uploadResume = false;
 
   List<BaseApiResponseWithSerializable<JobOpportunityResponse>>? jobOpportunityList = [];
   String offset = "";
@@ -116,6 +118,9 @@ class _PlacementInfoState extends State<PlacementInfo> {
             }
             if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_SELECTED_INTERNSHIP_FINAL) {
               selectedInternshipFinal = true;
+            }
+            if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPLOAD_RESUME) {
+              uploadResume = true;
             }
           }
         } else {
@@ -350,6 +355,27 @@ class _PlacementInfoState extends State<PlacementInfo> {
                                         Get.to(() => const SelectedForInternship(), arguments: [
                                           {"placementType": 1}
                                         ]);
+                                      },
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: jobOpportunityList?.isNotEmpty == true && uploadResume,
+                                    child: GestureDetector(
+                                      child: Card(
+                                        elevation: 5,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                          child: const Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(strings_name.str_upload_resume, textAlign: TextAlign.center, style: blackTextSemiBold16),
+                                              Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Get.to(() => const UploadDocumentsPlacement());
                                       },
                                     ),
                                   ),

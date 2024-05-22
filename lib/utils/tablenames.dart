@@ -113,6 +113,9 @@ class TableNames {
   static const TBL_PUNCH_DATA = "TBL_PUNCH_DATA";
   static const TBL_PLACEMENT_MARKS = "TBL_PLACEMENT_MARKS";
   static const TBL_STUDENT_REFERRALS = "TBL_STUDENT_REFERRALS";
+  static const TBL_ASK_PARAMETERS = "TBL_ASK_PARAMETERS";
+  static const TBL_ASK_LEVEL = "TBL_ASK_LEVEL";
+  static const TBL_ASK_MANAGEMENT = "TBL_ASK_MANAGEMENT";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -299,7 +302,8 @@ class TableNames {
   static const PERMISSION_ID_ADD_ASK_LEVELS = "DP1801";
   static const PERMISSION_ID_ADD_ASK_PARAMETERS = "DP1802";
   static const PERMISSION_ID_NEW_EVALUATION = "DP1803";
-  static const PERMISSION_ID_UPDATE_EVALUATION = "DP1804";
+  static const PERMISSION_ID_UPDATE_ASK_PARAMETERS = "DP1804";
+  static const PERMISSION_ID_UPDATE_EVALUATION = "DP1805";
 
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";

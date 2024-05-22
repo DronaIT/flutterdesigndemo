@@ -4,6 +4,7 @@ import 'package:flutterdesigndemo/api/api_repository.dart';
 import 'package:flutterdesigndemo/api/service_locator.dart';
 import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
+import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
@@ -27,8 +28,10 @@ class SpecializationSelection extends StatefulWidget {
 class _SpecializationSelectionState extends State<SpecializationSelection> {
   bool isVisible = false;
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
+  List<BaseApiResponseWithSerializable<SpecializationResponse>>? displayData = [];
 
   final apiRepository = getIt.get<ApiRepository>();
+  var controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -43,23 +46,24 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
     setState(() {
       isVisible = true;
     });
-    try{
+    try {
       var data = await apiRepository.getSpecializationApi();
       if (data.records?.isNotEmpty == true) {
         PreferenceUtils.setSpecializationList(data);
-        setState(() {
-          specializationData = data.records;
-          for (var i = 0; i < selectedData!.length; i++) {
-            for (var j = 0; j < specializationData!.length; j++) {
-              if (specializationData![j].fields!.specializationId == selectedData[i].fields!.specializationId) {
-                specializationData![j].fields!.selected = true;
-                break;
-              }
+        specializationData = data.records;
+        for (var i = 0; i < selectedData!.length; i++) {
+          for (var j = 0; j < specializationData!.length; j++) {
+            if (specializationData![j].fields!.specializationId == selectedData[i].fields!.specializationId) {
+              specializationData![j].fields!.selected = true;
+              break;
             }
           }
-        });
+        }
+
+        displayData = specializationData;
+        setState(() {});
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -79,11 +83,32 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
       body: Stack(children: [
         specializationData?.isNotEmpty == true
             ? Column(children: [
+                SizedBox(height: 10.h),
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      displayData = [];
+                      displayData = List.from(specializationData!);
+                      setState(() {});
+                    } else {
+                      displayData = [];
+                      for (var i = 0; i < specializationData!.length; i++) {
+                        if (specializationData![i].fields!.specializationName!.toLowerCase().contains(value.toLowerCase())) {
+                          displayData?.add(specializationData![i]);
+                        }
+                      }
+                      setState(() {});
+                    }
+                  },
+                ),
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: ListView.builder(
-                        itemCount: specializationData?.length,
+                        itemCount: displayData?.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 5,
@@ -93,14 +118,19 @@ class _SpecializationSelectionState extends State<SpecializationSelection> {
                                 color: colors_name.colorWhite,
                                 padding: const EdgeInsets.all(12),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                  Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
-                                  if (specializationData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)
+                                  Expanded(child: Text("${displayData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackTextSemiBold16)),
+                                  if (displayData![index].fields!.selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary)
                                 ]),
                               ),
                               onTap: () {
-                                setState(() {
-                                  specializationData![index].fields!.selected = !specializationData![index].fields!.selected;
-                                });
+                                displayData![index].fields!.selected = !displayData![index].fields!.selected;
+                                for (int i = 0; i < (specializationData?.length ?? 0); i++) {
+                                  if (displayData![index].fields?.specializationId == specializationData![i].fields?.specializationId) {
+                                    specializationData![i].fields?.selected = displayData![index].fields!.selected;
+                                    break;
+                                  }
+                                }
+                                setState(() {});
                               },
                             ),
                           );

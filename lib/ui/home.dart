@@ -84,6 +84,7 @@ class _HomeState extends State<Home> {
   String warningLetterString = "";
 
   Future<void> getRecords(String roleId) async {
+    // var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0))";
     var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0),is_active=1)";
     setState(() {
       isVisible = true;

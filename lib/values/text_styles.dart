@@ -278,6 +278,19 @@ const greenTextSemiBold15 = TextStyle(
   color: colors_name.green,
 );
 
+const redTextSemiBold15 = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+  color: colors_name.colorPrimary,
+);
+
+const blueTextSemiBold15 = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+  color: colors_name.blue,
+);
+
+
 const errorTextStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,

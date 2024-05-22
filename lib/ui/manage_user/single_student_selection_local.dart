@@ -22,14 +22,14 @@ import 'package:get/get.dart';
 import '../../api/dio_exception.dart';
 import '../../customwidget/custom_edittext_search.dart';
 
-class StudentSelectionLocal extends StatefulWidget {
-  const StudentSelectionLocal({Key? key}) : super(key: key);
+class SingleStudentSelectionLocal extends StatefulWidget {
+  const SingleStudentSelectionLocal({Key? key}) : super(key: key);
 
   @override
-  State<StudentSelectionLocal> createState() => _StudentSelectionLocalState();
+  State<SingleStudentSelectionLocal> createState() => _SingleStudentSelectionLocalState();
 }
 
-class _StudentSelectionLocalState extends State<StudentSelectionLocal> {
+class _SingleStudentSelectionLocalState extends State<SingleStudentSelectionLocal> {
   bool isVisible = false;
   List<StudentResponse>? studentData = [];
   List<StudentResponse>? mainStudentData = [];
@@ -154,7 +154,7 @@ class _StudentSelectionLocalState extends State<StudentSelectionLocal> {
         data.studentMobileNumber = hubResponse!.fields!.studentMobileNumber![i];
         data.studentSemester = hubResponse!.fields!.studentSemester![i];
         data.studentSpecializationIds = hubResponse!.fields!.studentSpecializationIds![i];
-        data.studentHubIds = hubResponse!.fields!.hubId![i];
+        data.studentHubIds = hubResponse!.fields!.hubId;
 
         mainStudentData?.add(data);
       }
@@ -400,27 +400,33 @@ class _StudentSelectionLocalState extends State<StudentSelectionLocal> {
                                 }
                               }
                               setState(() {});
+                              if (studentData![index].selected) {
+                                Get.back(result: [studentData![index]]);
+                              }
                             },
                           ),
                         );
                       })),
               SizedBox(height: 20.h),
-              CustomButton(
-                text: strings_name.str_submit,
-                click: () {
-                  List<StudentResponse>? selectedData = [];
-                  for (var i = 0; i < mainStudentData!.length; i++) {
-                    if (mainStudentData![i].selected) {
-                      selectedData.add(mainStudentData![i]);
+              Visibility(
+                visible: false,
+                child: CustomButton(
+                  text: strings_name.str_submit,
+                  click: () {
+                    List<StudentResponse>? selectedData = [];
+                    for (var i = 0; i < mainStudentData!.length; i++) {
+                      if (mainStudentData![i].selected) {
+                        selectedData.add(mainStudentData![i]);
+                      }
                     }
-                  }
 
-                  if (selectedData.isNotEmpty == true) {
-                    Get.back(result: selectedData);
-                  } else {
-                    Utils.showSnackBar(context, strings_name.str_empty_select_student);
-                  }
-                },
+                    if (selectedData.isNotEmpty == true) {
+                      Get.back(result: selectedData);
+                    } else {
+                      Utils.showSnackBar(context, strings_name.str_empty_select_student);
+                    }
+                  },
+                ),
               )
             ]),
           ),

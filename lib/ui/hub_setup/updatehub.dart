@@ -58,14 +58,14 @@ class _UpdateHubState extends State<UpdateHub> {
     });
     // var query = "SEARCH('${data.fields!.hubId}',${TableNames.CLM_HUB_IDS},0)";
     var query = "FIND('${Utils.getHubIds(data.id)}',${TableNames.CLM_HUB_IDS}, 0)";
-    try{
+    try {
       var speData = await apiRepository.getSpecializationDetailApi(query);
       if (speData.records?.isNotEmpty == true) {
         setState(() {
           specializationData = speData.records;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
@@ -171,7 +171,10 @@ class _UpdateHubState extends State<UpdateHub> {
                                     padding: const EdgeInsets.all(10),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.center, style: blackText16), const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)],
+                                      children: [
+                                        Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)),
+                                        const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                      ],
                                     ),
                                   ),
                                   onTap: () {
@@ -202,11 +205,16 @@ class _UpdateHubState extends State<UpdateHub> {
                           selectedSpecializationData.add(specializationData![i].id.toString());
                         }
 
-                        Map<String, dynamic> updateEmployee = {"hub_name": hubController.text.toString(), "city": cityController.text.toString(), "address": addressController.text.toString(), "TBL_SPECIALIZATION": selectedSpecializationData};
+                        Map<String, dynamic> updateEmployee = {
+                          "hub_name": hubController.text.toString(),
+                          "city": cityController.text.toString(),
+                          "address": addressController.text.toString(),
+                          "TBL_SPECIALIZATION": selectedSpecializationData
+                        };
                         setState(() {
                           isVisible = true;
                         });
-                        try{
+                        try {
                           var updatehub = await apiRepository.updateHubApi(updateEmployee, id);
                           if (updatehub != null) {
                             setState(() {
@@ -221,14 +229,13 @@ class _UpdateHubState extends State<UpdateHub> {
                             });
                             Utils.showSnackBar(context, strings_name.str_something_wrong);
                           }
-                        }on DioError catch (e) {
+                        } on DioError catch (e) {
                           setState(() {
                             isVisible = false;
                           });
                           final errorMessage = DioExceptions.fromDioError(e).toString();
                           Utils.showSnackBarUsingGet(errorMessage);
                         }
-
                       }
                     })
               ],
@@ -250,7 +257,7 @@ class _UpdateHubState extends State<UpdateHub> {
     request.hub_name = hubController.text.toString();
     request.city = cityController.text.toString();
     request.address = addressController.text.toString();
-    try{
+    try {
       var resp = await apiRepository.addHubApi(request);
       if (resp.id!.isNotEmpty) {
         setState(() {
@@ -264,13 +271,12 @@ class _UpdateHubState extends State<UpdateHub> {
           isVisible = false;
         });
       }
-    }on DioError catch (e) {
+    } on DioError catch (e) {
       setState(() {
         isVisible = false;
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
     }
-
   }
 }

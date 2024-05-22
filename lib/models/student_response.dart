@@ -4,6 +4,9 @@ class StudentResponse {
   String? studentMobileNumber;
   String? studentSemester;
   String? studentSpecializationIds;
+  String? studentHubIds;
+  String? askScore;
+  String? askTotal;
   bool selected = false;
 
   StudentResponse({
@@ -12,6 +15,9 @@ class StudentResponse {
     this.studentMobileNumber,
     this.studentSemester,
     this.studentSpecializationIds,
+    this.studentHubIds,
+    this.askScore,
+    this.askTotal,
   });
 
   StudentResponse.fromJson(Map<String, dynamic> json) {
@@ -20,6 +26,9 @@ class StudentResponse {
     studentMobileNumber = json['studentMobileNumber'];
     studentSemester = json['studentSemester'];
     studentSpecializationIds = json['studentSpecializationIds'];
+    studentHubIds = json['studentHubIds'];
+    askScore = json['askScore'];
+    askTotal = json['askTotal'];
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +38,9 @@ class StudentResponse {
     data['studentMobileNumber'] = studentMobileNumber;
     data['studentSemester'] = studentSemester;
     data['studentSpecializationIds'] = studentSpecializationIds;
+    data['studentHubIds'] = studentHubIds;
+    data['askScore'] = askScore;
+    data['askTotal'] = askTotal;
     return data;
   }
 }

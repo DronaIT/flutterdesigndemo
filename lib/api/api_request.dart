@@ -5,6 +5,9 @@ import 'package:flutterdesigndemo/api/dio_client.dart';
 import 'package:flutterdesigndemo/models/App_data_response.dart';
 import 'package:flutterdesigndemo/models/add_timetable_model.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
+import 'package:flutterdesigndemo/models/ask_evaluation_response.dart';
+import 'package:flutterdesigndemo/models/ask_level_response.dart';
+import 'package:flutterdesigndemo/models/ask_parameter_response.dart';
 import 'package:flutterdesigndemo/models/fees_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
@@ -24,9 +27,11 @@ import 'package:flutterdesigndemo/models/request/add_specialization_request.dart
 import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
 import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
 import 'package:flutterdesigndemo/models/request/add_units_request.dart';
+import 'package:flutterdesigndemo/models/request/ask_parameter_request.dart';
 import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/request/evaluation_request.dart';
 import 'package:flutterdesigndemo/models/request/fees_request.dart';
 import 'package:flutterdesigndemo/models/request/marketing_request.dart';
 import 'package:flutterdesigndemo/models/request/student_referral_request.dart';
@@ -52,6 +57,7 @@ import 'package:flutterdesigndemo/models/update_topics.dart';
 import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
+import 'package:flutterdesigndemo/ui/ask/ask_evaluation.dart';
 import 'package:flutterdesigndemo/utils/tablenames.dart';
 
 import '../models/add_announcement_response.dart';
@@ -97,8 +103,13 @@ class ApiRequest {
 
   Future<BaseResponse<AnnouncementResponse>> fetchAnnouncementApi(String formula, [String offset = ""]) async {
     try {
-
-      Map<dynamic, dynamic> someMap = {"filterByFormula": formula,"sort": [{'field': 'id', 'direction': 'desc'}], if (offset.isNotEmpty) "offset": offset};
+      Map<dynamic, dynamic> someMap = {
+        "filterByFormula": formula,
+        "sort": [
+          {'field': 'id', 'direction': 'desc'}
+        ],
+        if (offset.isNotEmpty) "offset": offset
+      };
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.post('${TableNames.TBL_ANNOUNCEMENT}/listRecords', data: jsonEncode(someMap), options: Options(headers: header));
       return BaseResponse<AnnouncementResponse>.fromJson(response.data, (response) => AnnouncementResponse.fromJson(response));
@@ -110,7 +121,14 @@ class ApiRequest {
   Future<BaseResponse<TimeTableResponseClass>> fetchTimeTablesApi(String formula, [String offset = "", int? pageSize]) async {
     try {
       // Map<dynamic, dynamic> someMap = {"filterByFormula": formula,"sort": [{'field': 'id', 'direction': 'asc'}], if (offset.isNotEmpty) "offset": offset,if (pageSize!=null) "pageSize": pageSize};
-      Map<dynamic, dynamic> someMap = {"filterByFormula": formula,"sort": [{'field': 'date', 'direction': 'asc'}], if (offset.isNotEmpty) "offset": offset,if (pageSize!=null) "pageSize": pageSize};
+      Map<dynamic, dynamic> someMap = {
+        "filterByFormula": formula,
+        "sort": [
+          {'field': 'date', 'direction': 'asc'}
+        ],
+        if (offset.isNotEmpty) "offset": offset,
+        if (pageSize != null) "pageSize": pageSize
+      };
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
       final Response response = await dioClient.post('${TableNames.TBL_TIMETABLE}/listRecords', data: jsonEncode(someMap), options: Options(headers: header));
       return BaseResponse<TimeTableResponseClass>.fromJson(response.data, (response) => TimeTableResponseClass.fromJson(response));
@@ -1089,6 +1107,64 @@ class ApiRequest {
 
       Map<String, dynamic> response = await dioClient.patch("${TableNames.TBL_STUDENT_REFERRALS}/$recordId", options: Options(headers: header), data: jsonEncode(someMap));
       return BaseApiResponseWithSerializable<StudentReferralResponse>.fromJson(response, (response) => StudentReferralResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<ASKParameterResponse>> getAskParametersApi(String parameterFormula, [String offset = ""]) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": parameterFormula, if (offset.isNotEmpty) "offset": offset};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_ASK_PARAMETERS, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<ASKParameterResponse>.fromJson(response.data, (response) => ASKParameterResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<ASKLevelResponse>> getAskLevelsApi(String askLevelFormula, [String offset = ""]) async {
+    try {
+      Map<String, dynamic> someMap = {"filterByFormula": askLevelFormula, if (offset.isNotEmpty) "offset": offset};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_ASK_LEVEL, queryParameters: someMap, options: Options(headers: header));
+      return BaseLoginResponse<ASKLevelResponse>.fromJson(response.data, (response) => ASKLevelResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<ASKParameterResponse>> addAskParametersApi(ASKParameterRequest askParameterReq) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": askParameterReq};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_ASK_PARAMETERS, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<ASKParameterResponse>.fromJson(response.data, (response) => ASKParameterResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<ASKParameterResponse>> updateAskParametersApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": updateFormula};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      Map<String, dynamic> response = await dioClient.patch("${TableNames.TBL_ASK_PARAMETERS}/$recordId", options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<ASKParameterResponse>.fromJson(response, (response) => ASKParameterResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AskEvaluationResponse>> addAskEvaluationApi(EvaluationRequest evaluationReq) async {
+    try {
+      Map<String, dynamic> someMap = {"fields": evaluationReq, "typecast": true};
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+      final Response response = await dioClient.post(TableNames.TBL_ASK_MANAGEMENT, options: Options(headers: header), data: jsonEncode(someMap));
+      return BaseApiResponseWithSerializable<AskEvaluationResponse>.fromJson(response.data, (response) => AskEvaluationResponse.fromJson(response));
     } catch (e) {
       rethrow;
     }

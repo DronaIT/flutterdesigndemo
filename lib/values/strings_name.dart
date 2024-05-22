@@ -1005,5 +1005,31 @@ class strings_name {
   static const String str_levels_management = "Levels Management";
   static const String str_add_ask_levels = "+ Add ASK Levels";
   static const String str_add_ask_parameters = "+ Add ASK Parameters";
-  static const String str_new_evaluation = "+ New Evaluation";
+  static const String str_new_evaluation = "New Evaluation";
+
+  static const String str_ask_parameters = "ASK Parameters";
+  static const String str_ask_type_attitude = "Attitude";
+  static const String str_ask_type_skill = "Skill";
+  static const String str_ask_type_knowledge = "Knowledge";
+
+  static const String str_ask_parameter_title = "ASK Parameter Title";
+  static const String str_ask_parameter_desc = "ASK Parameter Description";
+  static const String str_ask_level = "ASK Level";
+  static const String str_select_ask_level = "Select ASK Level";
+  static const String str_ask_parameter_total_marks = "ASK Parameter Total Marks";
+  static const String str_empty_ask_parameter_title = "Please provide ASK Parameter Title";
+  static const String str_empty_ask_parameter_desc = "Please provide ASK Parameter Description";
+  static const String str_empty_ask_level = "Please select ASK Level";
+  static const String str_empty_ask_parameter_total_marks = "Please provide ASK Parameter Total Marks";
+  static const String str_invalid_ask_parameter_total_marks = "Please provide valid ASK Parameter Total Marks";
+
+  static const String str_ask_parameter_added = "ASK Parameter is added successfully.";
+  static const String str_ask_parameter_updated = "ASK Parameter is updated successfully.";
+  static const String str_select_ask_level_for_evaluation = "Select ASK Level for new Evaluation";
+
+  static const String str_ask_param_type_normal = "Normal Marks Entry";
+  static const String str_ask_param_type_other_msg = "Marks will be updated in realtime, no actions needed from your end for this parameter.";
+
+  static const String str_no_parameter_linked = "No parameters are linked with this ASK level.";
+  static const String str_new_evaluation_added = "New Evaluation added successfully.";
 }
