@@ -89,7 +89,11 @@ class _StudentHistoryState extends State<StudentHistory> {
           }
         }
       }
-      totalPresentPercentage = ((total_present * 100) / total_lecture).toStringAsFixed(2);
+      if (total_lecture > 0) {
+        totalPresentPercentage = ((total_present * 100) / total_lecture).toStringAsFixed(2);
+      } else {
+        totalPresentPercentage = "0.00";
+      }
     }
   }
 
@@ -140,7 +144,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       ],
                     ),
                     custom_text(
-                      text: "${strings_name.str_email}: ${data.records!.first.fields!.email!}",
+                      text: "${strings_name.str_email}: ${data.records!.first.fields!.email ?? ''}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       maxLines: 3,
@@ -149,7 +153,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       leftValue: 10,
                     ),
                     custom_text(
-                      text: "${strings_name.str_hub_name}: ${Utils.getHubName(data.records!.first.fields!.hubIdFromHubIds![0])!}",
+                      text: "${strings_name.str_hub_name}: ${Utils.getHubName(data.records!.first.fields!.hubIdFromHubIds![0]) ?? ''}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       topValue: 10,
@@ -158,7 +162,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       leftValue: 10,
                     ),
                     custom_text(
-                      text: "${strings_name.str_code}: ${data.records!.first.fields!.enrollmentNumber!}",
+                      text: "${strings_name.str_code}: ${data.records!.first.fields!.enrollmentNumber ?? ''}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       topValue: 10,
@@ -166,7 +170,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       leftValue: 10,
                     ),
                     custom_text(
-                      text: "${strings_name.str_university_number}: ${data.records!.first.fields!.sr_number!}",
+                      text: "${strings_name.str_university_number}: ${data.records!.first.fields!.sr_number ?? ''}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       topValue: 10,
@@ -174,7 +178,7 @@ class _StudentHistoryState extends State<StudentHistory> {
                       leftValue: 10,
                     ),
                     custom_text(
-                      text: "${strings_name.str_specilization}: ${Utils.getSpecializationName(data.records!.first.fields!.specializationIds![0])!}",
+                      text: "${strings_name.str_specilization}: ${Utils.getSpecializationName(data.records!.first.fields!.specializationIds![0]) ?? ''}",
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
                       maxLines: 2,
