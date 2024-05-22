@@ -8,9 +8,9 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_button.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
-import 'package:flutterdesigndemo/models/student_response.dart';
+import 'package:flutterdesigndemo/models/company_response.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
-import 'package:flutterdesigndemo/ui/manage_user/student_selection_local.dart';
+import 'package:flutterdesigndemo/ui/placement/company_selection_local.dart';
 import 'package:flutterdesigndemo/ui/punch_leaves/single_employee_selection.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
 import 'package:flutterdesigndemo/values/colors_name.dart';
@@ -18,27 +18,27 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 
-class AssignMentor extends StatefulWidget {
-  const AssignMentor({super.key});
+class AssignPlacementExecutiveNew extends StatefulWidget {
+  const AssignPlacementExecutiveNew({super.key});
 
   @override
-  State<AssignMentor> createState() => _AssignMentorState();
+  State<AssignPlacementExecutiveNew> createState() => _AssignPlacementExecutiveNewState();
 }
 
-class _AssignMentorState extends State<AssignMentor> {
+class _AssignPlacementExecutiveNewState extends State<AssignPlacementExecutiveNew> {
   bool isVisible = false;
 
   final apiRepository = getIt.get<ApiRepository>();
   String offset = "";
 
-  List<StudentResponse>? selectedStudentResponse = [];
+  List<CompanyResponse>? selectedCompanyResponse = [];
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? employeeData = [];
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppWidgets.appBarWithoutBack(strings_name.str_assign_mentor),
+        appBar: AppWidgets.appBarWithoutBack(strings_name.str_assign_placement_executive),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -55,34 +55,34 @@ class _AssignMentorState extends State<AssignMentor> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             custom_text(
-                              text: selectedStudentResponse != null && selectedStudentResponse?.isNotEmpty == true ? strings_name.str_selected_student : strings_name.str_select_student,
+                              text: selectedCompanyResponse != null && selectedCompanyResponse?.isNotEmpty == true ? strings_name.str_selected_company : strings_name.str_select_company,
                               alignment: Alignment.topLeft,
                               textStyles: blackTextSemiBold16,
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12.w),
-                              child: Icon(selectedStudentResponse != null && selectedStudentResponse?.isNotEmpty == true ? Icons.edit : Icons.arrow_forward_ios_rounded, size: 22, color: Colors.black),
+                              child: Icon(selectedCompanyResponse != null && selectedCompanyResponse?.isNotEmpty == true ? Icons.edit : Icons.arrow_forward_ios_rounded, size: 22, color: Colors.black),
                             ),
                           ],
                         ),
                       ),
                       onTap: () {
-                        Get.to(const StudentSelectionLocal(), arguments: selectedStudentResponse)?.then((result) {
+                        Get.to(const CompanySelectionLocal(), arguments: selectedCompanyResponse)?.then((result) {
                           if (result != null) {
                             setState(() {
-                              selectedStudentResponse = result;
+                              selectedCompanyResponse = result;
                             });
                           }
                         });
                       },
                     ),
-                    selectedStudentResponse != null && selectedStudentResponse?.isNotEmpty == true
+                    selectedCompanyResponse != null && selectedCompanyResponse?.isNotEmpty == true
                         ? Card(
                             elevation: 1,
                             child: Column(
                               children: [
                                 custom_text(
-                                  text: "New Selected : ${selectedStudentResponse?.length} Students",
+                                  text: "New Selected : ${selectedCompanyResponse?.length} Companies",
                                   alignment: Alignment.topLeft,
                                   textStyles: blackTextSemiBold16,
                                 ),
@@ -98,7 +98,7 @@ class _AssignMentorState extends State<AssignMentor> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const custom_text(
+                            custom_text(
                               text: strings_name.str_assign_to,
                               alignment: Alignment.topLeft,
                               textStyles: blackTextSemiBold16,
@@ -145,15 +145,7 @@ class _AssignMentorState extends State<AssignMentor> {
                                 custom_text(
                                   text: "Role: ${employeeData?.last.fields?.roleTitleFromRoleIds?.last}",
                                   alignment: Alignment.topLeft,
-                                  topValue: 5,
-                                  bottomValue: 0,
                                   textStyles: blackTextSemiBold16,
-                                ),
-                                custom_text(
-                                  text: "Currently Managing: ${employeeData?.last.fields?.assigned_students?.length ?? 0} Students",
-                                  alignment: Alignment.topLeft,
-                                  textStyles: blackTextSemiBold16,
-                                  topValue: 5,
                                 ),
                               ],
                             ),
@@ -163,8 +155,8 @@ class _AssignMentorState extends State<AssignMentor> {
                     CustomButton(
                       text: strings_name.str_submit,
                       click: () {
-                        if (selectedStudentResponse == null || selectedStudentResponse?.isEmpty == true) {
-                          Utils.showSnackBar(context, strings_name.str_empty_select_student);
+                        if (selectedCompanyResponse == null) {
+                          Utils.showSnackBar(context, strings_name.str_empty_company);
                         } else if (employeeData == null || employeeData?.isEmpty == true) {
                           Utils.showSnackBar(context, strings_name.str_empty_select_employee);
                         } else {
@@ -198,24 +190,21 @@ class _AssignMentorState extends State<AssignMentor> {
       setState(() {
         isVisible = true;
       });
-
       List<String> studentData = [];
-      studentData.addAll(employeeData?.last.fields?.assigned_students ?? []);
-      for (int i = 0; i < (selectedStudentResponse?.length ?? 0); i++) {
-        if (!studentData.contains(selectedStudentResponse![i].studentId)) {
-          studentData.add(selectedStudentResponse![i].studentId!);
+      studentData.addAll(employeeData?.last.fields?.assigned_company ?? []);
+      for (int i = 0; i < (selectedCompanyResponse?.length ?? 0); i++) {
+        if (!studentData.contains(selectedCompanyResponse![i].companyId)) {
+          studentData.add(selectedCompanyResponse![i].companyId!);
         }
       }
 
-      Map<String, dynamic> updateEmployee = {
-        "assigned_students": studentData,
-      };
-      var resp = await apiRepository.updateEmployeeApi(updateEmployee, employeeData?.last.id.toString() ?? "");
+      Map<String, dynamic> mapRequest = {"assigned_company": studentData};
+      var resp = await apiRepository.updateEmployeeApi(mapRequest, employeeData?.last.id.toString() ?? "");
       if (resp.id!.isNotEmpty) {
         setState(() {
           isVisible = false;
         });
-        Utils.showSnackBar(context, strings_name.str_mentor_assigned);
+        Utils.showSnackBar(context, strings_name.str_company_updated);
         await Future.delayed(const Duration(milliseconds: 2000));
         Get.back(closeOverlays: true, result: true);
       } else {

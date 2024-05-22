@@ -32,7 +32,7 @@ class _CompanySelectionLocalState extends State<CompanySelectionLocal> {
   List<CompanyResponse>? companyData = [];
   List<CompanyResponse>? mainCompanyData = [];
 
-  CompanyResponse selectedData = CompanyResponse();
+  List<CompanyResponse> selectedData = [];
 
   BaseApiResponseWithSerializable<HubResponse>? hubResponse;
   String hubValue = "";
@@ -118,130 +118,142 @@ class _CompanySelectionLocalState extends State<CompanySelectionLocal> {
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_select_company),
       body: Stack(children: [
         SingleChildScrollView(
-            child: Column(children: [
-          custom_text(
-            text: strings_name.str_select_hub,
-            alignment: Alignment.topLeft,
-            textStyles: blackTextSemiBold16,
-            bottomValue: 0,
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.h),
-            width: MediaQuery.of(context).size.width,
-            child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
-              value: hubResponse,
-              elevation: 16,
-              style: blackText16,
-              focusColor: Colors.white,
-              onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
-                setState(() {
-                  hubValue = newValue!.id!.toString();
-                  hubResponse = newValue;
-                  getCompanyRecords();
-                });
-              },
-              items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
-                return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
-                  value: value,
-                  child: Text(value.fields!.hubName!.toString()),
-                );
-              }).toList(),
+            child: Column(
+          children: [
+            custom_text(
+              text: strings_name.str_select_hub,
+              alignment: Alignment.topLeft,
+              textStyles: blackTextSemiBold16,
+              bottomValue: 0,
             ),
-          ),
-          SizedBox(height: 10.h),
-          Visibility(
-            visible: mainCompanyData?.isNotEmpty == true,
-            child: Column(children: [
-              CustomEditTextSearch(
-                type: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                controller: controllerSearch,
-                onChanges: (value) {
-                  if (value.isEmpty) {
-                    companyData = [];
-                    companyData = List.from(mainCompanyData as Iterable);
-                    setState(() {});
-                  } else {
-                    companyData = [];
-                    if (mainCompanyData != null && mainCompanyData?.isNotEmpty == true) {
-                      for (var i = 0; i < mainCompanyData!.length; i++) {
-                        if (mainCompanyData![i].companyName!.toLowerCase().contains(value.toLowerCase())) {
-                          companyData?.add(mainCompanyData![i]);
+            Container(
+              margin: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.h),
+              width: MediaQuery.of(context).size.width,
+              child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                value: hubResponse,
+                elevation: 16,
+                style: blackText16,
+                focusColor: Colors.white,
+                onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                  setState(() {
+                    hubValue = newValue!.id!.toString();
+                    hubResponse = newValue;
+                    getCompanyRecords();
+                  });
+                },
+                items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                  return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                    value: value,
+                    child: Text(value.fields!.hubName!.toString()),
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(height: 10.h),
+            Visibility(
+              visible: mainCompanyData?.isNotEmpty == true,
+              child: Column(children: [
+                CustomEditTextSearch(
+                  type: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controllerSearch,
+                  onChanges: (value) {
+                    if (value.isEmpty) {
+                      companyData = [];
+                      companyData = List.from(mainCompanyData as Iterable);
+                      setState(() {});
+                    } else {
+                      companyData = [];
+                      if (mainCompanyData != null && mainCompanyData?.isNotEmpty == true) {
+                        for (var i = 0; i < mainCompanyData!.length; i++) {
+                          if (mainCompanyData![i].companyName!.toLowerCase().contains(value.toLowerCase())) {
+                            companyData?.add(mainCompanyData![i]);
+                          }
                         }
                       }
+                      setState(() {});
                     }
-                    setState(() {});
-                  }
-                },
-              ),
-              SizedBox(height: 5.h),
-              Visibility(
-                  visible: companyData?.isNotEmpty == true,
-                  child: ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: companyData?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          margin: EdgeInsets.symmetric(vertical: 5.w, horizontal: 10.h),
-                          child: GestureDetector(
-                            child: Container(
-                              color: colors_name.colorWhite,
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        custom_text(
-                                          text: "${companyData![index].companyName}",
-                                          textAlign: TextAlign.start,
-                                          textStyles: blackTextSemiBold16,
-                                          topValue: 5,
-                                          bottomValue: 5,
-                                        ),
-                                        custom_text(
-                                          text: "City: ${companyData![index].companyCity}",
-                                          textAlign: TextAlign.start,
-                                          textStyles: blackText14,
-                                          topValue: 0,
-                                          bottomValue: 5,
-                                        ),
-                                      ],
+                  },
+                ),
+                SizedBox(height: 5.h),
+                Visibility(
+                    visible: companyData?.isNotEmpty == true,
+                    child: ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: companyData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            margin: EdgeInsets.symmetric(vertical: 5.w, horizontal: 10.h),
+                            child: GestureDetector(
+                              child: Container(
+                                color: colors_name.colorWhite,
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          custom_text(
+                                            text: "${companyData![index].companyName}",
+                                            textAlign: TextAlign.start,
+                                            textStyles: blackTextSemiBold16,
+                                            topValue: 5,
+                                            bottomValue: 5,
+                                          ),
+                                          custom_text(
+                                            text: "City: ${companyData![index].companyCity}",
+                                            textAlign: TextAlign.start,
+                                            textStyles: blackText14,
+                                            topValue: 0,
+                                            bottomValue: 5,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  if (companyData![index].selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary),
-                                ],
+                                    if (companyData![index].selected) const Icon(Icons.check, size: 20, color: colors_name.colorPrimary),
+                                  ],
+                                ),
                               ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedData = companyData![index];
-                                companyData![index].selected = !companyData![index].selected;
-                                for (int i = 0; i < mainCompanyData!.length; i++) {
-                                  if (companyData![index].companyId == mainCompanyData![i].companyId) {
-                                    mainCompanyData![i].selected = companyData![index].selected;
-                                  } else {
-                                    mainCompanyData![i].selected = false;
+                              onTap: () {
+                                setState(() {
+                                  companyData![index].selected = !companyData![index].selected;
+                                  for (int i = 0; i < mainCompanyData!.length; i++) {
+                                    if (companyData![index].companyId == mainCompanyData![i].companyId) {
+                                      mainCompanyData![i].selected = companyData![index].selected;
+                                    }
                                   }
-                                }
-                                setState(() {});
+                                  setState(() {});
+                                });
+                              },
+                            ),
+                          );
+                        })),
+                SizedBox(height: 20.h),
+                CustomButton(
+                  text: strings_name.str_submit,
+                  click: () {
+                    List<CompanyResponse>? selectedData = [];
+                    for (var i = 0; i < mainCompanyData!.length; i++) {
+                      if (mainCompanyData![i].selected) {
+                        selectedData.add(mainCompanyData![i]);
+                      }
+                    }
 
-                                if (selectedData.companyId?.isNotEmpty == true) {
-                                  Get.back(result: selectedData);
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      })),
-              SizedBox(height: 20.h),
-            ]),
-          ),
-        ])),
+                    if (selectedData.isNotEmpty == true) {
+                      Get.back(result: selectedData);
+                    } else {
+                      Utils.showSnackBar(context, strings_name.str_empty_company);
+                    }
+                  },
+                )
+              ]),
+            ),
+          ],
+        )),
         Visibility(
           visible: isVisible,
           child: Container(

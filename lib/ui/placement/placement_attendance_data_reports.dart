@@ -473,18 +473,15 @@ class _PlacementAttendanceDataReportState extends State<PlacementAttendanceDataR
   int countTotalStudents() {
     if (hubResponse != null && hubResponse?.fields != null) {
       int totalStudent = hubResponse?.fields?.tblStudent?.length ?? 0;
-      if (speValue.isNotEmpty) {
-        for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
-          if (speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
+      for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
+        if(hubResponse?.fields?.studentSemester![j] != "7") {
+          if (speValue.isNotEmpty && speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
+            totalStudent -= 1;
+          } else if (semesterValue != -1 && semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
             totalStudent -= 1;
           }
-        }
-      }
-      if (semesterValue != -1) {
-        for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
-          if (semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
-            totalStudent -= 1;
-          }
+        }else{
+          totalStudent -= 1;
         }
       }
       return totalStudent;

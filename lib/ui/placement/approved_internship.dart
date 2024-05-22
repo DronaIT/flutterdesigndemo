@@ -57,6 +57,17 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
   int jobType = 0;
   String jobValue = strings_name.str_job_type_regular_internship;
 
+  var viewWidth;
+
+  List<String> jobCategoryArr = <String>[
+    strings_name.str_job_category,
+    TableNames.JOB_CATEGORY_25,
+    TableNames.JOB_CATEGORY_50,
+    TableNames.JOB_CATEGORY_75,
+    TableNames.JOB_CATEGORY_100,
+  ];
+  String jobCategoryValue = strings_name.str_job_category;
+
   @override
   void initState() {
     super.initState();
@@ -159,6 +170,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
 
   @override
   Widget build(BuildContext context) {
+    viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_list_pending_job_opp),
@@ -439,6 +451,40 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
             bottomValue: 0,
           ),
           SizedBox(height: 5.h),
+          const custom_text(
+            text: strings_name.str_job_category,
+            alignment: Alignment.topLeft,
+            textStyles: blackTextSemiBold16,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                fit: FlexFit.loose,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                  width: viewWidth,
+                  child: DropdownButtonFormField<String>(
+                    elevation: 16,
+                    value: jobCategoryValue,
+                    style: blackText16,
+                    focusColor: Colors.white,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        jobCategoryValue = newValue!;
+                      });
+                    },
+                    items: jobCategoryArr.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ),
           custom_text(
             text: strings_name.str_job_apply_timing,
             alignment: Alignment.topLeft,
@@ -532,7 +578,9 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
           CustomButton(
               text: strings_name.str_submit,
               click: () {
-                if (startTimeController.text.trim().isEmpty) {
+                if (jobCategoryValue == strings_name.str_job_category) {
+                  Utils.showSnackBar(context, strings_name.str_empty_job_category);
+                } else if (startTimeController.text.trim().isEmpty) {
                   Utils.showSnackBar(context, strings_name.str_empty_job_apply_start_time);
                 } else if (endTimeController.text.trim().isEmpty) {
                   Utils.showSnackBar(context, strings_name.str_empty_job_apply_end_time);
@@ -614,8 +662,13 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
       request.jobRejectionReason = rejectionReasonController.text.trim().toString();
     }
 
-    var json = request.toJson();
+    Map<String, dynamic> json = request.toJson();
     json.removeWhere((key, value) => value == null);
+
+    if (isApproved) {
+      json["job_category"] = jobCategoryValue;
+    }
+
     try {
       var resp = await apiRepository.updateJobOpportunityApi(json, jobData.id.toString());
       if (resp.id!.isNotEmpty) {

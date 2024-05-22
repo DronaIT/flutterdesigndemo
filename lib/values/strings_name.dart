@@ -108,6 +108,7 @@ class strings_name {
   static const String str_select_upload_file = "Select file to upload";
   static const String str_students_added = "New students added successfully.";
 
+  static const String str_no = "No";
   static const String str_male = "Male";
   static const String str_female = "Female";
   static const String str_both = "Both";
@@ -676,7 +677,8 @@ class strings_name {
   static const String str_date_r = "Date*";
   static const String str_holiday = "Holiday";
   static const String str_holiday_title = "Holiday title";
-  static const String str_faculty_name = "Select Faculty Name*";
+  static const String str_faculty_name = "Faculty Name*";
+  static const String str_select_faculty_name = "Select Faculty Name*";
   static const String str_mode = "Mode:";
   static const String str_meeting_link_r = "Online Meeting Link*";
   static const String str_class_room_number = "Classroom number*";
@@ -691,8 +693,8 @@ class strings_name {
   static const String str_you_do_not_have_permission_time_table = "You do not have permission to access time table";
   static const String str_no_time_table_found = "No time tables found";
   static const String str_attendance_for = "Attendance for";
-  static const String str_predefined_lectures = "Predefined Lectures";
-  static const String str_new_lectures = "New Lectures";
+  static const String str_predefined_lectures = "Timetable Lectures";
+  static const String str_new_lectures = "Proxy Lectures";
   static const String str_select_unit_and_topic = "Select Unit and Topic";
 
   static const String str_attendance_already_taken = "Attendance already taken";
@@ -967,4 +969,67 @@ class strings_name {
   static const String str_no_referrals_hub = "No referrals added for this Hub";
   static const String str_referral_updated = "Referral status updated successfully.";
   static const String str_mentor_assigned = "Students assigned to mentors successfully.";
+
+  static const String str_lecture_type_proxy = "Proxy Lecture";
+  static const String str_lecture_type_timetable = "Timetable Lecture";
+
+  static const String str_proxy_lecture = "Add Proxy";
+  static const String str_update_proxy_lecture = "Update Proxy";
+  static const String str_cancel_lecture = "Cancel Lecture";
+
+  static const String str_proxy_selection = "Tick this box if above faculty is Proxy Taker, and this lecture is not rescheduled because of them.";
+  static const String str_original_proxy_maker = "Original Proxy Maker";
+  static const String str_proxy_taker = "Proxy Taker for this Lecture";
+
+  static const String str_empty_original_proxy_maker = "Please select original Proxy Maker";
+  static const String str_empty_proxy_taker = "Please select Proxy Taker for this Lecture";
+
+  static const String str_status_proxy_added = "Proxy Added";
+  static const String str_status_lecture_cancelled = "Lecture Cancelled";
+
+  static const String str_lecture_cancelled_success = "Lecture cancelled successfully.";
+
+  static const String str_company_size = "Company Size";
+  static const String str_empty_company_size = "Please select company size";
+  static const String str_probable_vacancy = "Probable Vacancy";
+  static const String str_empty_probable_vacancy = "Please enter probable vacancy";
+
+  static const String str_job_category = "Select Job Category";
+  static const String str_empty_job_category = "Please select Job Category";
+
+  static const String str_select_mentor = "Select mentor";
+  static const String str_empty_mentor_hub = "Please select hub or mentor";
+
+  static const String str_ask = "ASK";
+  static const String str_ask_dashboard = "ASK Dashboard";
+  static const String str_levels_management = "Levels Management";
+  static const String str_add_ask_levels = "+ Add ASK Levels";
+  static const String str_add_ask_parameters = "+ Add ASK Parameters";
+  static const String str_new_evaluation = "New Evaluation";
+
+  static const String str_ask_parameters = "ASK Parameters";
+  static const String str_ask_type_attitude = "Attitude";
+  static const String str_ask_type_skill = "Skill";
+  static const String str_ask_type_knowledge = "Knowledge";
+
+  static const String str_ask_parameter_title = "ASK Parameter Title";
+  static const String str_ask_parameter_desc = "ASK Parameter Description";
+  static const String str_ask_level = "ASK Level";
+  static const String str_select_ask_level = "Select ASK Level";
+  static const String str_ask_parameter_total_marks = "ASK Parameter Total Marks";
+  static const String str_empty_ask_parameter_title = "Please provide ASK Parameter Title";
+  static const String str_empty_ask_parameter_desc = "Please provide ASK Parameter Description";
+  static const String str_empty_ask_level = "Please select ASK Level";
+  static const String str_empty_ask_parameter_total_marks = "Please provide ASK Parameter Total Marks";
+  static const String str_invalid_ask_parameter_total_marks = "Please provide valid ASK Parameter Total Marks";
+
+  static const String str_ask_parameter_added = "ASK Parameter is added successfully.";
+  static const String str_ask_parameter_updated = "ASK Parameter is updated successfully.";
+  static const String str_select_ask_level_for_evaluation = "Select ASK Level for new Evaluation";
+
+  static const String str_ask_param_type_normal = "Normal Marks Entry";
+  static const String str_ask_param_type_other_msg = "Marks will be updated in realtime, no actions needed from your end for this parameter.";
+
+  static const String str_no_parameter_linked = "No parameters are linked with this ASK level.";
+  static const String str_new_evaluation_added = "New Evaluation added successfully.";
 }

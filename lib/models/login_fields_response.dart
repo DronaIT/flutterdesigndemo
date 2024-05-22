@@ -70,6 +70,7 @@ class LoginFieldsResponse {
   List<String>? company_name_from_placed_job;
   List<String>? job_title_from_placed_job;
   List<String>? job_description_from_placed_job;
+  List<String>? placed_job_code;
 
   List<String>? job_title_from_rejected_job;
   List<String>? company_name_from_rejected_job;
@@ -196,6 +197,7 @@ class LoginFieldsResponse {
     this.company_name_from_placed_job,
     this.job_title_from_placed_job,
     this.job_description_from_placed_job,
+    this.placed_job_code,
     this.company_name_from_rejected_job,
     this.job_title_from_rejected_job,
     this.job_description_from_rejected_job,
@@ -242,6 +244,7 @@ class LoginFieldsResponse {
     company_name_from_placed_job = json['company_name_from_placed_job']?.cast<String>();
     job_title_from_placed_job = json['job_title_from_placed_job']?.cast<String>();
     job_description_from_placed_job = json['job_description_from_placed_job']?.cast<String>();
+    placed_job_code = json['placed_job_code']?.cast<String>();
 
     job_title_selected_job = json['job_title_selected_job']?.cast<String>();
     company_name_from_selected_job = json['company_name_from_selected_job']?.cast<String>();
@@ -360,6 +363,7 @@ class LoginFieldsResponse {
     data['company_name_from_placed_job'] = company_name_from_placed_job;
     data['job_title_from_placed_job'] = job_title_from_placed_job;
     data['job_description_from_placed_job'] = job_description_from_placed_job;
+    data['placed_job_code'] = placed_job_code;
 
     data['job_title_selected_job'] = job_title_selected_job;
     data['company_name_from_selected_job'] = company_name_from_selected_job;

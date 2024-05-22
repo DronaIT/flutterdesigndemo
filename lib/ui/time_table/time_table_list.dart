@@ -43,6 +43,8 @@ class _TimeTableListState extends State<TimeTableList> {
   bool canUpdateTimeTable = false;
   bool canShowTimeTable = false;
   bool canShowAllTimeTable = false;
+  bool canAddProxy = false;
+  bool canCancelLecture = false;
 
   bool isLoading = false;
   var loginId = "";
@@ -195,7 +197,10 @@ class _TimeTableListState extends State<TimeTableList> {
             canShowTimeTable = true;
           } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_VIEW_ALL_TIME_TABLE) {
             canShowAllTimeTable = true;
-            debugPrint('../ canShowAllTimeTable $canShowAllTimeTable');
+          } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_ADD_PROXY) {
+            canAddProxy = true;
+          } else if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_CANCEL_LECTURE) {
+            canCancelLecture = true;
           }
         }
       }
@@ -294,8 +299,7 @@ class _TimeTableListState extends State<TimeTableList> {
             query = "AND({date} = TODAY())";
           } else {
             String hubValue = loginData.hubIdFromHubIds![0];
-            query =
-                "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
+            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
           }
         }
       } else {
@@ -307,6 +311,12 @@ class _TimeTableListState extends State<TimeTableList> {
       var data = await apiRepository.fetchTimeTablesListApi(query, offset, 25);
       if (data.records!.isNotEmpty) {
         timeTables.addAll(data.records as Iterable<BaseApiResponseWithSerializable<TimeTableResponseClass>>);
+        for (int i = 0; i < timeTables.length; i++) {
+          if (timeTables[i].fields?.status == strings_name.str_status_lecture_cancelled) {
+            timeTables.removeAt(i);
+            i--;
+          }
+        }
         offset = data.offset;
         setState(() {
           isLoading = false;
@@ -368,8 +378,7 @@ class _TimeTableListState extends State<TimeTableList> {
       unitValue = "";
       topicValue = "";
 
-      var query =
-          "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
+      var query = "AND(FIND('$semesterValue', ${TableNames.CLM_SEMESTER}, 0),FIND('${Utils.getSpecializationIds(specializationValue)}',${TableNames.CLM_SPE_IDS}, 0))";
       try {
         var data = await apiRepository.getSubjectsApi(query);
         setState(() {
@@ -534,6 +543,7 @@ class _TimeTableListState extends State<TimeTableList> {
                                         var data = await Get.to(
                                           AddEditTimeTable(
                                             timeTableData: timeTables[index],
+                                            isProxy: false,
                                           ),
                                         );
                                         debugPrint('../ result $data');
@@ -542,10 +552,9 @@ class _TimeTableListState extends State<TimeTableList> {
                                         }
                                       },
                                       onTap: () {
-                                        if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) ||
-                                            (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false)) {
+                                        if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) || (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false)) {
                                           if (timeTables[index].fields?.isAttendanceTaken ?? false) {
-                                            if(PreferenceUtils.getIsLogin() != 1) {
+                                            if (PreferenceUtils.getIsLogin() != 1) {
                                               Utils.showSnackBarUsingGet(strings_name.str_attendance_already_taken);
                                             }
                                           } else {
@@ -554,10 +563,27 @@ class _TimeTableListState extends State<TimeTableList> {
                                             selectUnitAndTopicDropDown(timeTables[index]);
                                           }
                                         } else {
-                                          if(PreferenceUtils.getIsLogin() != 1) {
+                                          if (PreferenceUtils.getIsLogin() != 1) {
                                             Utils.showSnackBarUsingGet(strings_name.str_not_per_atek_attedndance);
                                           }
                                         }
+                                      },
+                                      canAddProxy: canAddProxy && !(timeTables[index].fields?.isAttendanceTaken ?? false),
+                                      onAddProxy: () async {
+                                        var data = await Get.to(
+                                          AddEditTimeTable(
+                                            timeTableData: timeTables[index],
+                                            isProxy: true,
+                                          ),
+                                        );
+                                        debugPrint('../ result $data');
+                                        if (data == TableNames.LUK_UPDATE_TIME_TABLE) {
+                                          clearAndFetchTimeTable();
+                                        }
+                                      },
+                                      canCancelLecture: canCancelLecture && !(timeTables[index].fields?.isAttendanceTaken ?? false),
+                                      onCancelLecture: () {
+                                        cancelConfirmationDialog(timeTables[index]);
                                       },
                                     );
                             }),
@@ -567,6 +593,118 @@ class _TimeTableListState extends State<TimeTableList> {
               ],
             ),
     );
+  }
+
+  Future<void> cancelConfirmationDialog(BaseApiResponseWithSerializable<TimeTableResponseClass> timetableData) async {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), //this right here
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          custom_text(
+            text: 'Please confirm the lecture cancellation',
+            textStyles: boldTitlePrimaryColorStyle,
+            maxLines: 2,
+          ),
+          SizedBox(height: 5.h),
+          custom_text(
+            text:
+                '${strings_name.str_faculty}: ${timetableData.fields?.proxy_taker_employee_name?.isNotEmpty == true ? timetableData.fields!.proxy_taker_employee_name!.last : (timetableData.fields?.employeeNameFromLectureId?.isEmpty ?? true ? '' : timetableData.fields?.employeeNameFromLectureId?.first ?? '')}',
+            textStyles: blackTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          custom_text(
+            text: 'Subject : ${timetableData.fields?.subjectTitleFromSubjectId?.last.toString()}',
+            textStyles: blackTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          SizedBox(height: 5.h),
+          const custom_text(
+            text: 'Are you sure you want to cancel this lecture?',
+            textStyles: primaryTextSemiBold14,
+            maxLines: 2,
+            bottomValue: 0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Get.back(closeOverlays: true);
+                },
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(5.w, 10.h, 0, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: colors_name.colorBlack.withOpacity(0.1),
+                  ),
+                  child: custom_text(
+                    textStyles: primaryTextSemiBold15,
+                    text: strings_name.str_no,
+                    topValue: 5.h,
+                    bottomValue: 5.h,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              GestureDetector(
+                onTap: () {
+                  Get.back(closeOverlays: true);
+                  cancelLecture(timetableData);
+                },
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(5.w, 10.h, 20.w, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: colors_name.colorBlack.withOpacity(0.1),
+                  ),
+                  child: custom_text(
+                    textStyles: greenTextSemiBold15,
+                    text: strings_name.str_yes,
+                    topValue: 5.h,
+                    bottomValue: 5.h,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+        ],
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+  void cancelLecture(BaseApiResponseWithSerializable<TimeTableResponseClass> timetableData) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Map<String, dynamic> requestParams = {};
+    requestParams[TableNames.CLM_STATUS] = strings_name.str_status_lecture_cancelled;
+
+    try {
+      var resp = await apiRepository.cancelTimeTableDataApi(requestParams, timetableData.id ?? '');
+      if (resp.id!.isNotEmpty) {
+        setState(() {
+          isLoading = false;
+        });
+        Utils.showSnackBar(context, strings_name.str_lecture_cancelled_success);
+        clearAndFetchTimeTable();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
   }
 
   bool isDialogDropDownLoading = false;
@@ -696,7 +834,7 @@ class _TimeTableListState extends State<TimeTableList> {
 
                   AddStudentAttendanceRequest request = AddStudentAttendanceRequest();
                   // request.employeeId = PreferenceUtils.getLoginRecordId().split(",");
-                  request.employeeId = timeTableData.fields!.lectureId;
+                  request.employeeId = timeTableData.fields?.proxy_taker?.isNotEmpty == true ? timeTableData.fields?.proxy_taker : timeTableData.fields!.lectureId;
                   request.hubId = timeTableData.fields!.hubId!;
                   request.specializationId = timeTableData.fields!.specializationId!;
                   request.division = '${timeTableData.fields?.division}';
@@ -781,8 +919,7 @@ class _TimeTableListState extends State<TimeTableList> {
                                               getTopics();
                                             });
                                           },
-                                          items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>(
-                                              (BaseApiResponseWithSerializable<UnitsResponse> value) {
+                                          items: unitResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>>((BaseApiResponseWithSerializable<UnitsResponse> value) {
                                             return DropdownMenuItem<BaseApiResponseWithSerializable<UnitsResponse>>(
                                               value: value,
                                               child: Text(value.fields!.unitTitle!.toString()),
@@ -826,8 +963,7 @@ class _TimeTableListState extends State<TimeTableList> {
                                     topicResponse = newValue;
                                     topicRecordId = newValue.id!;
                                   },
-                                  items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>(
-                                      (BaseApiResponseWithSerializable<TopicsResponse> value) {
+                                  items: topicResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>>((BaseApiResponseWithSerializable<TopicsResponse> value) {
                                     return DropdownMenuItem<BaseApiResponseWithSerializable<TopicsResponse>>(
                                       value: value,
                                       child: Text(value.fields!.topicTitle!.toString()),
@@ -910,8 +1046,7 @@ class _TimeTableListState extends State<TimeTableList> {
                             getSpecializations();
                           });
                         },
-                        items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
-                            (BaseApiResponseWithSerializable<HubResponse> value) {
+                        items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                           return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                             value: value,
                             child: Text(value.fields!.hubName!.toString()),
@@ -951,8 +1086,8 @@ class _TimeTableListState extends State<TimeTableList> {
                                   // getSubjects();
                                 });
                               },
-                              items: specializationResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
-                                  (BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                              items: specializationResponseArray
+                                  ?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
                                 return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                                   value: value,
                                   child: Text(value.fields!.specializationName!.toString()),
@@ -1073,10 +1208,8 @@ class _TimeTableListState extends State<TimeTableList> {
     setState(() {
       if (args.value is PickerDateRange) {
         DateTime endD = args.value.endDate ?? args.value.startDate;
-        _range =
-            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
-        _rangeToSend =
-            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(endD.add(const Duration(days: 1)))}';
+        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        _rangeToSend = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(endD.add(const Duration(days: 1)))}';
         startDate = args.value.startDate;
         endDate = args.value.endDate ?? args.value.startDate;
       } else if (args.value is DateTime) {
@@ -1137,6 +1270,10 @@ class TimeTableCard extends StatelessWidget {
   final bool canUpdateTimeTable;
   final VoidCallback? onEdit;
   final VoidCallback? onTap;
+  final bool canAddProxy;
+  final bool canCancelLecture;
+  final VoidCallback? onAddProxy;
+  final VoidCallback? onCancelLecture;
 
   const TimeTableCard({
     super.key,
@@ -1144,6 +1281,10 @@ class TimeTableCard extends StatelessWidget {
     this.canUpdateTimeTable = false,
     this.onEdit,
     this.onTap,
+    this.canAddProxy = false,
+    this.canCancelLecture = false,
+    this.onAddProxy,
+    this.onCancelLecture,
   });
 
   String formatDateString(String dateString) {
@@ -1187,15 +1328,12 @@ class TimeTableCard extends StatelessWidget {
         ? Container(
             margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
             padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-            decoration: BoxDecoration(
-                color: colors_name.lightCoffee, border: Border.all(color: colors_name.coffee), borderRadius: BorderRadius.circular(6.w)),
+            decoration: BoxDecoration(color: colors_name.lightCoffee, border: Border.all(color: colors_name.coffee), borderRadius: BorderRadius.circular(6.w)),
             child: Column(
               children: [
                 Row(
                   children: [
-                    SizedBox(
-                      width: 25.w,
-                    ),
+                    SizedBox(width: 25.w),
                     Expanded(
                       child: Center(
                         child: Text(
@@ -1206,6 +1344,7 @@ class TimeTableCard extends StatelessWidget {
                       ),
                     ),
                     // (timeTable?.createdBy?.contains(createdBy) ?? false) && canUpdateTimeTable
+/*
                     canUpdateTimeTable
                         ? GestureDetector(
                             onTap: canUpdateTimeTable ? onEdit : null,
@@ -1223,14 +1362,11 @@ class TimeTableCard extends StatelessWidget {
                               ),
                             ),
                           )
-                        : SizedBox(
-                            width: 25.w,
-                          ),
+                        : SizedBox(width: 0.w),
+*/
                   ],
                 ),
-                SizedBox(
-                  height: 8.h,
-                ),
+                SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1260,9 +1396,7 @@ class TimeTableCard extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10.h),
-                      decoration: BoxDecoration(
-                          color: colors_name.colorLightGreen3,
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(6.w), topRight: Radius.circular(6.w))),
+                      decoration: BoxDecoration(color: colors_name.colorLightGreen3, borderRadius: BorderRadius.only(topLeft: Radius.circular(6.w), topRight: Radius.circular(6.w))),
                       child: const Text(
                         strings_name.str_online,
                         style: blackTextSemiBold16,
@@ -1317,9 +1451,7 @@ class TimeTableCard extends StatelessWidget {
                                   ),
                           ],
                         ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
+                        SizedBox(height: 8.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -1333,46 +1465,34 @@ class TimeTableCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
+                        SizedBox(height: 8.h),
                         Text(
-                          '${strings_name.str_faculty}: ${timeTable?.employeeNameFromLectureId?.isEmpty ?? true ? '' : timeTable?.employeeNameFromLectureId?.first ?? ''}',
+                          '${strings_name.str_faculty}: ${timeTable?.proxy_taker_employee_name?.isNotEmpty == true ? timeTable!.proxy_taker_employee_name!.last : (timeTable?.employeeNameFromLectureId?.isEmpty ?? true ? '' : timeTable?.employeeNameFromLectureId?.first ?? '')}',
                           style: lightGrey14,
                         ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
+                        SizedBox(height: 8.h),
                         Row(
                           children: [
                             Text(
                               '${strings_name.str_timings}:',
                               style: lightGrey14,
                             ),
-                            SizedBox(
-                              width: 8.w,
-                            ),
+                            SizedBox(width: 8.w),
                             TextWithBackground(
                               title: timeTable?.startTime ?? '',
                             ),
-                            SizedBox(
-                              width: 8.w,
-                            ),
+                            SizedBox(width: 8.w),
                             Text(
                               strings_name.str_to,
                               style: lightGrey14,
                             ),
-                            SizedBox(
-                              width: 8.w,
-                            ),
+                            SizedBox(width: 8.w),
                             TextWithBackground(
                               title: timeTable?.endTime ?? '',
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
+                        SizedBox(height: 8.h),
                         Visibility(
                           visible: timeTable?.mode == TableNames.TIMETABLE_MODE_STATUS_ONLINE,
                           child: Row(
@@ -1382,9 +1502,7 @@ class TimeTableCard extends StatelessWidget {
                                 '${strings_name.str_link}:',
                                 style: lightGrey14,
                               ),
-                              SizedBox(
-                                width: 8.w,
-                              ),
+                              SizedBox(width: 8.w),
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () async {
@@ -1408,18 +1526,58 @@ class TimeTableCard extends StatelessWidget {
                                 '${strings_name.str_class_room}:',
                                 style: lightGrey14,
                               ),
-                              SizedBox(
-                                width: 8.w,
-                              ),
+                              SizedBox(width: 8.w),
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 2.h),
-                                decoration:
-                                    BoxDecoration(border: Border.all(color: colors_name.colorBlack), borderRadius: BorderRadius.circular(20.w)),
+                                decoration: BoxDecoration(border: Border.all(color: colors_name.colorBlack), borderRadius: BorderRadius.circular(20.w)),
                                 child: Text(timeTable?.modeTitle ?? ''),
                               )
                             ],
                           ),
-                        )
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            canAddProxy
+                                ? GestureDetector(
+                                    onTap: canAddProxy ? onAddProxy : null,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(0, 10.h, 5.w, 0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        color: colors_name.colorBlack.withOpacity(0.1),
+                                      ),
+                                      child: custom_text(
+                                        text: timeTable?.proxy_taker?.isNotEmpty == true ? strings_name.str_update_proxy_lecture : strings_name.str_proxy_lecture,
+                                        textStyles: primaryTextSemiBold15,
+                                        alignment: Alignment.centerRight,
+                                        topValue: 5,
+                                        bottomValue: 5,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                            canCancelLecture
+                                ? GestureDetector(
+                                    onTap: canCancelLecture ? onCancelLecture : null,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(5.w, 10.h, 0, 0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        color: colors_name.colorBlack.withOpacity(0.1),
+                                      ),
+                                      child: const custom_text(
+                                        text: strings_name.str_cancel_lecture,
+                                        textStyles: primaryTextSemiBold15,
+                                        alignment: Alignment.centerRight,
+                                        topValue: 5,
+                                        bottomValue: 5,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
                       ],
                     ),
                   ),

@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutterdesigndemo/api/dio_exception.dart';
 import 'package:flutterdesigndemo/api/api_request.dart';
+import 'package:flutterdesigndemo/models/add_timetable_model.dart';
 import 'package:flutterdesigndemo/models/app_version_response.dart';
+import 'package:flutterdesigndemo/models/ask_evaluation_response.dart';
+import 'package:flutterdesigndemo/models/ask_level_response.dart';
+import 'package:flutterdesigndemo/models/ask_parameter_response.dart';
 import 'package:flutterdesigndemo/models/fees_response.dart';
 import 'package:flutterdesigndemo/models/helpdesk_responses.dart';
 import 'package:flutterdesigndemo/models/job_opportunity_response.dart';
@@ -20,9 +24,11 @@ import 'package:flutterdesigndemo/models/request/add_specialization_request.dart
 import 'package:flutterdesigndemo/models/request/add_subject_request.dart';
 import 'package:flutterdesigndemo/models/request/add_topics_request.dart';
 import 'package:flutterdesigndemo/models/request/add_units_request.dart';
+import 'package:flutterdesigndemo/models/request/ask_parameter_request.dart';
 import 'package:flutterdesigndemo/models/request/create_job_opportunity_request.dart';
 import 'package:flutterdesigndemo/models/request/create_student_request.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/request/evaluation_request.dart';
 import 'package:flutterdesigndemo/models/request/fees_request.dart';
 import 'package:flutterdesigndemo/models/request/marketing_request.dart';
 import 'package:flutterdesigndemo/models/request/student_referral_request.dart';
@@ -48,7 +54,6 @@ import 'package:flutterdesigndemo/models/update_topics.dart';
 import 'package:flutterdesigndemo/models/update_units.dart';
 import 'package:flutterdesigndemo/models/updatehub.dart';
 import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
-import 'package:flutterdesigndemo/ui/placement/add_placement_marks.dart';
 
 import '../models/App_data_response.dart';
 import '../models/add_announcement_response.dart';
@@ -568,6 +573,16 @@ class ApiRepository {
     }
   }
 
+  Future<BaseApiResponseWithSerializable<AddTimeTable>> cancelTimeTableDataApi(Map<String, dynamic> loginFormula, String recordId) async {
+    try {
+      final response = await userApi.cancelTimeTableApi(loginFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
   Future<UpdateJobOpportunity> getJobOpportunityWithRecordIdApi(String recordId) async {
     try {
       final response = await userApi.getJobOpportunityWithRecordIdApi(recordId);
@@ -951,6 +966,56 @@ class ApiRepository {
   Future<BaseApiResponseWithSerializable<StudentReferralResponse>> updateStudentReferralStatusApi(Map<String, dynamic> updateFormula, String recordId) async {
     try {
       final response = await userApi.updateStudentReferralStatusApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<ASKParameterResponse>> getAskParametersApi(String parameterFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getAskParametersApi(parameterFormula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<ASKLevelResponse>> getAskLevelsApi(String askLevelFormula, [String offset = ""]) async {
+    try {
+      final response = await userApi.getAskLevelsApi(askLevelFormula, offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<ASKParameterResponse>> addAskParametersApi(ASKParameterRequest askParameterRequest) async {
+    try {
+      final response = await userApi.addAskParametersApi(askParameterRequest);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<ASKParameterResponse>> updateAskParametersApi(Map<String, dynamic> updateFormula, String recordId) async {
+    try {
+      final response = await userApi.updateAskParametersApi(updateFormula, recordId);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseApiResponseWithSerializable<AskEvaluationResponse>> addAskEvaluationApi(EvaluationRequest evaluationRequest) async {
+    try {
+      final response = await userApi.addAskEvaluationApi(evaluationRequest);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

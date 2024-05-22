@@ -5,6 +5,8 @@ class HubResponse {
   String? hubId;
   String? address;
   List<String>? tblStudent;
+  List<dynamic>? studentAskScore;
+  List<dynamic>? studentAskTotal;
   List<String>? studentSpecializationIds;
   List<String>? studentMobileNumber;
   List<String>? studentName;
@@ -56,6 +58,8 @@ class HubResponse {
     this.hubId,
     this.address,
     this.tblStudent,
+    this.studentAskScore,
+    this.studentAskTotal,
     this.studentSpecializationIds,
     this.studentMobileNumber,
     this.studentName,
@@ -84,6 +88,8 @@ class HubResponse {
     hubId = json['hub_id'];
     address = json['address'];
     tblStudent = json['TBL_STUDENT']?.cast<String>();
+    studentAskScore = json['student_ask_score']?.cast<dynamic>();
+    studentAskTotal = json['student_ask_total']?.cast<dynamic>();
     studentSpecializationIds = json['student_specialization_ids']?.cast<String>();
     studentMobileNumber = json['student_mobile_number']?.cast<String>();
     studentName = json['student_name']?.cast<String>();
@@ -113,6 +119,8 @@ class HubResponse {
     data['hub_id'] = hubId;
     data['address'] = address;
     data['TBL_STUDENT'] = tblStudent;
+    data['student_ask_score'] = studentAskScore;
+    data['student_ask_total'] = studentAskTotal;
     data['student_specialization_ids'] = studentSpecializationIds;
     data['student_mobile_number'] = studentMobileNumber;
     data['student_name'] = studentName;

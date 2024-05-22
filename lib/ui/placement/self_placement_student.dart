@@ -420,6 +420,7 @@ class _SelfPlacementStudentState extends State<SelfPlacementStudent> {
     companyRequest?.reporting_address = companyInfo?.fields?.reporting_address?.trim() ?? "";
     companyRequest?.city = companyInfo?.fields?.city?.trim() ?? "";
     companyRequest?.hub_id = companyInfo?.fields?.hubIds;
+    companyRequest?.existing_slab = companyInfo?.fields?.existing_slab;
     if (PreferenceUtils.getIsLogin() == 1) {
       companyRequest?.status = strings_name.str_company_status_pending;
     } else {

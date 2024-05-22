@@ -319,6 +319,8 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
 
     if (semesterValue != -1) {
       query += ",${TableNames.CLM_SEMESTER}='${semesterValue.toString()}'";
+    } else {
+      query += ",${TableNames.CLM_SEMESTER}!='7'";
     }
 
     if (placedValue == TableNames.PLACED) {
@@ -413,9 +415,13 @@ class _FilterPlacementScreenStudentState extends State<FilterPlacementScreenStud
     if (hubResponse != null && hubResponse?.fields != null) {
       int totalStudent = hubResponse?.fields?.tblStudent?.length ?? 0;
       for (int j = 0; j < (hubResponse?.fields?.tblStudent?.length ?? 0); j++) {
-        if (speValue.isNotEmpty && speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
-          totalStudent -= 1;
-        } else if (semesterValue != -1 && semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
+        if(hubResponse?.fields?.studentSemester![j] != "7") {
+          if (speValue.isNotEmpty && speResponse?.fields?.specializationId != hubResponse?.fields?.studentSpecializationIds![j]) {
+            totalStudent -= 1;
+          } else if (semesterValue != -1 && semesterValue.toString() != hubResponse?.fields?.studentSemester![j]) {
+            totalStudent -= 1;
+          }
+        }else{
           totalStudent -= 1;
         }
       }

@@ -487,6 +487,8 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
     companyRequest.city = companyInfo?.fields?.city?.trim() ?? "";
     companyRequest.hub_id = companyInfo?.fields?.hubIds;
     companyRequest.status = strings_name.str_company_status_approved;
+    companyRequest.existing_slab = companyInfo?.fields?.existing_slab;
+    companyRequest.probable_vacancy = 1;
 
     if (companyInfo?.fields?.company_logo?.last.url?.isNotEmpty == true) {
       Map<String, dynamic> map = Map();

@@ -24,6 +24,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -320,7 +321,7 @@ class _AddStudent extends State<CreateStudent> {
                 request.pinCode = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_HUB_IDS:
-                request.hubIds = Utils.getHubIds(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
+                request.hubIds = Utils.getHubId(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
                 break;
               case TableNames.EXCEL_COL_SPECIALIZATION_IDS:
                 request.specializationIds = Utils.getSpecializationId(excel.tables[table]?.rows[row][col]?.value.toString())!.split(",");
@@ -341,7 +342,7 @@ class _AddStudent extends State<CreateStudent> {
                 request.srNumber = excel.tables[table]?.rows[row][col]?.value.toString();
                 break;
               case TableNames.EXCEL_COL_BIRTHDATE:
-                request.birthdate = excel.tables[table]?.rows[row][col]?.value.toString();
+                request.birthdate = excel.tables[table]?.rows[row][col]?.value.toString().trim();
                 break;
               case TableNames.EXCEL_COL_AADHAR_CARD_NUMBER:
                 request.aadharCardNumber = excel.tables[table]?.rows[row][col]?.value.toString();
@@ -374,14 +375,14 @@ class _AddStudent extends State<CreateStudent> {
           }
           // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
           if (request.mobileNumber != null) {
-            var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
+            // var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
             try {
-              var checkMobile = await createStudentRepository.loginApi(query);
-              if (checkMobile.records?.isEmpty == true) {
+              // var checkMobile = await createStudentRepository.loginApi(query);
+              // if (checkMobile.records?.isEmpty == true) {
                 Map<String, CreateStudentRequest> map = {};
                 map["fields"] = request;
                 list.add(map);
-              }
+              // }
             } on DioError catch (e) {
               setState(() {
                 isVisible = false;

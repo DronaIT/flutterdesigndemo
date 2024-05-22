@@ -18,8 +18,11 @@ class TableNames {
   static const FCM_KEY = "AAAAoZqBw4M:APA91bEtTRpbCXGa_hffoFkrDrUueNPyOlP3pEeKWrCOoNotzovGkejCozJfJqyhFGhM-vcmmzRTHAzpLgfAK269CzVmetr9EEXgs0X-GmmN-J0XLN1W9hAeihr-MCWsuLskqSK20GOz";
   static const FCM_PUSH_API = "https://fcm.googleapis.com/fcm/send";
 
-  static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";
-  static const CLOUDARY_PRESET = "kgicun2o";
+// static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";    // From old it@drona account
+// static const CLOUDARY_PRESET = "kgicun2o";         // From old it@drona account
+
+  static const CLOUDARY_CLOUD_NAME = "dcycbefvl";
+  static const CLOUDARY_PRESET = "kyxglsmj";
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
   static const CLOUDARY_FOLDER_HELP_DESK= "HelpDesk";
@@ -59,6 +62,7 @@ class TableNames {
   static const MODULE_PUNCH_LEAVES = "DM15";
   static const MODULE_MIS = "DM16";
   static const MODULE_STUDENT_REFERRAL = "DM17";
+  static const MODULE_ASK_MODULE = "DM18";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -109,6 +113,9 @@ class TableNames {
   static const TBL_PUNCH_DATA = "TBL_PUNCH_DATA";
   static const TBL_PLACEMENT_MARKS = "TBL_PLACEMENT_MARKS";
   static const TBL_STUDENT_REFERRALS = "TBL_STUDENT_REFERRALS";
+  static const TBL_ASK_PARAMETERS = "TBL_ASK_PARAMETERS";
+  static const TBL_ASK_LEVEL = "TBL_ASK_LEVEL";
+  static const TBL_ASK_MANAGEMENT = "TBL_ASK_MANAGEMENT";
 
   static const TB_USERS_PHONE = "mobile_number";
   static const TB_USERS_ENROLLMENT = "enrollment_number";
@@ -270,6 +277,7 @@ class TableNames {
   static const PERMISSION_ID_UPLOAD_DOCUMENTS = "DP0601";
 
   static const PERMISSION_ID_VIEW_STUDENT_DIRECTORY = "DP0701";
+  static const PERMISSION_ID_VIEW_MENTORS = "DP0702";
 
   static const PERMISSION_ID_VIEW_OTHER_TICKET = "DP0801";
   static const PERMISSION_ID_UPDATE_TICKET_STATUS = "DP0802";
@@ -285,10 +293,17 @@ class TableNames {
   static const PERMISSION_ID_ADD_TIME_TABLE = "DP1102";
   static const PERMISSION_ID_UPDATE_TIME_TABLE = "DP1103";
   static const PERMISSION_ID_VIEW_ALL_TIME_TABLE = "DP1104";
-  static const PERMISSION_ID_UPDATE_ALL_TIME_TABLE = "DP1105";
+  static const PERMISSION_ID_ADD_PROXY = "DP1105";
+  static const PERMISSION_ID_CANCEL_LECTURE = "DP1106";
 
   static const PERMISSION_ID_VIEW_OTHERS_MARKETING_RECORD = "DP1301";
   static const PERMISSION_ID_ADD_MARKETING_RECORD = "DP1302";
+
+  static const PERMISSION_ID_ADD_ASK_LEVELS = "DP1801";
+  static const PERMISSION_ID_ADD_ASK_PARAMETERS = "DP1802";
+  static const PERMISSION_ID_NEW_EVALUATION = "DP1803";
+  static const PERMISSION_ID_UPDATE_ASK_PARAMETERS = "DP1804";
+  static const PERMISSION_ID_UPDATE_EVALUATION = "DP1805";
 
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";
@@ -351,4 +366,15 @@ class TableNames {
 
   static const JOB_TYPE_REGULAR = "Regular Internship";
   static const JOB_TYPE_FINAL_PLACEMENT = "Final Placement";
+
+  static const COMPANY_SLAB_20 = "1-50";
+  static const COMPANY_SLAB_40 = "51-500";
+  static const COMPANY_SLAB_60 = "501-1000";
+  static const COMPANY_SLAB_80 = "1001-5000";
+  static const COMPANY_SLAB_100 = "5001+";
+
+  static const JOB_CATEGORY_25 = "Field Work";
+  static const JOB_CATEGORY_50 = "Counter/Office Sales";
+  static const JOB_CATEGORY_75 = "Tech Field";
+  static const JOB_CATEGORY_100 = "Office Tech";
 }

@@ -163,8 +163,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
             GestureDetector(
               child: custom_text(text: "${strings_name.str_select_date} : $formattedDate", textStyles: blackTextSemiBold16, bottomValue: 0),
               onTap: () {
-                showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now())
-                    .then((pickedDate) {
+                showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
                   if (pickedDate == null) {
                     return;
                   }
@@ -227,11 +226,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     custom_text(text: "${studentList[index].fields?.name}", textStyles: blackTextSemiBold16),
-                                    custom_text(
-                                        topValue: 0,
-                                        bottomValue: 10,
-                                        text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}",
-                                        textStyles: blackTextSemiBold14),
+                                    custom_text(topValue: 0, bottomValue: 10, text: "Enrollment No: ${studentList[index].fields?.enrollmentNumber}", textStyles: blackTextSemiBold14),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -247,9 +242,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                             },
                                             child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: studentList[index].fields?.attendanceStatus == 1
-                                                        ? colors_name.colorPrimary
-                                                        : Theme.of(context).cardColor,
+                                                    color: studentList[index].fields?.attendanceStatus == 1 ? colors_name.colorPrimary : Theme.of(context).cardColor,
                                                     border: Border.all(color: colors_name.colorDark)),
                                                 child: custom_text(
                                                     text: strings_name.str_present,
@@ -271,9 +264,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                                             },
                                             child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: studentList[index].fields?.attendanceStatus == 0
-                                                        ? colors_name.colorPrimary
-                                                        : Theme.of(context).cardColor,
+                                                    color: studentList[index].fields?.attendanceStatus == 0 ? colors_name.colorPrimary : Theme.of(context).cardColor,
                                                     border: Border.all(color: colors_name.colorDark)),
                                                 child: custom_text(
                                                     text: strings_name.str_absent,
@@ -312,9 +303,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                           }),
                     ),
                   )
-                : Container(
-                    margin: const EdgeInsets.only(top: 100),
-                    child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_students, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
             CustomButton(
               text: strings_name.str_submit_attendance,
               click: () {
@@ -397,9 +386,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                           Get.back(closeOverlays: true);
                           submitAttendance();
                         })),
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10),
                 Expanded(
                     child: CustomButton(
                         text: strings_name.str_cancle,
@@ -470,6 +457,12 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
         request.lectureDate = formattedDate;
         request.lectureTime = formattedTime;
 
+        if (timeTableData != null) {
+          request.lecture_type = strings_name.str_lecture_type_timetable;
+        } else {
+          request.lecture_type = strings_name.str_lecture_type_proxy;
+        }
+
         var resp = await apiRepository.addStudentAttendanceApi(request);
         if (resp.id!.isNotEmpty) {
           if (widget.timeTableData == null) {
@@ -480,7 +473,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
             await Future.delayed(const Duration(milliseconds: 2000));
             Get.back(closeOverlays: true, result: true);
           } else {
-            updateTimeTableRecord();
+            updateTimeTableRecord(resp.id);
           }
           if (absentTokens.isNotEmpty) {
             String msg = "";
@@ -506,7 +499,7 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
     }
   }
 
-  updateTimeTableRecord() async {
+  updateTimeTableRecord(String? attendanceId) async {
     try {
       UpdateTimeTableRequest? updateTimeTableModel;
       var data = timeTableData?.fields;
@@ -530,14 +523,18 @@ class _AttendanceStudentListState extends State<AttendanceStudentList> {
                 updatedBy: data?.updatedBy,
                 mode: data?.mode,
                 modeTitle: data?.modeTitle,
-                isAttendanceTaken: true),
+                isAttendanceTaken: true,
+                attendance_record_id: attendanceId?.split(","),
+            ),
           )
         ],
       );
 
-      debugPrint('../ updateTimeTableModel ${jsonEncode(updateTimeTableModel.toJson())}');
+      var json = updateTimeTableModel.toJson();
+      json.removeWhere((key, value) => value == null);
+      debugPrint('../ updateTimeTableModel ${jsonEncode(json)}');
 
-      var resp = await apiRepository.updateTimeTableDataApi(updateTimeTableModel.toJson(), timeTableData?.id ?? '');
+      var resp = await apiRepository.updateTimeTableDataApi(json, timeTableData?.id ?? '');
 
       if (resp.records?.isNotEmpty ?? false) {
         setState(() {
