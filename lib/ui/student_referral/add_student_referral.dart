@@ -570,6 +570,7 @@ class _AddStudentReferralState extends State<AddStudentReferral> {
     response.hub_id = hubResponse?.id?.split(",");
     response.specialization_id = speResponse?.id?.split(",");
     response.student_id = PreferenceUtils.getLoginRecordId().split(",");
+    response.status = strings_name.str_referral_status_pending;
 
     try {
       var query = "AND(mobile_number='${mobileController.text.trim().toString()}')";
