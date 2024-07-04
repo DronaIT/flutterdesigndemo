@@ -12,8 +12,6 @@ import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
 import 'package:flutterdesigndemo/models/student_response.dart';
-import 'package:flutterdesigndemo/ui/ask/add_ask_levels.dart';
-import 'package:flutterdesigndemo/ui/ask/add_ask_parameters.dart';
 import 'package:flutterdesigndemo/ui/ask/ask_evaluation.dart';
 import 'package:flutterdesigndemo/ui/ask/ask_parameters.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
@@ -365,7 +363,7 @@ class _AskDashboardState extends State<AskDashboard> {
                       ],
                     )
                   : Container(),
-              custom_text(
+              const custom_text(
                 text: strings_name.str_select_hub,
                 alignment: Alignment.topLeft,
                 textStyles: blackTextSemiBold16,
@@ -377,6 +375,7 @@ class _AskDashboardState extends State<AskDashboard> {
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
                   elevation: 16,
+                  isExpanded: true,
                   style: blackText16,
                   focusColor: Colors.white,
                   onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
@@ -409,11 +408,12 @@ class _AskDashboardState extends State<AskDashboard> {
                 ),
               ),
               SizedBox(height: 5.h),
-              custom_text(
+              const custom_text(
                 text: strings_name.str_select_specialization,
                 alignment: Alignment.topLeft,
                 textStyles: blackTextSemiBold16,
                 topValue: 0,
+                bottomValue: 0,
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
@@ -422,6 +422,7 @@ class _AskDashboardState extends State<AskDashboard> {
                   value: speResponse,
                   elevation: 16,
                   style: blackText16,
+                  isExpanded: true,
                   focusColor: Colors.white,
                   onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
                     setState(() {
@@ -440,11 +441,12 @@ class _AskDashboardState extends State<AskDashboard> {
                 ),
               ),
               SizedBox(height: 5.h),
-              custom_text(
+              const custom_text(
                 text: strings_name.str_semester,
                 alignment: Alignment.topLeft,
                 textStyles: blackTextSemiBold16,
                 topValue: 0,
+                bottomValue: 0,
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
@@ -499,7 +501,6 @@ class _AskDashboardState extends State<AskDashboard> {
                         textStyles: primaryTextSemiBold14,
                         bottomValue: 0,
                       ),
-                      SizedBox(height: 5.h),
                       studentData?.isNotEmpty == true
                           ? ListView.builder(
                               primary: false,
@@ -579,14 +580,14 @@ class _AskDashboardState extends State<AskDashboard> {
                                   ),
                                 );
                               })
-                          : custom_text(
+                          : const custom_text(
                               text: strings_name.str_no_students,
                               textStyles: blackTextSemiBold14,
                               maxLines: 2,
                               alignment: Alignment.center,
                             ),
                     ])
-                  : custom_text(
+                  : const custom_text(
                       text: strings_name.str_no_students,
                       textStyles: blackTextSemiBold16,
                       maxLines: 2,

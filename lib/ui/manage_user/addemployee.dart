@@ -294,6 +294,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<RoleResponse>>(
                               value: roleResponse,
                               elevation: 16,
+                              isExpanded: true,
                               style: blackText16,
                               focusColor: Colors.white,
                               onChanged: (BaseApiResponseWithSerializable<RoleResponse>? newValue) {
@@ -329,6 +330,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                             width: viewWidth,
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                               value: hubResponse,
+                              isExpanded: true,
                               elevation: 16,
                               style: blackText16,
                               focusColor: Colors.white,

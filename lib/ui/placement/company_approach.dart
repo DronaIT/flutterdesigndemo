@@ -93,6 +93,7 @@ class _CompanyApproachState extends State<CompanyApproach> {
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                           elevation: 16,
                           style: blackText16,
+                          isExpanded: true,
                           value: typeOfResponse,
                           focusColor: Colors.white,
                           onChanged: (BaseApiResponseWithSerializable<TypeOfSectorResponse>? newValue) {

@@ -132,6 +132,7 @@ class _CompanySelectionLocalState extends State<CompanySelectionLocal> {
               child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                 value: hubResponse,
                 elevation: 16,
+                isExpanded: true,
                 style: blackText16,
                 focusColor: Colors.white,
                 onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {

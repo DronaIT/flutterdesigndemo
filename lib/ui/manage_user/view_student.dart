@@ -116,7 +116,7 @@ class _ViewStudentState extends State<ViewStudent> {
               child: Column(
                 children: [
                   SizedBox(height: 10.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_select_hub,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -127,6 +127,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     width: MediaQuery.of(context).size.width,
                     child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                       value: hubResponse,
+                      isExpanded: true,
                       elevation: 16,
                       style: blackText16,
                       focusColor: Colors.white,
@@ -160,7 +161,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     ),
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_select_specialization,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -171,6 +172,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     width: MediaQuery.of(context).size.width,
                     child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                       value: speResponse,
+                      isExpanded: true,
                       elevation: 16,
                       style: blackText16,
                       focusColor: Colors.white,
@@ -190,7 +192,7 @@ class _ViewStudentState extends State<ViewStudent> {
                     ),
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_semester,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,

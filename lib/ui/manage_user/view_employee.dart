@@ -37,6 +37,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? viewEmployee = [];
   List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mainData = [];
   var controllerSearch = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -84,23 +85,25 @@ class _ViewEmployeeState extends State<ViewEmployee> {
             margin: const EdgeInsets.all(10),
             child: Column(
               children: [
-                SizedBox(height: 10.h),
-                custom_text(
+                const custom_text(
                   text: strings_name.str_select_hub_r,
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
+                  bottomValue: 5,
+                  topValue: 5,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 5),
                   width: MediaQuery.of(context).size.width,
                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                     value: hubResponse,
                     elevation: 16,
+                    isExpanded: true,
                     style: blackText16,
                     focusColor: Colors.white,
                     onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                       setState(() {
-                        hubValue = newValue!.fields!.id!.toString();
+                        hubValue = newValue!.fields!.hubId!.toString();
                         hubResponse = newValue;
                       });
                     },
@@ -117,7 +120,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                     if (hubValue.isEmpty) {
                       Utils.showSnackBar(context, strings_name.str_empty_hub);
                     } else {
-                      var query = "SEARCH('$hubValue',${TableNames.CLM_HUB_IDS},0)";
+                      var query = "SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
                       setState(() {
                         isVisible = true;
                       });
@@ -156,9 +159,9 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                   text: strings_name.str_submit,
                 ),
                 Visibility(
-                  visible:  mainData!.isNotEmpty,
+                  visible: mainData!.isNotEmpty,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 5,bottom: 10),
+                    padding: const EdgeInsets.only(top: 5, bottom: 10),
                     child: CustomEditTextSearch(
                       type: TextInputType.text,
                       textInputAction: TextInputAction.done,
@@ -181,7 +184,6 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                     ),
                   ),
                 ),
-
                 viewEmployee!.isNotEmpty
                     ? Expanded(
                         child: ListView.builder(
@@ -194,8 +196,18 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                     Flexible(
                                       child: Column(
                                         children: [
-                                          custom_text(text: "${viewEmployee![index].fields!.employeeName!} (${viewEmployee![index].fields!.employeeCode!})", textStyles: blackTextSemiBold16, topValue: 10, maxLines: 2),
-                                          Visibility(visible: viewEmployee![index].fields!.email != null, child: custom_text(text: viewEmployee![index].fields!.email != null ? viewEmployee![index].fields!.email! : "", textStyles: blackTextSemiBold14, bottomValue: 5, topValue: 0)),
+                                          custom_text(
+                                              text: "${viewEmployee![index].fields!.employeeName!} (${viewEmployee![index].fields!.employeeCode!})",
+                                              textStyles: blackTextSemiBold16,
+                                              topValue: 10,
+                                              maxLines: 2),
+                                          Visibility(
+                                              visible: viewEmployee![index].fields!.email != null,
+                                              child: custom_text(
+                                                  text: viewEmployee![index].fields!.email != null ? viewEmployee![index].fields!.email! : "",
+                                                  textStyles: blackTextSemiBold14,
+                                                  bottomValue: 5,
+                                                  topValue: 0)),
                                           custom_text(text: viewEmployee![index].fields!.mobileNumber!, textStyles: blackTextSemiBold14, bottomValue: 10, topValue: 0)
                                         ],
                                       ),
@@ -205,7 +217,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                                             onTap: () async {
                                               var response = await Get.to(const UpdateEmployee(), arguments: viewEmployee![index]);
                                               if (response) {
-                                                var query = "SEARCH('$hubValue',${TableNames.CLM_HUB_IDS},0)";
+                                                var query = "SEARCH('$hubValue',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
                                                 setState(() {
                                                   isVisible = true;
                                                 });
@@ -246,7 +258,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                               );
                             }),
                       )
-                    : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: const EdgeInsets.only(top: 100), child: const custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               ],
             ),
           ),

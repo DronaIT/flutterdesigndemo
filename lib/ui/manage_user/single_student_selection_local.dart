@@ -212,6 +212,7 @@ class _SingleStudentSelectionLocalState extends State<SingleStudentSelectionLoca
             width: MediaQuery.of(context).size.width,
             child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
               value: hubResponse,
+              isExpanded: true,
               elevation: 16,
               style: blackText16,
               focusColor: Colors.white,
@@ -257,6 +258,7 @@ class _SingleStudentSelectionLocalState extends State<SingleStudentSelectionLoca
             child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
               value: speResponse,
               elevation: 16,
+              isExpanded: true,
               style: blackText16,
               focusColor: Colors.white,
               onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {

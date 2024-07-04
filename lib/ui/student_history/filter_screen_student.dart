@@ -253,6 +253,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                           value: hubResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -309,6 +310,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                                   width: viewWidth,
                                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
                                     value: mentorResponse,
+                                    isExpanded: true,
                                     elevation: 16,
                                     style: blackText16,
                                     focusColor: Colors.white,
@@ -344,6 +346,7 @@ class _FilterScreenStudentState extends State<FilterScreenStudent> {
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                           value: speResponse,
                           elevation: 16,
+                          isExpanded: true,
                           style: blackText16,
                           focusColor: Colors.white,
                           onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {

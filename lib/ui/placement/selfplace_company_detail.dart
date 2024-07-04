@@ -254,6 +254,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                           width: viewWidth,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                             elevation: 16,
+                            isExpanded: true,
                             style: blackText16,
                             value: typeOfResponse,
                             focusColor: Colors.white,
@@ -325,6 +326,7 @@ class _SelfPlaceCompanyDetailState extends State<SelfPlaceCompanyDetail> {
                           width: MediaQuery.of(context).size.width,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                             value: hubResponse,
+                            isExpanded: true,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,

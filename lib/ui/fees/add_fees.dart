@@ -134,6 +134,7 @@ class _AddFeesState extends State<AddFees> {
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
                   elevation: 16,
+                  isExpanded: true,
                   style: blackText16,
                   focusColor: Colors.white,
                   onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
@@ -181,6 +182,7 @@ class _AddFeesState extends State<AddFees> {
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                   value: speResponse,
                   elevation: 16,
+                  isExpanded: true,
                   style: blackText16,
                   focusColor: Colors.white,
                   onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {

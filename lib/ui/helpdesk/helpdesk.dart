@@ -94,6 +94,7 @@ class _HelpDeskState extends State<HelpDesk> {
                           width: viewWidth,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
                             value: helpDeskTypeResponses,
+                            isExpanded: true,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,

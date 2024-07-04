@@ -222,6 +222,7 @@ class _AcademicDetailsState extends State<AcademicDetails> {
                         value: hubResponse,
                         elevation: 16,
                         style: blackText16,
+                        isExpanded: true,
                         focusColor: Colors.white,
                         onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
                           setState(() {

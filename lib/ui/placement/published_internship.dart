@@ -167,6 +167,7 @@ class _PublishedInternshipState extends State<PublishedInternship> {
                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                     value: hubResponse,
                     elevation: 16,
+                    isExpanded: true,
                     style: blackText16,
                     focusColor: Colors.white,
                     onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {

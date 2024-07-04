@@ -210,7 +210,8 @@ class _AddAskParametersState extends State<AddAskParameters> {
                   text: strings_name.str_select_ask_level,
                   alignment: Alignment.topLeft,
                   textStyles: blackTextSemiBold16,
-                  topValue: 0,
+                  topValue: 5,
+                  bottomValue: 0,
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
@@ -219,6 +220,7 @@ class _AddAskParametersState extends State<AddAskParameters> {
                     value: askLevelResponse,
                     elevation: 16,
                     style: blackText16,
+                    isExpanded: true,
                     focusColor: Colors.white,
                     onChanged: (BaseApiResponseWithSerializable<ASKLevelResponse>? newValue) {
                       askLevelValue = newValue!.fields!.askCode.toString();

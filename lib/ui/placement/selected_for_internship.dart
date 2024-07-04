@@ -137,7 +137,7 @@ class _SelectedForInternshipState extends State<SelectedForInternship> {
                                 jobOpportunityData.records?[index].fields!.specificRequirements != null
                                     ? custom_text(
                                         text: "Specific Requirement: ${jobOpportunityData.records?[index].fields!.specificRequirements?.trim()}",
-                                        textStyles: blackTextSemiBold12,
+                                        textStyles: primryTextSemiBold14,
                                         topValue: 5,
                                         maxLines: 1000,
                                         bottomValue: 5,

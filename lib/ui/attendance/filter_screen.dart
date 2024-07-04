@@ -191,6 +191,7 @@ class _FilterState extends State<Filter> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                           value: hubResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -242,6 +243,7 @@ class _FilterState extends State<Filter> {
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                           value: speResponse,
                           elevation: 16,
+                          isExpanded: true,
                           style: blackText16,
                           focusColor: Colors.white,
                           onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {

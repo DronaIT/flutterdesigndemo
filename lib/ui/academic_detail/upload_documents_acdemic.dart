@@ -87,7 +87,7 @@ class _UploadDocumentsAcademicState extends State<UploadDocumentsAcademic> {
               elevation: 0.0,
               backgroundColor: colors_name.colorPrimary,
               onPressed: () {
-                uplaodDocument();
+                uploadDocument();
               },
               child: const Icon(
                 Icons.upload,
@@ -96,7 +96,7 @@ class _UploadDocumentsAcademicState extends State<UploadDocumentsAcademic> {
     );
   }
 
-  Future<void> uplaodDocument() async {
+  Future<void> uploadDocument() async {
     showDialog(
         context: context,
         builder: (BuildContext context) {

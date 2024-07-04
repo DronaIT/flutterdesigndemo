@@ -300,6 +300,7 @@ class _StudentReferralsState extends State<StudentReferrals> {
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
                   elevation: 16,
+                  isExpanded: true,
                   style: blackText16,
                   focusColor: Colors.white,
                   onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {

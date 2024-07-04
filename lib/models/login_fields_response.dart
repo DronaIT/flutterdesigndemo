@@ -119,6 +119,9 @@ class LoginFieldsResponse {
   int missedToApply = 0;
   int missedToAppearForInterview = 0;
 
+  List<String>? assigned_to;
+  List<String>? assigned_to_employee_name;
+
   LoginFieldsResponse({
     this.city,
     this.joiningYear,
@@ -220,6 +223,8 @@ class LoginFieldsResponse {
     this.warning_letter_1_for_applying,
     this.warning_letter_2_for_applying,
     this.warning_letter_3_for_applying,
+    this.assigned_to,
+    this.assigned_to_employee_name,
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
@@ -336,6 +341,10 @@ class LoginFieldsResponse {
     percentage = json['percentage'];
     is_placed_now = json['is_placed_now'];
     has_resigned = json['has_resigned'];
+
+    assigned_to = json['assigned_to']?.cast<String>();
+    assigned_to_employee_name = json['assigned_to_employee_name']?.cast<String>();
+
     if (json['resume'] != null) {
       resume = <AttachmentResponse>[];
       json['resume'].forEach((v) {
@@ -459,6 +468,9 @@ class LoginFieldsResponse {
     data['father_full_name'] = father_full_name;
     data['is_placed_now'] = is_placed_now;
     data['has_resigned'] = has_resigned;
+    data['assigned_to'] = assigned_to;
+    data['assigned_to_employee_name'] = assigned_to_employee_name;
+
     if (resume != null) {
       data['resume'] = resume!.map((v) => v.toJson()).toList();
     }

@@ -557,7 +557,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         setState(() {
           isLoading = false;
         });
-        Get.back(result: TableNames.LUK_ADD_TIME_TABLE);
+        // Get.back(result: TableNames.LUK_ADD_TIME_TABLE);
         Utils.showSnackBar(context, strings_name.str_time_table_added);
       } else {
         setState(() {
@@ -1269,6 +1269,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
                   elevation: 16,
+                  isExpanded: true,
                   style: blackText16,
                   focusColor: Colors.white,
                   onChanged: widget.timeTableData == null
@@ -1312,6 +1313,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                       child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                         value: specializationResponse,
                         elevation: 16,
+                        isExpanded: true,
                         style: blackText16,
                         focusColor: Colors.white,
                         onChanged: widget.timeTableData == null
@@ -1495,6 +1497,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
                       )
                     : DropdownButtonFormField<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
                         value: facultyResponse,
+                        isExpanded: true,
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,

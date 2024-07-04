@@ -153,7 +153,7 @@ class _JobOpportunityListState extends State<JobOpportunityList> {
                                 jobpportunityData.records![index].fields!.specificRequirements != null
                                     ? custom_text(
                                         text: "Specific Requirement: ${jobpportunityData.records![index].fields!.specificRequirements?.trim()}",
-                                        textStyles: blackTextSemiBold12,
+                                        textStyles: primryTextSemiBold14,
                                         topValue: 5,
                                         maxLines: 1000,
                                         bottomValue: 5,

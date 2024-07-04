@@ -250,6 +250,7 @@ class _ASKEvaluationState extends State<ASKEvaluation> {
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<ASKLevelResponse>>(
                             value: askLevelResponse,
                             elevation: 16,
+                            isExpanded: true,
                             style: blackText16,
                             focusColor: Colors.white,
                             onChanged: (BaseApiResponseWithSerializable<ASKLevelResponse>? newValue) {

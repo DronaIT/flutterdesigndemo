@@ -223,7 +223,7 @@ class ApiRepository {
     }
   }
 
-  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi() async {
+  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi([String offset = ""]) async {
     try {
       final response = await userApi.getSpecializationApi();
       return response;

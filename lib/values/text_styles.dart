@@ -196,7 +196,7 @@ const blackTextSemiBold12 = TextStyle(
 );
 
 const blackTextSemiBold15 = TextStyle(
-  fontSize: 16,
+  fontSize: 15,
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );

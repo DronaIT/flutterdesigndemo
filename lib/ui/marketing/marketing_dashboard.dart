@@ -618,7 +618,7 @@ class _MarketingDashboardState extends State<MarketingDashboard> {
                                 SizedBox(height: 5.h),
                                 Visibility(
                                   visible: othersList![index].fields?.remarks?.isNotEmpty == true,
-                                  child: Row(
+                                  child: Column(
                                     children: [
                                       custom_text(
                                         text: "${strings_name.str_remarks}: ",
@@ -632,9 +632,8 @@ class _MarketingDashboardState extends State<MarketingDashboard> {
                                         text: othersList![index].fields?.remarks ?? "",
                                         textStyles: blackText14,
                                         bottomValue: 0,
-                                        leftValue: 0,
                                         topValue: 0,
-                                        maxLines: 2,
+                                        maxLines: 1000,
                                       ),
                                     ],
                                   ),

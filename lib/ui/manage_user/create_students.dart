@@ -178,6 +178,7 @@ class _AddStudent extends State<CreateStudent> {
                   width: viewWidth,
                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                     value: hubResponse,
+                    isExpanded: true,
                     elevation: 16,
                     style: blackText16,
                     focusColor: colors_name.colorPrimary,
@@ -243,6 +244,9 @@ class _AddStudent extends State<CreateStudent> {
                     }
 
                     if (tempList.length == 10) {
+                      createStudents(tempList, i == list.length - 1);
+                      tempList.clear();
+                    } else if (i == list.length - 1 && tempList.isNotEmpty) {
                       createStudents(tempList, i == list.length - 1);
                       tempList.clear();
                     } else if (i == list.length - 1) {
@@ -375,14 +379,14 @@ class _AddStudent extends State<CreateStudent> {
           }
           // var query = "OR(${TableNames.TB_USERS_PHONE}='${response.mobileNumber.toString()}',${TableNames.CLM_MOTHER_NUMBER}='${response.motherNumber.toString()}',${TableNames.CLM_FATHER_NUMBERS}='${response.fatherNumber.toString()}')";
           if (request.mobileNumber != null) {
-            // var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
+            var query = "FIND('${request.mobileNumber.toString()}',${TableNames.TB_USERS_PHONE},0)";
             try {
-              // var checkMobile = await createStudentRepository.loginApi(query);
-              // if (checkMobile.records?.isEmpty == true) {
+              var checkMobile = await createStudentRepository.loginApi(query);
+              if (checkMobile.records?.isEmpty == true) {
                 Map<String, CreateStudentRequest> map = {};
                 map["fields"] = request;
                 list.add(map);
-              // }
+              }
             } on DioError catch (e) {
               setState(() {
                 isVisible = false;

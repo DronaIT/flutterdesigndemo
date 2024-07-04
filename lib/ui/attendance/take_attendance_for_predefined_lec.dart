@@ -153,14 +153,14 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
           if (canShowAllTimeTable) {
             query = "AND({date} = TODAY())";
           } else {
-            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
+            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,{proxy_taker}=$loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
           }
         } else {
           List<String> dates = splitAndReFormatDate(_rangeToSend);
           if (canShowAllTimeTable) {
             query = "AND({date} >= '${dates[0]}', {date} <= '${dates[1]}')";
           } else {
-            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId),{date} >= '${dates[0]}', {date} <= '${dates[1]}')";
+            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,{proxy_taker}=$loginId),{date} >= '${dates[0]}', {date} <= '${dates[1]}')";
           }
         }
         debugPrint('../ query $query');
@@ -335,7 +335,7 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
                       return unitResponseArray!.isNotEmpty
                           ? Column(
                               children: [
-                                custom_text(
+                                const custom_text(
                                   text: strings_name.str_view_unit,
                                   alignment: Alignment.topLeft,
                                   textStyles: blackTextSemiBold16,
@@ -383,7 +383,7 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
                   ? Column(
                       children: [
                         SizedBox(height: 10.h),
-                        custom_text(
+                        const custom_text(
                           text: strings_name.str_view_topic,
                           alignment: Alignment.topLeft,
                           textStyles: blackTextSemiBold16,
@@ -578,7 +578,7 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
               : ListView(
                   children: [
                     SizedBox(height: 10.h),
-                    custom_text(
+                    const custom_text(
                       text: strings_name.str_range_r,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,

@@ -188,6 +188,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                           value: hubResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -231,6 +232,7 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                           value: speResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -332,8 +334,8 @@ class _CustomFilterScreenState extends State<CustomFilterScreen> {
                                         width: viewWidth,
                                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
                                           value: subjectResponse,
-                                          elevation: 16,
                                           isExpanded: true,
+                                          elevation: 16,
                                           style: blackText16,
                                           focusColor: Colors.white,
                                           onChanged: (BaseApiResponseWithSerializable<SubjectResponse>? newValue) {

@@ -274,6 +274,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           width: viewWidth,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<TypeOfSectorResponse>>(
                             elevation: 16,
+                            isExpanded: true,
                             style: blackText16,
                             value: typeOfResponse,
                             focusColor: Colors.white,
@@ -358,6 +359,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                           width: MediaQuery.of(context).size.width,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                             value: hubResponse,
+                            isExpanded: true,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,

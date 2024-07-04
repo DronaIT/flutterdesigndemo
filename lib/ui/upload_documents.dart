@@ -40,7 +40,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
   String docPath = "";
   String docName = "";
   var docFileData;
-  bool canupload = false, canView = false;
+  bool canUpload = false, canView = false;
 
   @override
   void initState() {
@@ -62,14 +62,14 @@ class _UploadDocumentsState extends State<UploadDocuments> {
       var loginData = PreferenceUtils.getLoginDataEmployee();
       roleId = loginData.roleIdFromRoleIds!.join(',');
     }
-    var query = "AND(FIND('${roleId}',role_ids)>0,module_ids='${TableNames.MODULE_UPLOAD_DOCUMENT}')";
+    var query = "AND(FIND('$roleId',role_ids)>0,module_ids='${TableNames.MODULE_UPLOAD_DOCUMENT}')";
     try {
       var data = await createStudentRepository.getPermissionsApi(query);
       if (data.records!.isNotEmpty) {
         for (var i = 0; i < data.records!.length; i++) {
           if (data.records![i].fields!.permissionId == TableNames.PERMISSION_ID_UPLOAD_DOCUMENTS) {
             setState(() {
-              canupload = true;
+              canUpload = true;
             });
           }
 
@@ -168,7 +168,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                                 );
                               }),
                         )
-                      : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                      : Container(margin: const EdgeInsets.only(top: 100), child: const custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
                 ),
               ),
               Center(
@@ -177,12 +177,12 @@ class _UploadDocumentsState extends State<UploadDocuments> {
             ],
           ),
           floatingActionButton: Visibility(
-            visible: canupload,
+            visible: canUpload,
             child: FloatingActionButton(
                 elevation: 0.0,
                 backgroundColor: colors_name.colorPrimary,
                 onPressed: () {
-                  uplaodDocument();
+                  uploadDocument();
                 },
                 child: const Icon(
                   Icons.upload,
@@ -192,7 +192,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     );
   }
 
-  Future<void> uplaodDocument() async {
+  Future<void> uploadDocument() async {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -208,7 +208,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                       Get.back();
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 10, right: 10),
+                      margin: const EdgeInsets.only(top: 10, right: 10),
                       alignment: Alignment.topRight,
                       child: const Icon(
                         Icons.close,
@@ -220,6 +220,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                     text: strings_name.str_title,
                     textStyles: boldTitlePrimaryColorStyle,
                     topValue: 0,
+                    bottomValue: 5,
                   ),
                   custom_edittext(
                     hintText: strings_name.str_title,
@@ -232,21 +233,23 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                   custom_text(
                     text: strings_name.str_description,
                     textStyles: boldTitlePrimaryColorStyle,
-                    topValue: 3,
+                    topValue: 5,
+                    bottomValue: 5,
                   ),
                   custom_edittext(
                     hintText: strings_name.str_description,
-                    type: TextInputType.text,
-                    textInputAction: TextInputAction.done,
+                    type: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
                     controller: desController,
+                    minLines: 3,
                     maxLines: 3,
                     topValue: 0,
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      custom_text(
+                      const custom_text(
                         text: strings_name.str_document,
                         leftValue: 10,
                         alignment: Alignment.topLeft,
@@ -276,7 +279,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                               // documentfile();
                             },
                           ),
-                          custom_text(
+                          const custom_text(
                             text: strings_name.str_upload_file,
                             textStyles: blackTextSemiBold14,
                             leftValue: 5,
@@ -292,7 +295,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                     maxLines: 1,
                     topValue: 0,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   CustomButton(
                       text: strings_name.str_submit,
                       click: () async {
@@ -339,8 +342,8 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     });
     try {
       //isForStudent = "0" - Employee , "1" - student
-      Map<String, dynamic> docUplaod = {"title": titleController.text, "url": path, "description": desController.text , "isForStudent" : PreferenceUtils.getIsLogin() ==2 ? "0" : "1"};
-      var resp = await createStudentRepository.addAppDataApi(docUplaod);
+      Map<String, dynamic> docUpload = {"title": titleController.text, "url": path, "description": desController.text , "isForStudent" : PreferenceUtils.getIsLogin() ==2 ? "0" : "1"};
+      var resp = await createStudentRepository.addAppDataApi(docUpload);
       if (resp != null) {
         setState(() {
           isVisible = false;

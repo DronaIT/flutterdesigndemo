@@ -213,6 +213,7 @@ class _StudentSelectionLocalState extends State<StudentSelectionLocal> {
             child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
               value: hubResponse,
               elevation: 16,
+              isExpanded: true,
               style: blackText16,
               focusColor: Colors.white,
               onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
@@ -256,6 +257,7 @@ class _StudentSelectionLocalState extends State<StudentSelectionLocal> {
             width: viewWidth,
             child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
               value: speResponse,
+              isExpanded: true,
               elevation: 16,
               style: blackText16,
               focusColor: Colors.white,

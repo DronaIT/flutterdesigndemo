@@ -148,69 +148,67 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
             }
           }
 
-          setState(() {
-            fromEdit = true;
-            if (data.records?.first.fields != null) {
-              addStudentId = data.records?.first.id;
-              nameController.text = data.records!.first.fields!.name ?? "";
-              emailController.text = data.records!.first.fields!.email ?? "";
-              phoneController.text = data.records!.first.fields!.mobileNumber ?? "";
-              cityController.text = data.records!.first.fields!.city ?? "";
-              addressController.text = data.records!.first.fields!.address ?? "";
-              pincodeController.text = data.records!.first.fields!.pin_code ?? "";
-              joiningYearController.text = data.records!.first.fields!.joiningYear ?? "";
-              srnumberController.text = data.records!.first.fields!.sr_number ?? "";
-              birthdateController.text = data.records!.first.fields!.birthdate ?? "";
-              batchController.text = data.records!.first.fields!.batch ?? "";
-              if (data.records!.first.fields!.birthdate?.isNotEmpty == true) {
-                formattedDate = data.records!.first.fields!.birthdate ?? "";
-              }
-              aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number ?? "";
-              casteController.text = data.records!.first.fields!.caste ?? "";
-              hscpercentageController.text = data.records!.first.fields!.hsc_percentage ?? "";
-              hscschoolcityController.text = data.records!.first.fields!.hsc_school_city ?? "";
-              hscschoolController.text = data.records!.first.fields!.hsc_school ?? "";
-              mothernumberController.text = data.records!.first.fields!.mother_number ?? "";
-              fathernumberController.text = data.records!.first.fields!.father_number ?? "";
-              mothernameController.text = data.records!.first.fields!.mother_name ?? "";
-              gender = data.records!.first.fields!.gender ?? strings_name.str_male;
-              for (var i = 0; i < speResponseArray!.length; i++) {
-                if (data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId) {
-                  setState(() {
-                    speResponse = speResponseArray![i];
-                    speValue = speResponseArray![i].fields!.specializationId!.toString();
-                  });
-                  break;
-                }
-              }
-              for (var i = 0; i < hubResponseArray!.length; i++) {
-                if (data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId) {
-                  setState(() {
-                    hubResponse = hubResponseArray![i];
-                    hubValue = hubResponseArray![i].fields!.hubId!.toString();
-                  });
-                  break;
-                }
-              }
-
-              for (var i = 0; i < semesterResponseArray.length; i++) {
-                if (data.records!.first.fields!.semester == semesterResponseArray[i].toString()) {
-                  setState(() {
-                    semesterValue = semesterResponseArray[i];
-                  });
-                  break;
-                }
-              }
-              for (var i = 0; i < divisionResponseArray.length; i++) {
-                if (data.records!.first.fields!.division == divisionResponseArray[i].toString()) {
-                  setState(() {
-                    divisionValue = divisionResponseArray[i];
-                  });
-                  break;
-                }
+          fromEdit = true;
+          if (data.records?.first.fields != null) {
+            addStudentId = data.records?.first.id;
+            nameController.text = data.records!.first.fields!.name ?? "";
+            emailController.text = data.records!.first.fields!.email ?? "";
+            phoneController.text = data.records!.first.fields!.mobileNumber ?? "";
+            cityController.text = data.records!.first.fields!.city ?? "";
+            addressController.text = data.records!.first.fields!.address ?? "";
+            pincodeController.text = data.records!.first.fields!.pin_code ?? "";
+            joiningYearController.text = data.records!.first.fields!.joiningYear ?? "";
+            srnumberController.text = data.records!.first.fields!.sr_number ?? "";
+            birthdateController.text = data.records!.first.fields!.birthdate ?? "";
+            batchController.text = data.records!.first.fields!.batch ?? "";
+            if (data.records!.first.fields!.birthdate?.isNotEmpty == true) {
+              formattedDate = data.records!.first.fields!.birthdate ?? "";
+            }
+            aadharcardnumberController.text = data.records!.first.fields!.aadhar_card_number ?? "";
+            casteController.text = data.records!.first.fields!.caste ?? "";
+            hscpercentageController.text = data.records!.first.fields!.hsc_percentage ?? "";
+            hscschoolcityController.text = data.records!.first.fields!.hsc_school_city ?? "";
+            hscschoolController.text = data.records!.first.fields!.hsc_school ?? "";
+            mothernumberController.text = data.records!.first.fields!.mother_number ?? "";
+            fathernumberController.text = data.records!.first.fields!.father_number ?? "";
+            mothernameController.text = data.records!.first.fields!.mother_name ?? "";
+            gender = data.records!.first.fields!.gender ?? strings_name.str_male;
+            for (var i = 0; i < speResponseArray!.length; i++) {
+              if (data.records!.first.fields!.specializationIdFromSpecializationIds?[0] == speResponseArray![i].fields!.specializationId) {
+                setState(() {
+                  speResponse = speResponseArray![i];
+                  speValue = speResponseArray![i].fields!.specializationId!.toString();
+                });
+                break;
               }
             }
-          });
+            for (var i = 0; i < hubResponseArray!.length; i++) {
+              if (data.records!.first.fields!.hubIdFromHubIds?[0] == hubResponseArray![i].fields!.hubId) {
+                setState(() {
+                  hubResponse = hubResponseArray![i];
+                  hubValue = hubResponseArray![i].fields!.hubId!.toString();
+                });
+                break;
+              }
+            }
+
+            for (var i = 0; i < semesterResponseArray.length; i++) {
+              if (data.records!.first.fields!.semester == semesterResponseArray[i].toString()) {
+                setState(() {
+                  semesterValue = semesterResponseArray[i];
+                });
+                break;
+              }
+            }
+            for (var i = 0; i < divisionResponseArray.length; i++) {
+              if (data.records!.first.fields!.division == divisionResponseArray[i].toString()) {
+                setState(() {
+                  divisionValue = divisionResponseArray[i];
+                });
+                break;
+              }
+            }
+          }
         } else {
           Utils.showSnackBar(context, strings_name.str_something_wrong);
         }
@@ -241,7 +239,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
               child: Column(
                 children: [
                   SizedBox(height: 10.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_student_name,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -255,7 +253,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_email_add,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -268,7 +266,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_phone_number,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -282,7 +280,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_birthday,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -299,9 +297,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                       ),
                     ),
                     onTap: () {
-                      showDatePicker(
-                              context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(1950), lastDate: DateTime.now())
-                          .then((pickedDate) {
+                      showDatePicker(context: context, initialDate: DateTime.parse(formattedDate), firstDate: DateTime(1950), lastDate: DateTime.now()).then((pickedDate) {
                         if (pickedDate == null) {
                           return;
                         }
@@ -314,7 +310,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     },
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_mother_name,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -334,7 +330,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           flex: 1,
                           child: Column(
                             children: [
-                              custom_text(
+                              const custom_text(
                                 text: strings_name.str_father_number,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
@@ -353,7 +349,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           flex: 1,
                           child: Column(
                             children: [
-                              custom_text(
+                              const custom_text(
                                 text: strings_name.str_mother_number,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
@@ -371,7 +367,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_address_r,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -391,7 +387,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           flex: 6,
                           child: Column(
                             children: [
-                              custom_text(
+                              const custom_text(
                                 text: strings_name.str_city_r,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
@@ -409,7 +405,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         flex: 4,
                         child: Column(
                           children: [
-                            custom_text(
+                            const custom_text(
                               text: strings_name.str_pincode,
                               alignment: Alignment.topLeft,
                               textStyles: blackTextSemiBold16,
@@ -428,7 +424,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_select_gender,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -442,7 +438,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         flex: 1,
                         child: RadioListTile(
                           activeColor: colors_name.colorPrimary,
-                          title: custom_text(
+                          title: const custom_text(
                             text: strings_name.str_male,
                             textStyles: blackTextSemiBold16,
                             bottomValue: 0,
@@ -463,7 +459,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                         flex: 1,
                         child: RadioListTile(
                           activeColor: colors_name.colorPrimary,
-                          title: custom_text(
+                          title: const custom_text(
                             text: strings_name.str_female,
                             textStyles: blackTextSemiBold16,
                             bottomValue: 0,
@@ -483,7 +479,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 2.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_joining_year,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -496,7 +492,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     maxLength: 4,
                   ),
                   SizedBox(height: 2.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_batch,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -509,7 +505,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     maxLength: 10,
                   ),
                   SizedBox(height: 2.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_serial_number,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -522,7 +518,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_select_hub_r,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -537,6 +533,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           width: viewWidth,
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                             value: hubResponse,
+                            isExpanded: true,
                             elevation: 16,
                             style: blackText16,
                             focusColor: Colors.white,
@@ -560,8 +557,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                               }
                               setState(() {});
                             },
-                            items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>(
-                                (BaseApiResponseWithSerializable<HubResponse> value) {
+                            items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
                               return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
                                 value: value,
                                 child: Text(value.fields!.hubName!.toString()),
@@ -573,7 +569,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_select_specialization,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -589,6 +585,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                             value: speResponse,
                             elevation: 16,
+                            isExpanded: true,
                             style: blackText16,
                             focusColor: Colors.white,
                             onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
@@ -597,8 +594,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                                 speResponse = newValue;
                               });
                             },
-                            items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>(
-                                (BaseApiResponseWithSerializable<SpecializationResponse> value) {
+                            items: speResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>>((BaseApiResponseWithSerializable<SpecializationResponse> value) {
                               return DropdownMenuItem<BaseApiResponseWithSerializable<SpecializationResponse>>(
                                 value: value,
                                 child: Text(value.fields!.specializationName.toString()),
@@ -610,7 +606,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_semester,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -645,7 +641,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_division,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -680,7 +676,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     ],
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_adharcard_number,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -694,7 +690,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_caste,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -707,7 +703,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                     topValue: 2,
                   ),
                   SizedBox(height: 3.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_hsc_school,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -726,7 +722,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           flex: 7,
                           child: Column(
                             children: [
-                              custom_text(
+                              const custom_text(
                                 text: strings_name.str_hsc_school_city,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,
@@ -744,7 +740,7 @@ class _AddSingleStudentState extends State<AddSingleStudent> {
                           flex: 3,
                           child: Column(
                             children: [
-                              custom_text(
+                              const custom_text(
                                 text: strings_name.str_hsc_percentage,
                                 alignment: Alignment.topLeft,
                                 textStyles: blackTextSemiBold16,

@@ -109,7 +109,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
     BaseApiResponseWithSerializable<ViewEmployeeResponse> data = Get.arguments;
     nameController.text = data.fields!.employeeName!;
     phoneController.text = data.fields!.mobileNumber!;
-    emailController.text = data.fields!.email!;
+    emailController.text = data.fields!.email ?? "";
     addressController.text = data.fields!.address ?? "";
     cityController.text = data.fields!.city ?? "";
     gender = data.fields!.gender ?? "";
@@ -338,6 +338,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                             margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<RoleResponse>>(
                               value: roleResponse,
+                              isExpanded: true,
                               elevation: 16,
                               style: blackText16,
                               focusColor: Colors.white,
@@ -375,6 +376,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                               value: hubResponse,
                               elevation: 16,
+                              isExpanded: true,
                               style: blackText16,
                               focusColor: Colors.white,
                               onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {

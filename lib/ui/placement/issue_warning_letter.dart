@@ -170,6 +170,7 @@ class _IssueWarningLetterState extends State<IssueWarningLetter> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                           value: hubResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -214,6 +215,7 @@ class _IssueWarningLetterState extends State<IssueWarningLetter> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                           value: speResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,

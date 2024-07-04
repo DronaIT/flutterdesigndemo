@@ -21,8 +21,12 @@ class TableNames {
 // static const CLOUDARY_CLOUD_NAME = "diz8xhbjv";    // From old it@drona account
 // static const CLOUDARY_PRESET = "kgicun2o";         // From old it@drona account
 
-  static const CLOUDARY_CLOUD_NAME = "dcycbefvl";
-  static const CLOUDARY_PRESET = "kyxglsmj";
+  // static const CLOUDARY_CLOUD_NAME = "dcycbefvl";     // From old gaurav@drona account
+  // static const CLOUDARY_PRESET = "kyxglsmj";          // From old gaurav@drona account
+
+  static const CLOUDARY_CLOUD_NAME = "du7mwwrme";
+  static const CLOUDARY_PRESET = "jdgvuqlb";
+  
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
   static const CLOUDARY_FOLDER_HELP_DESK= "HelpDesk";
@@ -63,6 +67,7 @@ class TableNames {
   static const MODULE_MIS = "DM16";
   static const MODULE_STUDENT_REFERRAL = "DM17";
   static const MODULE_ASK_MODULE = "DM18";
+  static const MODULE_EXAM_MODULE = "DM19";
 
   static const DIVISION_A = "Class A";
   static const DIVISION_B = "Class B";
@@ -304,6 +309,11 @@ class TableNames {
   static const PERMISSION_ID_NEW_EVALUATION = "DP1803";
   static const PERMISSION_ID_UPDATE_ASK_PARAMETERS = "DP1804";
   static const PERMISSION_ID_UPDATE_EVALUATION = "DP1805";
+
+  static const PERMISSION_ID_CREATE_EXAM_SCHEDULE = "DP1901";
+  static const PERMISSION_ID_UPDATE_EXAM_SCHEDULE = "DP1902";
+  static const PERMISSION_ID_UPDATE_ACCESSIBLE_EXAM_DATA = "DP1903";
+  static const PERMISSION_ID_UPDATE_MY_EXAM_DATA = "DP1904";
 
   static const EXCEL_COL_NAME = "name";
   static const EXCEL_COL_MOBILE_NUMBER = "mobile_number";

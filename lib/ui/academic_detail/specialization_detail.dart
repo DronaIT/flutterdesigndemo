@@ -45,7 +45,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
   void initState() {
     super.initState();
     getPermission();
-    initialization();
+    // initialization();
   }
 
   Future<void> getPermission() async {
@@ -86,6 +86,8 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
       });
       final errorMessage = DioExceptions.fromDioError(e).toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    } finally {
+      initialization();
     }
   }
 
@@ -159,16 +161,17 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
             ? SingleChildScrollView(
                 child: Column(
                   children: [
-                    custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24),
-                    custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16),
-                    custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14),
-
+                    custom_text(text: specializationData![0].fields!.specializationName.toString(), maxLines: 5, textStyles: centerTextStyle24, bottomValue: 5),
+                    custom_text(text: "Code : ${specializationData![0].fields!.specializationId}", textStyles: blackTextSemiBold16, topValue: 5),
+                    custom_text(text: specializationData![0].fields!.specializationDesc.toString(), maxLines: 5000, textStyles: blackTextSemiBold14, topValue: 5),
                     Visibility(
                       visible: PreferenceUtils.getIsLogin() == 2,
-                      child: custom_text(
+                      child: const custom_text(
                         text: strings_name.str_semester,
                         alignment: Alignment.topLeft,
                         textStyles: blackTextSemiBold16,
+                        topValue: 5,
+                        bottomValue: 0,
                       ),
                     ),
                     Visibility(
@@ -205,10 +208,10 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                         ],
                       ),
                     ),
-                    Visibility(visible: subjectData?.isNotEmpty == true, child: custom_text(text: "Subjects", textStyles: blackTextSemiBold16)),
+                    Visibility(visible: subjectData?.isNotEmpty == true, child: const custom_text(text: "Subjects", textStyles: blackTextSemiBold16, bottomValue: 5)),
                     subjectData?.isNotEmpty == true
                         ? Container(
-                            margin: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 30),
+                            margin: const EdgeInsets.only(top: 0, left: 5, right: 5, bottom: 60),
                             child: ListView.builder(
                                 primary: false,
                                 shrinkWrap: true,
@@ -249,12 +252,12 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                   );
                                 }),
                           )
-                        : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_subjects, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                        : Container(margin: const EdgeInsets.only(top: 100), child: const custom_text(text: strings_name.str_no_subjects, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
                     // Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_employee, textStyles: centerTextStyleBlack18, alignment: Alignment.center))
                   ],
                 ),
               )
-            : Container(margin: const EdgeInsets.only(top: 100), child: custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+            : Container(margin: const EdgeInsets.only(top: 100), child: const custom_text(text: strings_name.str_no_data, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
         canAddSubject
             ? Container(
                 alignment: Alignment.bottomCenter,

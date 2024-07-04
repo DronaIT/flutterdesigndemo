@@ -84,8 +84,8 @@ class _HomeState extends State<Home> {
   String warningLetterString = "";
 
   Future<void> getRecords(String roleId) async {
-    // var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0))";
-    var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0),is_active=1)";
+    var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0))";
+    // var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0),is_active=1)";
     setState(() {
       isVisible = true;
     });
@@ -578,6 +578,8 @@ class _HomeState extends State<Home> {
                                             Get.to(const StudentReferrals());
                                           }
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ASK_MODULE) {
+                                          Get.to(const AskDashboard());
+                                        } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_EXAM_MODULE) {
                                           Get.to(const AskDashboard());
                                         }
                                       },

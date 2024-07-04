@@ -186,6 +186,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                               child: DropdownButtonFormField<BaseApiResponseWithSerializable<HelpDeskTypeResponse>>(
                                 value: helpDeskTypeResponses,
                                 elevation: 16,
+                                isExpanded: true,
                                 style: blackText16,
                                 focusColor: Colors.white,
                                 onChanged: (BaseApiResponseWithSerializable<HelpDeskTypeResponse>? newValue) {
@@ -253,6 +254,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                           value: hubResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,
@@ -299,6 +301,7 @@ class _FilterScreenHelpdeskState extends State<FilterScreenHelpdesk> {
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                           value: speResponse,
+                          isExpanded: true,
                           elevation: 16,
                           style: blackText16,
                           focusColor: Colors.white,

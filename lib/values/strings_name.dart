@@ -45,8 +45,8 @@ class strings_name {
   static const String sessionExpired = "Session expired";
 
   static const String str_manage_users = "Manage user";
-  static const String str_add_students = "Add students";
-  static const String str_add_student = "Add student";
+  static const String str_add_students = "Add Students";
+  static const String str_add_student = "Add Student";
   static const String str_update_student_details = "Update student details";
   static const String str_update_details = "Update Details";
   static const String str_update_details_successfully = "Details updated successfully";
@@ -1032,4 +1032,14 @@ class strings_name {
 
   static const String str_no_parameter_linked = "No parameters are linked with this ASK level.";
   static const String str_new_evaluation_added = "New Evaluation added successfully.";
+
+  static const String str_exam_schedule = "Exam Schedule";
+  static const String str_exam_title = "Exam Title";
+  static const String str_empty_exam_title = "Please provide Exam Title";
+  static const String str_exam_type = "Exam Category";
+  static const String str_empty_exam_type = "Please select Exam Category";
+
+  static const String str_exam_type_cie = "CIE EXAM";
+  static const String str_exam_type_final = "FINAL EXAM";
+  static const String str_exam_type_supplementry = "SUPPLEMENTARY EXAM";
 }

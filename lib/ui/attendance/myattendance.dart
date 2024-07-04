@@ -718,6 +718,7 @@ class _MyAttendanceState extends State<MyAttendance> {
       margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
       child: DropdownButtonFormField<BaseApiResponseWithSerializable<SubjectResponse>>(
         value: subjectResponse,
+        isExpanded: true,
         elevation: 16,
         style: blackText16,
         focusColor: colors_name.colorPrimary,

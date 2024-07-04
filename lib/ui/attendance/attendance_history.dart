@@ -235,6 +235,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
                         width: viewWidth,
                         child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                          isExpanded: true,
                           value: hubResponse,
                           elevation: 16,
                           style: blackText16,

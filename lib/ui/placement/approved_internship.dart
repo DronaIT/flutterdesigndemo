@@ -194,6 +194,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                 width: MediaQuery.of(context).size.width,
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
+                  isExpanded: true,
                   elevation: 16,
                   style: blackText16,
                   focusColor: Colors.white,
@@ -334,7 +335,7 @@ class _ApprovedInternshipState extends State<ApprovedInternship> {
                                   jobOpportunityList![index].fields!.specificRequirements != null
                                       ? custom_text(
                                           text: "Specific Requirement: ${jobOpportunityList![index].fields!.specificRequirements?.trim()}",
-                                          textStyles: blackTextSemiBold12,
+                                          textStyles: primryTextSemiBold14,
                                           topValue: 5,
                                           maxLines: 1000,
                                           bottomValue: 5,

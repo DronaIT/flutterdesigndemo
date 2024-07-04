@@ -8,7 +8,9 @@ import 'package:flutterdesigndemo/customwidget/app_widgets.dart';
 import 'package:flutterdesigndemo/customwidget/custom_edittext_search.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
+import 'package:flutterdesigndemo/models/hub_response.dart';
 import 'package:flutterdesigndemo/models/login_fields_response.dart';
+import 'package:flutterdesigndemo/models/viewemployeeresponse.dart';
 import 'package:flutterdesigndemo/ui/placement/approve_placement_attendance_detail.dart';
 import 'package:flutterdesigndemo/ui/student_history/student_history.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
@@ -37,9 +39,52 @@ class _ApprovePlacementAttendanceState extends State<ApprovePlacementAttendance>
   String offset = "";
   var controllerSearch = TextEditingController();
 
+  BaseApiResponseWithSerializable<HubResponse>? hubResponse;
+  String hubValue = "";
+  List<BaseApiResponseWithSerializable<HubResponse>>? hubResponseArray = [];
+
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mentorMainArray = [];
+  List<BaseApiResponseWithSerializable<ViewEmployeeResponse>>? mentorArray = [];
+  BaseApiResponseWithSerializable<ViewEmployeeResponse>? mentorResponse;
+  String mentorValue = "";
+
   @override
   void initState() {
     super.initState();
+    hubResponseArray = PreferenceUtils.getHubList().records;
+    var isLogin = PreferenceUtils.getIsLogin();
+    if (isLogin == 2) {
+      var loginData = PreferenceUtils.getLoginDataEmployee();
+      if ((loginData.accessible_hub_ids?.length ?? 0) > 0) {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          var isAccessible = false;
+          for (var j = 0; j < loginData.accessible_hub_ids!.length; j++) {
+            if (loginData.accessible_hub_ids![j] == hubResponseArray![i].id) {
+              isAccessible = true;
+              break;
+            }
+            if (loginData.hubIdFromHubIds?.first == hubResponseArray![i].fields?.hubId) {
+              isAccessible = true;
+              break;
+            }
+          }
+          if (!isAccessible) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      } else {
+        for (var i = 0; i < hubResponseArray!.length; i++) {
+          if (loginData.hubIdFromHubIds?.first != hubResponseArray![i].fields?.hubId) {
+            hubResponseArray?.removeAt(i);
+            i--;
+          }
+        }
+      }
+
+      fetchFaculty();
+    }
+
     if (PreferenceUtils.getIsLogin() == 2) {
       getRecords();
     }
@@ -108,8 +153,100 @@ class _ApprovePlacementAttendanceState extends State<ApprovePlacementAttendance>
     }
   }
 
+  fetchFaculty() async {
+    var query = "AND({is_working} = 1, {assigned_students}!='')";
+    setState(() {
+      isVisible = true;
+    });
+    try {
+      var data = await apiRepository.getEmployeeListApi(query, offset);
+      if (data.records!.isNotEmpty) {
+        if (offset.isEmpty) {
+          mentorArray?.clear();
+          mentorMainArray?.clear();
+        }
+        mentorMainArray?.addAll(data.records as Iterable<BaseApiResponseWithSerializable<ViewEmployeeResponse>>);
+        offset = data.offset;
+        if (offset.isNotEmpty) {
+          fetchFaculty();
+        } else {
+          mentorMainArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+          updateMentor();
+        }
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    } catch (e) {
+      final errorMessage = e.toString();
+      Utils.showSnackBarUsingGet(errorMessage);
+    }
+  }
+
+  updateMentor() {
+    mentorValue = "";
+    mentorResponse = null;
+    mentorArray?.clear();
+
+    for (int i = 0; i < (mentorMainArray?.length ?? 0); i++) {
+      bool contains = false;
+      if (hubValue.isEmpty) {
+        for (int j = 0; j < (hubResponseArray?.length ?? 0); j++) {
+          if (mentorMainArray![i].fields!.hubIdFromHubIds?.contains(hubResponseArray![j].fields?.hubId) == true) {
+            contains = true;
+            break;
+          } else if (mentorMainArray![i].fields!.accessible_hub_codes?.contains(hubResponseArray![j].fields?.hubId) == true) {
+            contains = true;
+            break;
+          }
+        }
+      } else {
+        if (mentorMainArray![i].fields!.hubIdFromHubIds?.contains(hubResponse?.fields?.hubId) == true) {
+          contains = true;
+        } else if (mentorMainArray![i].fields!.accessible_hub_codes?.contains(hubResponse?.fields?.hubId) == true) {
+          contains = true;
+        }
+      }
+      if (contains) {
+        mentorArray?.add(mentorMainArray![i]);
+      }
+    }
+
+    mentorArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+  }
+
+  filterStudents() {
+    studentData = [];
+
+    for (var i = 0; i < mainStudentData!.length; i++) {
+      bool canAddBasedOnHub = true, canAddBasedOnMentor = true, canAddBasedOnSearch = true;
+      if (hubValue.isNotEmpty) {
+        if (mainStudentData![i].fields!.hubIdFromHubIds!.last != hubResponse?.fields?.hubId) {
+          canAddBasedOnHub = false;
+        }
+      }
+      if (mentorValue.isNotEmpty) {
+        if (mainStudentData![i].fields!.assigned_to!.last != mentorResponse?.id || mainStudentData![i].fields!.assigned_to_employee_name!.last != mentorResponse?.fields?.employeeName) {
+          canAddBasedOnMentor = false;
+        }
+      }
+      if (controllerSearch.text.trim().isNotEmpty) {
+        if (!mainStudentData![i].fields!.name!.toLowerCase().contains(controllerSearch.text.trim().toLowerCase())) {
+          canAddBasedOnSearch = false;
+        }
+      }
+
+      if (canAddBasedOnHub && canAddBasedOnMentor && canAddBasedOnSearch) {
+        studentData?.add(mainStudentData![i]);
+      }
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    var viewWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppWidgets.appBarWithoutBack(strings_name.str_approve_placement_attendance),
@@ -124,12 +261,78 @@ class _ApprovePlacementAttendanceState extends State<ApprovePlacementAttendance>
               Visibility(
                 visible: mainStudentData != null && mainStudentData!.isNotEmpty,
                 child: Column(children: [
+                  const custom_text(
+                    text: strings_name.str_select_hub,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    bottomValue: 0,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                    width: viewWidth,
+                    child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
+                      value: hubResponse,
+                      isExpanded: true,
+                      elevation: 16,
+                      style: blackText16,
+                      focusColor: Colors.white,
+                      onChanged: (BaseApiResponseWithSerializable<HubResponse>? newValue) {
+                        setState(() {
+                          hubValue = newValue!.fields!.id!.toString();
+                          hubResponse = newValue;
+
+                          updateMentor();
+                          filterStudents();
+                        });
+                      },
+                      items: hubResponseArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>>((BaseApiResponseWithSerializable<HubResponse> value) {
+                        return DropdownMenuItem<BaseApiResponseWithSerializable<HubResponse>>(
+                          value: value,
+                          child: Text(value.fields!.hubName!.toString()),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  const custom_text(
+                    text: strings_name.str_select_mentor,
+                    alignment: Alignment.topLeft,
+                    textStyles: blackTextSemiBold16,
+                    bottomValue: 0,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    width: viewWidth,
+                    child: DropdownButtonFormField<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
+                      value: mentorResponse,
+                      isExpanded: true,
+                      elevation: 16,
+                      style: blackText16,
+                      focusColor: Colors.white,
+                      onChanged: (BaseApiResponseWithSerializable<ViewEmployeeResponse>? newValue) {
+                        setState(() {
+                          mentorValue = newValue!.id!.toString();
+                          mentorResponse = newValue;
+
+                          filterStudents();
+                        });
+                      },
+                      items: mentorArray?.map<DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>>((BaseApiResponseWithSerializable<ViewEmployeeResponse> value) {
+                        return DropdownMenuItem<BaseApiResponseWithSerializable<ViewEmployeeResponse>>(
+                          value: value,
+                          child: Text(value.fields!.employeeName!.toString()),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                   CustomEditTextSearch(
                     type: TextInputType.text,
                     hintText: "Search by student name...",
                     textInputAction: TextInputAction.done,
                     controller: controllerSearch,
                     onChanges: (value) {
+                      filterStudents();
+/*
                       if (value.isEmpty) {
                         studentData = [];
                         studentData = mainStudentData;
@@ -143,10 +346,11 @@ class _ApprovePlacementAttendanceState extends State<ApprovePlacementAttendance>
                         }
                         setState(() {});
                       }
+*/
                     },
                   ),
                   custom_text(
-                    text: "Total students: ${mainStudentData?.length ?? 0}",
+                    text: "Total students: ${studentData?.length ?? 0}",
                     textStyles: blackTextSemiBold16,
                     leftValue: 12.w,
                     bottomValue: 0,
@@ -229,7 +433,7 @@ class _ApprovePlacementAttendanceState extends State<ApprovePlacementAttendance>
                           );
                         })
                     : Container(
-                        margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_doc_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                        margin: const EdgeInsets.only(top: 10), child: const custom_text(text: strings_name.str_no_doc_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               )
             ],
           )),

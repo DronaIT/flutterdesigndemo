@@ -273,7 +273,7 @@ class _TimeTableListState extends State<TimeTableList> {
       } else if (isLogin == 2) {
         if (isFilterTimeTable) {
           query =
-              "OR(AND(FIND(\"$hubRecordId\", ARRAYJOIN({hub_id})),{is_holiday} = 1),AND( ${canShowAllTimeTable ? '' : 'OR({created_by} = $loginId,{lecture_id} = $loginId),'}FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";
+              "OR(AND(FIND(\"$hubRecordId\", ARRAYJOIN({hub_id})),{is_holiday} = 1),AND(${canShowAllTimeTable ? '' : 'OR({created_by} = $loginId,{lecture_id} = $loginId,{proxy_taker}=$loginId),'}FIND(\"$hubValue\", ARRAYJOIN({hub_id}))";
           if (specializationValue.trim().isNotEmpty) {
             query += ", {specialization_id} = '$specializationValue'";
           }
@@ -299,7 +299,7 @@ class _TimeTableListState extends State<TimeTableList> {
             query = "AND({date} = TODAY())";
           } else {
             String hubValue = loginData.hubIdFromHubIds![0];
-            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
+            query = "AND(OR({created_by} = $loginId,{lecture_id} = $loginId,{proxy_taker}=$loginId,AND(FIND(\"$hubValue\", ARRAYJOIN({hub_id (from hub_id)})),{is_holiday} = 1)),{date} = TODAY())";
           }
         }
       } else {
@@ -434,7 +434,7 @@ class _TimeTableListState extends State<TimeTableList> {
                       title: strings_name.str_new_time_table_icon,
                       onTap: () async {
                         var data = await Get.to(const AddEditTimeTable());
-                        if (data == TableNames.LUK_ADD_TIME_TABLE) {
+                        if (data == TableNames.LUK_ADD_TIME_TABLE || true) {
                           clearAndFetchTimeTable();
                         }
                       },
@@ -552,7 +552,10 @@ class _TimeTableListState extends State<TimeTableList> {
                                         }
                                       },
                                       onTap: () {
-                                        if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) || (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false)) {
+                                        if ((timeTables[index].fields?.createdBy?.contains(createdBy) ?? false) ||
+                                            (timeTables[index].fields?.proxy_taker?.isNotEmpty == true
+                                                ? (timeTables[index].fields?.proxy_taker?.contains(createdBy) ?? false)
+                                                : (timeTables[index].fields?.lectureId?.contains(createdBy) ?? false))) {
                                           if (timeTables[index].fields?.isAttendanceTaken ?? false) {
                                             if (PreferenceUtils.getIsLogin() != 1) {
                                               Utils.showSnackBarUsingGet(strings_name.str_attendance_already_taken);
@@ -1035,6 +1038,7 @@ class _TimeTableListState extends State<TimeTableList> {
                       width: viewWidth,
                       child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                         value: hubResponse,
+                        isExpanded: true,
                         elevation: 16,
                         style: blackText16,
                         focusColor: Colors.white,
@@ -1076,6 +1080,7 @@ class _TimeTableListState extends State<TimeTableList> {
                             child: DropdownButtonFormField<BaseApiResponseWithSerializable<SpecializationResponse>>(
                               value: specializationResponse,
                               elevation: 16,
+                              isExpanded: true,
                               style: blackText16,
                               focusColor: Colors.white,
                               onChanged: (BaseApiResponseWithSerializable<SpecializationResponse>? newValue) {
@@ -1405,18 +1410,14 @@ class TimeTableCard extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 10.h),
+                    padding: EdgeInsets.only(left: 12.w, right: 12.w, bottom: 10.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 10.h,
-                        ),
+                        SizedBox(height: 10.h),
                         Row(
                           children: [
-                            SizedBox(
-                              width: 25.w,
-                            ),
+                            SizedBox(width: 20.w),
                             Expanded(
                               child: Center(
                                 child: Text(
@@ -1424,7 +1425,7 @@ class TimeTableCard extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: blackTextSemiBold16,
+                                  style: blackTextSemiBold15,
                                 ),
                               ),
                             ),
@@ -1433,8 +1434,8 @@ class TimeTableCard extends StatelessWidget {
                                 ? GestureDetector(
                                     onTap: canUpdateTimeTable ? onEdit : null,
                                     child: Container(
-                                      height: 25.w,
-                                      width: 25.w,
+                                      height: 20.w,
+                                      width: 20.w,
                                       decoration: BoxDecoration(
                                         color: colors_name.lightGreyColor.withOpacity(0.5),
                                         shape: BoxShape.circle,
@@ -1446,9 +1447,7 @@ class TimeTableCard extends StatelessWidget {
                                       ),
                                     ),
                                   )
-                                : SizedBox(
-                                    width: 25.w,
-                                  ),
+                                : SizedBox(width: 25.w),
                           ],
                         ),
                         SizedBox(height: 8.h),

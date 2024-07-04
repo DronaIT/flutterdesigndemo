@@ -172,6 +172,7 @@ class _SelectedStudentListState extends State<SelectedStudentList> {
                   width: MediaQuery.of(context).size.width,
                   child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                     value: hubResponse,
+                    isExpanded: true,
                     elevation: 16,
                     style: blackText16,
                     focusColor: Colors.white,

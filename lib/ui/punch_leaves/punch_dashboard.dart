@@ -160,6 +160,7 @@ class _PunchDashboardState extends State<PunchDashboard> {
                 width: viewWidth,
                 child: DropdownButtonFormField<BaseApiResponseWithSerializable<HubResponse>>(
                   value: hubResponse,
+                  isExpanded: true,
                   elevation: 16,
                   style: blackText16,
                   focusColor: Colors.white,
