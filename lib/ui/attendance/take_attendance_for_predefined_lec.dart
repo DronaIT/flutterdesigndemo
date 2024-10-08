@@ -171,6 +171,18 @@ class _TakeAttendanceForPredefinedLecState extends State<TakeAttendanceForPredef
             if (timeTables[i].fields?.status == strings_name.str_status_lecture_cancelled) {
               timeTables.removeAt(i);
               i--;
+            } else if (canShowAllTimeTable && isLogin == 2) {
+              if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids?.isNotEmpty == true) {
+                if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.contains(timeTables[i].fields?.hubIdFromHubId?.last) != true) {
+                  timeTables.removeAt(i);
+                  i--;
+                }
+              } else {
+                if (PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds?.contains(timeTables[i].fields?.hubIdFromHubId?.last) != true) {
+                  timeTables.removeAt(i);
+                  i--;
+                }
+              }
             }
           }
           offset = data.offset;

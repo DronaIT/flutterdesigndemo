@@ -121,6 +121,11 @@ class LoginFieldsResponse {
 
   List<String>? assigned_to;
   List<String>? assigned_to_employee_name;
+  List<String>? assigned_employee_mobile_number;
+
+  List<String>? assigned_counsellor;
+  List<String>? assigned_counsellor_name;
+  List<String>? assigned_counsellor_mobile_number;
 
   LoginFieldsResponse({
     this.city,
@@ -225,6 +230,10 @@ class LoginFieldsResponse {
     this.warning_letter_3_for_applying,
     this.assigned_to,
     this.assigned_to_employee_name,
+    this.assigned_employee_mobile_number,
+    this.assigned_counsellor,
+    this.assigned_counsellor_name,
+    this.assigned_counsellor_mobile_number,
   });
 
   LoginFieldsResponse.fromJson(Map<String, dynamic> json) {
@@ -344,6 +353,11 @@ class LoginFieldsResponse {
 
     assigned_to = json['assigned_to']?.cast<String>();
     assigned_to_employee_name = json['assigned_to_employee_name']?.cast<String>();
+    assigned_employee_mobile_number = json['assigned_employee_mobile_number']?.cast<String>();
+
+    assigned_counsellor = json['assigned_counsellor']?.cast<String>();
+    assigned_counsellor_name = json['assigned_counsellor_name']?.cast<String>();
+    assigned_counsellor_mobile_number = json['assigned_counsellor_mobile_number']?.cast<String>();
 
     if (json['resume'] != null) {
       resume = <AttachmentResponse>[];
@@ -468,8 +482,14 @@ class LoginFieldsResponse {
     data['father_full_name'] = father_full_name;
     data['is_placed_now'] = is_placed_now;
     data['has_resigned'] = has_resigned;
+
     data['assigned_to'] = assigned_to;
     data['assigned_to_employee_name'] = assigned_to_employee_name;
+    data['assigned_employee_mobile_number'] = assigned_employee_mobile_number;
+
+    data['assigned_counsellor'] = assigned_counsellor;
+    data['assigned_counsellor_name'] = assigned_counsellor_name;
+    data['assigned_counsellor_mobile_number'] = assigned_counsellor_mobile_number;
 
     if (resume != null) {
       data['resume'] = resume!.map((v) => v.toJson()).toList();

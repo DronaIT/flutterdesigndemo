@@ -117,7 +117,7 @@ class _HelpDeskState extends State<HelpDesk> {
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  custom_text(
+                  const custom_text(
                     text: strings_name.str_help_note,
                     alignment: Alignment.topLeft,
                     textStyles: blackTextSemiBold16,
@@ -254,7 +254,7 @@ class _HelpDeskState extends State<HelpDesk> {
         });
         debugPrint(assigned_to_token.length.toString());
         if (assigned_to_token.isNotEmpty) {
-          PushNotificationService.sendNotificationToMultipleDevices(assigned_to_token, "", strings_name.str_push_desc_new_ticket_assigned);
+          // PushNotificationService.sendNotificationToMultipleDevices(assigned_to_token, "", strings_name.str_push_desc_new_ticket_assigned);
         }
         Utils.showSnackBar(context, strings_name.str_create_ticket_message);
         await Future.delayed(const Duration(milliseconds: 2000));

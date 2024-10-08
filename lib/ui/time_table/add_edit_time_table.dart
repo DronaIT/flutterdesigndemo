@@ -185,10 +185,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         }
       }
     }
-    await fetchFaculty();
-    if (widget.timeTableData != null) {
-      setInitDataForUpdate();
-    }
+    fetchFaculty();
   }
 
   setInitDataForUpdate() async {
@@ -258,7 +255,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
         }
       }
 
-      if(timeTableData?.proxy_maker?.isNotEmpty == true){
+      if (timeTableData?.proxy_maker?.isNotEmpty == true) {
         for (var fac in proxyMakerArray ?? []) {
           for (var data in timeTableData!.proxy_maker ?? []) {
             if (fac.id.toString() == data.toString()) {
@@ -274,7 +271,7 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           }
         }
       }
-      if(timeTableData?.proxy_taker?.isNotEmpty == true){
+      if (timeTableData?.proxy_taker?.isNotEmpty == true) {
         for (var fac in proxyTakerArray ?? []) {
           for (var data in timeTableData!.proxy_taker ?? []) {
             if (fac.id.toString() == data.toString()) {
@@ -393,12 +390,16 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
           setState(() {});
         }
         offset = data.offset;
-        if (offset.isNotEmpty) {
-          fetchFaculty();
-        }
         facultyResponseArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
         proxyMakerArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
         proxyTakerArray?.sort((a, b) => a.fields!.employeeName!.toLowerCase().compareTo(b.fields!.employeeName!.toLowerCase()));
+        if (offset.isNotEmpty) {
+          fetchFaculty();
+        } else {
+          if (widget.timeTableData != null) {
+            setInitDataForUpdate();
+          }
+        }
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

@@ -106,6 +106,7 @@ class _ManageUserState extends State<ManageUser> {
                 visible: canAddEmployee,
                 child: GestureDetector(
                   child: Card(
+                    margin: EdgeInsets.only(top: 5.h),
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
@@ -124,11 +125,11 @@ class _ManageUserState extends State<ManageUser> {
                   },
                 ),
               ),
-              SizedBox(height: 5.h),
               Visibility(
                 visible: canAddStudent,
                 child: GestureDetector(
                   child: Card(
+                    margin: EdgeInsets.only(top: 5.h),
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
@@ -177,11 +178,11 @@ class _ManageUserState extends State<ManageUser> {
                   },
                 ),
               ),
-              SizedBox(height: 5.h),
               Visibility(
                 visible: canViewEmployee,
                 child: GestureDetector(
                   child: Card(
+                    margin: EdgeInsets.only(top: 5.h),
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
@@ -200,11 +201,11 @@ class _ManageUserState extends State<ManageUser> {
                   },
                 ),
               ),
-              // SizedBox(height: 5.h),
               Visibility(
                 visible: false,
                 child: GestureDetector(
                   child: Card(
+                    margin: EdgeInsets.only(top: 5.h),
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
@@ -223,11 +224,11 @@ class _ManageUserState extends State<ManageUser> {
                   },
                 ),
               ),
-              SizedBox(height: 5.h),
               Visibility(
                 visible: canViewStudent,
                 child: GestureDetector(
                   child: Card(
+                    margin: EdgeInsets.only(top: 5.h),
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,
@@ -250,6 +251,7 @@ class _ManageUserState extends State<ManageUser> {
                 visible: canAssignMentor,
                 child: GestureDetector(
                   child: Card(
+                    margin: EdgeInsets.only(top: 5.h),
                     elevation: 5,
                     child: Container(
                       color: colors_name.colorWhite,

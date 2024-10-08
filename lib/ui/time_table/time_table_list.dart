@@ -308,13 +308,25 @@ class _TimeTableListState extends State<TimeTableList> {
 
       debugPrint('../ query is $query');
 
-      var data = await apiRepository.fetchTimeTablesListApi(query, offset, 25);
+      var data = await apiRepository.fetchTimeTablesListApi(query, offset, 100);
       if (data.records!.isNotEmpty) {
         timeTables.addAll(data.records as Iterable<BaseApiResponseWithSerializable<TimeTableResponseClass>>);
         for (int i = 0; i < timeTables.length; i++) {
           if (timeTables[i].fields?.status == strings_name.str_status_lecture_cancelled) {
             timeTables.removeAt(i);
             i--;
+          } else if (canShowAllTimeTable && isLogin == 2) {
+            if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids?.isNotEmpty == true) {
+              if (PreferenceUtils.getLoginDataEmployee().accessible_hub_ids_code?.contains(timeTables[i].fields?.hubIdFromHubId?.last) != true) {
+                timeTables.removeAt(i);
+                i--;
+              }
+            } else {
+              if (PreferenceUtils.getLoginDataEmployee().hubIdFromHubIds?.contains(timeTables[i].fields?.hubIdFromHubId?.last) != true) {
+                timeTables.removeAt(i);
+                i--;
+              }
+            }
           }
         }
         offset = data.offset;
@@ -513,7 +525,7 @@ class _TimeTableListState extends State<TimeTableList> {
                           child: Text(strings_name.str_you_do_not_have_permission_time_table),
                         ),
                       )
-                    : timeTables.isEmpty
+                    : timeTables.isEmpty == true
                         ? Padding(
                             padding: EdgeInsets.symmetric(vertical: 40.0.h),
                             child: const Center(
@@ -1467,6 +1479,26 @@ class TimeTableCard extends StatelessWidget {
                         SizedBox(height: 8.h),
                         Text(
                           '${strings_name.str_faculty}: ${timeTable?.proxy_taker_employee_name?.isNotEmpty == true ? timeTable!.proxy_taker_employee_name!.last : (timeTable?.employeeNameFromLectureId?.isEmpty ?? true ? '' : timeTable?.employeeNameFromLectureId?.first ?? '')}',
+                          style: lightGrey14,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          '${strings_name.str_hubname}${Utils.getHubName(timeTable?.hubIdFromHubId!.last)}',
+                          style: lightGrey14,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          '${strings_name.str_specialization} ${Utils.getSpecializationName(timeTable?.specializationId!.last)}',
+                          style: lightGrey14,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          '${strings_name.str_semester}: ${timeTable?.semester}',
+                          style: lightGrey14,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          '${strings_name.str_division}: ${timeTable?.division}',
                           style: lightGrey14,
                         ),
                         SizedBox(height: 8.h),

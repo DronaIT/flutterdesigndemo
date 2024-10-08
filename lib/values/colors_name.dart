@@ -55,4 +55,5 @@ abstract class colors_name {
 
   static const Color lightCoffee = Color(0xFFFFF1D5);
   static const Color coffee = Color(0xFFCC8800);
+  static const Color subItemColor = Color(0xFFDCDCDC);
 }

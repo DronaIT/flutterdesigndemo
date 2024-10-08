@@ -326,7 +326,7 @@ class _TaskDashboardState extends State<TaskDashboard> {
                                       {"canUpdateTicketCategory": false},
                                       {"recordId": myTaskList?[index].id},
                                       {"title": strings_name.str_task_detail},
-                                      {"canUpdateTicketAssignee": false},
+                                      {"canUpdateTicketAssignee": canUpdateTicketAssignee},
                                     ])?.then((value) {
                                       if (value != null && value) {
                                         taskList?.clear();

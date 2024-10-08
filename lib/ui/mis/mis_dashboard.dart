@@ -43,7 +43,16 @@ class MISDashboard extends StatefulWidget {
 
 class _MISDashboardState extends State<MISDashboard> {
   final apiRepository = getIt.get<ApiRepository>();
-  String offset = "";
+  String offsetMarketing = "";
+  String offsetAttendance = "";
+  String offsetPunchRecord = "";
+  String offsetCompanyApproach = "";
+  String offsetCompanyDetail = "";
+  String offsetJobOpportunity = "";
+  String offsetLogin = "";
+  String offsetPlacedStudent = "";
+  String offsetCompany = "";
+  String offsetFees = "";
   bool isVisible = false;
 
   DateTime? startDate = DateTime.now().add(const Duration(days: -1));
@@ -659,14 +668,21 @@ class _MISDashboardState extends State<MISDashboard> {
     }
   }
 
-  fetchData() {
+  fetchData() async {
     if (canShowAttendance != -1) {
       attendanceData.clear();
       overallStudentAttendance = 0;
       averageLectureAttendance = 0;
 
-      fetchAttendanceData();
-    } else if (canShowMarketing != -1) {
+      await fetchAttendanceData();
+    }
+
+    if (canShowPlacement != -1) {
+      companyApproachData.clear();
+      await fetchCompanyApproachData();
+    }
+
+    if (canShowMarketing != -1) {
       marketingData.clear();
 
       numberOfApproaches = 0;
@@ -674,28 +690,30 @@ class _MISDashboardState extends State<MISDashboard> {
       numberOfSeminarArranged = 0;
       numberOfSeminarsCompleted = 0;
 
-      fetchMarketingData();
-    } else if (canShowPunchLeave != -1) {
+      await fetchMarketingData();
+    }
+
+    if (canShowPunchLeave != -1) {
       punchData.clear();
       totalRunningLate = 0;
       totalOnLeave = 0;
 
-      fetchPunchLeaveData();
-    } else if (canShowFees != -1) {
+      await fetchPunchLeaveData();
+    }
+
+    if (canShowFees != -1) {
       feesData.clear();
       totalFeesReceived = 0;
       totalStudentsWhoPaid = 0;
-      fetchFeesData();
-    } else if (canShowPlacement != -1) {
-      companyApproachData.clear();
-      fetchCompanyApproachData();
-    } else {
-      isVisible = false;
-      setState(() {});
+
+      await fetchFeesData();
     }
+
+    isVisible = false;
+    setState(() {});
   }
 
-  void fetchPunchLeaveData() async {
+  fetchPunchLeaveData() async {
     if (!isVisible) {
       setState(() {
         isVisible = true;
@@ -725,14 +743,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getPunchRecordsApi(query, offset);
+      var data = await apiRepository.getPunchRecordsApi(query, offsetPunchRecord);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetPunchRecord.isEmpty) {
           punchData.clear();
         }
         punchData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<PunchDataResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetPunchRecord = data.offset;
+        if (offsetPunchRecord.isNotEmpty) {
           fetchPunchLeaveData();
         } else {
           punchData.sort((a, b) => b.fields!.punchDate!.compareTo(a.fields!.punchDate!));
@@ -755,6 +773,7 @@ class _MISDashboardState extends State<MISDashboard> {
             }
           }
 
+/*
           if (canShowFees != -1) {
             feesData.clear();
             totalFeesReceived = 0;
@@ -764,8 +783,10 @@ class _MISDashboardState extends State<MISDashboard> {
             isVisible = false;
             setState(() {});
           }
+*/
         }
       } else {
+/*
         if (canShowFees != -1) {
           feesData.clear();
           totalFeesReceived = 0;
@@ -775,6 +796,7 @@ class _MISDashboardState extends State<MISDashboard> {
           isVisible = false;
           setState(() {});
         }
+*/
       }
     } on DioError catch (e) {
       setState(() {
@@ -785,7 +807,7 @@ class _MISDashboardState extends State<MISDashboard> {
     }
   }
 
-  void fetchAttendanceData() async {
+  fetchAttendanceData() async {
     if (!isVisible) {
       setState(() {
         isVisible = true;
@@ -815,14 +837,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getStudentAttendanceApi(query, offset);
+      var data = await apiRepository.getStudentAttendanceApi(query, offsetAttendance);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetAttendance.isEmpty) {
           attendanceData.clear();
         }
         attendanceData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<StudentAttendanceResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetAttendance = data.offset;
+        if (offsetAttendance.isNotEmpty) {
           fetchAttendanceData();
         } else {
           attendanceData.sort((a, b) => a.fields!.lectureDate!.compareTo(b.fields!.lectureDate!));
@@ -843,6 +865,7 @@ class _MISDashboardState extends State<MISDashboard> {
           overallStudentAttendance = (presentStudent * 100) / totalStudent;
           averageLectureAttendance = avgAttendance / attendanceData.length;
 
+/*
           if (canShowMarketing != -1) {
             marketingData.clear();
 
@@ -856,8 +879,10 @@ class _MISDashboardState extends State<MISDashboard> {
             isVisible = false;
             setState(() {});
           }
+*/
         }
       } else {
+/*
         if (canShowMarketing != -1) {
           marketingData.clear();
 
@@ -871,6 +896,7 @@ class _MISDashboardState extends State<MISDashboard> {
           isVisible = false;
           setState(() {});
         }
+*/
       }
     } on DioError catch (e) {
       setState(() {
@@ -881,7 +907,7 @@ class _MISDashboardState extends State<MISDashboard> {
     }
   }
 
-  void fetchMarketingData() async {
+  fetchMarketingData() async {
     if (!isVisible) {
       setState(() {
         isVisible = true;
@@ -911,14 +937,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getMarketingRecordsApi(query, offset);
+      var data = await apiRepository.getMarketingRecordsApi(query, offsetMarketing);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetMarketing.isEmpty) {
           marketingData.clear();
         }
         marketingData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<MarketingResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetMarketing = data.offset;
+        if (offsetMarketing.isNotEmpty) {
           fetchMarketingData();
         } else {
           marketingData.sort((a, b) => a.fields!.entryDate!.compareTo(b.fields!.entryDate!));
@@ -931,6 +957,7 @@ class _MISDashboardState extends State<MISDashboard> {
             numberOfSeminarsCompleted += marketingData[i].fields!.numberOfSeminarsCompleted ?? 0;
           }
 
+/*
           if (canShowPunchLeave != -1) {
             punchData.clear();
             totalRunningLate = 0;
@@ -941,8 +968,10 @@ class _MISDashboardState extends State<MISDashboard> {
             isVisible = false;
             setState(() {});
           }
+*/
         }
       } else {
+/*
         if (canShowPunchLeave != -1) {
           punchData.clear();
           totalRunningLate = 0;
@@ -953,6 +982,7 @@ class _MISDashboardState extends State<MISDashboard> {
           isVisible = false;
           setState(() {});
         }
+*/
       }
     } on DioError catch (e) {
       setState(() {
@@ -963,7 +993,7 @@ class _MISDashboardState extends State<MISDashboard> {
     }
   }
 
-  void fetchCompanyApproachData() async {
+  fetchCompanyApproachData() async {
     if (!isVisible) {
       setState(() {
         isVisible = true;
@@ -983,14 +1013,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getCompanyApproachApi(query, offset);
+      var data = await apiRepository.getCompanyApproachApi(query, offsetCompanyApproach);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetCompanyApproach.isEmpty) {
           companyApproachData.clear();
         }
         companyApproachData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyApproachResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetCompanyApproach = data.offset;
+        if (offsetCompanyApproach.isNotEmpty) {
           fetchCompanyApproachData();
         } else {
           companyApproachData.sort((a, b) => a.fields!.companyName!.compareTo(b.fields!.companyName!));
@@ -1042,14 +1072,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getCompanyDetailApi(query, offset);
+      var data = await apiRepository.getCompanyDetailApi(query, offsetCompanyDetail);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetCompanyDetail.isEmpty) {
           companyData.clear();
         }
         companyData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyDetailResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetCompanyDetail = data.offset;
+        if (offsetCompanyDetail.isNotEmpty) {
           fetchCompanyData();
         } else {
           companyData.sort((a, b) => a.fields!.companyName!.compareTo(b.fields!.companyName!));
@@ -1103,14 +1133,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getJobOppoApi(query, offset);
+      var data = await apiRepository.getJobOppoApi(query, offsetJobOpportunity);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetJobOpportunity.isEmpty) {
           jobsData.clear();
         }
         jobsData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<JobOpportunityResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetJobOpportunity = data.offset;
+        if (offsetJobOpportunity.isNotEmpty) {
           fetchJobsData();
         } else {
           jobsData.sort((a, b) => a.fields!.jobTitle!.compareTo(b.fields!.jobTitle!));
@@ -1165,14 +1195,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.loginApi(query, offset);
+      var data = await apiRepository.loginApi(query, offsetLogin);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetLogin.isEmpty) {
           placedStudentData.clear();
         }
         placedStudentData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetLogin = data.offset;
+        if (offsetLogin.isNotEmpty) {
           fetchPlacedStudentData();
         } else {
           placedStudentData.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
@@ -1275,14 +1305,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.loginApi(query, offset);
+      var data = await apiRepository.loginApi(query, offsetPlacedStudent);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetPlacedStudent.isEmpty) {
           totalPlacedStudentData.clear();
         }
         totalPlacedStudentData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<LoginFieldsResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetPlacedStudent = data.offset;
+        if (offsetPlacedStudent.isNotEmpty) {
           fetchTotalPlacedStudentData();
         } else {
           totalPlacedStudentData.sort((a, b) => a.fields!.name!.compareTo(b.fields!.name!));
@@ -1326,14 +1356,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getCompanyDetailApi(query, offset);
+      var data = await apiRepository.getCompanyDetailApi(query, offsetCompany);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetCompany.isEmpty) {
           totalCompanyData.clear();
         }
         totalCompanyData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<CompanyDetailResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetCompany = data.offset;
+        if (offsetCompany.isNotEmpty) {
           fetchTotalCompanyData();
         } else {
           totalCompanyData.sort((a, b) => a.fields!.companyName!.compareTo(b.fields!.companyName!));
@@ -1355,7 +1385,7 @@ class _MISDashboardState extends State<MISDashboard> {
     }
   }
 
-  void fetchFeesData() async {
+  fetchFeesData() async {
     if (!isVisible) {
       setState(() {
         isVisible = true;
@@ -1385,14 +1415,14 @@ class _MISDashboardState extends State<MISDashboard> {
     debugPrint(query);
 
     try {
-      var data = await apiRepository.getFeesRecordsApi(query, offset);
+      var data = await apiRepository.getFeesRecordsApi(query, offsetFees);
       if (data.records?.isNotEmpty == true) {
-        if (offset.isEmpty) {
+        if (offsetFees.isEmpty) {
           feesData.clear();
         }
         feesData.addAll(data.records as Iterable<BaseApiResponseWithSerializable<FeesResponse>>);
-        offset = data.offset;
-        if (offset.isNotEmpty) {
+        offsetFees = data.offset;
+        if (offsetFees.isNotEmpty) {
           fetchFeesData();
         } else {
           feesData.sort((a, b) => a.fields!.studentName!.first.compareTo(b.fields!.studentName!.first));
@@ -1403,6 +1433,7 @@ class _MISDashboardState extends State<MISDashboard> {
             totalStudentsWhoPaid += 1;
           }
 
+/*
           if (canShowPlacement != -1) {
             companyApproachData.clear();
             fetchCompanyApproachData();
@@ -1410,8 +1441,10 @@ class _MISDashboardState extends State<MISDashboard> {
             isVisible = false;
             setState(() {});
           }
+*/
         }
       } else {
+/*
         if (canShowPlacement != -1) {
           companyApproachData.clear();
           fetchCompanyApproachData();
@@ -1419,6 +1452,7 @@ class _MISDashboardState extends State<MISDashboard> {
           isVisible = false;
           setState(() {});
         }
+*/
       }
     } on DioError catch (e) {
       setState(() {

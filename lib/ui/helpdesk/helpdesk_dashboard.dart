@@ -302,7 +302,7 @@ class _HelpdeskDashboardState extends State<HelpdeskDashboard> {
                                     {"canUpdateTicketCategory": false},
                                     {"recordId": myTicketList?[index].id},
                                     {"title": strings_name.str_help_desk_detail},
-                                    {"canUpdateTicketAssignee": false},
+                                    {"canUpdateTicketAssignee": canUpdateTicketAssignee},
                                   ]);
                                 },
                                 child: Column(children: [
