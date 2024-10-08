@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.45+48
+version: 1.0.50+53
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
@@ -69,7 +69,7 @@ dependencies:
   store_redirect:
   platform_device_id:
 #    path: /Users/pratik/StudioProjects/flutterdesigndemo/platform_device_id
-    path: D:\project\flutterdesigndemo\platform_device_id
+    path: D:\Projects\flutterdesigndemo\platform_device_id
   flutter_pickers: ^2.1.9
   image_picker: ^1.0.1
   permission_handler: ^11.1.0

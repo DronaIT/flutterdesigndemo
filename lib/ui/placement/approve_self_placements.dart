@@ -65,8 +65,8 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
       }
     }
     query += "), ${TableNames.CLM_IS_PLACED_NOW}='0', OR("
-        "FIND('${TableNames.SELFPLACE_STATUS_PENDING}', ARRAYJOIN({${TableNames.CLM_SELF_PLACE_STATUS}})),"
-        "FIND('${TableNames.SELFPLACE_STATUS_REJECTED}', ARRAYJOIN({${TableNames.CLM_SELF_PLACE_STATUS}}))"
+        "FIND('${TableNames.SELFPLACE_STATUS_PENDING}', ARRAYJOIN({${TableNames.CLM_SELF_PLACE_STATUS}}))"
+        // "FIND('${TableNames.SELFPLACE_STATUS_REJECTED}', ARRAYJOIN({${TableNames.CLM_SELF_PLACE_STATUS}}))"
         "))";
     debugPrint(query);
 
@@ -207,7 +207,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                                         }
                                       });
                                     },
-                                    child: custom_text(
+                                    child: const custom_text(
                                       text: strings_name.str_view_details,
                                       textStyles: primaryTextSemiBold15,
                                       alignment: Alignment.centerRight,
@@ -270,7 +270,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
                             ),
                           );
                         })
-                    : Container(margin: const EdgeInsets.only(top: 10), child: custom_text(text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
+                    : Container(margin: const EdgeInsets.only(top: 10), child: const custom_text(text: strings_name.str_no_jobs_approval_pending, textStyles: centerTextStyleBlack18, alignment: Alignment.center)),
               )
             ],
           )),
@@ -288,7 +288,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          custom_text(
+          const custom_text(
             text: 'Are you sure you want to approve this placement?',
             textStyles: primaryTextSemiBold16,
             maxLines: 3,
@@ -324,7 +324,7 @@ class _ApproveSelfPlacementsState extends State<ApproveSelfPlacements> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          custom_text(
+          const custom_text(
             text: 'Provide rejection reason',
             textStyles: primaryTextSemiBold16,
             maxLines: 2,

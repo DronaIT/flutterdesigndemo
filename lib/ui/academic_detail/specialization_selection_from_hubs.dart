@@ -56,8 +56,8 @@ class _SpecializationSelectionFromHubsState extends State<SpecializationSelectio
       isVisible = true;
     });
     try {
-      var query = "AND(SEARCH('${hubData?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0)";
-      var data = await apiRepository.getSpecializationApi(query);
+      var query = "AND(SEARCH('${hubData?.fields?.hubId}',ARRAYJOIN({${TableNames.CLM_HUB_IDS_FROM_HUB_ID}}),0))";
+      var data = await apiRepository.getSpecializationDataApi(query);
       if (data.records?.isNotEmpty == true) {
         PreferenceUtils.setSpecializationList(data);
         specializationData = data.records;

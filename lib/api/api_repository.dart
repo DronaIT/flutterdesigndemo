@@ -225,7 +225,17 @@ class ApiRepository {
 
   Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi([String offset = ""]) async {
     try {
-      final response = await userApi.getSpecializationApi();
+      final response = await userApi.getSpecializationApi(offset);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationDataApi(String query, [String offset = ""]) async {
+    try {
+      final response = await userApi.getSpecializationDataApi(query, offset);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

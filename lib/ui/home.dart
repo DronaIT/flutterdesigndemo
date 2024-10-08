@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdesigndemo/api/api_repository.dart';
@@ -15,8 +16,8 @@ import 'package:flutterdesigndemo/models/login_fields_response.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/academic_details.dart';
 import 'package:flutterdesigndemo/ui/ask/ask_dashboard.dart';
 import 'package:flutterdesigndemo/ui/attendance/attendance.dart';
+import 'package:flutterdesigndemo/ui/exam/exam_dashboard.dart';
 import 'package:flutterdesigndemo/ui/student_referral/my_referrals.dart';
-import 'package:flutterdesigndemo/ui/student_referral/referral_terms.dart';
 import 'package:flutterdesigndemo/ui/authentication/login.dart';
 import 'package:flutterdesigndemo/ui/fees/fees_dashboard.dart';
 import 'package:flutterdesigndemo/ui/helpdesk/helpdesk_dashboard.dart';
@@ -31,7 +32,6 @@ import 'package:flutterdesigndemo/ui/profile.dart';
 import 'package:flutterdesigndemo/ui/punch_leaves/punch_dashboard.dart';
 import 'package:flutterdesigndemo/ui/settings_screen.dart';
 import 'package:flutterdesigndemo/ui/student_history/filter_screen_student.dart';
-import 'package:flutterdesigndemo/ui/student_referral/add_student_referral.dart';
 import 'package:flutterdesigndemo/ui/student_referral/student_referrals.dart';
 import 'package:flutterdesigndemo/ui/task/task_dashboard.dart';
 import 'package:flutterdesigndemo/ui/time_table/time_table_list.dart';
@@ -44,6 +44,7 @@ import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../customwidget/announcements_card.dart';
 import '../api/dio_exception.dart';
@@ -82,6 +83,9 @@ class _HomeState extends State<Home> {
 
   String warningLetterDisplayType = "";
   String warningLetterString = "";
+
+  bool showMentor = false;
+  bool showSupportTeam = false;
 
   Future<void> getRecords(String roleId) async {
     var query = "AND(SEARCH('$roleId',${TableNames.CLM_ROLE_ID},0))";
@@ -464,6 +468,7 @@ class _HomeState extends State<Home> {
         children: [
           homeModule.records?.isNotEmpty == true
               ? ListView(
+                  shrinkWrap: true,
                   children: [
                     Visibility(visible: canShowAnnouncements, child: announcementSection()),
                     Visibility(
@@ -574,13 +579,13 @@ class _HomeState extends State<Home> {
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_STUDENT_REFERRAL) {
                                           if (PreferenceUtils.getIsLogin() == 1) {
                                             Get.to(const MyReferrals());
-                                          }else if (PreferenceUtils.getIsLogin() == 2) {
+                                          } else if (PreferenceUtils.getIsLogin() == 2) {
                                             Get.to(const StudentReferrals());
                                           }
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_ASK_MODULE) {
                                           Get.to(const AskDashboard());
                                         } else if (homeModule.records![index].fields?.moduleId == TableNames.MODULE_EXAM_MODULE) {
-                                          Get.to(const AskDashboard());
+                                          Get.to(const ExamDashboard());
                                         }
                                       },
                                     ),
@@ -588,6 +593,158 @@ class _HomeState extends State<Home> {
                         },
                       ),
                     ),
+                    isLogin == 1
+                        ? Column(
+                            children: [
+                              PreferenceUtils.getLoginData().assigned_to?.isNotEmpty == true
+                                  ? Column(
+                                      children: [
+                                        GestureDetector(
+                                          child: Card(
+                                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                            elevation: 1,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const custom_text(
+                                                  text: strings_name.str_mentor_detail,
+                                                  alignment: Alignment.topLeft,
+                                                  textStyles: primaryTextSemiBold16,
+                                                  leftValue: 20,
+                                                ),
+                                                Icon(showMentor ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            showSupportTeam = false;
+                                            showMentor = !showMentor;
+                                            setState(() {});
+                                          },
+                                        ),
+                                        showMentor
+                                            ? Container(
+                                                color: colors_name.subItemColor,
+                                                child: Column(children: [
+                                                  custom_text(
+                                                    text: PreferenceUtils.getLoginData().assigned_to_employee_name?.last ?? '',
+                                                    alignment: Alignment.topLeft,
+                                                    textStyles: blackTextSemiBold16,
+                                                    topValue: 10,
+                                                    bottomValue: 10,
+                                                    leftValue: 20,
+                                                  ),
+                                                  Visibility(
+                                                    visible: false,
+                                                    child: GestureDetector(
+                                                      child: custom_text(
+                                                        text: PreferenceUtils.getLoginData().assigned_employee_mobile_number?.last ?? '',
+                                                        alignment: Alignment.topLeft,
+                                                        textStyles: linkTextSemiBold16,
+                                                        topValue: 5,
+                                                        bottomValue: 10,
+                                                        leftValue: 20,
+                                                      ),
+                                                      onTap: () {
+                                                        _launchCaller(PreferenceUtils.getLoginData().assigned_employee_mobile_number?.last ?? "");
+                                                      },
+                                                    ),
+                                                  ),
+                                                ]),
+                                              )
+                                            : Container(),
+                                      ],
+                                    )
+                                  : Container(),
+                              PreferenceUtils.getLoginData().assigned_counsellor?.isNotEmpty == true
+                                  ? Column(
+                                      children: [
+                                        GestureDetector(
+                                          child: Card(
+                                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                            margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                            elevation: 1,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const custom_text(
+                                                  text: strings_name.str_student_support,
+                                                  alignment: Alignment.topLeft,
+                                                  textStyles: primaryTextSemiBold16,
+                                                  leftValue: 20,
+                                                ),
+                                                Icon(showSupportTeam ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            showMentor = false;
+                                            showSupportTeam = !showSupportTeam;
+                                            setState(() {});
+                                          },
+                                        ),
+                                        showSupportTeam
+                                            ? ListView.builder(
+                                                primary: false,
+                                                shrinkWrap: true,
+                                                itemCount: PreferenceUtils.getLoginData().assigned_counsellor!.length,
+                                                itemBuilder: (BuildContext context, int index) {
+                                                  return Container(
+                                                    color: colors_name.subItemColor,
+                                                    child: Column(children: [
+                                                      Container(
+                                                        color: colors_name.colorWhite,
+                                                        height: index != 0 ? 1 : 0,
+                                                      ),
+                                                      custom_text(
+                                                        text: PreferenceUtils.getLoginData().assigned_counsellor_name![index] ?? '',
+                                                        alignment: Alignment.topLeft,
+                                                        textStyles: blackTextSemiBold16,
+                                                        topValue: 10,
+                                                        bottomValue: 10,
+                                                        leftValue: 20,
+                                                      ),
+                                                      Visibility(
+                                                        visible: false,
+                                                        child: GestureDetector(
+                                                          child: custom_text(
+                                                            text: PreferenceUtils.getLoginData().assigned_counsellor_mobile_number![index] ?? '',
+                                                            alignment: Alignment.topLeft,
+                                                            textStyles: linkTextSemiBold16,
+                                                            topValue: 5,
+                                                            bottomValue: 10,
+                                                            leftValue: 20,
+                                                          ),
+                                                          onTap: () {
+                                                            _launchCaller(PreferenceUtils.getLoginData().assigned_counsellor_mobile_number![index] ?? "");
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                  );
+                                                })
+                                            : Container(),
+                                      ],
+                                    )
+                                  : Container(),
+                              SizedBox(height: 15.h),
+                              Text.rich(TextSpan(children: [
+                                const TextSpan(
+                                  text: 'For more help or assistance reach out to\n',
+                                  style: primaryTextSemiBold14,
+                                ),
+                                TextSpan(
+                                  text: '+91-9909990741',
+                                  style: linkTextSemiBold14,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      _launchCaller("9909990741");
+                                    },
+                                ),
+                              ]), textAlign: TextAlign.center,),
+                            ],
+                          )
+                        : Container()
                   ],
                 )
               : Container(
@@ -799,5 +956,13 @@ class _HomeState extends State<Home> {
         );
       },
     );
+  }
+
+  _launchCaller(String mobile) async {
+    try {
+      await launchUrl(Uri.parse("tel:$mobile"), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      Utils.showSnackBarUsingGet(strings_name.str_invalid_mobile);
+    }
   }
 }

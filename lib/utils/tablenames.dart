@@ -24,9 +24,12 @@ class TableNames {
   // static const CLOUDARY_CLOUD_NAME = "dcycbefvl";     // From old gaurav@drona account
   // static const CLOUDARY_PRESET = "kyxglsmj";          // From old gaurav@drona account
 
-  static const CLOUDARY_CLOUD_NAME = "du7mwwrme";
-  static const CLOUDARY_PRESET = "jdgvuqlb";
-  
+  // static const CLOUDARY_CLOUD_NAME = "du7mwwrme";      // From old drona.appdata1 account
+  // static const CLOUDARY_PRESET = "jdgvuqlb";           // From old drona.appdata1 account
+
+  static const CLOUDARY_CLOUD_NAME = "db3kp6ic8";
+  static const CLOUDARY_PRESET = "jwvkn3nj";
+
   static const CLOUDARY_FOLDER_COMPANY_LOGO = "CompanyLogo";
   static const CLOUDARY_FOLDER_COMPANY_LOI = "CompanyLOI";
   static const CLOUDARY_FOLDER_HELP_DESK= "HelpDesk";

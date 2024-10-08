@@ -7,8 +7,9 @@ import 'package:flutterdesigndemo/customwidget/custom_edittext.dart';
 import 'package:flutterdesigndemo/customwidget/custom_text.dart';
 import 'package:flutterdesigndemo/models/base_api_response.dart';
 import 'package:flutterdesigndemo/models/hub_response.dart';
+import 'package:flutterdesigndemo/models/semester_data.dart';
 import 'package:flutterdesigndemo/models/specialization_response.dart';
-import 'package:flutterdesigndemo/ui/academic_detail/specialization_selection.dart';
+import 'package:flutterdesigndemo/ui/academic_detail/semester_selection.dart';
 import 'package:flutterdesigndemo/ui/academic_detail/specialization_selection_from_hubs.dart';
 import 'package:flutterdesigndemo/utils/preference.dart';
 import 'package:flutterdesigndemo/utils/utils.dart';
@@ -16,6 +17,7 @@ import 'package:flutterdesigndemo/values/colors_name.dart';
 import 'package:flutterdesigndemo/values/strings_name.dart';
 import 'package:flutterdesigndemo/values/text_styles.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class AddUpdateExam extends StatefulWidget {
   const AddUpdateExam({super.key});
@@ -29,6 +31,7 @@ class _AddUpdateExamState extends State<AddUpdateExam> {
   final apiRepository = getIt.get<ApiRepository>();
 
   TextEditingController examTitleController = TextEditingController();
+  TextEditingController tentativeDateController = TextEditingController();
 
   List<String> examTypeArr = <String>[
     strings_name.str_select_category,
@@ -44,6 +47,7 @@ class _AddUpdateExamState extends State<AddUpdateExam> {
 
   List<BaseApiResponseWithSerializable<SpecializationResponse>>? specializationData = [];
   List<BaseApiResponseWithSerializable<HubResponse>>? hubsData = [];
+  List<SemesterData>? semesterData = [];
 
   @override
   void initState() {
@@ -175,7 +179,7 @@ class _AddUpdateExamState extends State<AddUpdateExam> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    custom_text(
+                    const custom_text(
                       text: strings_name.str_specializations,
                       alignment: Alignment.topLeft,
                       textStyles: blackTextSemiBold16,
@@ -187,7 +191,7 @@ class _AddUpdateExamState extends State<AddUpdateExam> {
                         textStyles: primaryTextSemiBold16,
                       ),
                       onTap: () {
-                        if(hubValue.isNotEmpty) {
+                        if (hubValue.isNotEmpty) {
                           Get.to(const SpecializationSelectionFromHubs(), arguments: [
                             {"selectedData": specializationData},
                             {"hubData": hubResponse},
@@ -198,7 +202,7 @@ class _AddUpdateExamState extends State<AddUpdateExam> {
                               });
                             }
                           });
-                        }else{
+                        } else {
                           Utils.showSnackBar(context, strings_name.str_empty_hub);
                         }
                       },
@@ -207,26 +211,101 @@ class _AddUpdateExamState extends State<AddUpdateExam> {
                 ),
                 specializationData!.isNotEmpty
                     ? ListView.builder(
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: specializationData?.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 5,
-                        child: Container(
-                          color: colors_name.colorWhite,
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)),
-                              const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
-                            ],
-                          ),
-                        ),
-                      );
-                    })
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: specializationData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            child: Container(
+                              color: colors_name.colorWhite,
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text("${specializationData![index].fields!.specializationName}", textAlign: TextAlign.start, style: blackText16)),
+                                  const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                ],
+                              ),
+                            ),
+                          );
+                        })
                     : Container(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const custom_text(
+                      text: strings_name.str_semester,
+                      alignment: Alignment.topLeft,
+                      textStyles: blackTextSemiBold16,
+                    ),
+                    GestureDetector(
+                      child: custom_text(
+                        text: semesterData?.isEmpty == true ? strings_name.str_add : strings_name.str_update,
+                        alignment: Alignment.topLeft,
+                        textStyles: primaryTextSemiBold16,
+                      ),
+                      onTap: () {
+                        Get.to(const SemesterSelection(), arguments: semesterData)?.then((result) {
+                          if (result != null) {
+                            setState(() {
+                              semesterData = result;
+                            });
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                semesterData!.isNotEmpty
+                    ? ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: semesterData?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 5,
+                            child: Container(
+                              color: colors_name.colorWhite,
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text("Semester ${semesterData![index].semester}", textAlign: TextAlign.start, style: blackText16)),
+                                  const Icon(Icons.keyboard_arrow_right, size: 30, color: colors_name.colorPrimary)
+                                ],
+                              ),
+                            ),
+                          );
+                        })
+                    : Container(),
+                const custom_text(
+                  text: strings_name.str_exam_tentative_date,
+                  alignment: Alignment.topLeft,
+                  textStyles: blackTextSemiBold16,
+                ),
+                InkWell(
+                  child: IgnorePointer(
+                    child: custom_edittext(
+                      hintText: strings_name.str_select_dates,
+                      type: TextInputType.none,
+                      textInputAction: TextInputAction.next,
+                      controller: tentativeDateController,
+                      topValue: 0,
+                    ),
+                  ),
+                  onTap: () {
+                    showDatePicker(context: context, initialDate: tentativeDateController.text.isNotEmpty ? DateTime.parse(tentativeDateController.text) : DateTime.now(), firstDate: DateTime(2005), lastDate: DateTime.now()).then((pickedDate) {
+                      if (pickedDate == null) {
+                        return;
+                      }
+                      setState(() {
+                        var formatter = DateFormat('yyyy-MM-dd');
+                        tentativeDateController.text = formatter.format(pickedDate);
+                      });
+                    });
+                  },
+                ),
               ],
             ),
           ),

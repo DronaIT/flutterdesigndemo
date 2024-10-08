@@ -245,7 +245,7 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
     });
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
-    var title = mentorName.toString().trim().isNotEmpty ? mentorName :Utils.getHubName(studentList[0].fields?.hubIdFromHubIds?.first);
+    var title = mentorName.toString().trim().isNotEmpty ? mentorName : Utils.getHubName(studentList[0].fields?.hubIdFromHubIds?.first);
     sheet.appendRow([title]);
     sheet.appendRow([
       'Name',
@@ -304,6 +304,14 @@ class _FilterDataStudentState extends State<FilterDataStudent> {
       studentDetail.add(placementStatus);
       studentDetail.add(companyName);
       studentDetail.add(jobTitle);
+
+/*
+      if (row.fields?.resume?.last.filename?.contains("warning") == true) {
+        studentDetail.add("Not uploaded");
+      } else {
+        studentDetail.add(row.fields?.resume?.last.url);
+      }
+*/
 
       if (mentorName.toString().trim().isNotEmpty) {
         if (row.fields?.job_title_from_placed_job?.last.isNotEmpty == true) {

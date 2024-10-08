@@ -293,9 +293,24 @@ class ApiRequest {
     }
   }
 
-  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi([String offset = ""]) async {
+  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationApi([String offset = "", String query = ""]) async {
     try {
-      Map<String, String> someMap = {if(offset.isNotEmpty) "filterByFormula": offset};
+      Map<String, String> someMap = {};
+      if (query.isNotEmpty || offset.isNotEmpty) {
+        someMap = {if (query.isNotEmpty) "filterByFormula": query, if (offset.isNotEmpty) "offset": offset};
+      }
+      Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
+
+      final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, options: Options(headers: header), queryParameters: someMap);
+      return BaseLoginResponse<SpecializationResponse>.fromJson(response.data, (response) => SpecializationResponse.fromJson(response));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<BaseLoginResponse<SpecializationResponse>> getSpecializationDataApi(String query, [String offset = ""]) async {
+    try {
+      Map<String, String> someMap = {"filterByFormula": query, if (offset.isNotEmpty) "offset": offset};
       Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer ${TableNames.APIKEY}"};
 
       final Response response = await dioClient.get(TableNames.TBL_SPECIALIZATION, options: Options(headers: header), queryParameters: someMap);

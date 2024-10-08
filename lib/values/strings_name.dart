@@ -1042,4 +1042,21 @@ class strings_name {
   static const String str_exam_type_cie = "CIE EXAM";
   static const String str_exam_type_final = "FINAL EXAM";
   static const String str_exam_type_supplementry = "SUPPLEMENTARY EXAM";
+
+  static const String str_exam_tentative_date = "Exam Tentative Date";
+  static const String str_empty_exam_tentative_date = "Please provide exam tentative date";
+  static const String str_exam_preparation_start_date = "Exam Preparation Start Date";
+  static const String str_empty_exam_preparation_start_date = "Please provide preparation start date";
+  static const String str_exam_panel_submission_deadline = "Panel Submission Deadline";
+  static const String str_empty_exam_panel_submission_deadline = "Please provide panel submission deadline";
+  static const String str_panel_members = "Panel Members";
+  static const String str_empty_panel_members = "Please select Panel Members";
+  static const String str_exam_start_date = "Exam Start Date";
+  static const String str_empty_exam_start_date = "Please provide Exam Start Date";
+  static const String str_exam_end_date = "Exam End Date";
+  static const String str_empty_exam_end_date = "Please provide Exam End Date";
+  static const String str_select_dates = "Select Date";
+
+  static const String str_mentor_detail = "Your Mentor Details";
+  static const String str_student_support = "Your Support Team Detail";
 }

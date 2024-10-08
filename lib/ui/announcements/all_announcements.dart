@@ -169,10 +169,6 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
         } else {
           await filterData();
         }
-        setState(() {
-          announcementsEmpty = announcement.isEmpty;
-          isVisible = false;
-        });
       } else {
         setState(() {
           announcementsEmpty = true;
@@ -274,6 +270,10 @@ class _AllAnnouncementsState extends State<AllAnnouncements> {
         }
       }
     }
+    setState(() {
+      announcementsEmpty = announcement.isEmpty;
+      isVisible = false;
+    });
   }
 
   @override
