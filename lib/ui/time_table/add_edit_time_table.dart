@@ -365,6 +365,9 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
 
   fetchFaculty() async {
     // var query = "AND({is_working} = 1,{role_ids} = 'DR05')";
+    setState(() {
+      isDataLoading = true;
+    });
     var query = "AND({is_working} = 1)";
     try {
       var data = await apiRepository.getEmployeeListApi(query, offset);
@@ -407,6 +410,10 @@ class _AddEditTimeTableState extends State<AddEditTimeTable> {
     } catch (e) {
       final errorMessage = e.toString();
       Utils.showSnackBarUsingGet(errorMessage);
+    } finally {
+      setState(() {
+        isDataLoading = false;
+      });
     }
   }
 
